@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package intrvproto;
+option php_namespace = "App\\Protobuf\\Generated";
+option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
+
+import "rpc_signin.proto";
+
+service AuthService {
+  rpc SignInUser(SignInUserInput) returns (SignInUserResponse) {}
+}

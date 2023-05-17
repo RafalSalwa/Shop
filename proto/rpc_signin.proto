@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package intrvproto;
+option php_namespace = "App\\Protobuf\\Generated";
+option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
+
+message SignInUserInput {
+  string username = 1;
+  string password = 2;
+}
+
+message SignInUserResponse {
+  string status = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+}
