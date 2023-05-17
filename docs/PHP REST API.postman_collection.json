@@ -1,0 +1,135 @@
+{
+	"info": {
+		"_postman_id": "9adadfca-ea67-4703-a026-3a75b5d7735f",
+		"name": "PHP REST API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "6676730"
+	},
+	"item": [
+		{
+			"name": "Homepage",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "interview.local",
+					"host": [
+						"interview",
+						"local"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Healthcheck",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "interview.local/healthcheck",
+					"host": [
+						"interview",
+						"local"
+					],
+					"path": [
+						"healthcheck"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user{id}",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "interview.local/user/1",
+					"host": [
+						"interview",
+						"local"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user{id} from go server",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "interview.local/user/1",
+					"host": [
+						"interview",
+						"local"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Authenticate",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "interview.local/user/1",
+					"host": [
+						"interview",
+						"local"
+					],
+					"path": [
+						"user",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "key",
+				"value": "x-api-key",
+				"type": "string"
+			},
+			{
+				"key": "value",
+				"value": "CBusCNJihmsv6fGwyPUJzPwDPhnxsSJLEBGSHOPtSKmiW72IZpMobs4on5NPnoiY",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
