@@ -15,7 +15,18 @@ security:
                 # optional: if you're using multiple Doctrine entity
                 # managers, this option defines which one to use
                 #manager_name: 'customer'
+    enable_authenticator_manager: true
+
     firewalls:
+        api_token:
+            pattern: ^/token$
+            security: false
+        api:
+            pattern: ^/api
+            security: true
+            stateless: true
+            oauth2: true
+            provider: users
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
@@ -24,17 +35,10 @@ security:
             provider: users_in_memory
             custom_authenticator: App\Security\AppInterviewAuthenticator
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
-    # Easy way to control access for large sections of your site
-    # Note: Only the *first* access control that matches will be used
     access_control:
         # - { path: ^/admin, roles: ROLE_ADMIN }
         # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
 
 when@test:
     security:
