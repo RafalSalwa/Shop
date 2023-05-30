@@ -13,7 +13,7 @@ class AuthGRPCService
     public function getClient(): AuthServiceClient
     {
         if ($this->client === null) {
-            $this->client = new AuthServiceClient('172.28.1.2:8082', [
+            $this->client = new AuthServiceClient('app:8089', [
                 'credentials' => Grpc\ChannelCredentials::createInsecure(),
             ]);
         }
