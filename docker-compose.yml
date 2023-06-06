@@ -1,21 +1,38 @@
-version: '3'
+version: '3.9'
 
 services:
-###> doctrine/doctrine-bundle ###
-  database:
-    image: postgres:${POSTGRES_VERSION:-15}-alpine
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-app}
-      # You should definitely change the password in production
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-!ChangeMe!}
-      POSTGRES_USER: ${POSTGRES_USER:-app}
+  php:
+    container_name: php
+    image: rafalsalwa/interview-app-php:latest
     volumes:
-      - database_data:/var/lib/postgresql/data:rw
-      # You may use a bind-mounted host directory instead, so that it is harder to accidentally remove the volume and lose all your data!
-      # - ./docker/db/data:/var/lib/postgresql/data:rw
-###< doctrine/doctrine-bundle ###
+      - ../:/var/www/symfony
+      - symfony_app_var:/var/www/symfony/var
+      - symfony_app_vendor:/var/www/symfony/vendor
+    networks:
+      interview-net:
+        aliases:
+          - iphp
+  nginx:
+    container_name: nginx
+    build:
+      context: ./docker/nginx
+    volumes:
+      - ../:/var/www/symfony
+      - symfony_app_var:/var/www/symfony/var
+      - symfony_app_vendor:/var/www/symfony/vendor
+    ports:
+      - 80:80
+    networks:
+      interview-net:
+        aliases:
+          - inginx
 
 volumes:
-###> doctrine/doctrine-bundle ###
-  database_data:
-###< doctrine/doctrine-bundle ###
+  symfony_app_var:
+  symfony_app_vendor:
+
+networks:
+  interview-net:
+    name: interview-net
+    driver: bridge
+    enable_ipv6: false
