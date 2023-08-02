@@ -1,39 +1,38 @@
 league_oauth2_server:
-    authorization_server:
-        private_key: '%kernel.project_dir%/config/jwt/private.key'
-        private_key_passphrase: '%env(resolve:OAUTH_PASSPHRASE)%'
-        encryption_key: '%env(resolve:OAUTH_ENCRYPTION_KEY)%'
-        encryption_key_type:  plain
+  authorization_server:
+    private_key: '%kernel.project_dir%/config/jwt/private.key'
+    private_key_passphrase: '%env(resolve:OAUTH_PASSPHRASE)%'
+    encryption_key: '%env(resolve:OAUTH_ENCRYPTION_KEY)%'
+    encryption_key_type: plain
 
-        access_token_ttl:     PT1H
-        refresh_token_ttl:    P1M
-        auth_code_ttl:        PT10M
+    access_token_ttl: PT1H
+    refresh_token_ttl: P1M
+    auth_code_ttl: PT10M
 
-        enable_client_credentials_grant: true
-        enable_password_grant: true
-        enable_refresh_token_grant: true
-        enable_auth_code_grant: true
-        require_code_challenge_for_public_clients: true
-        persist_access_token: true
+    enable_client_credentials_grant: true
+    enable_password_grant: true
+    enable_refresh_token_grant: true
+    enable_auth_code_grant: true
+    require_code_challenge_for_public_clients: true
+    persist_access_token: true
 
-    resource_server: # Required
-        public_key: '%kernel.project_dir%/config/jwt/public.key'
+  resource_server: # Required
+    public_key: '%kernel.project_dir%/config/jwt/public.key'
 
-    scopes:
-        available: [ 'email' ]
-        default: [ 'email' ]
+  scopes:
+    available: [ 'email' , 'profile' ]
+    default: [ 'email' , 'profile' ]
 
-    persistence:
-#        doctrine:
-#            entity_manager: default
-#            table_prefix: oauth2_
-        in_memory: ~
+  persistence:
+    doctrine:
+      entity_manager: default
+      table_prefix: oauth2_
 
-    role_prefix: ROLE_OAUTH2_
-    client:
-        classname: League\Bundle\OAuth2ServerBundle\Model\Client
+  role_prefix: ROLE_OAUTH2_
+  client:
+    classname: League\Bundle\OAuth2ServerBundle\Model\Client
 
 when@test:
-    league_oauth2_server:
-        persistence:
-            in_memory: null
+  league_oauth2_server:
+    persistence:
+      in_memory: null
