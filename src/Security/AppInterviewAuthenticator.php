@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,7 +36,8 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
+//        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
+        return null;
     }
 
 }

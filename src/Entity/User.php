@@ -3,62 +3,71 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
+use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
+use JsonSerializable;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Entity(repositoryClass: UserRepository::class)]
-#[Table(name: 'user')]
+#[Table(name: 'intrv_user')]
 #[HasLifecycleCallbacks]
-class User implements \JsonSerializable
+class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
-    #[Column(name:"id",type: Types::INTEGER, unique: true)]
-    private int $id;
-    #[Column(name:"username", type: Types::STRING, length: 180)]
+    #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
+    private int $user_id;
+    #[Column(name: 'username', type: Types::STRING, length: 180)]
     private string $username;
-    #[Column(name:"password", type: Types::STRING, length: 255)]
+    #[Column(name: 'pass', type: Types::STRING, length: 100)]
     private string $password;
-    #[Column(name:"first_name", type: Types::STRING, length: 255, nullable:true)]
+    #[Column(name: 'first_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $firstname = null;
-    #[Column(name:"last_name", type: Types::STRING, length: 255, nullable:true)]
+    #[Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $lastname = null;
-    #[Column(name:"email", type: Types::STRING, length: 255)]
+    #[Column(name: 'email', type: Types::STRING, length: 255)]
     private $email;
-    #[Column(name:"phone_no", type: Types::STRING, length: 11, nullable:true)]
+    #[Column(name: 'phone_no', type: Types::STRING, length: 11, nullable: true)]
     private $phoneNo;
-    #[Column(name:"roles", type: Types::JSON, length: 255, nullable:true)]
+    #[Column(name: 'roles', type: Types::JSON, length: 255, nullable: true)]
     private $roles;
-    #[Column(name:"verification_code", type: Types::STRING, length: 6)]
+    #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
     private $verificationCode;
-    #[Column(name:"is_verified", type: Types::BOOLEAN, length: 255, options: ["default" =>false])]
+    #[Column(name: 'is_verified', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
     private $verified;
-    #[Column(name:"is_active", type: Types::BOOLEAN, length: 255, options: ["default" =>false])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
     private $active;
-    #[Column(name:"created_at", type: Types::DATETIME_MUTABLE, options: ["default" =>"CURRENT_TIMESTAMP"])]
-    protected $createdAt;
-    #[Column(name:"updated_at",type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $updatedAt;
-    #[Column(name:"deleted_at", type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $deletedAt;
-    #[Column(name:"last_login",type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected $lastLogin;
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private $createdAt;
+    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private $updatedAt;
+    #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private $deletedAt;
+    #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
+    private $lastLogin;
+    #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
+    private Collection $oAuth2UserConsents;
 
     public function getId(): int
     {
-        return $this->id;
+        return $this->user_id;
     }
 
     public function setId(int $id): User
     {
-        $this->id = $id;
+        $this->user_id = $id;
+
         return $this;
     }
 
@@ -70,6 +79,7 @@ class User implements \JsonSerializable
     public function setUsername(string $username): User
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -81,6 +91,7 @@ class User implements \JsonSerializable
     public function setPassword(string $password): User
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -92,6 +103,7 @@ class User implements \JsonSerializable
     public function setFirstname(?string $firstname): User
     {
         $this->firstname = $firstname;
+
         return $this;
     }
 
@@ -103,209 +115,226 @@ class User implements \JsonSerializable
     public function setLastname(?string $lastname): User
     {
         $this->lastname = $lastname;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getEmail()
     {
         return $this->email;
     }
 
     /**
-     * @param mixed $email
      * @return User
      */
     public function setEmail($email)
     {
         $this->email = $email;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getPhoneNo()
     {
         return $this->phoneNo;
     }
 
     /**
-     * @param mixed $phoneNo
      * @return User
      */
     public function setPhoneNo($phoneNo)
     {
         $this->phoneNo = $phoneNo;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getRoles()
+    public function getRoles(): array
     {
-        return $this->roles;
+        if (array_key_exists('roles', $this->roles)) {
+            $roles = $this->roles['roles'];
+        } else {
+            $roles = $this->roles;
+        }
+
+        $roles[] = 'ROLE_USER';
+        return array_unique($roles);
     }
 
     /**
-     * @param mixed $roles
      * @return User
      */
     public function setRoles($roles)
     {
         $this->roles = $roles;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getVerificationCode()
     {
         return $this->verificationCode;
     }
 
     /**
-     * @param mixed $verificationCode
      * @return User
      */
     public function setVerificationCode($verificationCode)
     {
         $this->verificationCode = $verificationCode;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getVerified()
     {
         return $this->verified;
     }
 
     /**
-     * @param mixed $verified
      * @return User
      */
     public function setVerified($verified)
     {
         $this->verified = $verified;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getActive()
     {
         return $this->active;
     }
 
     /**
-     * @param mixed $active
      * @return User
      */
     public function setActive($active)
     {
         $this->active = $active;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
     /**
-     * @param mixed $createdAt
      * @return User
      */
     public function setCreatedAt($createdAt)
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getDeletedAt()
     {
         return $this->deletedAt;
     }
 
     /**
-     * @param mixed $deletedAt
      * @return User
      */
     public function setDeletedAt($deletedAt)
     {
         $this->deletedAt = $deletedAt;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getLastLogin()
     {
         return $this->lastLogin;
     }
 
     /**
-     * @param mixed $lastLogin
      * @return User
      */
     public function setLastLogin($lastLogin)
     {
         $this->lastLogin = $lastLogin;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param mixed $updatedAt
      * @return User
      */
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+
         return $this;
     }
 
-
-    public function jsonSerialize() : mixed
+    public function jsonSerialize(): mixed
     {
-        return array(
+        return [
             'id' => $this->id,
-            'username'=> $this->username,
-            'verified'=> $this->verified,
-            'active'=> $this->active,
-        );
+            'username' => $this->username,
+            'verified' => $this->verified,
+            'active' => $this->active,
+        ];
     }
 
     #[PrePersist]
     public function onPrePersist()
     {
-        $this->createdAt = new \DateTime("now");
+        $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
     public function onPreUpdate()
     {
-        $this->updatedAt = new \DateTime("now");
+        $this->updatedAt = new DateTime('now');
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return Collection<int, OAuth2UserConsent>
+     */
+    public function getOAuth2UserConsents(): Collection
+    {
+        return $this->oAuth2UserConsents;
+    }
+
+    public function addOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
+    {
+        if (!$this->oAuth2UserConsents->contains($oAuth2UserConsent)) {
+            $this->oAuth2UserConsents->add($oAuth2UserConsent);
+            $oAuth2UserConsent->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
+    {
+        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent)) {
+            // set the owning side to null (unless already changed)
+            if ($oAuth2UserConsent->getUser() === $this) {
+                $oAuth2UserConsent->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }

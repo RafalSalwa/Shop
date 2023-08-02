@@ -3,7 +3,10 @@ version: '3.9'
 services:
   php:
     container_name: php
-    image: rafalsalwa/interview-app-php:latest
+    #    image: rafalsalwa/interview-app-php:latest
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
     volumes:
       - .:/var/www/symfony
     networks:
@@ -29,6 +32,47 @@ services:
       interview-net:
         aliases:
           - inginx
+  postgres_php:
+    container_name: postgres_php
+    image: postgres:15-alpine3.18
+    user: postgres
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./docker/pg/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    environment:
+      POSTGRES_USER: 'interview'
+      POSTGRES_PASSWORD: 'interview'
+      POSTGRES_DB: 'interview'
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h localhost -U interview -d interview" ]
+      start_period: 5s
+      interval: 5s
+      timeout: 5s
+      retries: 55
+    networks:
+      interview-net:
+        aliases:
+          - ipostgres_php
+  cache_php:
+    container_name: cache_php
+    image: redis:7-alpine
+    restart: always
+    ports:
+      - '26379:6379'
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - cache:/data
+    networks:
+      interview-net:
+        aliases:
+          - icache_php
+volumes:
+  cache:
+    driver: local
+  pg-data:
 
 networks:
   interview-net:

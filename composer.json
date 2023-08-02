@@ -9,6 +9,7 @@
     "ext-ctype": "*",
     "ext-grpc": "*",
     "ext-iconv": "*",
+    "ext-openssl": "*",
     "doctrine/doctrine-bundle": "^2.9",
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.15",
@@ -17,27 +18,39 @@
     "grpc/grpc": "^1.52",
     "jms/serializer-bundle": "^5.2",
     "knpuniversity/oauth2-client-bundle": "^2.15",
+    "league/oauth2-server": "^8.5",
     "league/oauth2-server-bundle": "^0.5.0",
     "nelmio/api-doc-bundle": "^4.11",
     "nelmio/cors-bundle": "^2.3",
     "php-amqplib/php-amqplib": ">=3.0",
-    "symfony/amqp-messenger": "6.2.*",
-    "symfony/console": "6.2.*",
-    "symfony/dotenv": "6.2.*",
+    "symfony/amqp-messenger": "6.3.*",
+    "symfony/asset": "6.3.*",
+    "symfony/console": "6.3.*",
+    "symfony/dotenv": "6.3.*",
     "symfony/flex": "^2",
-    "symfony/framework-bundle": "6.2.*",
-    "symfony/http-client": "6.2.*",
-    "symfony/messenger": "6.2.*",
-    "symfony/runtime": "6.2.*",
-    "symfony/security-bundle": "6.2.*",
-    "symfony/security-csrf": "6.2.*",
-    "symfony/yaml": "6.2.*"
+    "symfony/framework-bundle": "6.3.*",
+    "symfony/http-client": "6.3.*",
+    "symfony/lock": "6.3.*",
+    "symfony/messenger": "6.3.*",
+    "symfony/monolog-bundle": "^3.8",
+    "symfony/rate-limiter": "6.3.*",
+    "symfony/runtime": "6.3.*",
+    "symfony/security-bundle": "6.3.*",
+    "symfony/security-csrf": "6.3.*",
+    "symfony/templating": "6.3.*",
+    "symfony/twig-bundle": "6.3.*",
+    "symfony/uid": "6.3.*",
+    "symfony/yaml": "6.3.*"
   },
   "config": {
     "allow-plugins": {
       "php-http/discovery": true,
       "symfony/flex": true,
       "symfony/runtime": true
+    },
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "*": "dist"
     },
     "sort-packages": true
   },
@@ -79,20 +92,28 @@
   "extra": {
     "symfony": {
       "allow-contrib": false,
-      "require": "6.2.*"
+      "require": "6.3.*"
     }
   },
   "require-dev": {
+    "dama/doctrine-test-bundle": "^7.2",
+    "doctrine/doctrine-fixtures-bundle": "^3.4",
     "friendsofphp/php-cs-fixer": "^3.4",
+    "php-standard-library/psalm-plugin": "^2.2",
     "phpmd/phpmd": "@stable",
     "phpstan/phpstan": "^1.10",
     "phpunit/phpunit": "^9.5",
+    "psalm/plugin-mockery": "^1.1",
+    "psalm/plugin-phpunit": "^0.18.4",
+    "psalm/plugin-symfony": "^5.0",
     "squizlabs/php_codesniffer": "3.*",
     "symfony/browser-kit": "6.0.*",
     "symfony/css-selector": "6.0.*",
     "symfony/maker-bundle": "^1.0",
     "symfony/phpunit-bridge": "^6.0",
-    "symfony/stopwatch": "6.0.*",
-    "vimeo/psalm": "^5.12"
+    "symfony/stopwatch": "6.3.*",
+    "symfony/web-profiler-bundle": "6.3.*",
+    "vimeo/psalm": "^5.13",
+    "weirdan/doctrine-psalm-plugin": "^2.9"
   }
 }

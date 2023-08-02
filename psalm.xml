@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <psalm>
     <projectFiles>
-        <directory name="src" />
+        <directory name="src"/>
     </projectFiles>
-</psalm>
+<plugins><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\MockeryPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\SymfonyPsalmPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\PhpUnitPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/></plugins></psalm>
