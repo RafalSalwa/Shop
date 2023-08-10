@@ -3,4 +3,11 @@
     <projectFiles>
         <directory name="src"/>
     </projectFiles>
-<plugins><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\MockeryPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\SymfonyPsalmPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\PhpUnitPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/><pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/></plugins></psalm>
+    <plugins>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\MockeryPlugin\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\SymfonyPsalmPlugin\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\PhpUnitPlugin\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/>
+    </plugins>
+</psalm>

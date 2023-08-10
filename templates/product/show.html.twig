@@ -3,25 +3,18 @@
 {% block title %}Hello IndexController!{% endblock %}
 
 {% block body %}
-
     <div class="example-wrapper">
     <div class="container">
     <div class="row mt-5">
-        {% for plan in plans %}
         <div class="col-md-3 col-sm-4 col-xs-6">
             <div class="card h-100">
                 <div class="card-body text-center">
-                    <h5 class="card-title">{{ plan.planName|capitalize }}</h5>
-                    <p class="card-text">{{ plan.description }}</p>
+                    <h5 class="card-title">{{ product.name|capitalize }}</h5>
+                    <p class="card-text">{{ product.categoryId }}</p>
                     <a class="btn btn-primary"
-                       href={{ path("plan_index", {id: plan.id}) }}>Check</a>
+                       href="#">Check</a>
                 </div>
             </div>
         </div>
-        {% if loop.index == 4 %}
-    </div>
-    <div class="row mt-5">
-        {% endif %}
-        {% endfor %}
     </div>
 {% endblock %}

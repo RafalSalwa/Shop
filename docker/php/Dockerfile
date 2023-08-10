@@ -22,6 +22,7 @@ RUN apt update && apt install -y --no-install-recommends \
     libpq-dev \
     libonig-dev \
     libxslt1-dev \
+    chromium-chromedriver firefox-geckodriver \
     acl \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
@@ -31,10 +32,10 @@ RUN pecl install amqp redis && docker-php-ext-enable amqp
 
 RUN docker-php-ext-configure intl \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
+    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-configure zip --with-libzip
 
-RUN docker-php-ext-install \
-    pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql
+RUN docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql
 
 #RUN git clone -b v1.53.1 https://github.com/grpc/grpc && \
 #    cd grpc && git submodule update --init && \

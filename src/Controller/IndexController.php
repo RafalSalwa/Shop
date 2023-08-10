@@ -3,21 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Repository\PlanRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class IndexController extends AbstractController
 {
     #[Route('/', name: 'app_index')]
-    public function index(): Response
+    public function index(Request $request, PlanRepository $planRepository): Response
     {
-        $user = $this->getUser();
-
+        $plans = $planRepository->findAll();
         return $this->render('index/index.html.twig', [
             'controller_name' => 'IndexController',
-            'username' => $user->getUserIdentifier(),
-            'roles' => $user->getRoles(),
+            'plans' => $plans
         ]);
     }
 
@@ -26,7 +26,7 @@ class IndexController extends AbstractController
     {
         // Load the public key from the filesystem and use OpenSSL to parse it.
         $kernelDirectory = $this->getParameter('kernel.project_dir');
-        $publicKey = openssl_pkey_get_public(file_get_contents($kernelDirectory.'/var/keys/public.key'));
+        $publicKey = openssl_pkey_get_public(file_get_contents($kernelDirectory . '/var/keys/public.key'));
         $details = openssl_pkey_get_details($publicKey);
         $jwks = [
             'keys' => [

@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -15,14 +15,13 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
-use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user')]
 #[HasLifecycleCallbacks]
-class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -44,9 +43,9 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     private $roles;
     #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
     private $verificationCode;
-    #[Column(name: 'is_verified', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
+    #[Column(name: 'is_verified', type: Types::BOOLEAN, options: ['default' => false])]
     private $verified;
-    #[Column(name: 'is_active', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private $active;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private $createdAt;
@@ -58,13 +57,20 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     private $lastLogin;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private Collection $oAuth2UserConsents;
+    #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    private ?Collection $carts = null;
+
+    public function __construct()
+    {
+        $this->carts = new ArrayCollection();
+    }
 
     public function getId(): int
     {
         return $this->user_id;
     }
 
-    public function setId(int $id): User
+    public function setId(int $id): self
     {
         $this->user_id = $id;
 
@@ -76,7 +82,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -88,7 +94,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -100,7 +106,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): User
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
@@ -112,7 +118,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): User
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -151,13 +157,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getRoles(): array
     {
-        if (array_key_exists('roles', $this->roles)) {
+        if (\array_key_exists('roles', $this->roles)) {
             $roles = $this->roles['roles'];
         } else {
             $roles = $this->roles;
         }
 
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -287,15 +294,15 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     }
 
     #[PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
     #[PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new \DateTime('now');
     }
 
     public function eraseCredentials()
