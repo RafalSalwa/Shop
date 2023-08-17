@@ -35,7 +35,7 @@ RUN docker-php-ext-configure intl \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
     && docker-php-ext-configure zip --with-libzip
 
-RUN docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql
+RUN docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath
 
 #RUN git clone -b v1.53.1 https://github.com/grpc/grpc && \
 #    cd grpc && git submodule update --init && \

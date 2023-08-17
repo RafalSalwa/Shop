@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -15,7 +16,7 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: ProductRepository::class)]
 #[Table(name: 'products')]
-class Product
+class Product implements CartInsertableInterface
 {
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
@@ -34,30 +35,16 @@ class Product
     private Category $category;
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
     private $quantityPerUnit;
-    #[Column(name: 'unit_price', type: Types::FLOAT, nullable: true)]
+    #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private $unitPrice;
     #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: true)]
     private $unitsInStock;
     #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: true)]
     private $unitsOnOrder;
-    #[Column(name: 'reorder_level', type: Types::SMALLINT, nullable: true)]
-    private $reorderLevel;
-    #[Column(name: 'discontinued', type: Types::INTEGER, nullable: false)]
-    private $discontinued;
-
-    public function getId()
-    {
-        return $this->id;
-    }
 
     public function getName()
     {
         return $this->name;
-    }
-
-    public function getSupplierId()
-    {
-        return $this->supplierId;
     }
 
     public function getCategoryId()
@@ -65,21 +52,9 @@ class Product
         return $this->categoryId;
     }
 
-    public function getCategory(): ?Category
+    public function getCategory(): Category
     {
         return $this->category;
-    }
-
-    public function setCategory(?Category $category): self
-    {
-        $this->category = $category;
-
-        return $this;
-    }
-
-    public function getQuantityPerUnit()
-    {
-        return $this->quantityPerUnit;
     }
 
     public function getUnitPrice()
@@ -87,23 +62,20 @@ class Product
         return $this->unitPrice;
     }
 
-    public function getUnitsInStock()
+    public function toCartItem(): CartItem
     {
-        return $this->unitsInStock;
+        $cartItem = new CartItem();
+        $cartItem->setProdId($this->getId())
+            ->setType('product')
+            ->setQuantity(1)
+            ->setCreatedAt(new DateTime('now'))
+            ->setUpdatedAt(new DateTime('now'));
+
+        return $cartItem;
     }
 
-    public function getUnitsOnOrder()
+    public function getId()
     {
-        return $this->unitsOnOrder;
-    }
-
-    public function getReorderLevel()
-    {
-        return $this->reorderLevel;
-    }
-
-    public function getDiscontinued()
-    {
-        return $this->discontinued;
+        return $this->id;
     }
 }

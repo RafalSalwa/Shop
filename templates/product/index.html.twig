@@ -13,7 +13,7 @@
                     <h5 class="card-title">{{ product.name|capitalize }}</h5>
                     <p class="card-text">{{ product.category.name }}</p>
                     <a class="btn btn-primary"
-                       href={{ path("plan_index", {id: product.id}) }}>Check</a>
+                       href={{ path("products_id", {id: product.id}) }}>Check</a>
                 </div>
             </div>
         </div>

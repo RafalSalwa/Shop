@@ -23,22 +23,21 @@ class CartSessionStorage
     /**
      * Gets the cart in session.
      */
-    public function getCart(): ?Cart
+    public function getCart($sorted = false): ?Cart
     {
-        return $this->cartRepository->findOneBy([
+        $cart = $this->cartRepository->findOneBy([
             'user' => $this->getUser(),
             'status' => Cart::STATUS_CREATED,
         ], ['createdAt' => 'DESC']);
+        if ($sorted) {
+        }
+
+        return $cart;
     }
 
     private function getUser(): ?UserInterface
     {
         return $this->security->getUser();
-    }
-
-    private function getSession(): SessionInterface
-    {
-        return $this->requestStack->getSession();
     }
 
     /**
@@ -47,6 +46,11 @@ class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $this->getSession()->set(self::CART_KEY_NAME, $cart->getId());
+    }
+
+    private function getSession(): SessionInterface
+    {
+        return $this->requestStack->getSession();
     }
 
     /**

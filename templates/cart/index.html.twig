@@ -1,32 +1,24 @@
 {% extends 'logged.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}Cart summary{% endblock %}
 
 {% block body %}
-    {% if cart is not empty %}
-        cart ID: {{ cart.id }}
-        <div class="example-wrapper">
-        <div class="container">
-        <div class="row mt-5">
-        {% for item in cart.items %}
-            Item
-            <div class="col-md-3 col-sm-4 col-xs-6">
-                <div class="card h-100">
-                    <div class="card-body text-center">
-                        <h5 class="card-title">{{ item.id }}</h5>
-                        <p class="card-text">{{ item.prod_id }}</p>
-                        <a class="btn btn-primary"
-                           href={{ path("plan_index", {id: item.id}) }}>Check</a>
-                    </div>
+    <div class="row mt-5">
+        <div class="col-md-9">
+            {% if cart is not empty %}
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="row mt-12">
+                    {% for item in cart.items %}
+                        {{ include('cart/_item.html.twig') }}
+                    {% endfor %}
                 </div>
+                {% else %}
+                    Cart is empty
+                {% endif %}
             </div>
-            {% if loop.index == 4 %}
-                </div>
-                <div class="row mt-5">
-            {% endif %}
-        {% endfor %}
         </div>
-    {% else %}
-        Cart is empty
-    {% endif %}
+        <div class="col-md-3">
+            {{ include('cart/_summary.html.twig') }}
+        </div>
+    </div>
 {% endblock %}

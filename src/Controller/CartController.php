@@ -2,43 +2,62 @@
 
 namespace App\Controller;
 
+use App\Entity\CartItem;
 use App\Manager\CartManager;
-use App\Repository\PlanRepository;
-use Doctrine\ORM\NonUniqueResultException;
+use App\Service\CartCalculator;
+use App\Service\CartService;
+use App\ValueResolver\EntityNameResolver;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends AbstractController
 {
-    /**
-     * @throws NonUniqueResultException
-     */
-    #[Route('/cart/add/{id}', name: 'cart_plan_add')]
-    public function add(Request $request, int $id, PlanRepository $planRepository, CartManager $cartManager): Response
+    #[Route('/cart/add/{type}/{id}', name: 'cart_add')]
+    public function addToCart(
+        #[ValueResolver('cart_item_type')] string $type,
+        int                                       $id,
+        CartService                               $cartService,
+        EntityManagerInterface                    $entityManager,
+        EntityNameResolver                        $resolver
+    )
     {
-        $cart = $cartManager->getCurrentCart();
-        $plan = $planRepository->findById($id);
-        if (!$plan) {
-            $this->addFlash('info', 'Plan not found');
+        $entity = $entityManager->getRepository($type)->find($id);
+        if (!$entity) {
+            throw $this->createNotFoundException('Product not found');
         }
-        $cart
-            ->addItem($plan)
-            ->setUpdatedAt(new \DateTime());
-        $cartManager->save($cart);
-        dd($cart);
 
-        return $this->redirectToRoute('plan_index', ['id' => $id]);
+        $item = $cartService->makeCartItem($entity);
+        $cart = $cartService->getCurrentCart();
+
+        $cart->addItem($item);
+        $cartService->save($cart);
+        $this->addFlash("notice", "successfully added item to cart");
+        return $this->redirectToRoute('products_id', ['id' => $id]);
+    }
+
+    #[Route('/cart/remove/{id}', name: 'cart_remove')]
+    public function removeFromCart(CartItem $item, CartService $cartService,)
+    {
+        $cart = $cartService->getCurrentCart();
+        if ($cart->getItems()->contains($item)) {
+            $cart->getItems()->removeElement($item);
+        }
+        $cartService->save($cart);
+        return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/cart/', name: 'cart_index')]
-    public function show(Request $request, CartManager $cartManager): Response
+    public function show(Request $request, CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();
-
+        $payment = $cartCalculator->calculatePayment($cart);
         return $this->render('cart/index.html.twig', [
             'cart' => $cart,
+            'payment' => $payment
         ]);
     }
 }

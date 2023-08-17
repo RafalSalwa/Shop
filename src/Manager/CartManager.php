@@ -6,24 +6,21 @@ use App\Entity\Cart;
 use App\Factory\CartFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class CartManager
 {
     private CartSessionStorage $cartSessionStorage;
     private EntityManagerInterface $entityManager;
-    private Security $security;
+    private CartFactory $cartFactory;
 
     public function __construct(
         CartSessionStorage $cartStorage,
         CartFactory $orderFactory,
-        EntityManagerInterface $entityManager,
-        Security $security
+        EntityManagerInterface $entityManager
     ) {
         $this->cartSessionStorage = $cartStorage;
         $this->cartFactory = $orderFactory;
         $this->entityManager = $entityManager;
-        $this->security = $security;
     }
 
     public function getCurrentCart(): Cart
@@ -41,10 +38,9 @@ class CartManager
      */
     public function save(Cart $cart): void
     {
-        // Persist in database
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
-        // Persist in session
+
         $this->cartSessionStorage->setCart($cart);
     }
 }

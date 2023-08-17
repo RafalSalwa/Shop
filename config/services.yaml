@@ -21,6 +21,12 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Tests/'
+  App\ValueResolver\CartItemTypeResolver:
+    tags:
+      - controller.argument_value_resolver:
+          name: cart_item_type
+          priority: 150
+
   Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
     arguments:
       - '@Redis'

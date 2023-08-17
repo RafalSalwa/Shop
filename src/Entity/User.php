@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -15,13 +16,15 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user')]
 #[HasLifecycleCallbacks]
-class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -60,9 +63,24 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     private ?Collection $carts = null;
 
+    #[OneToMany(mappedBy: 'user', targetEntity: Address::class)]
+    private ?Collection $addressess = null;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
+        $this->addressess = new ArrayCollection();
+    }
+
+    public function getAddressess(): ?Collection
+    {
+        return $this->addressess;
+    }
+
+    public function setAddressess(?Collection $addressess): User
+    {
+        $this->addressess = $addressess;
+        return $this;
     }
 
     public function getId(): int
@@ -157,7 +175,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
 
     public function getRoles(): array
     {
-        if (\array_key_exists('roles', $this->roles)) {
+        if (array_key_exists('roles', $this->roles)) {
             $roles = $this->roles['roles'];
         } else {
             $roles = $this->roles;
@@ -296,13 +314,13 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
     public function eraseCredentials()

@@ -5,19 +5,23 @@ namespace App\Entity;
 use App\Repository\CartItemRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
-use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
-#[Table(name: 'cart_item')]
 #[HasLifecycleCallbacks]
+#[InheritanceType('JOINED')]
+#[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
 class CartItem
 {
     #[Id]
@@ -29,15 +33,11 @@ class CartItem
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     private Cart $cart;
 
-    #[Column(name: 'prod_id', type: Types::INTEGER)]
-    private ?int $prodId = null;
-    #[Column(name: 'item_type', type: Types::STRING, length: 15)]
-    private ?string $type = null;
     #[Column(name: 'quantity', type: Types::INTEGER, options: ['default' => '1'])]
     private ?int $quantity;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE)]
+    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $updatedAt;
 
     public function getId(): ?int
@@ -69,16 +69,16 @@ class CartItem
         return $this;
     }
 
-    public function getType(): ?string
-    {
-        return $this->type;
-    }
-
     public function setType(?string $type): self
     {
         $this->type = $type;
 
         return $this;
+    }
+
+    public function getName()
+    {
+        return 'asd';
     }
 
     public function getQuantity(): ?int
@@ -93,7 +93,7 @@ class CartItem
         return $this;
     }
 
-    public function increaseQuantity(int $qty)
+    public function increaseQuantity(int $qty = 1): void
     {
         $this->quantity += $qty;
     }
@@ -122,14 +122,21 @@ class CartItem
         return $this;
     }
 
-    public function prePersist(): void
+    #[PrePersist]
+    public function prePersist()
     {
+        $this->setCreatedAt(new DateTime('now'));
         $this->setCreatedAt(new DateTime('now'));
     }
 
     #[PreUpdate]
-    public function preUpdate(): void
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
-        $this->setUpdatedAt(new DateTime('now'));
+        $this->value = 'changed from preUpdate callback!';
     }
+
+    public function setUser(UserInterface $getUser)
+    {
+    }
+
 }

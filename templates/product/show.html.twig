@@ -10,9 +10,9 @@
             <div class="card h-100">
                 <div class="card-body text-center">
                     <h5 class="card-title">{{ product.name|capitalize }}</h5>
-                    <p class="card-text">{{ product.categoryId }}</p>
+                    <p class="card-text">{{ product.category.name }}</p>
                     <a class="btn btn-primary"
-                       href="#">Check</a>
+                       href="{{ path("cart_add", {type:"product",id: product.id}) }}">To cart</a>
                 </div>
             </div>
         </div>

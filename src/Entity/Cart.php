@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\CartRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -29,7 +30,7 @@ class Cart
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private ?int $id = null;
 
-    #[OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, fetch: 'EAGER', cascade: ['all'], orphanRemoval: true)]
+    #[OneToMany(mappedBy: 'cart', targetEntity: CartItem::class, cascade: ['all'], fetch: 'EAGER', orphanRemoval: true)]
     private Collection $items;
 
     private ?string $cartItem = null;
@@ -40,9 +41,9 @@ class Cart
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private ?string $status = null;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private \DateTime $updatedAt;
+    private DateTime $updatedAt;
 
     public function __construct()
     {
@@ -71,44 +72,50 @@ class Cart
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt): self
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function addItem(CartInsertableInterface $item): self
+    public function addItem(CartItem $item): self
     {
-        $cartItem = $item->toCartItem();
-        dd($this->getItems(), $this->items, $cartItem);
-        if (!$this->items->contains($cartItem)) {
-            $cartItem->setCart($this);
-            $this->items[] = $cartItem;
+        if (!$this->itemExists($item)) {
+            $item->setCart($this);
+            $this->getItems()->add($item);
         } else {
-            $item = $this->getItems()->get($cartItem->getId());
-            $item->increaseQuantity();
-            $this->items[] = $cartItem;
+            /* @var CartItem $existingItem */
+            $existingItem = $this->getFilteredItems($item)->first();
+            $existingItem->increaseQuantity();
         }
 
         return $this;
+    }
+
+    public function itemExists(CartItem $cartItem): bool
+    {
+        /* @var CartItem $element */
+        return $this->getItems()->exists(function ($key, $element) use ($cartItem) {
+            return $element->getDestinationEntity()->getId() === $cartItem->getDestinationEntity()->getId() && $element::class === $cartItem::class;
+        });
     }
 
     public function getItems(): Collection
@@ -119,6 +126,13 @@ class Cart
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFilteredItems(CartItem $newItem): ArrayCollection
+    {
+        return $this->getItems()->filter(function (CartItem $cartItem) use ($newItem) {
+            return $cartItem->getDestinationEntity()->getId() === $newItem->getDestinationEntity()->getId() && $cartItem::class === $newItem::class;
+        });
     }
 
     public function getUser(): User
@@ -135,12 +149,12 @@ class Cart
 
     public function prePersist(): void
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 }

@@ -3,8 +3,12 @@
 namespace App\Factory;
 
 use App\Entity\Cart;
+use App\Entity\CartInsertableInterface;
 use App\Entity\CartItem;
+use App\Entity\Plan;
 use App\Entity\Product;
+use App\Entity\ProductCartItem;
+use App\Entity\SubscriptionCartItem;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class CartFactory
@@ -28,12 +32,12 @@ class CartFactory
     /**
      * Creates an item for a product.
      */
-    public function createItem(Product $product): CartItem
+    public function createItem(CartInsertableInterface $item): CartItem
     {
-        $item = new CartItem();
-        $item->setProdId($product);
-        $item->setQuantity(1);
-
-        return $item;
+        return match ($item::class) {
+            Plan::class => new SubscriptionCartItem(),
+            Product::class => new ProductCartItem(),
+            default => new CartItem()
+        };
     }
 }
