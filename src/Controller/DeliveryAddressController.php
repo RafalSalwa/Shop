@@ -5,17 +5,15 @@ namespace App\Controller;
 use App\Entity\Address;
 use App\Form\AddressType;
 use App\Repository\AddressRepository;
-use App\Service\CartCalculator;
-use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PaymentController extends AbstractController
+class DeliveryAddressController extends AbstractController
 {
-    #[Route('/cart/step/shipment', name: 'cart_shipment')]
-    public function shipment(Request $request, CartService $cartService, CartCalculator $cartCalculator, AddressRepository $repository): Response
+    #[Route('/cart/step/address/new', name: 'cart_shipment_address_new')]
+    public function shipment(Request $request, AddressRepository $repository): Response
     {
         $user = $this->getUser();
 
@@ -29,14 +27,9 @@ class PaymentController extends AbstractController
             $address->setUser($user);
             $repository->save($address);
         }
-//        if ($user->getDeliveryAddress()) {
-//            dd($user->getDeliveryAddress());
-//        }
-        return $this->render('shipping/step_one.html.twig', [
+        return $this->render('shipping/address_new.html.twig', [
             'form' => $form->createView(),
-            "deliveryAddresses" => $user->getDeliveryAddresses(),
-            "cart" => $cartService->getCurrentCart(),
-            "payment" => $cartCalculator->calculatePayment($cartService->getCurrentCart())
+            "deliveryAddresses" => $user->getDeliveryAddresses()
         ]);
     }
 }

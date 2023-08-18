@@ -1,0 +1,27 @@
+framework:
+  workflows:
+    order_processing:
+      type: 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\Entity\Order
+      initial_marking: pending
+      places:
+        - pending
+        - processing
+        - completed
+        - cancelled
+      transitions:
+        to_process:
+          from: pending
+          to: processing
+        to_complete:
+          from: processing
+          to: completed
+        to_cancel:
+          from: [ pending, processing ]
+          to: cancelled

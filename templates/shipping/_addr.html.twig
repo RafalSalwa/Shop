@@ -1,0 +1,9 @@
+<div class="list-group">
+    {% for address in deliveryAddresses %}
+        <label class="list-group-item">
+            <input class="form-check-input me-1" type="radio" value="{{ address.id }}">
+            {{ address.firstName }} {{ address.lastName }} - {{ address.addressLine1 }} {{ address.addressLine2 }}
+            {{ address.city }} {{ address.state }} {{ address.postalCode }}
+        </label>
+    {% endfor %}
+</div>

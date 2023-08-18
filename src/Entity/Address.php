@@ -26,30 +26,29 @@ class Address
     private $id;
     #[Assert\NotBlank]
     #[Column(name: 'first_name', type: Types::STRING, length: 40)]
-    private $firstName;
+    private string $firstName;
     #[Assert\NotBlank]
     #[Column(name: 'last_name', type: Types::STRING, length: 40)]
-    private $lastName;
+    private string $lastName;
     #[Assert\NotBlank]
     #[Column(name: 'address_line_1', type: Types::STRING, length: 40)]
-    private $addressLine1;
+    private string $addressLine1;
 
-    #[Assert\NotBlank]
     #[Column(name: 'address_line_2', type: Types::STRING, length: 40, nullable: true)]
-    private $addressLine2;
+    private ?string $addressLine2 = null;
     #[Assert\NotBlank]
     #[Column(name: 'city', type: Types::STRING, length: 40)]
-    private $city;
+    private string $city;
     #[Assert\NotBlank]
     #[Column(name: 'state', type: Types::STRING, length: 40)]
-    private $state;
+    private string $state;
     #[Assert\NotBlank]
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
-    private $postalCode;
+    private string $postalCode;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'addressess')]
+    #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
-    private UserInterface $user;
+    private User $user;
 
     /**
      * @return mixed

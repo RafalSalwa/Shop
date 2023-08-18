@@ -39,48 +39,64 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $lastname = null;
     #[Column(name: 'email', type: Types::STRING, length: 255)]
-    private $email;
+    private string $email;
     #[Column(name: 'phone_no', type: Types::STRING, length: 11, nullable: true)]
-    private $phoneNo;
+    private ?string $phoneNo = null;
     #[Column(name: 'roles', type: Types::JSON, length: 255, nullable: true)]
-    private $roles;
+    private ?array $roles = null;
     #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
-    private $verificationCode;
+    private string $verificationCode;
     #[Column(name: 'is_verified', type: Types::BOOLEAN, options: ['default' => false])]
-    private $verified;
+    private bool $verified;
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
-    private $active;
+    private bool $active;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $createdAt;
+    private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $updatedAt;
+    private ?DateTime $updatedAt = null;
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $deletedAt;
+    private ?DateTime $deletedAt = null;
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $lastLogin;
+    private ?DateTime $lastLogin = null;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
-    private Collection $oAuth2UserConsents;
+    private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     private ?Collection $carts = null;
 
-    #[OneToMany(mappedBy: 'user', targetEntity: Address::class)]
-    private ?Collection $addressess = null;
+    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
+    private ?Collection $deliveryAddresses;
+
+    #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
+    private ?Collection $payments = null;
+    #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private ?Collection $orders = null;
 
     public function __construct()
     {
         $this->carts = new ArrayCollection();
-        $this->addressess = new ArrayCollection();
+        $this->deliveryAddresses = new ArrayCollection();
     }
 
-    public function getAddressess(): ?Collection
+    public function getDeliveryAddresses(): Collection
     {
-        return $this->addressess;
+        return $this->deliveryAddresses;
     }
 
-    public function setAddressess(?Collection $addressess): User
+    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): User
     {
-        $this->addressess = $addressess;
+        $this->deliveryAddresses = $deliveryAddresses;
         return $this;
+    }
+
+    public function addDeliveryAddress(Address $address): void
+    {
+        $address->setUser($this);
+        $this->deliveryAddresses[] = $address;
+    }
+
+    public function removeDeliveryAddress(Address $address): void
+    {
+        $this->deliveryAddresses->removeElement($address);
     }
 
     public function getId(): int
