@@ -45,10 +45,10 @@ class SubscriptionPlan implements CartInsertableInterface
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $updatedAt;
+    private ?DateTime $updatedAt = null;
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $deletedAt;
+    private ?DateTime $deletedAt = null;
 
     public function getName(): ?string
     {

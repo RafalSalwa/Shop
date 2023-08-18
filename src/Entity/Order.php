@@ -4,20 +4,26 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
+use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Component\Workflow\WorkflowInterface;
 
 #[Entity(repositoryClass: OrderRepository::class)]
-#[Table(name: 'order')]
+#[Table(name: 'orders')]
+#[HasLifecycleCallbacks]
 class Order
 {
     #[Id]
@@ -29,10 +35,8 @@ class Order
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private $status;
 
-    private $currentState;
-
-    private $workflow;
-
+    #[Column(name: 'amount', type: Types::SMALLINT)]
+    private int $amount;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
 
@@ -41,20 +45,92 @@ class Order
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
-    private $user;
+    private User $user;
 
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private $payments;
 
-    public function __construct(WorkflowInterface $orderWorkflow)
+    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, orphanRemoval: true, cascade: ["persist"])]
+    private $items;
+
+    public function getId()
     {
-        $this->workflow = $orderWorkflow;
+        return $this->id;
     }
 
-    public function transitionTo(string $transition): void
+
+    public function getUser(): User
     {
-        if ($this->workflow->can($this, $transition)) {
-            $this->workflow->apply($this, $transition);
-        }
+        return $this->user;
+    }
+
+    public function setUser(User $user): Order
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(int $amount): Order
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function setItems(ArrayCollection $items): Order
+    {
+        $this->items = $items;
+        return $this;
+    }
+
+    public function addItem(OrderItem $item): void
+    {
+        $item->setOrder($this);
+        $this->items[] = $item;
+    }
+
+    public function removeItems(OrderItem $item): void
+    {
+        $this->items->removeElement($item);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     * @return Order
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    #[PrePersist]
+    public function prePersist()
+    {
+        $this->createdAt = new DateTime('now');
+    }
+
+    #[PreUpdate]
+    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    {
+        $this->updatedAt = new DateTime('now');
     }
 }

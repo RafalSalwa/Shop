@@ -11,11 +11,8 @@ class CartCalculator
 
     public function calculatePayment(Cart $cart): array
     {
-        $total = 0;
-        foreach ($cart->getItems() as $item) {
-            $price = $item->getDestinationEntity()->getUnitPrice() * $item->getQuantity();
-            $total += $price;
-        }
+        $total = $this->calculateTotal($cart);
+
         $vatDivisor = 1 + ($this->taxRate / 100);
         $netAmount = bcdiv($total, $vatDivisor, 0);
         $vatAmount = bcsub($total, $netAmount, 0);
@@ -25,5 +22,15 @@ class CartCalculator
         $vatAmount = number_format(($vatAmount / 100), 2, '.', ' ');
 
         return ["total" => $total, "vat" => $vatAmount, "net" => $netAmount];
+    }
+
+    public function calculateTotal(Cart $cart)
+    {
+        $total = 0;
+        foreach ($cart->getItems() as $item) {
+            $price = $item->getDestinationEntity()->getUnitPrice() * $item->getQuantity();
+            $total += $price;
+        }
+        return $total;
     }
 }

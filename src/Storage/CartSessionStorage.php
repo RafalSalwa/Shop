@@ -14,10 +14,11 @@ class CartSessionStorage
     public const CART_KEY_NAME = 'cart_id';
 
     public function __construct(
-        private readonly RequestStack $requestStack,
+        private readonly RequestStack   $requestStack,
         private readonly CartRepository $cartRepository,
-        private readonly Security $security
-    ) {
+        private readonly Security       $security
+    )
+    {
     }
 
     /**
@@ -53,6 +54,11 @@ class CartSessionStorage
         return $this->requestStack->getSession();
     }
 
+    public function removeCart(): void
+    {
+        $this->getSession()->remove(self::CART_KEY_NAME);
+    }
+
     /**
      * Returns the cart id.
      */
@@ -63,6 +69,6 @@ class CartSessionStorage
             return null;
         }
 
-        return (int) $this->getSession()->get(self::CART_KEY_NAME);
+        return (int)$this->getSession()->get(self::CART_KEY_NAME);
     }
 }

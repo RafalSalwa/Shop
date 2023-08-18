@@ -3,21 +3,10 @@
 {% block body %}
     <div class="row mt-5">
         <div class="col-md-9">
-            {% if deliveryAddresses is not empty %}
-                {{ include("shipping/_addr.html.twig") }}
-            {% else %}
-                No addressess found. Please add new delivery address
-            {% endif %}
-            {{ include("cart/_item_simple.html.twig") }}
+            {{ order.id }}
         </div>
         <div class="col-md-3">
-            {{ include('cart/_summary.html.twig') }}
-            <div class="row ml-3 mr-3 mt-4">
-                <a href="{{ path("cart_order_pending") }}" class="btn btn-warning input-block-level">payment</a>
-            </div>
         </div>
     </div>
-
-
 
 {% endblock %}

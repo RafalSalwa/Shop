@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Uid\Uuid;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment')]
@@ -38,5 +39,117 @@ class Payment
     #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
     private $user;
 
+    #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
+    #[JoinColumn(name: "order_id", referencedColumnName: 'order_id', nullable: true)]
+    private $order;
+
+    public function __construct()
+    {
+        $this->operationNumber = Uuid::v4();
+        $this->operationType = 'payment';
+        $this->createdAt = new DateTime('now');
+    }
+
+    public function getAmount(): int
+    {
+        return $this->amount;
+    }
+
+    public function setAmount(int $amount): Payment
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): Payment
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getOperationNumber(): ?string
+    {
+        return $this->operationNumber;
+    }
+
+    public function setOperationNumber(?string $operationNumber): Payment
+    {
+        $this->operationNumber = $operationNumber;
+        return $this;
+    }
+
+    public function getOperationType(): ?string
+    {
+        return $this->operationType;
+    }
+
+    public function setOperationType(?string $operationType): Payment
+    {
+        $this->operationType = $operationType;
+        return $this;
+    }
+
+    public function getPaymentDate(): DateTime
+    {
+        return $this->paymentDate;
+    }
+
+    public function setPaymentDate(DateTime $paymentDate): Payment
+    {
+        $this->paymentDate = $paymentDate;
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): Payment
+    {
+        $this->createdAt = $createdAt;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     * @return Payment
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getOrder()
+    {
+        return $this->order;
+    }
+
+    /**
+     * @param mixed $order
+     * @return Payment
+     */
+    public function setOrder($order)
+    {
+        $this->order = $order;
+        return $this;
+    }
 
 }

@@ -42,7 +42,7 @@ class CartService
      */
     public function save(Cart $cart = null): void
     {
-        if ($cart) {
+        if (!$cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);
@@ -59,5 +59,16 @@ class CartService
         }
 
         return $cart;
+    }
+
+    public function clearCart()
+    {
+        $cart = $this->getCurrentCart();
+
+//        $this->entityManager->remove($cart);
+//        $this->entityManager->flush();
+
+//        $this->cartSessionStorage->removeCart();
+
     }
 }

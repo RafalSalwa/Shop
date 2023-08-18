@@ -17,12 +17,15 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
+use JMS\Serializer\DeserializationContext;
+use JMS\Serializer\SerializationContext;
+use JMS\Serializer\SerializerInterface;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[HasLifecycleCallbacks]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
-class CartItem
+class CartItem implements SerializerInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -139,4 +142,18 @@ class CartItem
     {
     }
 
+    public function serialize($data, string $format, ?SerializationContext $context = null, ?string $type = null): string
+    {
+        return [
+            'id' => $this->id,
+            'username' => $this->username,
+            'verified' => $this->verified,
+            'active' => $this->active,
+        ];
+    }
+
+    public function deserialize(string $data, string $type, string $format, ?DeserializationContext $context = null)
+    {
+        // TODO: Implement deserialize() method.
+    }
 }
