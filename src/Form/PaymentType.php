@@ -16,7 +16,8 @@ class PaymentType extends AbstractType
         $builder
             ->add('operationNumber', TextType::class, ['label' => 'First Name'])
             ->add('amount', TextType::class, ['label' => 'Address Line 1'])
-            ->add('save', SubmitType::class);
+            ->add('yes', SubmitType::class)
+            ->add('no', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)

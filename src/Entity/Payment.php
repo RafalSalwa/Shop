@@ -15,10 +15,24 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Uid\Uuid;
 
+enum PaymentStatus: string
+{
+    case PENDING = 'pending';
+    case PROCESSING = 'processing';
+    case COMPLETED = 'completed';
+    case CANCELLED = 'cancelled';
+    case FAILED = 'failed';
+}
+
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment')]
 class Payment
 {
+    const PENDING = 'pending';
+    const PROCESSING = 'processing';
+    const COMPLETED = 'completed';
+    const CANCELLED = 'cancelled';
+
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'payment_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -27,9 +41,11 @@ class Payment
     #[Column(name: 'operation_number', type: Types::STRING, length: 40)]
     private ?string $operationNumber;
     #[Column(name: 'operation_type', type: Types::STRING, length: 40)]
-    private ?string $operationType;
+    private string $operationType = "payment";
     #[Column(name: 'amount', type: Types::SMALLINT, nullable: false)]
     private int $amount;
+    #[Column(name: 'status', type: Types::STRING, length: 25)]
+    private $status;
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $paymentDate;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
@@ -46,13 +62,12 @@ class Payment
     public function __construct()
     {
         $this->operationNumber = Uuid::v4();
-        $this->operationType = 'payment';
         $this->createdAt = new DateTime('now');
     }
 
-    public function getAmount(): int
+    public function getAmount($formatted = true): int|string
     {
-        return $this->amount;
+        return $formatted ? number_format($this->amount / 100, 2, ",", "") : $this->amount;
     }
 
     public function setAmount(int $amount): Payment
@@ -91,6 +106,24 @@ class Payment
     public function setOperationType(?string $operationType): Payment
     {
         $this->operationType = $operationType;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param mixed $status
+     * @return Payment
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
         return $this;
     }
 

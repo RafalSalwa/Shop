@@ -26,4 +26,10 @@ class PaymentRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getOneOrNullResult();
     }
+
+    public function save(Payment $payment)
+    {
+        $this->getEntityManager()->persist($payment);
+        $this->getEntityManager()->flush();
+    }
 }

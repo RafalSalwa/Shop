@@ -89,11 +89,18 @@ class SubscriptionPlan implements CartInsertableInterface
     /**
      * @return mixed
      */
-    public function getUnitPrice()
+    public function getUnitPrice($userFriendly = false)
     {
+        if ($userFriendly) {
+            return $this->unitPrice / 100;
+        }
         return $this->unitPrice;
     }
 
+    public function getUnitPriceNormalized()
+    {
+        return number_format($this->unitPrice / 100, 2, ",", "");
+    }
 
     public function getCreatedAt(): DateTime
     {

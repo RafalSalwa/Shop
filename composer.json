@@ -28,11 +28,13 @@
     "symfony/asset": "6.3.*",
     "symfony/console": "6.3.*",
     "symfony/dotenv": "6.3.*",
+    "symfony/event-dispatcher": "6.3.*",
     "symfony/flex": "^2",
     "symfony/form": "6.3.*",
     "symfony/framework-bundle": "6.3.*",
     "symfony/http-client": "6.3.*",
     "symfony/lock": "6.3.*",
+    "symfony/mailer": "6.3.*",
     "symfony/messenger": "6.3.*",
     "symfony/monolog-bundle": "^3.8",
     "symfony/rate-limiter": "6.3.*",
@@ -44,7 +46,9 @@
     "symfony/uid": "6.3.*",
     "symfony/validator": "6.3.*",
     "symfony/workflow": "6.3.*",
-    "symfony/yaml": "6.3.*"
+    "symfony/yaml": "6.3.*",
+    "twig/extra-bundle": "^3.7",
+    "twig/intl-extra": "^3.7"
   },
   "config": {
     "allow-plugins": {

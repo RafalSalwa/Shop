@@ -8,16 +8,7 @@
     <div class="container">
     <div class="row mt-5">
         {% for plan in plans %}
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ plan.name|capitalize }}</h5>
-                    <p class="card-text">{{ plan.description }}</p>
-                    <a class="btn btn-primary"
-                       href={{ path("plan_index", {id: plan.id}) }}>Check</a>
-                </div>
-            </div>
-        </div>
+        {{ include("plan/partials/card.html.twig") }}
         {% if loop.index == 4 %}
     </div>
     <div class="row mt-5">

@@ -18,13 +18,12 @@ class CartService
     private CartItemFactory $cartItemFactory;
 
     public function __construct(
-        CartSessionStorage     $cartStorage,
-        CartFactory            $orderFactory,
+        CartSessionStorage $cartStorage,
+        CartFactory $orderFactory,
         EntityManagerInterface $entityManager,
-        Security               $security,
-        CartItemFactory        $cartItemFactory
-    )
-    {
+        Security $security,
+        CartItemFactory $cartItemFactory
+    ) {
         $this->cartSessionStorage = $cartStorage;
         $this->cartFactory = $orderFactory;
         $this->entityManager = $entityManager;
@@ -65,10 +64,14 @@ class CartService
     {
         $cart = $this->getCurrentCart();
 
-//        $this->entityManager->remove($cart);
-//        $this->entityManager->flush();
+        $this->cartSessionStorage->removeCart();
+    }
 
-//        $this->cartSessionStorage->removeCart();
-
+    public function confirmCart()
+    {
+        $cart = $this->getCurrentCart();
+        $cart->setStatus(Cart::STATUS_CONFIRMED);
+        $this->entityManager->persist($cart);
+        $this->entityManager->flush();
     }
 }

@@ -1,0 +1,12 @@
+<div class="col-md-3 col-sm-4 col-xs-6">
+    <div class="card h-100">
+        <div class="card-body text-center">
+            <h5 class="card-title">{{ plan.name|capitalize }}</h5>
+            <p class="card-text">{{ plan.description }}<br/>
+                price: {{ plan.unitPrice(true)|format_currency('USD') }}</p>
+
+            <a class="btn btn-primary"
+               href={{ path("cart_add", {type:"plan", id: plan.id}) }}>Add to cart</a>
+        </div>
+    </div>
+</div>

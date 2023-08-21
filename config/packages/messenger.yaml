@@ -22,7 +22,7 @@ framework:
     routing:
       # Route your messages to the transports
       'App\Message\AccountCreated': async
-
+      'App\Message\OrderMessage': async
 # when@test:
 #    framework:
 #        messenger:

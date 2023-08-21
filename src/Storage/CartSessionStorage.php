@@ -30,8 +30,6 @@ class CartSessionStorage
             'user' => $this->getUser(),
             'status' => Cart::STATUS_CREATED,
         ], ['createdAt' => 'DESC']);
-        if ($sorted) {
-        }
 
         return $cart;
     }

@@ -25,6 +25,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class Cart
 {
     public const STATUS_CREATED = 'created';
+    const STATUS_CONFIRMED = 'confirmed';
+    const STATUS_CANCELLED = 'cancelled';
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]

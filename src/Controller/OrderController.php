@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Entity\Payment;
-use App\Form\DecisionType;
+use App\Entity\OrderStatus;
+use App\Form\PaymentType;
 use App\Service\CartService;
 use App\Service\OrderService;
+use App\Service\PaymentService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,25 +27,43 @@ class OrderController extends AbstractController
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
-    public function addToCart(int $id, Request $request, Order $order): Response
+    public function addToCart(
+        int            $id,
+        Request        $request,
+        Order          $order,
+        OrderService   $orderService,
+        PaymentService $paymentService,
+        CartService    $cartService
+    ): Response
     {
-        $payment = new Payment();
+        $payment = $paymentService->createPayment($order);
         $payment->setAmount($order->getAmount());
 
-        $form = $this->createForm(DecisionType::class, $payment);
+        $form = $this->createForm(PaymentType::class, $payment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('yes')->isClicked()) {
-                dd("T");
-            }
-            if ($form->get('no')->isClicked()) {
-                dd("N");
+                $paymentService->confirmPayment($payment);
+                $orderService->confirmOrder($order, $payment);
+                $cartService->confirmCart();
+                $cartService->clearCart();
+                return $this->redirectToRoute("order_summary", [
+                    "id" => $order->getId()
+                ]);
             }
         }
         return $this->render('order/payment.html.twig', [
             'order' => $order,
             'payment' => $payment,
             'form' => $form->createView()
+        ]);
+    }
+
+    #[Route('/order/summary/{id}', name: 'order_summary')]
+    public function summaryOrder(int $id, Order $order): Response
+    {
+        return $this->render('order/summary.html.twig', [
+            'order' => $order
         ]);
     }
 }
