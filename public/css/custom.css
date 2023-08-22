@@ -71,3 +71,14 @@
     }
 }
 
+.card-product-title {
+    min-height: 2rem;
+}
+
+.mt-20 {
+    margin-top: 20px !important;
+}
+
+.mb-20 {
+    margin-bottom: 20px !important;
+}
