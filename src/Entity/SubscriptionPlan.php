@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
+use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -19,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Entity(repositoryClass: PlanRepository::class)]
 #[Table(name: 'plan')]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
+#[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
 class SubscriptionPlan implements CartInsertableInterface
 {
@@ -37,6 +39,8 @@ class SubscriptionPlan implements CartInsertableInterface
 
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isActive = false;
+    #[Column(name: 'is_visible', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $isVisible = false;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private $unitPrice;

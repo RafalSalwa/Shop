@@ -15,7 +15,7 @@ class PlanController extends AbstractController
     #[Route('/plan', name: 'plan_index')]
     public function index(Request $request, PlanRepository $planRepository): Response
     {
-        $plans = $planRepository->findAll();
+        $plans = $planRepository->fetchAvailablePlans();
         return $this->render('plan/index.html.twig', [
             'controller_name' => 'IndexController',
             'plans' => $plans

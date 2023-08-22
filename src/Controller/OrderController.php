@@ -84,8 +84,8 @@ class OrderController extends AbstractController
     public function show(int $id, OrderRepository $orderRepository): Response
     {
         $order = $orderRepository->fetchOrderDetails($id);
-        return $this->render('order/index.html.twig', [
-            'orders' => $order
+        return $this->render('order/details.html.twig', [
+            'order' => $order
         ]);
     }
 }
