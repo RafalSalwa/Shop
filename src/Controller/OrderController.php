@@ -3,8 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Entity\OrderStatus;
+use App\Entity\User;
 use App\Form\PaymentType;
+use App\Repository\OrderRepository;
 use App\Service\CartService;
 use App\Service\OrderService;
 use App\Service\PaymentService;
@@ -12,14 +13,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 class OrderController extends AbstractController
 {
     #[Route('/order/create/', name: 'order_create_pending')]
-    public function createPendingOrder(CartService $cartService, OrderService $orderService): Response
+    public function createPendingOrder(CartService $cartService, OrderService $orderService, PaymentService $paymentService,): Response
     {
         $cart = $cartService->getCurrentCart();
         $order = $orderService->createPending($cart);
+        $orderService->assignDeliveryAddress($order);
+        $payment = $paymentService->createPayment($order);
+        $paymentService->save($payment);
+
         if ($order->getId()) {
             $cartService->clearCart();
         }
@@ -28,7 +34,6 @@ class OrderController extends AbstractController
 
     #[Route('/order/pending/{id}', name: 'order_show')]
     public function addToCart(
-        int            $id,
         Request        $request,
         Order          $order,
         OrderService   $orderService,
@@ -36,9 +41,7 @@ class OrderController extends AbstractController
         CartService    $cartService
     ): Response
     {
-        $payment = $paymentService->createPayment($order);
-        $payment->setAmount($order->getAmount());
-
+        $payment = $order->getLastPayment();
         $form = $this->createForm(PaymentType::class, $payment);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -46,6 +49,7 @@ class OrderController extends AbstractController
                 $paymentService->confirmPayment($payment);
                 $orderService->confirmOrder($order, $payment);
                 $cartService->confirmCart();
+
                 $cartService->clearCart();
                 return $this->redirectToRoute("order_summary", [
                     "id" => $order->getId()
@@ -64,6 +68,24 @@ class OrderController extends AbstractController
     {
         return $this->render('order/summary.html.twig', [
             'order' => $order
+        ]);
+    }
+
+    #[Route('/orders/{page<\d+>}', name: 'order_index')]
+    public function index(int $page, #[CurrentUser] User $user, OrderRepository $orderRepository): Response
+    {
+        $orders = $orderRepository->fetchOrders($user, $page);
+        return $this->render('order/index.html.twig', [
+            'paginator' => $orders
+        ]);
+    }
+
+    #[Route('/order/{id<\d+>}', name: 'order_details')]
+    public function show(int $id, OrderRepository $orderRepository): Response
+    {
+        $order = $orderRepository->fetchOrderDetails($id);
+        return $this->render('order/index.html.twig', [
+            'orders' => $order
         ]);
     }
 }

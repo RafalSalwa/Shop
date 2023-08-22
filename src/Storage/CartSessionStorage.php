@@ -12,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class CartSessionStorage
 {
     public const CART_KEY_NAME = 'cart_id';
+    public const ADDR_KEY_NAME = 'addr_id';
 
     public function __construct(
         private readonly RequestStack   $requestStack,
@@ -55,6 +56,16 @@ class CartSessionStorage
     public function removeCart(): void
     {
         $this->getSession()->remove(self::CART_KEY_NAME);
+    }
+
+    public function setDeliveryAddressId(int $addId)
+    {
+        $this->getSession()->set(self::ADDR_KEY_NAME, $addId);
+    }
+
+    public function getDeliveryAddressId()
+    {
+        return $this->getSession()->get(self::ADDR_KEY_NAME);
     }
 
     /**

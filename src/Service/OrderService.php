@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Address;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Entity\Order;
@@ -22,6 +23,7 @@ class OrderService
     private SerializerInterface $serializer;
     private CartCalculator $cartCalculator;
     private EventDispatcherInterface $eventDispatcher;
+    private CartService $cartService;
 
     public function __construct(
         EntityManagerInterface   $entityManager,
@@ -30,6 +32,7 @@ class OrderService
         SerializerInterface      $serializer,
         CartCalculator           $cartCalculator,
         EventDispatcherInterface $eventDispatcher,
+        CartService              $cartService
     )
     {
         $this->entityManager = $entityManager;
@@ -38,6 +41,7 @@ class OrderService
         $this->serializer = $serializer;
         $this->cartCalculator = $cartCalculator;
         $this->eventDispatcher = $eventDispatcher;
+        $this->cartService = $cartService;
     }
 
     public function createPending(Cart $cart): Order
@@ -73,5 +77,13 @@ class OrderService
         $repository->save($order);
         $event = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($event);
+    }
+
+    public function assignDeliveryAddress(Order $order)
+    {
+        $repository = $this->entityManager->getRepository(Address::class);
+        $addressId = $this->cartService->getDefaultDeliveryAddressId();
+        $address = $repository->findOneBy(["id" => $addressId]);
+        $order->setAddress($address);
     }
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
-    #[Route('/products/{page}', name: 'products_index')]
+    #[Route('/products/{page}', name: 'product_index')]
     public function index(Request $request, int $page, ProductRepository $productRepository): Response
     {
         return $this->render('product/index.html.twig', [
@@ -18,7 +18,7 @@ class ProductController extends AbstractController
         ]);
     }
 
-    #[Route('/product/{id}', name: 'products_id')]
+    #[Route('/product/{id}', name: 'product_details')]
     public function show(Request $request, int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);

@@ -5,22 +5,24 @@
 {% block body %}
     <div class="row mt-5">
         <div class="col-md-9">
-            {% if cart is not empty %}
-            <div class="col-md-12 col-sm-12 col-xs-12">
-                <div class="row mt-12">
-                    {% for item in cart.items %}
-                        {{ include('cart/_item.html.twig') }}
-                    {% endfor %}
+            <section class="pt-4">
+                <div class="container px-lg-3">
+                    <div class="row gx-lg-5">
+                        {% if cart is not empty %}
+                            {% for item in cart.items %}
+                                {% include "cart/partials/card.html.twig" %}
+                            {% endfor %}
+                        {% else %}
+                            Cart is empty
+                        {% endif %}
+                    </div>
                 </div>
-                {% else %}
-                    Cart is empty
-                {% endif %}
-            </div>
+            </section>
         </div>
         <div class="col-md-3">
             {{ include('cart/_summary.html.twig') }}
             <div class="row ml-3 mr-3 mt-4">
-                <a href="{{ path("cart_shipment") }}" class="btn btn-warning input-block-level">Shipping</a>
+                <a href="{{ path("cart_checkout_shipment") }}" class="btn btn-warning input-block-level">Shipping</a>
             </div>
         </div>
     </div>

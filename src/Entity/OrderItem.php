@@ -20,7 +20,7 @@ class OrderItem
     #[Id]
     #[GeneratedValue(strategy: 'AUTO')]
     #[Column(name: 'order_item_id', type: Types::INTEGER, unique: true, nullable: false)]
-    private $id;
+    private int $id;
     #[ManyToOne(targetEntity: Order::class, cascade: ["persist"], inversedBy: 'items')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id')]
     private Order $order;

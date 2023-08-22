@@ -42,11 +42,6 @@ class Product implements CartInsertableInterface
     #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: true)]
     private $unitsOnOrder;
 
-    public function getName()
-    {
-        return $this->name;
-    }
-
     public function getCategoryId()
     {
         return $this->categoryId;
@@ -57,8 +52,11 @@ class Product implements CartInsertableInterface
         return $this->category;
     }
 
-    public function getUnitPrice()
+    public function getUnitPrice($userFriendly = false)
     {
+        if ($userFriendly) {
+            return $this->unitPrice / 100;
+        }
         return $this->unitPrice;
     }
 
@@ -77,5 +75,20 @@ class Product implements CartInsertableInterface
     public function getId()
     {
         return $this->id;
+    }
+
+    public function getDisplayName(): string
+    {
+        return sprintf("%s %s", $this->getTypeName(), $this->getName());
+    }
+
+    public function getTypeName(): string
+    {
+        return 'product';
+    }
+
+    public function getName()
+    {
+        return $this->name;
     }
 }

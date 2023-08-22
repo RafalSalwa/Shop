@@ -18,12 +18,13 @@ class CartService
     private CartItemFactory $cartItemFactory;
 
     public function __construct(
-        CartSessionStorage $cartStorage,
-        CartFactory $orderFactory,
+        CartSessionStorage     $cartStorage,
+        CartFactory            $orderFactory,
         EntityManagerInterface $entityManager,
-        Security $security,
-        CartItemFactory $cartItemFactory
-    ) {
+        Security               $security,
+        CartItemFactory        $cartItemFactory
+    )
+    {
         $this->cartSessionStorage = $cartStorage;
         $this->cartFactory = $orderFactory;
         $this->entityManager = $entityManager;
@@ -74,4 +75,15 @@ class CartService
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
+
+    public function setDefaultDeliveryAddress(int $deliveryAddressId)
+    {
+        $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
+    }
+
+    public function getDefaultDeliveryAddressId(): ?int
+    {
+        return $this->cartSessionStorage->getDeliveryAddressId();
+    }
+
 }

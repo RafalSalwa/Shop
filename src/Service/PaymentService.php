@@ -37,13 +37,20 @@ class PaymentService
         }
         $this->workflow->getMarking($payment);
         $payment->setUser($this->security->getUser());
+        $payment->setAmount($order->getAmount());
         $order->addPayment($payment);
+
         return $payment;
     }
 
     public function confirmPayment(Payment $payment)
     {
         $this->workflow->apply($payment, 'to_confirm');
+        $this->paymentRepository->save($payment);
+    }
+
+    public function save(Payment $payment)
+    {
         $this->paymentRepository->save($payment);
     }
 }

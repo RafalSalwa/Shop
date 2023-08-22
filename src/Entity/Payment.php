@@ -15,15 +15,6 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Uid\Uuid;
 
-enum PaymentStatus: string
-{
-    case PENDING = 'pending';
-    case PROCESSING = 'processing';
-    case COMPLETED = 'completed';
-    case CANCELLED = 'cancelled';
-    case FAILED = 'failed';
-}
-
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment')]
 class Payment
@@ -42,7 +33,7 @@ class Payment
     private ?string $operationNumber;
     #[Column(name: 'operation_type', type: Types::STRING, length: 40)]
     private string $operationType = "payment";
-    #[Column(name: 'amount', type: Types::SMALLINT, nullable: false)]
+    #[Column(name: 'amount', type: Types::INTEGER, nullable: false)]
     private int $amount;
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private $status;

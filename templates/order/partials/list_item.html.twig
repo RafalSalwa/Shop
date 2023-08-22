@@ -1,0 +1,7 @@
+<li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+        <div class="fw-bold"><a href="{{ path("order_details", {id: order.id}) }}">{{ order.id }}</a></div>
+        {{ order.getAmount(true)|format_currency("USD") }}
+    </div>
+    <span class="badge bg-primary rounded-pill">{{ order.createdAt|date('d-m-Y') }}</span>
+</li>

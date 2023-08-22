@@ -40,7 +40,7 @@ class Order
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private string $status;
 
-    #[Column(name: 'amount', type: Types::SMALLINT)]
+    #[Column(name: 'amount', type: Types::INTEGER)]
     private int $amount;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
@@ -59,8 +59,13 @@ class Order
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private ?Collection $payments;
 
-    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, orphanRemoval: true, cascade: ["persist"])]
+    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private $items;
+
+    public function __construct()
+    {
+        $this->payments = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -78,8 +83,11 @@ class Order
         return $this;
     }
 
-    public function getAmount(): int
+    public function getAmount(bool $userFriendly = false): int
     {
+        if ($userFriendly) {
+            return $this->amount / 100;
+        }
         return $this->amount;
     }
 
@@ -157,4 +165,15 @@ class Order
     {
         return $this->payments->last();
     }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setAddress(Address $address)
+    {
+        $this->address = $address;
+    }
+
 }

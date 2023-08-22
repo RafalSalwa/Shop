@@ -50,11 +50,6 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $deletedAt = null;
 
-    public function getName(): ?string
-    {
-        return $this->planName;
-    }
-
     public function setPlanName(?string $planName): self
     {
         $this->planName = $planName;
@@ -172,5 +167,20 @@ class SubscriptionPlan implements CartInsertableInterface
     public function preUpdate(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
+    }
+
+    public function getDisplayName(): string
+    {
+        return sprintf("%s (%s) #%d", $this->getTypeName(), $this->getName(), $this->getId());
+    }
+
+    public function getTypeName(): string
+    {
+        return 'plan';
+    }
+
+    public function getName(): ?string
+    {
+        return $this->planName;
     }
 }

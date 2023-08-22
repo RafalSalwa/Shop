@@ -12,9 +12,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class PaymentController extends AbstractController
+class CheckoutController extends AbstractController
 {
-    #[Route('/cart/step/shipment', name: 'cart_shipment')]
+    #[Route('/cart/checkout/shipment', name: 'cart_checkout_shipment')]
     public function shipment(Request $request, CartService $cartService, CartCalculator $cartCalculator, AddressRepository $repository): Response
     {
         $user = $this->getUser();
@@ -30,9 +30,10 @@ class PaymentController extends AbstractController
             $repository->save($address);
         }
 
-        return $this->render('shipping/step_one.html.twig', [
+        return $this->render('checkout/shipment.html.twig', [
             'form' => $form->createView(),
             "deliveryAddresses" => $user->getDeliveryAddresses(),
+            "defaultAddress" => $cartService->getDefaultDeliveryAddressId(),
             "cart" => $cartService->getCurrentCart(),
             "payment" => $cartCalculator->calculatePayment($cartService->getCurrentCart())
         ]);

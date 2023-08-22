@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -10,6 +11,7 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -46,6 +48,8 @@ class Address
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
     private string $postalCode;
 
+    #[OneToMany(mappedBy: 'address', targetEntity: Order::class)]
+    private Collection $orders;
     #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;

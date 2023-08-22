@@ -6,9 +6,9 @@ use App\Entity\CartItem;
 use App\Manager\CartManager;
 use App\Service\CartCalculator;
 use App\Service\CartService;
-use App\ValueResolver\EntityNameResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
@@ -21,9 +21,8 @@ class CartController extends AbstractController
         #[ValueResolver('cart_item_type')] string $type,
         int                                       $id,
         CartService                               $cartService,
-        EntityManagerInterface                    $entityManager,
-        EntityNameResolver                        $resolver
-    )
+        EntityManagerInterface                    $entityManager
+    ): RedirectResponse
     {
         $entity = $entityManager->getRepository($type)->find($id);
         if (!$entity) {
@@ -32,15 +31,15 @@ class CartController extends AbstractController
 
         $item = $cartService->makeCartItem($entity);
         $cart = $cartService->getCurrentCart();
-
         $cart->addItem($item);
+
         $cartService->save($cart);
-        $this->addFlash("notice", "successfully added item to cart");
-        return $this->redirectToRoute('products_id', ['id' => $id]);
+        $this->addFlash("notice", "successfully added " . $entity->getDisplayName() . " to cart");
+        return $this->redirectToRoute($entity->getTypeName() . '_details', ['id' => $id]);
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
-    public function removeFromCart(CartItem $item, CartService $cartService,)
+    public function removeFromCart(CartItem $item, CartService $cartService,): RedirectResponse
     {
         $cart = $cartService->getCurrentCart();
         if ($cart->getItems()->contains($item)) {
@@ -48,6 +47,14 @@ class CartController extends AbstractController
         }
         $cartService->save($cart);
         return $this->redirectToRoute('cart_index');
+    }
+
+    #[Route('/cart/set_delivery_address', name: 'cart_delivery_address_set')]
+    public function deliveryAddress(Request $request, CartService $cartService): Response
+    {
+        $deliveryAddressId = $request->request->get("addrId");
+        $cartService->setDefaultDeliveryAddress($deliveryAddressId);
+        return new Response("ok");
     }
 
     #[Route('/cart/', name: 'cart_index')]

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\User;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,7 +23,7 @@ class LoginController extends AbstractController
     }
 
     #[Route('/login', name: 'app_login')]
-    public function index(AuthenticationUtils $authenticationUtils): Response
+    public function login(AuthenticationUtils $authenticationUtils): Response
     {
         if ($this->getUser()) {
             return $this->redirectToRoute('app_index');
@@ -35,6 +36,13 @@ class LoginController extends AbstractController
             'error' => $error,
             'last_username' => $lastUsername,
         ]);
+    }
+
+    #[Route('/logout', name: 'app_logout')]
+    public function logout(Security $security): Response
+    {
+        $response = $security->logout();
+        $this->redirectToRoute("app_login");
     }
 
     private function createTestUser()

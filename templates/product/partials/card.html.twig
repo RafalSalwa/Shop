@@ -1,0 +1,15 @@
+<div class="col-lg-6 col-xxl-3 mb-5">
+    <div class="card bg-light border-0 h-100">
+        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+            <h3 class="fs-6 fw-bold card-product-title mt-20 mb-20">{{ product.name|capitalize }}</h3>
+            <p class="mb-0">{{ product.category.name }}<br/>
+                price: {{ product.unitPrice(true)|format_currency('USD') }}
+            </p>
+            {% if add_to_cart == "true" %}
+                <a class="btn btn-primary" href={{ path("cart_add", {type:"product", id: product.id}) }}>Add to cart</a>
+            {% else %}
+                <a class="btn btn-primary" href={{ path("product_details", { id: product.id}) }}>Show</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

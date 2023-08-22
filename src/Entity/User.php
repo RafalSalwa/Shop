@@ -88,6 +88,21 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this;
     }
 
+    public function getCarts(): ?Collection
+    {
+        return $this->carts;
+    }
+
+    public function getPayments(): ?Collection
+    {
+        return $this->payments;
+    }
+
+    public function getOrders(): ?Collection
+    {
+        return $this->orders;
+    }
+
     public function addDeliveryAddress(Address $address): void
     {
         $address->setUser($this);

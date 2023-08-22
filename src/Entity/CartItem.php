@@ -25,12 +25,12 @@ use JMS\Serializer\SerializerInterface;
 #[HasLifecycleCallbacks]
 #[InheritanceType('JOINED')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
-class CartItem implements SerializerInterface
+class CartItem implements SerializerInterface, CartItemInterface
 {
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
-    private ?int $id = null;
+    private int $id;
 
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
@@ -43,7 +43,7 @@ class CartItem implements SerializerInterface
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $updatedAt;
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
     }
@@ -79,9 +79,9 @@ class CartItem implements SerializerInterface
         return $this;
     }
 
-    public function getName()
+    public function getName(): string
     {
-        return 'asd';
+        return 'cart_item';
     }
 
     public function getQuantity(): ?int
@@ -155,5 +155,15 @@ class CartItem implements SerializerInterface
     public function deserialize(string $data, string $type, string $format, ?DeserializationContext $context = null)
     {
         // TODO: Implement deserialize() method.
+    }
+
+    public function getTypeName(): string
+    {
+        // TODO: Implement getTypeName() method.
+    }
+
+    public function getDisplayName(): string
+    {
+        // TODO: Implement getDisplayName() method.
     }
 }
