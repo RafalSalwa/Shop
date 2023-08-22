@@ -1,0 +1,13 @@
+<div class="col-md-3 col-sm-4 col-xs-6">
+    <div class="card h-100">
+        <div class="card-body text-center">
+            <h5 class="card-title">{{ item.destinationEntity.name|capitalize }}
+                ({{ item.quantity }})</h5>
+            <p class="card-text">{{ item.type }} </p>
+            <a class="btn btn-primary"
+               href="/{{ item.type }}/{{ item.getDestinationEntity.id }}">Check</a>
+            <br/>
+            <a class="btn btn-primary" href="{{ path("cart_remove", {id: item.id}) }}" role="button">Remove</a>
+        </div>
+    </div>
+</div>

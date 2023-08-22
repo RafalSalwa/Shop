@@ -1,0 +1,30 @@
+{% extends 'logged.html.twig' %}
+
+{% block title %}Hello IndexController!{% endblock %}
+
+{% block body %}
+    {% if app.debug %}
+        <header class="py-5">
+            <div class="container px-lg-5">
+                <div class="p-2 p-lg-1 bg-light rounded-3 text-center">
+                    <div class="m-4 m-lg-5">
+                        <p class="fs-5">Subscriptions, like Products, are part of Doctrine Class Table Inheritance, Base
+                            class for those
+                            entities is App\Entity\CartItem. <br/> App\Entity\SubscriptionPlan Also implements two
+                            interfaces: CartInsertableInterface, CartItemInterface
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </header>
+    {% endif %}
+    <section class="pt-4">
+        <div class="container px-lg-5">
+            <div class="row gx-lg-5">
+                {% for plan in plans %}
+                    {% include "plan/partials/card.html.twig" with {"add_to_cart": "false"} %}
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

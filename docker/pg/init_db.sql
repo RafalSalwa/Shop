@@ -96,6 +96,48 @@ create table IF NOT EXISTS orders
     );
 
 
+CREATE TABLE public.cart_item
+(
+    cart_item_id integer NOT NULL,
+    user_id integer NOT NULL,
+    plan_id integer NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone,
+    CONSTRAINT cart_item_id_pk PRIMARY KEY (cart_item_id),
+    CONSTRAINT cart_item_plan FOREIGN KEY (plan_id)
+        REFERENCES public.plan (plan_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID,
+    CONSTRAINT cart_item_user FOREIGN KEY (user_id)
+        REFERENCES public.intrv_user (user_id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+        NOT VALID
+);
+
+ALTER TABLE IF EXISTS public.cart_item
+    OWNER to interview;
+
+CREATE TABLE public.order_pending
+(
+    order_id integer NOT NULL,
+    user_id integer NOT NULL,
+    cart_id integer NOT NULL,
+    CONSTRAINT order_pending_id_pk PRIMARY KEY (order_id)
+);
+
+ALTER TABLE IF EXISTS public.order_pending
+    OWNER to interview;
+
+CREATE TABLE public.cart
+(
+    cart_id integer,
+    cart_item_id integer
+);
+
+ALTER TABLE IF EXISTS public.cart
+    OWNER to interview;
 
 INSERT INTO intrv_user (user_id, username, pass, first_name, last_name, email, phone_no, roles, verification_code, is_verified,
                         is_active, created_at, updated_at, last_login, deleted_at)

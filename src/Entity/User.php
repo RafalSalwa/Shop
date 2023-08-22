@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -18,6 +19,7 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user')]
@@ -37,34 +39,87 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $lastname = null;
     #[Column(name: 'email', type: Types::STRING, length: 255)]
-    private $email;
+    private string $email;
     #[Column(name: 'phone_no', type: Types::STRING, length: 11, nullable: true)]
-    private $phoneNo;
+    private ?string $phoneNo = null;
     #[Column(name: 'roles', type: Types::JSON, length: 255, nullable: true)]
-    private $roles;
+    private ?array $roles = null;
     #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
-    private $verificationCode;
-    #[Column(name: 'is_verified', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
-    private $verified;
-    #[Column(name: 'is_active', type: Types::BOOLEAN, length: 255, options: ['default' => false])]
-    private $active;
+    private string $verificationCode;
+    #[Column(name: 'is_verified', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $verified;
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
+    private bool $active;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private $createdAt;
+    private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $updatedAt;
+    private ?DateTime $updatedAt = null;
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $deletedAt;
+    private ?DateTime $deletedAt = null;
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private $lastLogin;
+    private ?DateTime $lastLogin = null;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
-    private Collection $oAuth2UserConsents;
+    private ?Collection $oAuth2UserConsents = null;
+    #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    private ?Collection $carts = null;
+
+    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
+    private ?Collection $deliveryAddresses;
+
+    #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
+    private ?Collection $payments = null;
+    #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
+    private ?Collection $orders = null;
+
+    public function __construct()
+    {
+        $this->carts = new ArrayCollection();
+        $this->deliveryAddresses = new ArrayCollection();
+    }
+
+    public function getDeliveryAddresses(): Collection
+    {
+        return $this->deliveryAddresses;
+    }
+
+    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): User
+    {
+        $this->deliveryAddresses = $deliveryAddresses;
+        return $this;
+    }
+
+    public function getCarts(): ?Collection
+    {
+        return $this->carts;
+    }
+
+    public function getPayments(): ?Collection
+    {
+        return $this->payments;
+    }
+
+    public function getOrders(): ?Collection
+    {
+        return $this->orders;
+    }
+
+    public function addDeliveryAddress(Address $address): void
+    {
+        $address->setUser($this);
+        $this->deliveryAddresses[] = $address;
+    }
+
+    public function removeDeliveryAddress(Address $address): void
+    {
+        $this->deliveryAddresses->removeElement($address);
+    }
 
     public function getId(): int
     {
         return $this->user_id;
     }
 
-    public function setId(int $id): User
+    public function setId(int $id): self
     {
         $this->user_id = $id;
 
@@ -76,7 +131,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -88,7 +143,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
 
@@ -100,7 +155,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): User
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
@@ -112,7 +167,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): User
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -158,6 +213,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         }
 
         $roles[] = 'ROLE_USER';
+
         return array_unique($roles);
     }
 
@@ -287,13 +343,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     }
 
     #[PrePersist]
-    public function onPrePersist()
+    public function onPrePersist(): void
     {
         $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
-    public function onPreUpdate()
+    public function onPreUpdate(): void
     {
         $this->updatedAt = new DateTime('now');
     }

@@ -1,0 +1,65 @@
+{% extends 'logged.html.twig' %}
+{% block title %}Shipping{% endblock %}
+{% block body %}
+    <div class="row mt-5">
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-sm-12">
+                    {% if deliveryAddresses is not empty %}
+                        {{ include("shipping/_addr.html.twig") }}
+                    {% else %}
+                        No addressess found. Please add new delivery address
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-4 col-xs-6 mt-2">
+                <a class="btn btn-primary"
+                   href="{{ path("cart_shipment_address_new") }}">New address</a>
+            </div>
+            <div class="row my-5">
+                <div class="col-sm-12">
+                    Cart Items
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    {{ include("cart/_item_simple.html.twig") }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 ">
+            <div class="border rounded">
+                {{ include('cart/_summary.html.twig') }}
+                <div class="container ml-3 mr-3 mt-4">
+                    <div class="row">
+                        <div class="col-md-12 mb-5">
+                            <a href="{{ path("order_create_pending") }}"
+                               class=" mr-2 ml-2 btn btn-block btn-warning ">summary</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('input[type="radio"]').click(function () {
+                $el = $(this)
+                var addrId = $(this).val();
+                console.log(addrId)
+                $.ajax({
+                    url: "{{ path('cart_delivery_address_set') }}",
+                    method: "POST",
+                    data: {"addrId": addrId},
+                    success: function (data) {
+                        $('input[type="radio"]').parent().css("background-color", "white")
+                        $el.parent().fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+                        $el.parent().css("background-color", "lightblue")
+                        console.log($el)
+                    }
+                });
+            });
+        });
+    </script>
+
+{% endblock %}

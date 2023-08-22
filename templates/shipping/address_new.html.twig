@@ -1,0 +1,29 @@
+{% extends 'logged.html.twig' %}
+{% block title %}Delivery Address{% endblock %}
+
+{% block body %}
+    <div class="row mt-5">
+        <div class="col-md-3 col-sm-4 col-xs-6">
+            <a class="btn btn-primary"
+               href="{{ path("cart_shipment") }}">Return</a>
+        </div>
+    </div>
+    <div class="container-fluid text-left">
+        <div class="row content mt-5">
+            <div class="col-sm-4 sidenav"></div>
+            <div class="col-sm-4 text-left">
+                {{ form_start(form) }}
+                {{ form_row(form.firstName) }}
+                {{ form_row(form.lastName) }}
+                {{ form_row(form.addressLine1) }}
+                {{ form_row(form.addressLine2) }}
+                {{ form_row(form.city) }}
+                {{ form_row(form.state) }}
+                {{ form_row(form.postalCode) }}
+                {{ form_end(form) }}
+            </div>
+            <div class="col-sm-4 sidenav">
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<div class="container ">
+    <div class="row mb-4">
+        <div class="text-center col-lg">Summary</div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Total:
+        </div>
+        <div class="col-sm text-end">
+            {{ payment.total }} $
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Net:
+        </div>
+        <div class="col-sm text-end">
+            {{ payment.net }} $
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm">
+            Tax
+        </div>
+        <div class="col-sm text-end">
+            {{ payment.vat }} $
+        </div>
+    </div>
+</div>

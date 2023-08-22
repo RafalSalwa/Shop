@@ -1,0 +1,46 @@
+framework:
+  workflows:
+    order_processing:
+      type: 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\Entity\Order
+      initial_marking: !php/const App\Entity\Order::PENDING
+      places:
+        - !php/const App\Entity\Order::PENDING
+        - !php/const App\Entity\Order::PROCESSING
+        - !php/const App\Entity\Order::COMPLETED
+        - !php/const App\Entity\Order::CANCELLED
+      transitions:
+        to_completed:
+          from: !php/const App\Entity\Order::PENDING
+          to: !php/const App\Entity\Order::COMPLETED
+        to_cancel:
+          from: [ !php/const App\Entity\Order::PENDING, !php/const App\Entity\Order::PROCESSING ]
+          to: !php/const App\Entity\Order::CANCELLED
+    payment_processing:
+      type: 'state_machine'
+      audit_trail:
+        enabled: true
+      marking_store:
+        type: 'method'
+        property: 'status'
+      supports:
+        - App\Entity\Payment
+      initial_marking: !php/const App\Entity\Payment::PENDING
+      places:
+        - !php/const App\Entity\Payment::PENDING
+        - !php/const App\Entity\Payment::PROCESSING
+        - !php/const App\Entity\Payment::COMPLETED
+        - !php/const App\Entity\Payment::CANCELLED
+      transitions:
+        to_confirm:
+          from: !php/const App\Entity\Payment::PENDING
+          to: !php/const App\Entity\Payment::COMPLETED
+        to_cancel:
+          from: !php/const App\Entity\Payment::PENDING
+          to: !php/const App\Entity\Payment::CANCELLED
