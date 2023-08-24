@@ -12,7 +12,9 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
@@ -71,10 +73,25 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private ?Collection $orders = null;
 
+    #[OneToOne(targetEntity: Subscription::class, fetch: "EAGER")]
+    #[JoinColumn(name: "subscription_id", referencedColumnName: 'subscription_id', nullable: true)]
+    private ?Subscription $subscription;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(Subscription $subscription): User
+    {
+        $this->subscription = $subscription;
+        return $this;
     }
 
     public function getDeliveryAddresses(): Collection

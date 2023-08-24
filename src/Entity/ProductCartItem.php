@@ -28,4 +28,9 @@ class ProductCartItem extends CartItem
     {
         $this->destinationEntity = $product;
     }
+
+    public function getItemName(): string
+    {
+        return $this->destinationEntity->getName();
+    }
 }

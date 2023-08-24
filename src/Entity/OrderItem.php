@@ -27,6 +27,8 @@ class OrderItem
 
     #[Column(name: 'cart_item_entity', type: Types::JSON)]
     private string $cartItem;
+    #[Column(name: 'cart_item_type', type: Types::STRING, length: 25)]
+    private string $itemType;
 
     public function getOrder(): Order
     {
@@ -50,9 +52,15 @@ class OrderItem
         return $this;
     }
 
-    public function __toString(): string
+    public function getItemType(): string
     {
-        return "a";
+        return $this->itemType;
+    }
+
+    public function setItemType(string $itemType): OrderItem
+    {
+        $this->itemType = $itemType;
+        return $this;
     }
 
 }

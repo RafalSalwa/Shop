@@ -28,4 +28,9 @@ class SubscriptionPlanCartItem extends CartItem
     {
         $this->destinationEntity = $plan;
     }
+
+    public function getItemName(): string
+    {
+        return $this->destinationEntity->getName();
+    }
 }

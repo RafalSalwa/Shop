@@ -10,8 +10,8 @@
             <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                 <div class="m-4 m-lg-5">
                     <h1 class="display-5 fw-bold">A warm welcome!</h1>
-                    <p class="fs-5">To interview App based on symfony 6.3 with doctrine, twig, bootstrap, OAuth2,
-                        gRPC, Redis and more.</p>
+                    <p class="fs-5">To interview App based on symfony 6.3 with PHP 8.2 and nginx 1.25, based on docker
+                        containers</p>
                 </div>
             </div>
         </div>
@@ -25,16 +25,9 @@
                 <div class="col-lg-6 col-xxl-4 mb-5">
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Cache</h2>
-                            <p class="mb-0">With Bootstrap 5, we've created a fresh new layout for this template!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Doctrine</h2>
-                            <p class="mb-0">As always, Start Bootstrap has a powerful collectin of free templates.</p>
+                            <p class="mb-0">Postgress as DB, <br/>Entities have #[Attribute] mappings, <br/>Class Table
+                                inheritance for CartItems (Products, Subscriptions)<br/></p>
                         </div>
                     </div>
                 </div>
@@ -42,7 +35,16 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Rest</h2>
-                            <p class="mb-0">The heroic part of this template is the jumbotron hero header!</p>
+                            <p class="mb-0">Rest server used for fetching and adding products and subscriptions</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xxl-4 mb-5">
+                    <div class="card bg-light border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <h2 class="fs-4 fw-bold mt-20 mb-20">gRPC</h2>
+                            <p class="mb-0">Test functionality that allow to create, verify and authentication via gRPC
+                                server written in Go.</p>
                         </div>
                     </div>
                 </div>
@@ -50,7 +52,7 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">OAuth2</h2>
-                            <p class="mb-0">We've created some custom feature boxes using Bootstrap icons!</p>
+                            <p class="mb-0">Authorization to resources that allow to read user account and cart</p>
                         </div>
                     </div>
                 </div>
@@ -58,16 +60,8 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Messenger</h2>
-                            <p class="mb-0">We keep our dependencies up to date and squash bugs as they come!</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Swagger</h2>
-                            <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since
-                                2013!</p>
+                            <p class="mb-0">used to send events that can be generated in backend (Invoices, emails,
+                                notifications)</p>
                         </div>
                     </div>
                 </div>
@@ -75,8 +69,9 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Workflows</h2>
-                            <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since
-                                2013!</p>
+                            <p class="mb-0">State machine implementation <br/>with flow controll for <br/>Order state
+                                change
+                                (processing,completed,cancelled)<br/> Payment (processing,completed,cancelled)</p>
                         </div>
                     </div>
                 </div>
@@ -84,8 +79,8 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Resolvers & Mappers</h2>
-                            <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since
-                                2013!</p>
+                            <p class="mb-0">Sample usage of data resolvers for controllers actions that map doctrine CTI
+                                classes ito human-readable names</p>
                         </div>
                     </div>
                 </div>
@@ -93,8 +88,16 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">Voters</h2>
-                            <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since
-                                2013!</p>
+                            <p class="mb-0">Authorization to add_to_cart items based on subscription level and
+                                access</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xxl-4 mb-5">
+                    <div class="card bg-light border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <h2 class="fs-4 fw-bold mt-20 mb-20">Swagger</h2>
+                            <p class="mb-0">Docs for API for Products, subscriptions and cart</p>
                         </div>
                     </div>
                 </div>
@@ -102,8 +105,27 @@
                     <div class="card bg-light border-0 h-100">
                         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
                             <h2 class="fs-4 fw-bold mt-20 mb-20">PHP CS-Fixer, PHPStan, Psalm</h2>
-                            <p class="mb-0">Start Bootstrap has been the leader in free Bootstrap templates since
-                                2013!</p>
+                            <p class="mb-0">Coding standards and configuration files, Following symfony rules for Psalm
+                                and PHPStan, following PSR-12 for cs-Fixer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xxl-4 mb-5">
+                    <div class="card bg-light border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <h2 class="fs-4 fw-bold mt-20 mb-20">PHP Unit, Behat</h2>
+                            <p class="mb-0">Coding standards and configuration files, Following symfony rules for Psalm
+                                and PHPStan, following PSR-12 for cs-Fixer</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xxl-4 mb-5">
+                    <div class="card bg-light border-0 h-100">
+                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
+                            <h2 class="fs-4 fw-bold mt-20 mb-20">Sessions & Cache</h2>
+                            <p class="mb-0">Statefull part of app is based on sessions with Redis Adapter, Separate
+                                cache pool manages authentication<br/> Cart is based on Doctrine and cache for faster
+                                reads</p>
                         </div>
                     </div>
                 </div>

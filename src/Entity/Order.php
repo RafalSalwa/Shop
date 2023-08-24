@@ -62,9 +62,27 @@ class Order
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
     private $items;
 
+    private int $netAmount = 0;
+    private int $vatAmount = 0;
+
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+    }
+
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    public function getAddress(): ?Address
+    {
+        return $this->address;
+    }
+
+    public function setAddress(Address $address)
+    {
+        $this->address = $address;
     }
 
     public function getId()
@@ -97,6 +115,31 @@ class Order
         return $this;
     }
 
+    public function getNetAmount(bool $humanFriendly)
+    {
+        if ($humanFriendly) {
+            return number_format(($this->netAmount / 100), 2, '.', ' ');
+        }
+        return $this->netAmount;
+    }
+
+    public function setNetAmount(int $amount)
+    {
+        $this->netAmount = $amount;
+    }
+
+    public function getVatAmount(bool $humanFriendly)
+    {
+        if ($humanFriendly) {
+            return number_format(($this->vatAmount / 100), 2, '.', ' ');
+        }
+        return $this->vatAmount;
+    }
+
+    public function setVatAmount(int $amount)
+    {
+        $this->vatAmount = $amount;
+    }
 
     public function getItems(): Collection
     {
@@ -169,11 +212,6 @@ class Order
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
-    }
-
-    public function setAddress(Address $address)
-    {
-        $this->address = $address;
     }
 
 }

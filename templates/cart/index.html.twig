@@ -9,9 +9,11 @@
                 <div class="container px-lg-3">
                     <div class="row gx-lg-5">
                         {% if cart is not empty %}
-                            {% for item in cart.items %}
-                                {% include "cart/partials/card.html.twig" %}
-                            {% endfor %}
+                            <div class="list-group">
+                                {% for item in cart.items %}
+                                    {% include "cart/partials/_item_simple.html.twig" %}
+                                {% endfor %}
+                            </div>
                         {% else %}
                             Cart is empty
                         {% endif %}

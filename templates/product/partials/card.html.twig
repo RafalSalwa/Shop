@@ -3,12 +3,25 @@
         <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
             <h3 class="fs-6 fw-bold card-product-title mt-20 mb-20">{{ product.name|capitalize }}</h3>
             <p class="mb-0">{{ product.category.name }}<br/>
-                price: {{ product.unitPrice(true)|format_currency('USD') }}
+                price: {{ product.unitPrice(true)|format_currency('USD') }}<br/>
+                stock: {{ product.unitsInStock }}
             </p>
-            {% if add_to_cart == "true" %}
-                <a class="btn btn-primary" href={{ path("cart_add", {type:"product", id: product.id}) }}>Add to cart</a>
+            {% if product.unitsInStock > 0 %}
+                {% if is_granted('ADD_TO_CART', product) %}
+                    {% if add_to_cart == "true" %}
+                        <a class="btn btn-primary" href={{ path("cart_add", {type:"product", id: product.id}) }}>Add to
+                            cart</a>
+                    {% else %}
+                        <a class="btn btn-primary" href={{ path("product_details", { id: product.id}) }}>Show</a>
+                    {% endif %}
+                {% else %}
+                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
+                          title="Higher subscription plan required({{ product.getRequiredSubscription().getName() }})">
+                        <button class="btn btn-primary" type="button" disabled>Show</button>
+                    </span>
+                {% endif %}
             {% else %}
-                <a class="btn btn-primary" href={{ path("product_details", { id: product.id}) }}>Show</a>
+                <a class="btn btn-primary disabled" href="#">No stock</a>
             {% endif %}
         </div>
     </div>

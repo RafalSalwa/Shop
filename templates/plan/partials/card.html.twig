@@ -5,10 +5,18 @@
             <p class="mb-0">{{ plan.description }}<br/>
                 price: {{ plan.unitPrice(true)|format_currency('USD') }}
             </p>
-            {% if add_to_cart == "true" %}
-                <a class="btn btn-primary" href={{ path("cart_add", {type:"plan", id: plan.id}) }}>Add to cart</a>
+            {% if is_granted('ADD_TO_CART', plan) %}
+
+                {% if add_to_cart == "true" %}
+                    <a class="btn btn-primary" href={{ path("cart_add", {type:"plan", id: plan.id}) }}>Add to cart</a>
+                {% else %}
+                    <a class="btn btn-primary" href={{ path("plan_details", { id: plan.id}) }}>Show</a>
+                {% endif %}
             {% else %}
-                <a class="btn btn-primary" href={{ path("plan_details", { id: plan.id}) }}>Show</a>
+                <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
+                      title="You cannot buy lower plan that You already have">
+                        <button class="btn btn-primary" type="button" disabled>Show</button>
+                    </span>
             {% endif %}
         </div>
     </div>

@@ -17,8 +17,36 @@ class ProductRepository extends ServiceEntityRepository
     public function getPaginated(int $page)
     {
         $qb = $this->createQueryBuilder('p')
+            ->select("p", "s")
+            ->innerJoin("p.requiredSubscription", "s")
+            ->where("p.unitsInStock > 0")
             ->orderBy('p.id', 'DESC');
 
         return (new Paginator($qb))->paginate($page);
     }
+
+    public function decreaseQty(Product $product)
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->update($this->getEntityName(), 'p')
+            ->set('p.unitsInStock', $product->getUnitsInStock() - 1)
+            ->where('p.id = :id')
+            ->setParameter('id', $product->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function increaseQty(Product $product, $qty)
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->update($this->getEntityName(), 'p')
+            ->set('p.unitsInStock', $product->getUnitsInStock() + $qty)
+            ->where('p.id = :id')
+            ->setParameter('id', $product->getId())
+            ->getQuery()
+            ->execute();
+    }
+
 }

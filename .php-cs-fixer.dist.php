@@ -15,6 +15,19 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
+        'array_syntax' => [
+            'syntax' => 'short',
+        ],
+        'braces' => [
+            'allow_single_line_closure' => true,
+        ],
+        'ordered_imports' => true,
+        'modernize_types_casting' => true,
+        'phpdoc_add_missing_param_annotation' => [
+            'only_untyped' => true,
+        ],
+        'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
+        'declare_strict_types' => true,
         'linebreak_after_opening_tag' => true,
         'mb_str_functions' => true,
         'no_php4_constructor' => true,
@@ -24,8 +37,10 @@ return (new PhpCsFixer\Config())
         'php_unit_strict' => true,
         'phpdoc_order' => true,
         'strict_comparison' => true,
+        'semicolon_after_instruction' => true,
         'strict_param' => true,
         'blank_line_between_import_groups' => false,
+        'ternary_to_null_coalescing' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__.'/var/.php-cs-fixer.cache');
+    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache');

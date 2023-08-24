@@ -137,6 +137,14 @@ class Cart
         });
     }
 
+    public function itemTypeExists(CartItem $cartItem): bool
+    {
+        /* @var CartItem $element */
+        return $this->getItems()->exists(function ($key, $element) use ($cartItem) {
+            return $element::class === $cartItem::class;
+        });
+    }
+
     public function getUser(): User
     {
         return $this->user;

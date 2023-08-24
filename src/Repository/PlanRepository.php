@@ -38,4 +38,13 @@ class PlanRepository extends ServiceEntityRepository
         $query->enableResultCache(86400, 'subscription_plans');
         return $query->getResult();
     }
+
+    public function createSubscription(string $string)
+    {
+    }
+
+    public function getByName(string $type)
+    {
+        return $this->findOneBy(["planName" => strtolower($type)]);
+    }
 }

@@ -27,14 +27,18 @@ RUN apt update && apt install -y --no-install-recommends \
     && echo 'alias sf="php bin/console"' >> ~/.bashrc
 
 #RUN pecl install grpc protobuf
-RUN pecl install amqp redis && docker-php-ext-enable amqp
+RUN pecl install amqp && docker-php-ext-enable amqp \
+    && pecl install -o -f redis \
+    &&  rm -rf /tmp/pear \
+    &&  docker-php-ext-enable redis
 #RUN docker-php-ext-enable grpc protobuf
 
 RUN docker-php-ext-configure intl \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
-    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql
+    && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
+    && docker-php-ext-configure sysvsem
 
-RUN docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath
+RUN docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath sysvsem
 
 #RUN git clone -b v1.53.1 https://github.com/grpc/grpc && \
 #    cd grpc && git submodule update --init && \

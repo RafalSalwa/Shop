@@ -31,7 +31,7 @@ security:
       form_login:
         login_path: app_login
         check_path: app_login
-        enable_csrf: true
+        enable_csrf: false
         default_target_path: app_index
         use_referer: true
       logout:
@@ -39,12 +39,11 @@ security:
         target: app_index
 
   access_control:
-    - { path: ^/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/authorize, roles: PUBLIC_ACCESS }
     - { path: ^/login, role: PUBLIC_ACCESS }
     - { path: ^/token, role: PUBLIC_ACCESS }
     - { path: ^/.well-known, roles: PUBLIC_ACCESS }
     - { path: ^/api/test, role: ROLE_OAUTH2_EMAIL }
-    - { path: ^/, role: ROLE_USER }
 
 when@test:
   security:

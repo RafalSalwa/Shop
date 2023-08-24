@@ -29,7 +29,7 @@ class PaymentService
         $this->paymentRepository = $paymentRepository;
     }
 
-    public function createPayment(Order $order): Payment
+    public function createPendingPayment(Order $order): Payment
     {
         $payment = $order->getLastPayment();
         if (!$payment) {
@@ -45,7 +45,9 @@ class PaymentService
 
     public function confirmPayment(Payment $payment)
     {
-        $this->workflow->apply($payment, 'to_confirm');
+        if ($this->workflow->can($payment, 'to_confirm')) {
+            $this->workflow->apply($payment, 'to_confirm');
+        }
         $this->paymentRepository->save($payment);
     }
 

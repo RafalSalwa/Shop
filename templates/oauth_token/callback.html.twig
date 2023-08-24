@@ -1,0 +1,77 @@
+{% extends 'logged.html.twig' %}
+
+{% block title %}Hello IndexController!{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-8">
+            <table class="table table-bordered">
+                <thead>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Access Token</td>
+                    <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                        class="p-2"></td>
+                </tr>
+                <tr>
+                    <td>Refresh Token</td>
+                    <td id="refresh_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                        class="p-2"></td>
+                </tr>
+                <tr>
+                    <td>type</td>
+                    <td id="token_type" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                        class="p-2"></td>
+                </tr>
+                <tr>
+                    <td>Expires in</td>
+                    <td id="expires_in" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                        class="p-2"></td>
+                </tr>
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+    Try It out!
+    <button class="btn btn-primary" id="api_test"> Go</button>
+    <div id="api_test_result"></div>
+    <script>
+        $.ajax({
+            cache: false,
+            type: "POST",
+            url: "{{ path('oauth2_token', {'response_type':'token'}) }}",
+            data: "grant_type=authorization_code&client_id=testclient&client_secret=testpass&redirect_uri=https://interview.local/callback&code={{ parameters['code'] }}",
+            contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+            success: function (data) {
+                console.log(data.token_type)
+                $("#access_token").text(data.access_token)
+                $("#refresh_token").text(data.refresh_token)
+                $("#token_type").text(data.token_type)
+                $("#expires_in").text(data.expires_in)
+            }
+            ,
+            error: function (xhr, ajaxOptions, thrownError) {
+            }
+        })
+        $("#api_test").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + $("#access_token").text());
+                },
+                url: "{{ path('app_api_test') }}",
+                data: {},
+                success: function (result) {
+                    console.log(result);
+                    $("#api_test_result").text(JSON.stringify(result));
+                },
+                error: function (result) {
+                    alert('error');
+                }
+            });
+        });
+    </script>
+{% endblock %}

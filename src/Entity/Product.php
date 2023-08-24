@@ -16,8 +16,10 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: ProductRepository::class)]
 #[Table(name: 'products')]
-class Product implements CartInsertableInterface
+class Product implements CartInsertableInterface, CartItemInterface
 {
+    public const STOCK_DECREASE = 'decrease';
+    public const STOCK_INCREASE = 'increase';
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'product_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -41,6 +43,16 @@ class Product implements CartInsertableInterface
     private $unitsInStock;
     #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: true)]
     private $unitsOnOrder;
+
+    #[ManyToOne(targetEntity: SubscriptionPlan::class)]
+    #[JoinColumn(referencedColumnName: 'plan_id', nullable: true)]
+    private ?SubscriptionPlan $requiredSubscription;
+
+    public function getRequiredSubscription(): ?SubscriptionPlan
+    {
+        return $this->requiredSubscription;
+    }
+
 
     public function getCategoryId()
     {
@@ -72,7 +84,7 @@ class Product implements CartInsertableInterface
         return $cartItem;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -87,8 +99,63 @@ class Product implements CartInsertableInterface
         return 'product';
     }
 
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getQuantityPerUnit()
+    {
+        return $this->quantityPerUnit;
+    }
+
+    /**
+     * @param mixed $quantityPerUnit
+     * @return Product
+     */
+    public function setQuantityPerUnit($quantityPerUnit)
+    {
+        $this->quantityPerUnit = $quantityPerUnit;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnitsInStock()
+    {
+        return $this->unitsInStock;
+    }
+
+    /**
+     * @param mixed $unitsInStock
+     * @return Product
+     */
+    public function setUnitsInStock($unitsInStock)
+    {
+        $this->unitsInStock = $unitsInStock;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUnitsOnOrder()
+    {
+        return $this->unitsOnOrder;
+    }
+
+    /**
+     * @param mixed $unitsOnOrder
+     * @return Product
+     */
+    public function setUnitsOnOrder($unitsOnOrder)
+    {
+        $this->unitsOnOrder = $unitsOnOrder;
+        return $this;
+    }
+
 }

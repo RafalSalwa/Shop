@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Cart;
+use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
@@ -84,6 +85,15 @@ class CartService
     public function getDefaultDeliveryAddressId(): ?int
     {
         return $this->cartSessionStorage->getDeliveryAddressId();
+    }
+
+    public function checkSubscriptionsCount($item)
+    {
+        $cart = $this->getCurrentCart();
+        $items = $cart->getItems();
+        if ($cart->itemTypeExists($item)) {
+            throw new TooManySubscriptionsException("You can have only one subscription in cart");
+        }
     }
 
 }

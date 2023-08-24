@@ -3,25 +3,25 @@
 namespace App\Service;
 
 use App\Entity\Cart;
-use function bcdiv;
 
 class CartCalculator
 {
-    private int $taxRate = 23;
+    private TaxCalculator $taxCalculator;
+
+    public function __construct(TaxCalculator $taxCalculator)
+    {
+        $this->taxCalculator = $taxCalculator;
+    }
 
     public function calculatePayment(Cart $cart): array
     {
         $total = $this->calculateTotal($cart);
+        $this->taxCalculator->calculateTax($total);
 
-        $vatDivisor = 1 + ($this->taxRate / 100);
-        $netAmount = bcdiv($total, $vatDivisor, 0);
-        $vatAmount = bcsub($total, $netAmount, 0);
-
-        $total = number_format(($total / 100), 2, '.', ' ');
-        $netAmount = number_format(($netAmount / 100), 2, '.', ' ');
-        $vatAmount = number_format(($vatAmount / 100), 2, '.', ' ');
-
-        return ["total" => $total, "vat" => $vatAmount, "net" => $netAmount];
+        return [
+            "total" => $total,
+            "vat" => $this->taxCalculator->getNetAmount(),
+            "net" => $this->taxCalculator->getNetAmount()];
     }
 
     public function calculateTotal(Cart $cart)

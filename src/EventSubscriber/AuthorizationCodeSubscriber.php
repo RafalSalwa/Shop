@@ -46,7 +46,6 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
             if (null !== $request->getSession()->get('consent_granted')) {
                 $event->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()->remove('consent_granted');
-
                 return;
             }
             $response = new RedirectResponse($this->urlGenerator->generate('app_consent', $request->query->all()), 307);

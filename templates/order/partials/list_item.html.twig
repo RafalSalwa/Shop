@@ -1,7 +1,10 @@
-<li class="list-group-item d-flex justify-content-between align-items-start">
-    <div class="ms-2 me-auto">
-        <div class="fw-bold"><a href="{{ path("order_details", {id: order.id}) }}">{{ order.id }}</a></div>
-        {{ order.getAmount(true)|format_currency("USD") }}
+<a href="{{ path("order_details", {id: order.id}) }}"
+   class="list-group-item list-group-item-action flex-column align-items-start">
+    <div class="d-flex w-100 justify-content-between">
+        <h5 class="mb-1">ID: {{ order.id }}</h5>
+        <small>{{ order.createdAt|date('d-m-Y') }}</small>
     </div>
-    <span class="badge bg-primary rounded-pill">{{ order.createdAt|date('d-m-Y') }}</span>
-</li>
+    <p class="mb-1">Status: {{ order.status }}
+        amount: {{ order.getAmount(true)|format_currency("USD") }} status: {{ order.getLastPayment().getStatus() }}</p>
+    <small>Order items {{ order.items.count() }}</small>
+</a>

@@ -36,8 +36,8 @@ class CartItem implements SerializerInterface, CartItemInterface
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     private Cart $cart;
 
-    #[Column(name: 'quantity', type: Types::INTEGER, options: ['default' => '1'])]
-    private ?int $quantity;
+    #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
+    private int $quantity;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -84,7 +84,7 @@ class CartItem implements SerializerInterface, CartItemInterface
         return 'cart_item';
     }
 
-    public function getQuantity(): ?int
+    public function getQuantity(): int
     {
         return $this->quantity;
     }
