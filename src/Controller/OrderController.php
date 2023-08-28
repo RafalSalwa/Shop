@@ -42,6 +42,7 @@ class OrderController extends AbstractController
         CartService    $cartService
     ): Response
     {
+        $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
         $payment = $order->getLastPayment();
         $form = $this->createForm(PaymentType::class, $payment);
         $form->handleRequest($request);
@@ -49,12 +50,16 @@ class OrderController extends AbstractController
             if ($form->get('yes')->isClicked()) {
                 $paymentService->confirmPayment($payment);
                 $orderService->confirmOrder($order);
+
                 $cartService->confirmCart();
 
                 $cartService->clearCart();
                 return $this->redirectToRoute("order_summary", [
                     "id" => $order->getId()
                 ]);
+            }
+            if ($form->get('no')->isClicked()) {
+                return $this->redirectToRoute("order_index", ["page" => 1]);
             }
         }
         return $this->render('order/payment.html.twig', [
@@ -68,9 +73,12 @@ class OrderController extends AbstractController
     public function summaryOrder(int $id, OrderRepository $orderRepository, OrderService $orderService, TaxCalculator $taxCalculator): Response
     {
         $order = $orderRepository->fetchOrderDetails($id);
+
+        $orderService->proceedSubscriptionsIfAny($order);
         $orderService->deserializeOrderItems($order);
-        $taxCalculator->calculateOrderTax($order);
         
+        $taxCalculator->calculateOrderTax($order);
+
         return $this->render('order/summary.html.twig', [
             'order' => $order
         ]);

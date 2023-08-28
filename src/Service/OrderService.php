@@ -14,6 +14,7 @@ use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
+use MyNamespace\MyObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -27,6 +28,7 @@ class OrderService
     private CartCalculator $cartCalculator;
     private EventDispatcherInterface $eventDispatcher;
     private CartService $cartService;
+    private SubscriptionService $subscriptionService;
 
     public function __construct(
         EntityManagerInterface   $entityManager,
@@ -35,7 +37,8 @@ class OrderService
         SerializerInterface      $serializer,
         CartCalculator           $cartCalculator,
         EventDispatcherInterface $eventDispatcher,
-        CartService              $cartService
+        CartService              $cartService,
+        SubscriptionService      $subscriptionService
     )
     {
         $this->entityManager = $entityManager;
@@ -45,6 +48,7 @@ class OrderService
         $this->cartCalculator = $cartCalculator;
         $this->eventDispatcher = $eventDispatcher;
         $this->cartService = $cartService;
+        $this->subscriptionService = $subscriptionService;
     }
 
     public function createPending(Cart $cart): Order
@@ -81,6 +85,8 @@ class OrderService
 
         $event = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($event);
+
+//        $this->subscriptionService->assignSubscription();
     }
 
     public function assignDeliveryAddress(Order $order)
@@ -99,11 +105,22 @@ class OrderService
                 'plan' => SubscriptionPlan::class,
                 'product' => Product::class
             };
-            
+
             $deserialized = $this->serializer->deserialize($item->getCartItem(), $entityType, 'json');
             $orderItems->add($deserialized);
         }
         $order->setItems($orderItems);
 
     }
+
+    public function proceedSubscriptionsIfAny(Order $order)
+    {
+        foreach ($order->getItems() as $key => $item) {
+            if ($item->getItemType() == "plan") {
+                $deserialized = json_decode($item->getCartItem(), true);
+                $this->subscriptionService->assignSubscription($deserialized["plan_name"]);
+            }
+        }
+    }
+
 }

@@ -1,4 +1,9 @@
-<a href="{{ path("order_details", {id: order.id}) }}"
+{% if order.getStatus() == constant('App\\Entity\\Order::PENDING') %}
+    {% set redirect_uri = path("order_show", {id: order.id}) %}
+{% else %}
+    {% set redirect_uri = path("order_details", {id: order.id}) %}
+{% endif %}
+<a href="{{ redirect_uri }}"
    class="list-group-item list-group-item-action flex-column align-items-start">
     <div class="d-flex w-100 justify-content-between">
         <h5 class="mb-1">ID: {{ order.id }}</h5>

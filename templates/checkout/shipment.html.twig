@@ -33,8 +33,9 @@
                 <div class="container ml-3 mr-3 mt-4">
                     <div class="row">
                         <div class="col-md-12 mb-5">
+
                             <a href="{{ path("order_create_pending") }}"
-                               class=" mr-2 ml-2 btn btn-block btn-warning ">summary</a>
+                               class=" mr-2 ml-2 btn btn-block btn-warning btn-summary disabled">summary</a>
                         </div>
                     </div>
                 </div>
@@ -43,7 +44,11 @@
     </div>
     <script>
         $(document).ready(function () {
-            console.log($('input[type="radio"]').length);
+            $radioEl = $("input[type='radio']:checked");
+            if ($radioEl.length != undefined && $radioEl.length > 0) {
+                $('.btn-summary').removeClass("disabled")
+            }
+
             $('input[type="radio"]').click(function () {
                 $el = $(this)
                 var addrId = $(this).val();
@@ -56,6 +61,7 @@
                         $('input[type="radio"]').parent().css("background-color", "white")
                         $el.parent().fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
                         $el.parent().css("background-color", "lightblue")
+                        $('.btn-summary').removeClass("disabled")
                     }
                 });
             });
