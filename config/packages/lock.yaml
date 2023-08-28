@@ -1,3 +1,4 @@
 framework:
   lock:
     product: 'semaphore'
+    cart: 'semaphore'

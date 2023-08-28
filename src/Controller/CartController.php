@@ -19,6 +19,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -33,7 +34,8 @@ class CartController extends AbstractController
         int                                       $id,
         CartService                               $cartService,
         EntityManagerInterface                    $entityManager,
-        ProductStockService                       $productStockService
+        ProductStockService                       $productStockService,
+        LockFactory                               $cartLockFactory
     ): RedirectResponse
     {
         $repository = $entityManager->getRepository($type);
@@ -43,19 +45,24 @@ class CartController extends AbstractController
         }
 
         try {
+            $lock = $cartLockFactory->createLock('cart_item_add');
+            $lock->acquire(true);
             $this->denyAccessUnlessGranted(ProductVoter::ADD_TO_CART, $entity);
             $entityManager->getConnection()->beginTransaction();
 
             $productStockService->checkStockIsAvailable($entity);
+
             $item = $cartService->makeCartItem($entity);
             $cartService->checkSubscriptionsCount($item);
             $cart = $cartService->getCurrentCart();
 
             $cart->addItem($item);
             $cartService->save($cart);
-
             $productStockService->changeStock($entity, Product::STOCK_DECREASE);
+
             $entityManager->getConnection()->commit();
+            $lock->release();
+            
             $this->addFlash("info", "successfully added " . $entity->getDisplayName() . " to cart");
         } catch (ProductNotFound $pnf) {
             $this->addFlash("error", $pnf->getMessage());
@@ -69,6 +76,8 @@ class CartController extends AbstractController
         } catch (Exception $e) {
             $entityManager->getConnection()->rollback();
             throw $e;
+        } finally {
+            $lock->release();
         }
 
         return $this->redirectToRoute($entity->getTypeName() . '_details', ['id' => $id]);
@@ -102,7 +111,7 @@ class CartController extends AbstractController
         return new Response("ok");
     }
 
-    #[Route('/cart/', name: 'cart_index')]
+    #[Route('/cart', name: 'cart_index')]
     public function show(Request $request, CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();

@@ -3,36 +3,25 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
-    #[Route('.well-known/jwks.json', name: 'app_jwks', methods: ['GET'])]
-    public function jwks(): Response
-    {
-        // Load the public key from the filesystem and use OpenSSL to parse it.
-        $kernelDirectory = $this->getParameter('kernel.project_dir');
-        $publicKey = openssl_pkey_get_public(file_get_contents($kernelDirectory . '/var/keys/public.key'));
-        $details = openssl_pkey_get_details($publicKey);
-        $jwks = [
-            'keys' => [
-                [
-                    'kty' => 'RSA',
-                    'alg' => 'RS256',
-                    'use' => 'sig',
-                    'kid' => '1',
-                    'n' => strtr(rtrim(base64_encode($details['rsa']['n']), '='), '+/', '-_'),
-                    'e' => strtr(rtrim(base64_encode($details['rsa']['e']), '='), '+/', '-_'),
-                ],
-            ],
-        ];
 
-        return $this->json($jwks);
-    }
-
-    #[Route('/api/test', name: 'app_api_test')]
+    #[Route('/api/test', name: 'app_api_test', methods: ['GET'])]
+    #[OA\Response(
+        response: 200,
+        description: 'Returns the success response',
+        content: new OA\JsonContent(type: "object", example: "{'foo': 'bar', 'hello': 'world'}")
+    )]
+    #[OA\Response(response: 401, ref: "#/components/responses/JwtTokenInvalid")]
+    #[OA\Response(response: 404, description: "User not found", content: new OA\JsonContent(ref: "#/components/schemas/error"))]
+    #[Security(name: "Bearer")]
+    #[OA\Tag(name: 'api_test')]
     public function apiTest(): Response
     {
         /** @var User $user */

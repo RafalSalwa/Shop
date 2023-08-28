@@ -38,7 +38,29 @@
                href="{{ path("order_index", {"page":1}) }}">Orders</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3"
                href="{{ path("oauth_token_index") }}">OAuth Token</a>
-            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="{{ path("grpc_index") }}">gRPC</a>
+            <div id="menu">
+                <div class="panel list-group">
+                    <a href="#" class="list-group-item" data-bs-toggle="collapse" data-bs-target="#sm"
+                       data-bs-parent="#menu">gRPC
+                        <span class="glyphicon glyphicon-envelope pull-right"></span>
+                    </a>
+                    <div id="sm" class="sublinks collapse">
+                        <a href="{{ path("grpc_index") }}" class="list-group-item small">
+                            <span class="glyphicon glyphicon-chevron-right"></span> info
+                        </a>
+                        <a href="{{ path("grpc_user_create") }}" class="list-group-item small">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            Create user</a>
+                        <a href="{{ path("grpc_user_verify") }}" class="list-group-item small">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            Verify Account</a>
+                        <a href="{{ path("grpc_user_token") }}" class="list-group-item small">
+                            <span class="glyphicon glyphicon-chevron-right"></span>
+                            Get tokens</a>
+                    </div>
+                </div>
+            </div>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" href="/doc">Docs</a>
         </div>
     </div>
     <!-- Page content wrapper-->

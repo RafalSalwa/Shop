@@ -8,6 +8,7 @@ use App\Entity\Product;
 use App\Event\StockDepletedEvent;
 use App\Exception\ProductNotFound;
 use App\Exception\ProductStockDepleted;
+use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -46,6 +47,9 @@ class ProductStockService
         $this->changeStock($item->getDestinationEntity(), Product::STOCK_INCREASE, $item->getQuantity());
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty = -1): void
     {
         if ($entity instanceof Product) {
@@ -56,10 +60,16 @@ class ProductStockService
         }
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     */
     private function decrease(Product $product): void
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
+        if ($product->getUnitsInStock() == 0) {
+            throw new ProductStockDepletedException();
+        }
         if ($product->getUnitsInStock() == 1) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);

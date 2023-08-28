@@ -1,4 +1,4 @@
-syntax="proto3";
+syntax = "proto3";
 
 package intrvproto;
 option php_namespace = "App\\Protobuf\\Generated";
@@ -7,28 +7,61 @@ option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
 import "google/protobuf/timestamp.proto";
 
 message User {
-  string id = 1;
+  int64 id = 1;
   string username = 2;
   string email = 3;
 
   google.protobuf.Timestamp created_at = 4;
-  google.protobuf.Timestamp last_login = 5;
+}
+message UserDetails {
+  int64 Id = 1;
+  string Username = 2;
+  string Firstname = 3;
+  string Lastname = 4;
+  string Email = 5;
+  string Password = 6;
+  string RolesJson = 7;
+  string Roles = 8;
+  string Role = 9;
+  bool Verified = 10;
+  bool Active = 11;
+  google.protobuf.Timestamp CreatedAt = 12;
+  google.protobuf.Timestamp LastLogin = 13;
+}
+message GetUserRequest {
+  int64 user_id = 1;
 }
 
-message UserResponse { User user = 1; }
+message GetUsersRequest {
+  repeated GetUserRequest users = 1;
+}
 
 message GenericResponse {
   string status = 1;
   string message = 2;
 }
 
-// The request containing the user ID.
-message GetUserRequest {
-  string user_id = 1;
-}
+message UserResponse {User user = 1;}
 
-// The response containing the user's details.
 message GetUserResponse {
   string username = 1;
   string email = 2;
 }
+
+message GetUsersResponse {
+  repeated GetUserResponse users = 1;
+  string email = 2;
+}
+
+message ChangePasswordRequest {
+  int64 Id = 1;
+  string Password = 2;
+}
+
+message ChangePasswordResponse{
+  string status = 1;
+}
+
+message VerifyUserRequest {string code = 1;}
+message VerificationResponse {bool success = 1;}
+

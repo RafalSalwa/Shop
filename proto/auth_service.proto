@@ -7,5 +7,7 @@ option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
 import "rpc_signin.proto";
 
 service AuthService {
+  rpc SignUpUser(SignUpUserInput) returns (SignUpUserResponse) {}
   rpc SignInUser(SignInUserInput) returns (SignInUserResponse) {}
+  rpc GetVerificationKey(VerificationCodeRequest) returns (VerificationCodeResponse) {}
 }

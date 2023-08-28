@@ -20,8 +20,3 @@ framework:
     default_options:
       verify_host: false
       verify_peer: false
-when@test:
-  framework:
-    test: true
-    session:
-      storage_factory_id: session.storage.factory.mock_file

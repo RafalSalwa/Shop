@@ -1,13 +1,13 @@
 version: '3'
 
 services:
-  mailhog:
+  php_mailhog:
     image: mailhog/mailhog
-    container_name: mailhog
+    container_name: php_mailhog
     ports:
-      - "1025:1025" # smtp server
-      - "8025:8025" # web ui
+      - "11025:1025" # smtp server
+      - "18025:8025" # web ui
     networks:
       interview-net:
         aliases:
-          - imailhog
+          - iphpmailhog

@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -26,8 +25,6 @@ class Category
     private ?string $name = null;
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-    #[Column(name: 'picture', type: Types::BLOB, nullable: true)]
-    private $picture;
 
     public function __construct()
     {
@@ -49,16 +46,5 @@ class Category
         return $this->description;
     }
 
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-
-    /**
-     * @return Collection<int, Product>
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
+    
 }

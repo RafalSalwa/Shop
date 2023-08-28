@@ -1,9 +1,46 @@
 nelmio_api_doc:
-    documentation:
-        info:
-            title: My App
-            description: This is an awesome app!
-            version: 1.0.0
-    areas: # to filter documented areas
-        path_patterns:
-            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
+  use_validation_groups: true
+  documentation:
+    info:
+      title: My App
+      description: This is an awesome app!
+      version: 1.0.0
+    components:
+      securitySchemes:
+        Bearer:
+          type: http
+          scheme: bearer
+          bearerFormat: JWT
+      schemas:
+        error:
+          type: object
+          properties:
+            status:
+              type: string
+            message:
+              type: string
+        prod_id:
+          type: object
+          properties:
+            id:
+              type: int
+              default: 11
+      responses:
+        UnauthorizedError:
+          description: Bad credentials
+          content:
+            application/json:
+              schema:
+                allOf: [ $ref: '#/components/schemas/error' ]
+        JwtTokenInvalid:
+          description: "JWT Token invalid, expired or not found"
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/error'
+    security:
+      - Bearer
+  areas:
+    path_patterns:
+      - ^/api(?!/doc$)

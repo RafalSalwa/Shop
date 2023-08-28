@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
@@ -31,7 +32,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
-    private int $user_id;
+    private int $id;
     #[Column(name: 'username', type: Types::STRING, length: 180)]
     private string $username;
     #[Column(name: 'pass', type: Types::STRING, length: 100)]
@@ -63,6 +64,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    #[Groups("user_carts")]
     private ?Collection $carts = null;
 
     #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
@@ -133,12 +135,12 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getId(): int
     {
-        return $this->user_id;
+        return $this->id;
     }
 
     public function setId(int $id): self
     {
-        $this->user_id = $id;
+        $this->id = $id;
 
         return $this;
     }

@@ -7,9 +7,9 @@
         <div class="col-md-9">
             <section class="pt-4">
                 <div class="container px-lg-3">
-                    <div class="row gx-lg-5">
-                        {% if cart is not empty %}
-                            <div class="list-group">
+                    <div class="row gx-lg-5 cart-items">
+                        {% if cart.items is not empty %}
+                            <div class="list-group ">
                                 {% for item in cart.items %}
                                     {% include "cart/partials/_item_simple.html.twig" %}
                                 {% endfor %}
