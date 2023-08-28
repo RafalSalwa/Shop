@@ -43,10 +43,11 @@
     </div>
     <script>
         $(document).ready(function () {
+            console.log($('input[type="radio"]').length);
             $('input[type="radio"]').click(function () {
                 $el = $(this)
                 var addrId = $(this).val();
-                console.log(addrId)
+
                 $.ajax({
                     url: "{{ path('cart_delivery_address_set') }}",
                     method: "POST",
@@ -55,7 +56,6 @@
                         $('input[type="radio"]').parent().css("background-color", "white")
                         $el.parent().fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
                         $el.parent().css("background-color", "lightblue")
-                        console.log($el)
                     }
                 });
             });
