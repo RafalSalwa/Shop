@@ -46,9 +46,13 @@ class CartSessionStorage
 
     public function setCart(Cart $cart): void
     {
-        if ($this->security->getFirewallConfig($this->requestStack->getCurrentRequest())?->isStateless()) {
-            return;
+        $request = $this->requestStack->getCurrentRequest();
+        if ($request) {
+            if ($this->security->getFirewallConfig($request)?->isStateless()) {
+                return;
+            }
         }
+
         $this->getSession()->set(self::CART_KEY_NAME, $cart->getId());
     }
 

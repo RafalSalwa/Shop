@@ -19,7 +19,7 @@ RUN apt update && apt install -y --no-install-recommends \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
     && docker-php-ext-configure sysvsem \
-    && docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath sysvsem \
+    && docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath sysvsem sockets \
     && git clone -b v1.57.0 https://github.com/grpc/grpc \
     && cd grpc && git submodule update --init \
     && mkdir cmake/build && cd cmake/build  \
