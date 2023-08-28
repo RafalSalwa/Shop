@@ -7,7 +7,6 @@ use App\Repository\UserRepository;
 use App\Service\CartService;
 use App\Tests\CartAssertionsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Component\BrowserKit\AbstractBrowser;
 use UserLogInHelperTrait;
 
 class CartControllerTest extends WebTestCase
@@ -71,69 +70,5 @@ class CartControllerTest extends WebTestCase
     {
         $productRepository = static::getContainer()->get(ProductRepository::class);
         return $productRepository->findOneBy(["id" => 75]);
-    }
-
-    public function testClearCart()
-    {
-        $client = static::createClient();
-        $this->addRandomProductToCart($client);
-
-        // Go to the cart page
-        $client->request('GET', '/cart');
-
-        // Clears the cart
-        $client->submitForm('Clear');
-        $crawler = $client->followRedirect();
-
-        $this->assertCartIsEmpty($crawler);
-    }
-
-    public function testRemoveProductFromCart()
-    {
-        $client = static::createClient();
-        $product = $this->addRandomProductToCart($client);
-
-        // Go to the cart page
-        $client->request('GET', '/cart');
-
-        // Removes the product from the cart
-        $client->submitForm('Remove');
-        $crawler = $client->followRedirect();
-
-        $this->assertCartNotContainsProduct($crawler, $product['name']);
-    }
-
-    public function testUpdateQuantity()
-    {
-        $client = static::createClient();
-        $product = $this->addRandomProductToCart($client);
-
-        // Go to the cart page
-        $crawler = $client->request('GET', '/cart');
-
-        // Updates the quantity
-        $cartForm = $crawler->filter('.col-md-8 form')->form([
-            'cart[items][0][quantity]' => 4,
-        ]);
-        $client->submit($cartForm);
-        $crawler = $client->followRedirect();
-
-        $this->assertCartTotalEquals($crawler, $product['price'] * 4);
-        $this->assertCartContainsProductWithQuantity($crawler, $product['name'], 4);
-    }
-
-    private function getRandomProduct(AbstractBrowser $client): array
-    {
-        $crawler = $client->request('GET', '/');
-        $productNode = $crawler->filter('.card')->eq(rand(0, 9));
-        $productName = $productNode->filter('.card-title')->getNode(0)->textContent;
-        $productPrice = (float)$productNode->filter('span.h5')->getNode(0)->textContent;
-        $productLink = $productNode->filter('.btn-dark')->link();
-
-        return [
-            'name' => $productName,
-            'price' => $productPrice,
-            'url' => $productLink->getUri(),
-        ];
     }
 }

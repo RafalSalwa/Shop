@@ -24,7 +24,8 @@
         <div class="col-md-3">
             {{ include('cart/_summary.html.twig') }}
             <div class="row ml-3 mr-3 mt-4">
-                <a href="{{ path("cart_checkout_shipment") }}" class="btn btn- input-block-level">Shipping</a>
+                <a href="{{ path("cart_checkout_shipment") }}"
+                   class="btn btn- input-block-level {% if cart.items is empty %} disabled {% endif %}">Shipping</a>
             </div>
         </div>
     </div>

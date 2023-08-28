@@ -38,7 +38,10 @@ services:
   App\EventListener\ProductDepletedListener:
     tags:
       - { name: 'kernel.event_listener', event: 'product.depleted', method: 'onProductDepleted' }
+
   App\Security\ProductVoter:
     tags: [ 'security.voter' ]
   App\Security\SubscriptionPlanVoter:
+    tags: [ 'security.voter' ]
+  App\Security\OrderStatusVoter:
     tags: [ 'security.voter' ]

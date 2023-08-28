@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\User;
 use App\Repository\PlanRepository;
 use App\Repository\SubscriptionRepository;
 use App\Repository\UserRepository;
@@ -31,11 +32,17 @@ class SubscriptionService
     public function assignSubscription(string $type)
     {
         $plan = $this->planRepository->getByName($type);
+        if (!$plan) {
+            return;
+        }
+        /** @var User $user */
         $user = $this->security->getUser();
         $subscription = $user->getSubscription();
-
+        if ($user->getSubscription()->getSubscriptionPlan()->getName() == $type) {
+            return;
+        }
+        $subscription->setSubscriptionPlan($plan);
         $user->setSubscription($subscription);
-
         $this->userRepository->save($user);
     }
 }
