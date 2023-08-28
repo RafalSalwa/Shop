@@ -31,7 +31,7 @@ security:
       form_login:
         login_path: app_login
         check_path: app_login
-        enable_csrf: true
+        enable_csrf: false
         default_target_path: app_index
         use_referer: true
       logout:
@@ -39,12 +39,12 @@ security:
         target: app_index
 
   access_control:
-    - { path: ^/authorize, roles: IS_AUTHENTICATED_REMEMBERED }
+    - { path: ^/authorize, roles: PUBLIC_ACCESS }
     - { path: ^/login, role: PUBLIC_ACCESS }
     - { path: ^/token, role: PUBLIC_ACCESS }
     - { path: ^/.well-known, roles: PUBLIC_ACCESS }
-    - { path: ^/api/test, role: ROLE_OAUTH2_EMAIL }
-    - { path: ^/, role: ROLE_USER }
+    - { path: ^/cart, role: ROLE_USER }
+    - { path: ^/api, role: ROLE_OAUTH2_EMAIL }
 
 when@test:
   security:
@@ -55,6 +55,6 @@ when@test:
       # reduces the work factor to the lowest possible values.
       Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
         algorithm: auto
-        cost: 4 # Lowest possible value for bcrypt
-        time_cost: 3 # Lowest possible value for argon
-        memory_cost: 10 # Lowest possible value for argon
+        cost: 4
+        time_cost: 3
+        memory_cost: 10

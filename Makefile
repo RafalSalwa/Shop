@@ -10,9 +10,10 @@ test: ### run test
 	go test -v -cover -race ./internal/... ./pkg/... ./cmd/...
 .PHONY: test
 
+.PHONY: proto
 proto:
 	@ if ! which protoc > /dev/null; then \
 		echo "error: protoc not installed" >&2; \
 		exit 1; \
 	fi
-		protoc --proto_path=proto --php_out=src/grpc --grpc_out=src/grpc/php --plugin=protoc-gen-grpc=bin/grpc_php_plugin proto/*.proto;
+		protoc --proto_path=proto --php_out=src/ --grpc_out=src/ --plugin=protoc-gen-grpc=bin/grpc_php_plugin proto/*.proto;

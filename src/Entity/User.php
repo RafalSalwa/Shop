@@ -12,13 +12,16 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
@@ -29,7 +32,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
-    private int $user_id;
+    private int $id;
     #[Column(name: 'username', type: Types::STRING, length: 180)]
     private string $username;
     #[Column(name: 'pass', type: Types::STRING, length: 100)]
@@ -61,6 +64,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
+    #[Groups("user_carts")]
     private ?Collection $carts = null;
 
     #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
@@ -71,10 +75,25 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private ?Collection $orders = null;
 
+    #[OneToOne(targetEntity: Subscription::class, fetch: "EAGER")]
+    #[JoinColumn(name: "subscription_id", referencedColumnName: 'subscription_id', nullable: true)]
+    private ?Subscription $subscription;
+
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
+    }
+
+    public function getSubscription(): ?Subscription
+    {
+        return $this->subscription;
+    }
+
+    public function setSubscription(Subscription $subscription): User
+    {
+        $this->subscription = $subscription;
+        return $this;
     }
 
     public function getDeliveryAddresses(): Collection
@@ -116,12 +135,12 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getId(): int
     {
-        return $this->user_id;
+        return $this->id;
     }
 
     public function setId(int $id): self
     {
-        $this->user_id = $id;
+        $this->id = $id;
 
         return $this;
     }

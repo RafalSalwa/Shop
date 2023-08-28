@@ -1,0 +1,13 @@
+{% extends 'logged.html.twig' %}
+
+{% block title %}Hello IndexController!{% endblock %}
+
+{% block body %}
+    <section class="pt-4">
+        <div class="container px-lg-3">
+            <div class="row gx-lg-5">
+                {% include "product/partials/card.html.twig" with {"add_to_cart": "true"} %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -4,19 +4,46 @@
 
 {% block body %}
 
-    <div class="example-wrapper">
-    <div class="container">
-    <div class="row mt-5">
-        <div class="col-md-3 col-sm-4 col-xs-6">
-            <div class="card h-100">
-                <div class="card-body text-center">
-                    {#                    <h5 class="card-title">{{ plan.planName|capitalize }}</h5> #}
-                    {#                    <p class="card-text">{{ plan.description }}</p> #}
-                    {#                    <a class="btn btn-primary" #}
-                    {#                       href={{ path("cart_plan_add", {id: plan.id}) }}>Add to cart</a> #}
-                    products
+    <header class="py-5">
+        <div class="container px-lg-5">
+            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
+                <div class="m-4 m-lg-5">
+                    <p class="fs-5">Authorization based on
+                        <a href="https://github.com/thephpleague/oauth2-server" target="_blank">thephpleague/oauth2-server</a><br/><br/>
+                        flow :
+                    <ul class="">
+                        <li>OAuthTokenController::index</li>
+                        <li>OAuthTokenController::consent</li>
+                        <li>League\Bundle\OAuth2ServerBundle\Controller\AuthorizationController::indexAction</li>
+                        <li>OAuthTokenController::callback</li>
+                    </ul>
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
+    <div class="example-wrapper">
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-md-8 col-sm-4 col-xs-6">
+                    <div class="w3-container">
+                        <p><strong>Test Client App</strong> would like to access the following information about you:
+                        </p>
+                        <ul>
+                            <li>Your cart</li>
+                            <li>Your profile</li>
+                            <li>Your email address</li>
+                        </ul>
+                        <p>To allow this access, click the button below.</p>
+                    </div>
+                    <form action="/consent?response_type=code&amp;client_id=testclient&amp;redirect_uri=https://interview.local/callback&amp;scope=profile%20email"
+                          method="post" class="w3-container">
+                        <p>
+                            <button class="btn btn-primary" tabindex="1"
+                                    type="submit" name="consent" value="yes">Allow
+                            </button>
+                        </p>
+                    </form>
+                </div>
+            </div>
 {% endblock %}

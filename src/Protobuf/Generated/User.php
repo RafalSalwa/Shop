@@ -14,9 +14,9 @@ use Google\Protobuf\Internal\GPBUtil;
 class User extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>string id = 1;</code>
+     * Generated from protobuf field <code>int64 id = 1;</code>
      */
-    protected $id = '';
+    protected $id = 0;
     /**
      * Generated from protobuf field <code>string username = 2;</code>
      */
@@ -29,10 +29,6 @@ class User extends \Google\Protobuf\Internal\Message
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>
      */
     protected $created_at = null;
-    /**
-     * Generated from protobuf field <code>.google.protobuf.Timestamp last_login = 5;</code>
-     */
-    protected $last_login = null;
 
     /**
      * Constructor.
@@ -40,11 +36,10 @@ class User extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *     Optional. Data for populating the Message object.
      *
-     *     @type string $id
+     *     @type int|string $id
      *     @type string $username
      *     @type string $email
      *     @type \Google\Protobuf\Timestamp $created_at
-     *     @type \Google\Protobuf\Timestamp $last_login
      * }
      */
     public function __construct($data = NULL) {
@@ -53,8 +48,8 @@ class User extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string id = 1;</code>
-     * @return string
+     * Generated from protobuf field <code>int64 id = 1;</code>
+     * @return int|string
      */
     public function getId()
     {
@@ -62,13 +57,13 @@ class User extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string id = 1;</code>
-     * @param string $var
+     * Generated from protobuf field <code>int64 id = 1;</code>
+     * @param int|string $var
      * @return $this
      */
     public function setId($var)
     {
-        GPBUtil::checkString($var, True);
+        GPBUtil::checkInt64($var);
         $this->id = $var;
 
         return $this;
@@ -136,28 +131,6 @@ class User extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
         $this->created_at = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>.google.protobuf.Timestamp last_login = 5;</code>
-     * @return \Google\Protobuf\Timestamp
-     */
-    public function getLastLogin()
-    {
-        return $this->last_login;
-    }
-
-    /**
-     * Generated from protobuf field <code>.google.protobuf.Timestamp last_login = 5;</code>
-     * @param \Google\Protobuf\Timestamp $var
-     * @return $this
-     */
-    public function setLastLogin($var)
-    {
-        GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
-        $this->last_login = $var;
 
         return $this;
     }

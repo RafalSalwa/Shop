@@ -30,4 +30,46 @@ class UserServiceClient extends \Grpc\BaseStub {
         $metadata, $options);
     }
 
+    /**
+     * @param \App\Protobuf\Generated\GetUserRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function GetUserDetails(\App\Protobuf\Generated\GetUserRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/intrvproto.UserService/GetUserDetails',
+        $argument,
+        ['\App\Protobuf\Generated\UserDetails', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * @param \App\Protobuf\Generated\VerifyUserRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function VerifyUser(\App\Protobuf\Generated\VerifyUserRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/intrvproto.UserService/VerifyUser',
+        $argument,
+        ['\App\Protobuf\Generated\VerificationResponse', 'decode'],
+        $metadata, $options);
+    }
+
+    /**
+     * @param \App\Protobuf\Generated\ChangePasswordRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function ChangePassword(\App\Protobuf\Generated\ChangePasswordRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/intrvproto.UserService/ChangePassword',
+        $argument,
+        ['\App\Protobuf\Generated\ChangePasswordResponse', 'decode'],
+        $metadata, $options);
+    }
+
 }

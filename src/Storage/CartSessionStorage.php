@@ -5,8 +5,11 @@ namespace App\Storage;
 use App\Entity\Cart;
 use App\Repository\CartRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
+use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class CartSessionStorage
@@ -15,9 +18,10 @@ class CartSessionStorage
     public const ADDR_KEY_NAME = 'addr_id';
 
     public function __construct(
-        private readonly RequestStack   $requestStack,
-        private readonly CartRepository $cartRepository,
-        private readonly Security       $security
+        private readonly RequestStack          $requestStack,
+        private readonly CartRepository        $cartRepository,
+        private readonly Security              $security,
+        private readonly ParameterBagInterface $parameterBag
     )
     {
     }
@@ -25,7 +29,7 @@ class CartSessionStorage
     /**
      * Gets the cart in session.
      */
-    public function getCart($sorted = false): ?Cart
+    public function getCart(): ?Cart
     {
         $cart = $this->cartRepository->findOneBy([
             'user' => $this->getUser(),
@@ -40,16 +44,29 @@ class CartSessionStorage
         return $this->security->getUser();
     }
 
-    /**
-     * Sets the cart in session.
-     */
     public function setCart(Cart $cart): void
     {
+        if ($this->security->getFirewallConfig($this->requestStack->getCurrentRequest())?->isStateless()) {
+            return;
+        }
         $this->getSession()->set(self::CART_KEY_NAME, $cart->getId());
     }
 
     private function getSession(): SessionInterface
     {
+        // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
+        // that is the easiest solution for session storage between redis and filesystem
+        if ($this->parameterBag->get('kernel.environment') == "test") {
+            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
+
+            $sessionStorage = new MockFileSessionStorage($sessionSavePath);
+            $session = new Session($sessionStorage);
+
+            $session->start();
+            $session->save();
+
+            return $session;
+        }
         return $this->requestStack->getSession();
     }
 

@@ -4,6 +4,8 @@ package intrvproto;
 option php_namespace = "App\\Protobuf\\Generated";
 option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
 
+import "google/protobuf/timestamp.proto";
+
 message SignInUserInput {
   string username = 1;
   string password = 2;
@@ -13,4 +15,24 @@ message SignInUserResponse {
   string status = 1;
   string access_token = 2;
   string refresh_token = 3;
+}
+
+message SignUpUserInput {
+  string email = 1;
+  string password = 2;
+  string passwordConfirm = 3;
+}
+
+message SignUpUserResponse {
+  int64 id = 1;
+  string username = 2;
+  string verification_token = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+message VerificationCodeRequest{
+  string email = 1;
+}
+message VerificationCodeResponse {
+  string code = 1;
 }

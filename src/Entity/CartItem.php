@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[HasLifecycleCallbacks]
@@ -32,12 +33,13 @@ class CartItem implements SerializerInterface, CartItemInterface
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
+    #[ManyToOne(targetEntity: Cart::class)]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
-    private Cart $cart;
+    #[Groups("cart_item")]
+    private ?Cart $cart;
 
-    #[Column(name: 'quantity', type: Types::INTEGER, options: ['default' => '1'])]
-    private ?int $quantity;
+    #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
+    private int $quantity;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -60,57 +62,14 @@ class CartItem implements SerializerInterface, CartItemInterface
         return $this;
     }
 
-    public function getProdId(): ?int
-    {
-        return $this->prodId;
-    }
-
-    public function setProdId(?int $prodId): self
-    {
-        $this->prodId = $prodId;
-
-        return $this;
-    }
-
-    public function setType(?string $type): self
-    {
-        $this->type = $type;
-
-        return $this;
-    }
-
     public function getName(): string
     {
         return 'cart_item';
     }
 
-    public function getQuantity(): ?int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(?int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
     public function increaseQuantity(int $qty = 1): void
     {
         $this->quantity += $qty;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getUpdatedAt(): DateTime
@@ -157,13 +116,37 @@ class CartItem implements SerializerInterface, CartItemInterface
         // TODO: Implement deserialize() method.
     }
 
-    public function getTypeName(): string
-    {
-        // TODO: Implement getTypeName() method.
-    }
-
     public function getDisplayName(): string
     {
-        // TODO: Implement getDisplayName() method.
+        return 'cart_item';
+    }
+
+    public function getTypeName(): string
+    {
+        return 'cart_item';
+    }
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
+    public function setQuantity(?int $quantity): self
+    {
+        $this->quantity = $quantity;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): DateTime
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
     }
 }

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Security\User\UserLoaderInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,5 +42,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function getEntityManager(): EntityManagerInterface
     {
         return parent::getEntityManager();
+    }
+
+    public function findOneByEmail()
+    {
+
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findOneByUsername(string $username)
+    {
+        $qb = $this->createQueryBuilder('u')
+            ->where('u.username = :username')
+            ->setParameter('username', $username);
+
+        return $qb->getQuery()->getOneOrNullResult();
+    }
+
+    public function save(User $user): void
+    {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

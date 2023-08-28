@@ -9,8 +9,6 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * The response containing the user's details.
- *
  * Generated from protobuf message <code>intrvproto.GetUserResponse</code>
  */
 class GetUserResponse extends \Google\Protobuf\Internal\Message

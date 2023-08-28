@@ -1,2 +1,4 @@
 framework:
-    lock: '%env(LOCK_DSN)%'
+  lock:
+    product: 'semaphore'
+    cart: 'semaphore'

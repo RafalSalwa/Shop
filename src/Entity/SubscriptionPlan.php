@@ -22,15 +22,15 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
-class SubscriptionPlan implements CartInsertableInterface
+class SubscriptionPlan implements CartInsertableInterface, CartItemInterface
 {
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'plan_id', type: Types::INTEGER, unique: true, nullable: false)]
-    private ?int $id = null;
+    private int $id;
 
     #[Column(name: 'plan_name', type: Types::STRING, length: 255)]
-    private ?string $planName = null;
+    private string $planName;
 
     #[Column(name: 'description', type: Types::TEXT, nullable: false)]
     #[Assert\NotBlank(message: 'Description cannot be empty')]
@@ -43,7 +43,10 @@ class SubscriptionPlan implements CartInsertableInterface
     private bool $isVisible = false;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
-    private $unitPrice;
+    private int $unitPrice;
+
+    #[Column(name: 'tier', type: Types::SMALLINT, nullable: false)]
+    private int $tier;
 
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
@@ -96,11 +99,6 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->unitPrice;
     }
 
-    public function getUnitPriceNormalized()
-    {
-        return number_format($this->unitPrice / 100, 2, ",", "");
-    }
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -149,16 +147,9 @@ class SubscriptionPlan implements CartInsertableInterface
         return $cartItem;
     }
 
-    public function getId(): ?int
+    public function getId(): int
     {
         return $this->id;
-    }
-
-    public function setId(?int $planId): self
-    {
-        $this->id = $planId;
-
-        return $this;
     }
 
     #[PrePersist]
@@ -183,7 +174,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return 'plan';
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->planName;
     }

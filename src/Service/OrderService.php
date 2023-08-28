@@ -7,8 +7,11 @@ use App\Entity\Cart;
 use App\Entity\CartItem;
 use App\Entity\Order;
 use App\Entity\OrderItem;
+use App\Entity\Product;
+use App\Entity\SubscriptionPlan;
 use App\Event\OrderConfirmedEvent;
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -60,7 +63,7 @@ class OrderService
 
             $orderItem = new OrderItem();
             $orderItem->setCartItem($serialized);
-
+            $orderItem->setItemType($item->getType());
             $order->addItem($orderItem);
             $order->setUser($user);
         }
@@ -68,13 +71,14 @@ class OrderService
         return $order;
     }
 
-    public function confirmOrder(Order $order, $payment)
+    public function confirmOrder(Order $order)
     {
-        $order->addPayment($payment);
         $this->workflow->apply($order, "to_completed");
+
         /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
         $repository->save($order);
+
         $event = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($event);
     }
@@ -85,5 +89,21 @@ class OrderService
         $addressId = $this->cartService->getDefaultDeliveryAddressId();
         $address = $repository->findOneBy(["id" => $addressId]);
         $order->setAddress($address);
+    }
+
+    public function deserializeOrderItems(Order $order)
+    {
+        $orderItems = new ArrayCollection();
+        foreach ($order->getItems() as $key => $item) {
+            $entityType = match ($item->getItemType()) {
+                'plan' => SubscriptionPlan::class,
+                'product' => Product::class
+            };
+            
+            $deserialized = $this->serializer->deserialize($item->getCartItem(), $entityType, 'json');
+            $orderItems->add($deserialized);
+        }
+        $order->setItems($orderItems);
+
     }
 }

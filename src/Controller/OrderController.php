@@ -9,6 +9,7 @@ use App\Repository\OrderRepository;
 use App\Service\CartService;
 use App\Service\OrderService;
 use App\Service\PaymentService;
+use App\Service\TaxCalculator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,7 +24,7 @@ class OrderController extends AbstractController
         $cart = $cartService->getCurrentCart();
         $order = $orderService->createPending($cart);
         $orderService->assignDeliveryAddress($order);
-        $payment = $paymentService->createPayment($order);
+        $payment = $paymentService->createPendingPayment($order);
         $paymentService->save($payment);
 
         if ($order->getId()) {
@@ -33,7 +34,7 @@ class OrderController extends AbstractController
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
-    public function addToCart(
+    public function pending(
         Request        $request,
         Order          $order,
         OrderService   $orderService,
@@ -47,7 +48,7 @@ class OrderController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('yes')->isClicked()) {
                 $paymentService->confirmPayment($payment);
-                $orderService->confirmOrder($order, $payment);
+                $orderService->confirmOrder($order);
                 $cartService->confirmCart();
 
                 $cartService->clearCart();
@@ -64,8 +65,12 @@ class OrderController extends AbstractController
     }
 
     #[Route('/order/summary/{id}', name: 'order_summary')]
-    public function summaryOrder(int $id, Order $order): Response
+    public function summaryOrder(int $id, OrderRepository $orderRepository, OrderService $orderService, TaxCalculator $taxCalculator): Response
     {
+        $order = $orderRepository->fetchOrderDetails($id);
+        $orderService->deserializeOrderItems($order);
+        $taxCalculator->calculateOrderTax($order);
+        
         return $this->render('order/summary.html.twig', [
             'order' => $order
         ]);
@@ -81,9 +86,10 @@ class OrderController extends AbstractController
     }
 
     #[Route('/order/{id<\d+>}', name: 'order_details')]
-    public function show(int $id, OrderRepository $orderRepository): Response
+    public function show(int $id, OrderRepository $orderRepository, OrderService $orderService): Response
     {
         $order = $orderRepository->fetchOrderDetails($id);
+        $orderService->deserializeOrderItems($order);
         return $this->render('order/details.html.twig', [
             'order' => $order
         ]);

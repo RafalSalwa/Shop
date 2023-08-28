@@ -25,7 +25,6 @@ class AuthController extends AbstractController
         dd($signInInput);
         $parameters = json_decode($request->getContent(), true);
 
-        $signInResponse = $this->authGRPCService->getAuthTokens($parameters['username'], $parameters['password']);
 
         return new JsonResponse([
             'accessToken' => $signInResponse->getAccessToken(),
