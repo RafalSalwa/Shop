@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -124,4 +125,14 @@ class Product implements CartInsertableInterface, CartItemInterface
         return $this;
     }
 
+    public function toCartItem(): CartItem
+    {
+        $cartItem = new CartItem();
+        $cartItem
+            ->setQuantity(1)
+            ->setCreatedAt(new DateTime('now'))
+            ->setUpdatedAt(new DateTime('now'));
+
+        return $cartItem;
+    }
 }
