@@ -18,14 +18,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 )]
 class CreateAuthClientCommand extends Command
 {
-    private EntityManagerInterface $em;
-    private UserPasswordHasherInterface $passwordHasher;
 
-    public function __construct(EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher)
-    {
+    public function __construct(
+        private readonly EntityManagerInterface $em,
+        private readonly UserPasswordHasherInterface $passwordHasher
+    ) {
         parent::__construct();
-        $this->em = $em;
-        $this->passwordHasher = $passwordHasher;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
@@ -67,7 +65,7 @@ class CreateAuthClientCommand extends Command
                 'name' => $clientDescription,
             ]);
             $conn->commit();
-        } catch (Exception $e) {
+        } catch (Exception) {
             $conn->rollBack();
         }
         $io->success('Bootstrap complete.');

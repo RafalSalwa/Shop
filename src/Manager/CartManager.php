@@ -9,18 +9,12 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CartManager
 {
-    private CartSessionStorage $cartSessionStorage;
-    private EntityManagerInterface $entityManager;
-    private CartFactory $cartFactory;
 
     public function __construct(
-        CartSessionStorage $cartStorage,
-        CartFactory $orderFactory,
-        EntityManagerInterface $entityManager
+        private readonly CartSessionStorage $cartSessionStorage,
+        private readonly CartFactory $cartFactory,
+        private readonly EntityManagerInterface $entityManager
     ) {
-        $this->cartSessionStorage = $cartStorage;
-        $this->cartFactory = $orderFactory;
-        $this->entityManager = $entityManager;
     }
 
     public function getCurrentCart(): Cart

@@ -22,6 +22,7 @@ use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
@@ -77,7 +78,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     #[OneToOne(targetEntity: Subscription::class, fetch: "EAGER")]
     #[JoinColumn(name: "subscription_id", referencedColumnName: 'subscription_id', nullable: true)]
-    private ?Subscription $subscription;
+    private ?Subscription $subscription = null;
 
     public function __construct()
     {

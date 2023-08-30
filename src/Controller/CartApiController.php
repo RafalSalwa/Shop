@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Product;
-use App\Entity\User;
 use App\Exception\ProductStockDepletedException;
 use App\Manager\CartManager;
 use App\Repository\ProductRepository;
@@ -25,10 +24,9 @@ class CartApiController extends AbstractController
     #[Security(name: "Bearer")]
     public function index(CartManager $cartManager, SerializerInterface $serializer): JsonResponse
     {
-        /** @var User $user */
-        $user = $this->getUser();
         $cart = $cartManager->getCurrentCart();
-        $serialized = $serializer->serialize($cart, 'json',
+        $serialized = $serializer->serialize(
+            $cart, 'json',
             ['groups' => ['carts', 'cart_item']]
         );
         return JsonResponse::fromJsonString($serialized);
@@ -51,7 +49,8 @@ class CartApiController extends AbstractController
                 description: "Product not found",
                 content: new OA\JsonContent(ref: "#/components/schemas/error")
             )
-            , new OA\Response(ref: "#/components/responses/JwtTokenInvalid", response: 401)
+            ,
+            new OA\Response(ref: "#/components/responses/JwtTokenInvalid", response: 401)
         ]
     )]
     #[Security(name: "Bearer")]
@@ -63,7 +62,7 @@ class CartApiController extends AbstractController
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true);
+        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (!$params["id"]) {
             return new JsonResponse("prodID is missing in request", Response::HTTP_BAD_REQUEST);
         }

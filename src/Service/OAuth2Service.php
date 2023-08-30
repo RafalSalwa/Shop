@@ -12,19 +12,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 class OAuth2Service
 {
-    private EntityManagerInterface $entityManager;
-    private Security $security;
-    private RequestStack $requestStack;
-
     public function __construct(
-        EntityManagerInterface $entityManager,
-        Security               $security,
-        RequestStack           $requestStack
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security               $security,
+        private readonly RequestStack           $requestStack
     )
     {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->requestStack = $requestStack;
     }
 
     public function getProfile($appClient)
@@ -44,11 +37,6 @@ class OAuth2Service
 
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);
-        $scopeNames = [
-            'profile' => 'Your profile',
-            'cart' => 'Your cart',
-            'email' => 'Your email address',
-        ];
 
         $consents = $userConsents ?? new OAuth2UserConsent();
         $consents->setScopes(array_merge($requestedScopes, $userScopes));
@@ -56,6 +44,7 @@ class OAuth2Service
         $consents->setCreated(new DateTimeImmutable());
         $consents->setExpires(new DateTimeImmutable('+30 days'));
         $consents->setIpAddress($request->getClientIp());
+        
         return $consents;
     }
 

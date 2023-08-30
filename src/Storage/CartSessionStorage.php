@@ -14,16 +14,15 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CartSessionStorage
 {
-    public const CART_KEY_NAME = 'cart_id';
-    public const ADDR_KEY_NAME = 'addr_id';
+    final public const CART_KEY_NAME = 'cart_id';
+    final public const ADDR_KEY_NAME = 'addr_id';
 
     public function __construct(
-        private readonly RequestStack          $requestStack,
-        private readonly CartRepository        $cartRepository,
-        private readonly Security              $security,
+        private readonly RequestStack $requestStack,
+        private readonly CartRepository $cartRepository,
+        private readonly Security $security,
         private readonly ParameterBagInterface $parameterBag
-    )
-    {
+    ) {
     }
 
     /**
@@ -31,12 +30,10 @@ class CartSessionStorage
      */
     public function getCart(): ?Cart
     {
-        $cart = $this->cartRepository->findOneBy([
+        return $this->cartRepository->findOneBy([
             'user' => $this->getUser(),
             'status' => Cart::STATUS_CREATED,
         ], ['createdAt' => 'DESC']);
-
-        return $cart;
     }
 
     private function getUser(): ?UserInterface
@@ -87,18 +84,5 @@ class CartSessionStorage
     public function getDeliveryAddressId()
     {
         return $this->getSession()->get(self::ADDR_KEY_NAME);
-    }
-
-    /**
-     * Returns the cart id.
-     */
-    private function getCartId(): ?int
-    {
-        $cartId = $this->getSession()->get(self::CART_KEY_NAME);
-        if (!$cartId) {
-            return null;
-        }
-
-        return (int)$this->getSession()->get(self::CART_KEY_NAME);
     }
 }

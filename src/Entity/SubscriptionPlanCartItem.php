@@ -12,19 +12,19 @@ class SubscriptionPlanCartItem extends CartItem
 {
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(referencedColumnName: 'plan_id')]
-    private $destinationEntity;
+    private CartInsertableInterface $destinationEntity;
 
     public function getType(): ?string
     {
         return 'plan';
     }
 
-    public function getDestinationEntity()
+    public function getDestinationEntity(): CartInsertableInterface
     {
         return $this->destinationEntity;
     }
 
-    public function setDestinationEntity(CartInsertableInterface $plan)
+    public function setDestinationEntity(CartInsertableInterface $plan): void
     {
         $this->destinationEntity = $plan;
     }

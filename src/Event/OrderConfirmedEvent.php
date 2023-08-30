@@ -6,11 +6,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class OrderConfirmedEvent extends Event
 {
-    private int $orderId;
-
-    public function __construct(int $orderId)
+    public function __construct(private readonly int $orderId)
     {
-        $this->orderId = $orderId;
     }
 
     public function getOrderData(): int

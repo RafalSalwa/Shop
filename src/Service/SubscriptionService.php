@@ -4,24 +4,16 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\PlanRepository;
-use App\Repository\SubscriptionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class SubscriptionService
 {
-    private SubscriptionRepository $subscriptionRepository;
-    private PlanRepository $planRepository;
-    private UserRepository $userRepository;
-    private Security $security;
-
-
-    public function __construct(SubscriptionRepository $subscriptionRepository, PlanRepository $planRepository, UserRepository $userRepository, Security $security)
-    {
-        $this->subscriptionRepository = $subscriptionRepository;
-        $this->planRepository = $planRepository;
-        $this->userRepository = $userRepository;
-        $this->security = $security;
+    public function __construct(
+        private readonly PlanRepository $planRepository,
+        private readonly UserRepository $userRepository,
+        private readonly Security $security
+    ) {
     }
 
     public function cancelSubscription()

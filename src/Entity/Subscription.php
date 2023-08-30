@@ -27,7 +27,7 @@ class Subscription
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
     #[JoinColumn(name: "subscription_plan_id", referencedColumnName: 'plan_id', nullable: true)]
-    private $subscriptionPlan;
+    private ?SubscriptionPlan $subscriptionPlan = null;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: true)]
     private int $tier;
@@ -46,16 +46,12 @@ class Subscription
     /**
      * @return mixed
      */
-    public function getSubscriptionPlan()
+    public function getSubscriptionPlan(): ?SubscriptionPlan
     {
         return $this->subscriptionPlan;
     }
 
-    /**
-     * @param mixed $subscriptionPlan
-     * @return Subscription
-     */
-    public function setSubscriptionPlan($subscriptionPlan)
+    public function setSubscriptionPlan(SubscriptionPlan $subscriptionPlan): self
     {
         $this->subscriptionPlan = $subscriptionPlan;
         return $this;

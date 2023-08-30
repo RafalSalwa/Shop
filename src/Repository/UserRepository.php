@@ -27,9 +27,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
-        $entityManager = $this->getEntityManager();
-
-        // Check if the identifier is an email address
         if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
             return $this->findOneBy(['email' => $identifier]);
         }
@@ -37,11 +34,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             return $this->findOneBy(['uuid' => Uuid::fromString($identifier)->toBinary()]);
         }
         return null;
-    }
-
-    public function getEntityManager(): EntityManagerInterface
-    {
-        return parent::getEntityManager();
     }
 
     public function findOneByEmail()
@@ -65,5 +57,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
+    }
+
+    public function getEntityManager(): EntityManagerInterface
+    {
+        return parent::getEntityManager();
     }
 }

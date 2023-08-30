@@ -6,12 +6,10 @@ use App\Entity\Cart;
 use DateTime;
 use DateTimeImmutable;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\RequestStack;
 
 class CartFactory
 {
-    public function __construct(private readonly Security     $security,
-                                private readonly RequestStack $requestStack)
+    public function __construct(private readonly Security $security)
     {
     }
 

@@ -28,9 +28,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[HasLifecycleCallbacks]
 class Cart implements JsonSerializable
 {
-    public const STATUS_CREATED = 'created';
-    public const STATUS_CONFIRMED = 'confirmed';
-    public const STATUS_CANCELLED = 'cancelled';
+    final public const STATUS_CREATED = 'created';
+    final public const STATUS_CONFIRMED = 'confirmed';
+    final public const STATUS_CANCELLED = 'cancelled';
 
     #[Id]
     #[GeneratedValue]
@@ -91,10 +91,11 @@ class Cart implements JsonSerializable
     public function itemExists(CartItem $cartItem): bool
     {
         /* @var CartItem $element */
-        return $this->getItems()->exists(function ($key, $element) use ($cartItem) {
-            return $element->getDestinationEntity()->getId() === $cartItem->getDestinationEntity()->getId() &&
-                $element::class === $cartItem::class;
-        });
+        return $this->getItems()->exists(
+            fn($key, $element) => $element->getDestinationEntity()->getId() === $cartItem->getDestinationEntity(
+                )->getId() &&
+                $element::class === $cartItem::class
+        );
     }
 
     public function getItems(): Collection
@@ -109,10 +110,11 @@ class Cart implements JsonSerializable
 
     public function getFilteredItems(CartItem $newItem): ReadableCollection
     {
-        return $this->getItems()->filter(function (CartItem $cartItem) use ($newItem) {
-            return $cartItem->getDestinationEntity()->getId() === $newItem->getDestinationEntity()->getId() &&
-                $cartItem::class === $newItem::class;
-        });
+        return $this->getItems()->filter(
+            fn(CartItem $cartItem) => $cartItem->getDestinationEntity()->getId() === $newItem->getDestinationEntity(
+                )->getId() &&
+                $cartItem::class === $newItem::class
+        );
     }
 
     public function removeItem(CartItem $item)
@@ -127,9 +129,7 @@ class Cart implements JsonSerializable
     public function itemTypeExists(CartItem $cartItem): bool
     {
         /* @var CartItem $element */
-        return $this->getItems()->exists(function ($key, $element) use ($cartItem) {
-            return $element::class === $cartItem::class;
-        });
+        return $this->getItems()->exists(fn($key, $element) => $element::class === $cartItem::class);
     }
 
     public function getUser(): User

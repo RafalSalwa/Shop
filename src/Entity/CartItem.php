@@ -36,7 +36,7 @@ class CartItem implements SerializerInterface, CartItemInterface
     #[ManyToOne(targetEntity: Cart::class)]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     #[Groups("cart_item")]
-    private ?Cart $cart;
+    private ?Cart $cart = null;
 
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
     private int $quantity;
@@ -101,8 +101,12 @@ class CartItem implements SerializerInterface, CartItemInterface
     {
     }
 
-    public function serialize($data, string $format, ?SerializationContext $context = null, ?string $type = null): string
-    {
+    public function serialize(
+        $data,
+        string $format,
+        ?SerializationContext $context = null,
+        ?string $type = null
+    ): string {
         return [
             'id' => $this->id,
             'username' => $this->username,

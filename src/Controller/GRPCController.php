@@ -18,7 +18,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class GRPCController extends AbstractController
 {
     #[Route('/grpc', name: 'grpc_index')]
-    public function index(Request $request): Response
+    public function index(): Response
     {
         return $this->render('grpc/index.html.twig', [
         ]);
@@ -35,7 +35,10 @@ class GRPCController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            [$grpcResponse, $status] = $authGRPCService->signUpUser($signInInput->getEmail(), $signInInput->getPassword());
+            [$grpcResponse, $status] = $authGRPCService->signUpUser(
+                $signInInput->getEmail(),
+                $signInInput->getPassword()
+            );
         }
         return $this->render('grpc/sign_up.html.twig', [
             'form' => $form->createView(),
