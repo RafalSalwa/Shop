@@ -19,10 +19,10 @@ use Symfony\Component\Uid\Uuid;
 #[Table(name: 'payment')]
 class Payment
 {
-    const PENDING = 'pending';
-    const PROCESSING = 'processing';
-    const COMPLETED = 'completed';
-    const CANCELLED = 'cancelled';
+    final public const PENDING = 'pending';
+    final public const PROCESSING = 'processing';
+    final public const COMPLETED = 'completed';
+    final public const CANCELLED = 'cancelled';
 
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
@@ -36,7 +36,7 @@ class Payment
     #[Column(name: 'amount', type: Types::INTEGER, nullable: false)]
     private int $amount;
     #[Column(name: 'status', type: Types::STRING, length: 25)]
-    private $status;
+    private string $status;
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $paymentDate;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
@@ -44,11 +44,11 @@ class Payment
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
     #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
-    private $user;
+    private ?User $user = null;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
     #[JoinColumn(name: "order_id", referencedColumnName: 'order_id', nullable: true)]
-    private $order;
+    private ?Order $order = null;
 
     public function __construct()
     {
@@ -100,19 +100,12 @@ class Payment
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param mixed $status
-     * @return Payment
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
         return $this;
@@ -140,37 +133,23 @@ class Payment
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUser()
+    public function getUser(): ?User
     {
         return $this->user;
     }
 
-    /**
-     * @param mixed $user
-     * @return Payment
-     */
-    public function setUser($user)
+    public function setUser(User $user): self
     {
         $this->user = $user;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getOrder()
+    public function getOrder(): ?Order
     {
         return $this->order;
     }
 
-    /**
-     * @param mixed $order
-     * @return Payment
-     */
-    public function setOrder($order)
+    public function setOrder(Order $order): self
     {
         $this->order = $order;
         return $this;

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Annotation\Get;
@@ -10,10 +11,9 @@ class HealthcheckController extends AbstractController
 {
     /**
      * @param Request $request
-     * @return JsonResponse
      */
     #[Get('/healthcheck', name: 'healthcheck')]
-    public function healthcheck(Request $request): JsonResponse
+    public function healthcheck(): JsonResponse
     {
         return new JsonResponse('Ok');
     }

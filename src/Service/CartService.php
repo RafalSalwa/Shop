@@ -13,32 +13,16 @@ use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class CartService
 {
-    private CartSessionStorage $cartSessionStorage;
-    private EntityManagerInterface $entityManager;
-    private CartFactory $cartFactory;
-    private Security $security;
-    private CartItemFactory $cartItemFactory;
-    private ProductStockService $productStockService;
-
     public function __construct(
-        CartSessionStorage     $cartStorage,
-        CartFactory            $orderFactory,
-        EntityManagerInterface $entityManager,
-        Security               $security,
-        CartItemFactory        $cartItemFactory,
-        ProductStockService    $productStockService
-    )
-    {
-        $this->cartSessionStorage = $cartStorage;
-        $this->cartFactory = $orderFactory;
-        $this->entityManager = $entityManager;
-        $this->security = $security;
-        $this->cartItemFactory = $cartItemFactory;
-        $this->productStockService = $productStockService;
+        private readonly CartSessionStorage $cartSessionStorage,
+        private readonly CartFactory $cartFactory,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly CartItemFactory $cartItemFactory,
+        private readonly ProductStockService $productStockService
+    ) {
     }
 
     public function clearCart()

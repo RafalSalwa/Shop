@@ -9,13 +9,10 @@ use Symfony\Component\Mime\Email;
 
 class OrderConfirmedListener implements EventSubscriberInterface
 {
-    private $mailer;
-    private $fromEmail;
-
-    public function __construct(MailerInterface $mailer, string $fromEmail)
+    public function __construct(
+        private readonly MailerInterface $mailer,
+        private readonly string          $fromEmail)
     {
-        $this->mailer = $mailer;
-        $this->fromEmail = $fromEmail;
     }
 
     public static function getSubscribedEvents()

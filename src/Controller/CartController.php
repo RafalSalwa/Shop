@@ -31,13 +31,12 @@ class CartController extends AbstractController
     #[Route('/cart/add/{type}/{id}', name: 'cart_add')]
     public function addToCart(
         #[ValueResolver('cart_item_type')] string $type,
-        int                                       $id,
-        CartService                               $cartService,
-        EntityManagerInterface                    $entityManager,
-        ProductStockService                       $productStockService,
-        LockFactory                               $cartLockFactory
-    ): RedirectResponse
-    {
+        int $id,
+        CartService $cartService,
+        EntityManagerInterface $entityManager,
+        ProductStockService $productStockService,
+        LockFactory $cartLockFactory
+    ): RedirectResponse {
         $repository = $entityManager->getRepository($type);
         $entity = $repository->find($id);
         if (!$entity) {
@@ -62,15 +61,18 @@ class CartController extends AbstractController
 
             $entityManager->getConnection()->commit();
             $lock->release();
-            
+
             $this->addFlash("info", "successfully added " . $entity->getDisplayName() . " to cart");
         } catch (ProductNotFound $pnf) {
             $this->addFlash("error", $pnf->getMessage());
             return $this->redirectToRoute($entity->getTypeName() . '_index', ['id' => $id, "page" => 1]);
         } catch (ProductStockDepleted $psd) {
             $this->addFlash("error", $psd->getMessage());
-        } catch (AccessDeniedException $ade) {
-            $this->addFlash("error", "You cannot add this product to cart with current subscription. Consider upgrade:)");
+        } catch (AccessDeniedException) {
+            $this->addFlash(
+                "error",
+                "You cannot add this product to cart with current subscription. Consider upgrade:)"
+            );
         } catch (TooManySubscriptionsException $subex) {
             $this->addFlash("error", $subex->getMessage());
         } catch (Exception $e) {
@@ -84,8 +86,11 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
-    public function removeFromCart(CartItem $item, CartService $cartService, ProductStockService $productStockService): RedirectResponse
-    {
+    public function removeFromCart(
+        CartItem $item,
+        CartService $cartService,
+        ProductStockService $productStockService
+    ): RedirectResponse {
         $cart = $cartService->getCurrentCart();
         try {
             if ($cart->getItems()->contains($item)) {
@@ -112,7 +117,7 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart', name: 'cart_index')]
-    public function show(Request $request, CartManager $cartManager, CartCalculator $cartCalculator): Response
+    public function show(CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();
         $payment = $cartCalculator->calculatePayment($cart);

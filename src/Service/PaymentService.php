@@ -7,26 +7,17 @@ use App\Entity\Payment;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
-use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class PaymentService
 {
-    private Security $security;
     private WorkflowInterface $workflow;
-    private PaymentRepository $paymentRepository;
-    private EventDispatcherInterface $eventDispatcher;
 
     public function __construct(
-        Security                 $security,
-        WorkflowInterface        $paymentProcessing,
-        PaymentRepository        $paymentRepository,
-        EventDispatcherInterface $eventDispatcher,
-    )
-    {
-        $this->security = $security;
+        WorkflowInterface $paymentProcessing,
+        private readonly Security $security,
+        private readonly PaymentRepository $paymentRepository,
+    ) {
         $this->workflow = $paymentProcessing;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->paymentRepository = $paymentRepository;
     }
 
     public function createPendingPayment(Order $order): Payment

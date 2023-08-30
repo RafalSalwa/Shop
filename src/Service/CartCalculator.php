@@ -6,11 +6,8 @@ use App\Entity\Cart;
 
 class CartCalculator
 {
-    private TaxCalculator $taxCalculator;
-
-    public function __construct(TaxCalculator $taxCalculator)
+    public function __construct(private readonly TaxCalculator $taxCalculator)
     {
-        $this->taxCalculator = $taxCalculator;
     }
 
     public function calculatePayment(Cart $cart): array

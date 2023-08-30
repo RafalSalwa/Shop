@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class SubscriptionPlanVoter extends Voter
 {
-    const ADD_TO_CART = "ADD_TO_CART";
+    final public const ADD_TO_CART = "ADD_TO_CART";
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -18,10 +18,7 @@ class SubscriptionPlanVoter extends Voter
     }
 
     /**
-     * @param string $attribute
      * @param Product $subject
-     * @param TokenInterface $token
-     * @return bool
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {

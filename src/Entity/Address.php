@@ -25,7 +25,7 @@ class Address
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'address_id', type: Types::INTEGER, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'address_addressId_seq', allocationSize: 1, initialValue: 1)]
-    private $id;
+    private int $id;
     #[Assert\NotBlank]
     #[Column(name: 'first_name', type: Types::STRING, length: 40)]
     private string $firstName;
@@ -54,145 +54,89 @@ class Address
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;
 
-    /**
-     * @return mixed
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param mixed $id
-     * @return Address
-     */
-    public function setId($id)
+    public function setId(int $id): self
     {
         $this->id = $id;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param mixed $firstName
-     * @return Address
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @param mixed $lastName
-     * @return Address
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAddressLine1()
+    public function getAddressLine1(): string
     {
         return $this->addressLine1;
     }
 
-    /**
-     * @param mixed $addressLine1
-     * @return Address
-     */
-    public function setAddressLine1($addressLine1)
+    public function setAddressLine1(string $addressLine1): self
     {
         $this->addressLine1 = $addressLine1;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getAddressLine2()
+    public function getAddressLine2(): string
     {
         return $this->addressLine2;
     }
 
-    /**
-     * @param mixed $addressLine2
-     * @return Address
-     */
-    public function setAddressLine2($addressLine2)
+    public function setAddressLine2(string $addressLine2): self
     {
         $this->addressLine2 = $addressLine2;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getCity()
+    public function getCity(): string
     {
         return $this->city;
     }
 
-    /**
-     * @param mixed $city
-     * @return Address
-     */
-    public function setCity($city)
+    public function setCity(string $city): self
     {
         $this->city = $city;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
 
-    /**
-     * @param mixed $state
-     * @return Address
-     */
-    public function setState($state)
+    public function setState(string $state): self
     {
         $this->state = $state;
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getPostalCode()
+    public function getPostalCode(): string
     {
         return $this->postalCode;
     }
 
-    /**
-     * @param mixed $postalCode
-     * @return Address
-     */
-    public function setPostalCode($postalCode)
+    public function setPostalCode(string $postalCode): self
     {
         $this->postalCode = $postalCode;
         return $this;

@@ -3,9 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\OAuth2UserConsent;
-use App\Repository\ProductRepository;
 use App\Service\OAuth2Service;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +29,7 @@ class OAuthTokenController extends AbstractController
             'client_id' => 'testclient',
             'client_secret' => 'testpass',
             'redirect_uri' => 'http://localhost:8080/callback',
-            'code' => urldecode($request->get("code")),
+            'code' => urldecode((string)$request->get("code")),
         ];
 
         return $this->render('oauth_token/callback.html.twig', [
@@ -41,7 +39,7 @@ class OAuthTokenController extends AbstractController
     }
 
     #[Route('/oauth/token', name: 'oauth_token_index')]
-    public function index(Request $request, ProductRepository $productRepository, EntityManagerInterface $em): Response
+    public function index(): Response
     {
         return $this->render('oauth_token/index.html.twig', [
         ]);
@@ -56,7 +54,6 @@ class OAuthTokenController extends AbstractController
             fn(OAuth2UserConsent $consent) => $consent->getClient() === $appClient
         )->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
-        $hasExistingScopes = count($userScopes) > 0;
         $requestedScopes = explode(' ', $request->query->get('scope'));
         // If user has already consented to the scopes, give consent
         if (count(array_diff($requestedScopes, $userScopes)) === 0) {

@@ -9,11 +9,10 @@ use Symfony\Component\Mime\Email;
 
 class StockDepletedListener implements EventSubscriberInterface
 {
-    private $mailer;
 
-    public function __construct(MailerInterface $mailer)
+    public function __construct(
+        private readonly MailerInterface $mailer)
     {
-        $this->mailer = $mailer;
     }
 
     public static function getSubscribedEvents()

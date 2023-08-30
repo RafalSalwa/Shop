@@ -27,10 +27,10 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[HasLifecycleCallbacks]
 class Order
 {
-    public const PENDING = 'pending';
-    public const PROCESSING = 'processing';
-    public const COMPLETED = 'completed';
-    public const CANCELLED = 'cancelled';
+    final public const PENDING = 'pending';
+    final public const PROCESSING = 'processing';
+    final public const COMPLETED = 'completed';
+    final public const CANCELLED = 'cancelled';
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'order_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -54,13 +54,13 @@ class Order
 
     #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
     #[JoinColumn(name: "address_id", referencedColumnName: 'address_id', nullable: true)]
-    private ?Address $address;
+    private ?Address $address = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
-    private ?Collection $payments;
+    private ?Collection $payments = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
-    private $items;
+    private ?Collection $items = null;
 
     private int $netAmount = 0;
     private int $vatAmount = 0;
@@ -163,19 +163,12 @@ class Order
         $this->items->removeElement($item);
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
 
-    /**
-     * @param mixed $status
-     * @return Order
-     */
-    public function setStatus($status)
+    public function setStatus(string $status): self
     {
         $this->status = $status;
         return $this;

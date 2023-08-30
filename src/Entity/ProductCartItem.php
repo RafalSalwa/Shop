@@ -13,7 +13,7 @@ class ProductCartItem extends CartItem implements JsonSerializable
 {
     #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(referencedColumnName: 'product_id')]
-    private $destinationEntity;
+    private CartInsertableInterface $destinationEntity;
 
     public function getType(): ?string
     {
@@ -35,12 +35,12 @@ class ProductCartItem extends CartItem implements JsonSerializable
         ];
     }
 
-    public function getDestinationEntity()
+    public function getDestinationEntity(): CartInsertableInterface
     {
         return $this->destinationEntity;
     }
 
-    public function setDestinationEntity(CartInsertableInterface $product)
+    public function setDestinationEntity(CartInsertableInterface $product): void
     {
         $this->destinationEntity = $product;
     }

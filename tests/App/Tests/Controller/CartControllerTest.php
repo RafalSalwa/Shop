@@ -39,7 +39,6 @@ class CartControllerTest extends WebTestCase
         $this->assertResponseIsSuccessful();
 
         $cartService = static::getContainer()->get(CartService::class);
-        $cart = $cartService->getCurrentCart();
         $product = $this->getTestProduct();
 
         $crawler = $client->request('POST', '/cart');

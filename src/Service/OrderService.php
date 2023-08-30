@@ -21,34 +21,19 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderService
 {
-    private EntityManagerInterface $entityManager;
-    private Security $security;
     private WorkflowInterface $workflow;
-    private SerializerInterface $serializer;
-    private CartCalculator $cartCalculator;
-    private EventDispatcherInterface $eventDispatcher;
-    private CartService $cartService;
-    private SubscriptionService $subscriptionService;
 
     public function __construct(
-        EntityManagerInterface   $entityManager,
-        Security                 $security,
-        WorkflowInterface        $orderProcessing,
-        SerializerInterface      $serializer,
-        CartCalculator           $cartCalculator,
-        EventDispatcherInterface $eventDispatcher,
-        CartService              $cartService,
-        SubscriptionService      $subscriptionService
-    )
-    {
-        $this->entityManager = $entityManager;
-        $this->security = $security;
+        WorkflowInterface $orderProcessing,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
+        private readonly SerializerInterface $serializer,
+        private readonly CartCalculator $cartCalculator,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly CartService $cartService,
+        private readonly SubscriptionService $subscriptionService
+    ) {
         $this->workflow = $orderProcessing;
-        $this->serializer = $serializer;
-        $this->cartCalculator = $cartCalculator;
-        $this->eventDispatcher = $eventDispatcher;
-        $this->cartService = $cartService;
-        $this->subscriptionService = $subscriptionService;
     }
 
     public function createPending(Cart $cart): Order
@@ -85,7 +70,6 @@ class OrderService
 
         $event = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($event);
-
 //        $this->subscriptionService->assignSubscription();
     }
 
@@ -100,7 +84,7 @@ class OrderService
     public function deserializeOrderItems(Order $order)
     {
         $orderItems = new ArrayCollection();
-        foreach ($order->getItems() as $key => $item) {
+        foreach ($order->getItems() as $item) {
             $entityType = match ($item->getItemType()) {
                 'plan' => SubscriptionPlan::class,
                 'product' => Product::class
@@ -110,14 +94,14 @@ class OrderService
             $orderItems->add($deserialized);
         }
         $order->setItems($orderItems);
-
     }
 
     public function proceedSubscriptionsIfAny(Order $order)
     {
-        foreach ($order->getItems() as $key => $item) {
+        /** @var OrderItem $item */
+        foreach ($order->getItems() as $item) {
             if ($item->getItemType() == "plan") {
-                $deserialized = json_decode($item->getCartItem(), true);
+                $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
                 $this->subscriptionService->assignSubscription($deserialized["plan_name"]);
             }
         }

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -18,8 +17,8 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'products')]
 class Product implements CartInsertableInterface, CartItemInterface
 {
-    public const STOCK_DECREASE = 'decrease';
-    public const STOCK_INCREASE = 'increase';
+    final public const STOCK_DECREASE = 'decrease';
+    final public const STOCK_INCREASE = 'increase';
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'product_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -36,17 +35,17 @@ class Product implements CartInsertableInterface, CartItemInterface
     #[JoinColumn(referencedColumnName: 'category_id', nullable: false)]
     private Category $category;
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
-    private $quantityPerUnit;
+    private string $quantityPerUnit;
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private $unitPrice;
     #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: true)]
-    private $unitsInStock;
+    private int $unitsInStock;
     #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: true)]
-    private $unitsOnOrder;
+    private int $unitsOnOrder;
 
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(referencedColumnName: 'plan_id', nullable: true)]
-    private ?SubscriptionPlan $requiredSubscription;
+    private ?SubscriptionPlan $requiredSubscription = null;
 
     public function getRequiredSubscription(): ?SubscriptionPlan
     {
@@ -72,18 +71,6 @@ class Product implements CartInsertableInterface, CartItemInterface
         return $this->unitPrice;
     }
 
-    public function toCartItem(): CartItem
-    {
-        $cartItem = new CartItem();
-        $cartItem->setProdId($this->getId())
-            ->setType('product')
-            ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
-
-        return $cartItem;
-    }
-
     public function getId(): int
     {
         return $this->id;
@@ -104,22 +91,9 @@ class Product implements CartInsertableInterface, CartItemInterface
         return $this->name;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getQuantityPerUnit()
+    public function getQuantityPerUnit(): string
     {
         return $this->quantityPerUnit;
-    }
-
-    /**
-     * @param mixed $quantityPerUnit
-     * @return Product
-     */
-    public function setQuantityPerUnit($quantityPerUnit)
-    {
-        $this->quantityPerUnit = $quantityPerUnit;
-        return $this;
     }
 
     /**
@@ -130,11 +104,7 @@ class Product implements CartInsertableInterface, CartItemInterface
         return $this->unitsInStock;
     }
 
-    /**
-     * @param mixed $unitsInStock
-     * @return Product
-     */
-    public function setUnitsInStock($unitsInStock)
+    public function setUnitsInStock(int $unitsInStock): self
     {
         $this->unitsInStock = $unitsInStock;
         return $this;
@@ -148,11 +118,7 @@ class Product implements CartInsertableInterface, CartItemInterface
         return $this->unitsOnOrder;
     }
 
-    /**
-     * @param mixed $unitsOnOrder
-     * @return Product
-     */
-    public function setUnitsOnOrder($unitsOnOrder)
+    public function setUnitsOnOrder(int $unitsOnOrder): self
     {
         $this->unitsOnOrder = $unitsOnOrder;
         return $this;

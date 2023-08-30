@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\SubscriptionPlan;
 use App\Repository\PlanRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -13,7 +12,7 @@ class PlanController extends AbstractController
 {
 
     #[Route('/plan', name: 'plan_index')]
-    public function index(Request $request, PlanRepository $planRepository): Response
+    public function index(PlanRepository $planRepository): Response
     {
         $plans = $planRepository->fetchAvailablePlans();
         return $this->render('plan/index.html.twig', [

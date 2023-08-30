@@ -4,11 +4,9 @@ namespace App\Message;
 
 class OrderMessage
 {
-    private int $orderId;
 
-    public function __construct(int $orderId)
+    public function __construct(private readonly int $orderId)
     {
-        $this->orderId = $orderId;
     }
 
     public function getOrderId(): int

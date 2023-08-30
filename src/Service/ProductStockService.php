@@ -15,15 +15,12 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductStockService
 {
-    private LockFactory $productLockFactory;
-    private ProductRepository $repository;
-    private EventDispatcherInterface $eventDispatcher;
 
-    public function __construct(LockFactory $productLockFactory, ProductRepository $repository, EventDispatcherInterface $eventDispatcher)
+    public function __construct(
+        private readonly LockFactory              $productLockFactory,
+        private readonly ProductRepository        $repository,
+        private readonly EventDispatcherInterface $eventDispatcher)
     {
-        $this->productLockFactory = $productLockFactory;
-        $this->repository = $repository;
-        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
