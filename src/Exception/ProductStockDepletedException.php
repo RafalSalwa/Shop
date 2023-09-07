@@ -5,7 +5,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-class ProductStockDepleted extends Exception
+class ProductStockDepletedException extends Exception
 {
     public function __construct(string $message = '', Throwable $previous = null)
     {
