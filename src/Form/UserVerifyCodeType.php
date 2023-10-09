@@ -18,7 +18,7 @@ class UserVerifyCodeType extends AbstractType
             ->add('send', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => EntityVerifyCode::class,

@@ -19,10 +19,12 @@ class ApiController extends AbstractController
         content: new OA\JsonContent(type: "object", example: "{'foo': 'bar', 'hello': 'world'}")
     )]
     #[OA\Response(response: 401, ref: "#/components/responses/JwtTokenInvalid")]
-    #[OA\Response(response: 404, description: "User not found", content: new OA\JsonContent(ref: "#/components/schemas/error"))]
+    #[OA\Response(response: 404, description: "User not found", content: new OA\JsonContent(
+        ref: "#/components/schemas/error"
+    ))]
     #[Security(name: "Bearer")]
     #[OA\Tag(name: 'api_test')]
-    public function apiTest(): Response
+    public function user(): Response
     {
         /** @var User $user */
         $user = $this->getUser();

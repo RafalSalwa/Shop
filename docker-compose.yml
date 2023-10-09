@@ -4,9 +4,9 @@ services:
   php:
     container_name: php
     image: rafalsalwa/interview-app-php:latest
-    build:
-      context: ./
-      dockerfile: ./docker/php/Dockerfile
+    #    build:
+    #      context: ./
+    #      dockerfile: ./docker/php/Dockerfile
     volumes:
       - .:/var/www/symfony
     networks:

@@ -16,7 +16,7 @@ class CartItemTypeResolver implements ValueResolverInterface
         if ($argument->getName() !== "type") {
             return [];
         }
-        // get the value from the request, based on the argument name
+
         $value = $request->attributes->get($argument->getName());
         if (!is_string($value)) {
             return [];

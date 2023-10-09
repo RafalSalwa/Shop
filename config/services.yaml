@@ -32,6 +32,10 @@ services:
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:
     class: App\Repository\AccessTokenRepository
     decorates: 'League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository'
+
+  App\Service\CartAddService:
+    arguments:
+      $entityManager: '@doctrine.orm.entity_manager'
   App\EventListener\OrderConfirmedListener:
     arguments:
       $fromEmail: '%env(MAILER_FROM)%'

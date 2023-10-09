@@ -6,10 +6,11 @@ framework:
     transports:
       async:
         dsn: '%env(RABBITMQ_URL)%'
+        serializer: App\Messenger\ExternalJsonMessageSerializer
         options:
           auto_setup: false
           exchange:
-            name: interview
+            name: ex_interview
             type: direct
             default_publish_routing_key: interview
           queues:
@@ -21,8 +22,9 @@ framework:
 
     routing:
       # Route your messages to the transports
-      'App\Message\AccountCreated': async
+      'App\Message\UserLoggedIn': async
       'App\Message\OrderMessage': async
+      'App\Message\AMQPMessage': async
 # when@test:
 #    framework:
 #        messenger:
