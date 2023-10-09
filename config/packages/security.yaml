@@ -52,6 +52,7 @@ security:
     - { path: ^/.well-known, roles: PUBLIC_ACCESS }
     - { path: ^/cart, role: ROLE_USER }
     - { path: ^/api, role: ROLE_OAUTH2_EMAIL }
+    - { path: ^/*, roles: IS_AUTHENTICATED_FULLY }
 
 when@test:
   security:

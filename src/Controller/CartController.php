@@ -6,20 +6,21 @@ use App\Entity\CartItem;
 use App\Entity\Product;
 use App\Exception\ProductNotFound;
 use App\Exception\ProductStockDepleted;
+use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
+use App\Factory\CartItemFactory;
 use App\Manager\CartManager;
 use App\Security\ProductVoter;
+use App\Service\CartAddService;
 use App\Service\CartCalculator;
 use App\Service\CartService;
 use App\Service\ProductStockService;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
-use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
@@ -32,11 +33,15 @@ class CartController extends AbstractController
     public function addToCart(
         #[ValueResolver('cart_item_type')] string $type,
         int $id,
+        CartAddService $cartAddService,
         CartService $cartService,
-        EntityManagerInterface $entityManager,
-        ProductStockService $productStockService,
-        LockFactory $cartLockFactory
+        CartItemFactory $cartItemFactory
     ): RedirectResponse {
+        try {
+            $cartItemFactory->createCartItem();
+        }
+        $cartAddService->addToCart($type, $id);
+
         $repository = $entityManager->getRepository($type);
         $entity = $repository->find($id);
         if (!$entity) {
@@ -66,7 +71,7 @@ class CartController extends AbstractController
         } catch (ProductNotFound $pnf) {
             $this->addFlash("error", $pnf->getMessage());
             return $this->redirectToRoute($entity->getTypeName() . '_index', ['id' => $id, "page" => 1]);
-        } catch (ProductStockDepleted $psd) {
+        } catch (ProductStockDepletedException $psd) {
             $this->addFlash("error", $psd->getMessage());
         } catch (AccessDeniedException) {
             $this->addFlash(

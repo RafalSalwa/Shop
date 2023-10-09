@@ -153,4 +153,19 @@ class CartItem implements SerializerInterface, CartItemInterface
 
         return $this;
     }
+
+    public function getType(): string
+    {
+        // TODO: Implement getType() method.
+    }
+
+    public function getPrice(): float
+    {
+        // TODO: Implement getPrice() method.
+    }
+
+    public function getTotalPrice(): float
+    {
+        // TODO: Implement getTotalPrice() method.
+    }
 }

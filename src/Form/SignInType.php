@@ -19,7 +19,7 @@ class SignInType extends AbstractType
             ->add('send', SubmitType::class);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => SignInUserInput::class,

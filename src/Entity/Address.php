@@ -26,30 +26,37 @@ class Address
     #[Column(name: 'address_id', type: Types::INTEGER, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'address_addressId_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
+
     #[Assert\NotBlank]
     #[Column(name: 'first_name', type: Types::STRING, length: 40)]
     private string $firstName;
+
     #[Assert\NotBlank]
     #[Column(name: 'last_name', type: Types::STRING, length: 40)]
     private string $lastName;
+
     #[Assert\NotBlank]
     #[Column(name: 'address_line_1', type: Types::STRING, length: 40)]
     private string $addressLine1;
 
     #[Column(name: 'address_line_2', type: Types::STRING, length: 40, nullable: true)]
     private ?string $addressLine2 = null;
+
     #[Assert\NotBlank]
     #[Column(name: 'city', type: Types::STRING, length: 40)]
     private string $city;
+
     #[Assert\NotBlank]
     #[Column(name: 'state', type: Types::STRING, length: 40)]
     private string $state;
+
     #[Assert\NotBlank]
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
     private string $postalCode;
 
     #[OneToMany(mappedBy: 'address', targetEntity: Order::class)]
     private Collection $orders;
+    
     #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;

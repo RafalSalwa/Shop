@@ -36,6 +36,7 @@ class Cart implements JsonSerializable
     #[GeneratedValue]
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private ?int $id = null;
+
     #[OneToMany(
         mappedBy: 'cart',
         targetEntity: CartItem::class,
@@ -46,14 +47,18 @@ class Cart implements JsonSerializable
     ]
     #[Groups("cart")]
     private ?Collection $items;
+
     #[ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     #[Groups("carts")]
     private User $user;
+
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
+
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdAt;
+    
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $updatedAt;
 
@@ -80,7 +85,7 @@ class Cart implements JsonSerializable
             $item->setCart($this);
             $this->getItems()->add($item);
         } else {
-            /* @var CartItem $existingItem */
+            /** @var CartItem $existingItem */
             $existingItem = $this->getFilteredItems($item)->first();
             $existingItem->increaseQuantity();
         }
@@ -90,7 +95,7 @@ class Cart implements JsonSerializable
 
     public function itemExists(CartItem $cartItem): bool
     {
-        /* @var CartItem $element */
+        /** @var CartItem $element */
         return $this->getItems()->exists(
             fn($key, $element) => $element->getDestinationEntity()->getId() === $cartItem->getDestinationEntity(
                 )->getId() &&

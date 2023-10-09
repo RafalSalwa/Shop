@@ -10,7 +10,7 @@ use App\Entity\SubscriptionPlanCartItem;
 
 class CartItemFactory
 {
-    public function createCartItem($entity)
+    public function createCartItem($entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
     {
         return match (true) {
             $entity instanceof Product => $this->createProductCartItem($entity),
@@ -19,7 +19,7 @@ class CartItemFactory
         };
     }
 
-    private function createProductCartItem(Product $product, int $quantity = 1)
+    private function createProductCartItem(Product $product, int $quantity = 1): ProductCartItem
     {
         $cartItem = new ProductCartItem();
         $cartItem->setDestinationEntity($product);
@@ -28,7 +28,7 @@ class CartItemFactory
         return $cartItem;
     }
 
-    private function createSubscriptionCartItem(SubscriptionPlan $plan, int $quantity = 1)
+    private function createSubscriptionCartItem(SubscriptionPlan $plan, int $quantity = 1): SubscriptionPlanCartItem
     {
         $cartItem = new SubscriptionPlanCartItem();
         $cartItem->setDestinationEntity($plan);

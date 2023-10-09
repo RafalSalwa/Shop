@@ -6,7 +6,7 @@ use App\Message\AMQPMessage;
 
 class AMQPMessageHandler
 {
-    public function __invoke(AMQPMessage $message)
+    public function __invoke(AMQPMessage $message): void
     {
         $userId = $message->getContent();
     }
