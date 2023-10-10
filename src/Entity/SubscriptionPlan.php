@@ -22,7 +22,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
-class SubscriptionPlan implements CartInsertableInterface, CartItemInterface
+class SubscriptionPlan implements CartInsertableInterface
 {
     #[Id]
     #[GeneratedValue]

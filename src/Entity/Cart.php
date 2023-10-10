@@ -58,7 +58,7 @@ class Cart implements JsonSerializable
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdAt;
-    
+
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $updatedAt;
 
@@ -79,7 +79,7 @@ class Cart implements JsonSerializable
         return $this;
     }
 
-    public function addItem(CartItem $item): self
+    public function addItem(CartItemInterface $item): self
     {
         if (!$this->itemExists($item)) {
             $item->setCart($this);
@@ -93,12 +93,12 @@ class Cart implements JsonSerializable
         return $this;
     }
 
-    public function itemExists(CartItem $cartItem): bool
+    public function itemExists(CartItemInterface $cartItem): bool
     {
-        /** @var CartItem $element */
+        /** @var CartItemInterface $element */
         return $this->getItems()->exists(
-            fn($key, $element) => $element->getDestinationEntity()->getId() === $cartItem->getDestinationEntity(
-                )->getId() &&
+            fn($key, $element) => $element->getReferenceEntity()->getId() === $cartItem->getReferenceEntity()->getId(
+                ) &&
                 $element::class === $cartItem::class
         );
     }
@@ -116,7 +116,7 @@ class Cart implements JsonSerializable
     public function getFilteredItems(CartItem $newItem): ReadableCollection
     {
         return $this->getItems()->filter(
-            fn(CartItem $cartItem) => $cartItem->getDestinationEntity()->getId() === $newItem->getDestinationEntity(
+            fn(CartItem $cartItem) => $cartItem->getReferenceEntity()->getId() === $newItem->getReferenceEntity(
                 )->getId() &&
                 $cartItem::class === $newItem::class
         );
@@ -131,7 +131,7 @@ class Cart implements JsonSerializable
         }
     }
 
-    public function itemTypeExists(CartItem $cartItem): bool
+    public function itemTypeExists(CartInsertableInterface $cartItem): bool
     {
         /* @var CartItem $element */
         return $this->getItems()->exists(fn($key, $element) => $element::class === $cartItem::class);

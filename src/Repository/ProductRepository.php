@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Entity\StockManageableInterface;
 use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -25,12 +26,12 @@ class ProductRepository extends ServiceEntityRepository
         return (new Paginator($qb))->paginate($page);
     }
 
-    public function decreaseQty(Product $product)
+    public function decreaseQty(StockManageableInterface $product, int $qty)
     {
         return $this
             ->createQueryBuilder('p')
             ->update($this->getEntityName(), 'p')
-            ->set('p.unitsInStock', $product->getUnitsInStock() - 1)
+            ->set('p.unitsInStock', $product->getUnitsInStock() - $qty)
             ->where('p.id = :id')
             ->setParameter('id', $product->getId())
             ->getQuery()

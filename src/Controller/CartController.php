@@ -3,15 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\CartItem;
-use App\Entity\Product;
+use App\Exception\ItemNotFoundException;
 use App\Exception\ProductNotFound;
 use App\Exception\ProductStockDepleted;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartItemFactory;
 use App\Manager\CartManager;
-use App\Security\ProductVoter;
-use App\Service\CartAddService;
+use App\Security\CartItemVoter;
 use App\Service\CartCalculator;
 use App\Service\CartService;
 use App\Service\ProductStockService;
@@ -33,44 +32,18 @@ class CartController extends AbstractController
     public function addToCart(
         #[ValueResolver('cart_item_type')] string $type,
         int $id,
-        CartAddService $cartAddService,
         CartService $cartService,
         CartItemFactory $cartItemFactory
     ): RedirectResponse {
         try {
-            $cartItemFactory->createCartItem();
-        }
-        $cartAddService->addToCart($type, $id);
+            $item = $cartItemFactory->createCartItem($type, $id);
+            $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
-        $repository = $entityManager->getRepository($type);
-        $entity = $repository->find($id);
-        if (!$entity) {
-            throw $this->createNotFoundException('Item not found');
-        }
-
-        try {
-            $lock = $cartLockFactory->createLock('cart_item_add');
-            $lock->acquire(true);
-            $this->denyAccessUnlessGranted(ProductVoter::ADD_TO_CART, $entity);
-            $entityManager->getConnection()->beginTransaction();
-
-            $productStockService->checkStockIsAvailable($entity);
-
-            $item = $cartService->makeCartItem($entity);
-            $cartService->checkSubscriptionsCount($item);
-            $cart = $cartService->getCurrentCart();
-
-            $cart->addItem($item);
-            $cartService->save($cart);
-            $productStockService->changeStock($entity, Product::STOCK_DECREASE);
-
-            $entityManager->getConnection()->commit();
-            $lock->release();
-
-            $this->addFlash("info", "successfully added " . $entity->getDisplayName() . " to cart");
-        } catch (ProductNotFound $pnf) {
+            $cartService->add($item);
+            $this->addFlash("info", "successfully added " . $item->getDisplayName() . " to cart");
+        } catch (ItemNotFoundException $pnf) {
             $this->addFlash("error", $pnf->getMessage());
-            return $this->redirectToRoute($entity->getTypeName() . '_index', ['id' => $id, "page" => 1]);
+            return $this->redirectToRoute($type . '_index', ['id' => $id, "page" => 1]);
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash("error", $psd->getMessage());
         } catch (AccessDeniedException) {
@@ -80,14 +53,9 @@ class CartController extends AbstractController
             );
         } catch (TooManySubscriptionsException $subex) {
             $this->addFlash("error", $subex->getMessage());
-        } catch (Exception $e) {
-            $entityManager->getConnection()->rollback();
-            throw $e;
-        } finally {
-            $lock->release();
         }
 
-        return $this->redirectToRoute($entity->getTypeName() . '_details', ['id' => $id]);
+        return $this->redirectToRoute($item->getTypeName() . '_details', ['id' => $id]);
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
@@ -98,16 +66,15 @@ class CartController extends AbstractController
     ): RedirectResponse {
         $cart = $cartService->getCurrentCart();
         try {
-            if ($cart->getItems()->contains($item)) {
-                $cart->getItems()->removeElement($item);
-            }
+            $cartService->removeItemIfExists($item);
+            $productStockService->restoreStock($item);
 
-            $productStockService->restoreStock($item, Product::STOCK_INCREASE);
             $cartService->save($cart);
+
             $this->addFlash("info", "successfully removed " . $item->getItemName() . " from cart");
-        } catch (ProductNotFound $pnf) {
+        } catch (ItemNotFoundException $pnf) {
             $this->addFlash("error", $pnf->getMessage());
-        } catch (ProductStockDepleted $psd) {
+        } catch (ProductStockDepletedException $psd) {
             $this->addFlash("error", $psd->getMessage());
         }
         return $this->redirectToRoute('cart_index');

@@ -8,7 +8,7 @@ class UserLoggedInHandler
 {
     public function __invoke(UserLoggedIn $message): void
     {
-        $userId = $message->getContent();
+        $message->getContent();
         // Przetwarzanie zamówienia - np. zapis do bazy danych, generowanie faktury itp.
     }
 }

@@ -14,9 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CheckoutController extends AbstractController
 {
-    #[Route('/cart/checkout/shipment', name: 'cart_checkout_shipment')]
-    public function shipment(Request $request, CartService $cartService, CartCalculator $cartCalculator, AddressRepository $repository): Response
-    {
+    #[Route('/cart/checkout/shipment', name: 'checkout_shipment')]
+    public function shipment(
+        Request $request,
+        CartService $cartService,
+        CartCalculator $cartCalculator,
+        AddressRepository $repository
+    ): Response {
         $user = $this->getUser();
 
         $address = new Address();

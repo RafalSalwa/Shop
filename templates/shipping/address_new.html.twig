@@ -5,7 +5,7 @@
     <div class="row mt-5">
         <div class="col-md-3 col-sm-4 col-xs-6">
             <a class="btn btn-primary"
-               href="{{ path("cart_shipment") }}">Return</a>
+               href="{{ path("checkout_shipment") }}">Return</a>
         </div>
     </div>
     <div class="container-fluid text-left">
@@ -24,6 +24,13 @@
             </div>
             <div class="col-sm-4 sidenav">
             </div>
+        </div>
+        <div class="row content">
+            {% if not form.vars.valid %}
+                <div class="alert alert-error">
+                    {{ form_errors(form) }}
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

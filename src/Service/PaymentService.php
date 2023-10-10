@@ -10,14 +10,8 @@ use Symfony\Component\Workflow\WorkflowInterface;
 
 class PaymentService
 {
-    private WorkflowInterface $workflow;
-
-    public function __construct(
-        WorkflowInterface $paymentProcessing,
-        private readonly Security $security,
-        private readonly PaymentRepository $paymentRepository,
-    ) {
-        $this->workflow = $paymentProcessing;
+    public function __construct(private readonly WorkflowInterface $workflow, private readonly Security $security, private readonly PaymentRepository $paymentRepository)
+    {
     }
 
     public function createPendingPayment(Order $order): Payment

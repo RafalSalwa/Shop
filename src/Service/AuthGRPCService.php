@@ -18,11 +18,14 @@ class AuthGRPCService
     private ?AuthServiceClient $authClient = null;
     private ?UserServiceClient $userClient = null;
 
-    public function __construct(private readonly RequestStack $requestStack,)
-    {
+    public function __construct(
+        private readonly RequestStack $requestStack,
+        private readonly string $authServiceDsn,
+        private readonly string $userServiceDsn
+    ) {
     }
 
-    public function signInUser(string $email, string $password)
+    public function signInUser(string $email, string $password): array
     {
         $signInReq = new SignInUserInput();
         $signInReq->setUsername($email);
@@ -34,7 +37,7 @@ class AuthGRPCService
     public function getAuthClient(): AuthServiceClient
     {
         if ($this->authClient === null) {
-            $this->authClient = new AuthServiceClient('auth_service:8022', [
+            $this->authClient = new AuthServiceClient($this->authServiceDsn, [
                 'credentials' => ChannelCredentials::createInsecure(),
             ]);
         }
@@ -66,7 +69,6 @@ class AuthGRPCService
 
     public function setUserCredentialsFromLastSignUp(array $arrUser)
     {
-
         $this->getSession()->set(self::GRPC_USER_KEY, $arrUser);
     }
 
@@ -99,7 +101,7 @@ class AuthGRPCService
     public function getUserClient(): UserServiceClient
     {
         if ($this->userClient === null) {
-            $this->userClient = new UserServiceClient('user_service:8032', [
+            $this->userClient = new UserServiceClient($this->userServiceDsn, [
                 'credentials' => ChannelCredentials::createInsecure(),
             ]);
         }

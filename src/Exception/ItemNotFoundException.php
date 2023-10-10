@@ -5,7 +5,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-class ProductNotFound extends Exception
+class ItemNotFoundException extends Exception
 {
     public function __construct(string $message = '', Throwable $previous = null)
     {

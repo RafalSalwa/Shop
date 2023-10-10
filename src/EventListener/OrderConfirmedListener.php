@@ -4,6 +4,7 @@ namespace App\EventListener;
 
 use App\Event\OrderConfirmedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
@@ -11,8 +12,8 @@ class OrderConfirmedListener implements EventSubscriberInterface
 {
     public function __construct(
         private readonly MailerInterface $mailer,
-        private readonly string          $fromEmail)
-    {
+        private readonly string $fromEmail
+    ) {
     }
 
     public static function getSubscribedEvents()
@@ -31,7 +32,9 @@ class OrderConfirmedListener implements EventSubscriberInterface
             ->to($this->fromEmail)
             ->subject('Order Confirmation')
             ->html("Thank you for your order. Here are the details: <pre>" . print_r($orderData, true) . "</pre>");
-
-        $this->mailer->send($email);
+        try {
+            $this->mailer->send($email);
+        } catch (TransportExceptionInterface) {
+        }
     }
 }

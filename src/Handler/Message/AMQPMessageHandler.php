@@ -8,6 +8,6 @@ class AMQPMessageHandler
 {
     public function __invoke(AMQPMessage $message): void
     {
-        $userId = $message->getContent();
+        $message->getContent();
     }
 }
