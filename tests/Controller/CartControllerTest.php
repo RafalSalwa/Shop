@@ -7,12 +7,10 @@ use App\Repository\UserRepository;
 use App\Service\CartService;
 use App\Tests\CartAssertionsTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use UserLogInHelperTrait;
 
 class CartControllerTest extends WebTestCase
 {
     use CartAssertionsTrait;
-
 
     public function testCartIsEmpty()
     {

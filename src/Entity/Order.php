@@ -68,6 +68,7 @@ class Order
     public function __construct()
     {
         $this->payments = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function getUpdatedAt(): ?DateTime

@@ -4,7 +4,8 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Entity\Cart;
-use App\Entity\CartItem;
+use App\Entity\CartInsertableInterface;
+use App\Entity\CartItemInterface;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
@@ -14,26 +15,14 @@ use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
-use MyNamespace\MyObject;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderService
 {
-    private WorkflowInterface $workflow;
-
-    public function __construct(
-        WorkflowInterface $orderProcessing,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly Security $security,
-        private readonly SerializerInterface $serializer,
-        private readonly CartCalculator $cartCalculator,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly CartService $cartService,
-        private readonly SubscriptionService $subscriptionService
-    ) {
-        $this->workflow = $orderProcessing;
+    public function __construct(private readonly WorkflowInterface $workflow, private readonly EntityManagerInterface $entityManager, private readonly Security $security, private readonly SerializerInterface $serializer, private readonly CartCalculator $cartCalculator, private readonly EventDispatcherInterface $eventDispatcher, private readonly CartService $cartService, private readonly SubscriptionService $subscriptionService)
+    {
     }
 
     public function createPending(Cart $cart): Order
@@ -45,10 +34,10 @@ class OrderService
         $user = $this->security->getUser();
         /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
+        /** @var CartItemInterface $item */
         foreach ($cart->getItems() as $item) {
-            /** @var CartItem $itemEntity */
-            $itemEntity = $item->getDestinationEntity();
-            $serialized = $this->serializer->serialize($itemEntity, 'json');
+            $entity = $item->getReferencedEntity();
+            $serialized = $this->serializer->serialize($entity, 'json');
 
             $orderItem = new OrderItem();
             $orderItem->setCartItem($serialized);

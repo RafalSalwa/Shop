@@ -42,7 +42,10 @@ services:
   App\EventListener\ProductDepletedListener:
     tags:
       - { name: 'kernel.event_listener', event: 'product.depleted', method: 'onProductDepleted' }
-
+  App\Service\AuthGRPCService:
+    arguments:
+      $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
+      $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
   App\Security\ProductVoter:
     tags: [ 'security.voter' ]
   App\Security\SubscriptionPlanVoter:

@@ -2,21 +2,21 @@
 
 namespace App\Event;
 
-use App\Entity\Product;
+use App\Entity\StockManageableInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
 class StockDepletedEvent extends Event
 {
     private array $arrProd = [];
 
-    public function __construct(Product $product)
+    public function __construct(StockManageableInterface $product)
     {
+        $prod = $product->getReferenceEntity();
         $this->arrProd = [
-            "id" => $product->getId(),
-            "name" => $product->getName(),
-            "category" => $product->getCategory()->getName()
+            "id" => $prod->getId(),
+            "name" => $prod->getName(),
+            "category" => $prod->getCategory()->getName()
         ];
-
     }
 
     public function getEventData(): array

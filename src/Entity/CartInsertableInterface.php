@@ -6,5 +6,5 @@ interface CartInsertableInterface
 {
     public function toCartItem(): CartItem;
 
-    public function getName();
+    public function getName(): string;
 }

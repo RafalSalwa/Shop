@@ -15,13 +15,8 @@ use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
 
 class BasicMetricsExporter
 {
-    private ExportingReader $reader;
-    private ClockInterface $clock;
-
-    public function __construct(ExportingReader $reader, ClockInterface $clock)
+    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock)
     {
-        $this->reader = $reader;
-        $this->clock = $clock;
     }
 
     public function generate(): void

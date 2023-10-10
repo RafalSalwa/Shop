@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: ProductRepository::class)]
 #[Table(name: 'products')]
-class Product implements CartInsertableInterface, CartItemInterface
+class Product implements CartInsertableInterface, StockManageableInterface
 {
     final public const STOCK_DECREASE = 'decrease';
     final public const STOCK_INCREASE = 'increase';
@@ -127,12 +127,28 @@ class Product implements CartInsertableInterface, CartItemInterface
 
     public function toCartItem(): CartItem
     {
-        $cartItem = new CartItem();
+        $cartItem = new ProductCartItem();
         $cartItem
             ->setQuantity(1)
+            ->setReferencedEntity($this)
             ->setCreatedAt(new DateTime('now'))
             ->setUpdatedAt(new DateTime('now'));
 
         return $cartItem;
+    }
+
+    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+        // TODO: Implement decreaseStock() method.
+    }
+
+    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+        // TODO: Implement increaseStock() method.
+    }
+
+    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+        // TODO: Implement changeStock() method.
     }
 }

@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
@@ -20,30 +21,30 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[HasLifecycleCallbacks]
-#[InheritanceType('JOINED')]
+#[InheritanceType('SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
+#[DiscriminatorMap(['product' => ProductCartItem::class, 'subscription_plan' => SubscriptionPlanCartItem::class])]
 class CartItem implements SerializerInterface, CartItemInterface
 {
+    #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
+    protected int $quantity;
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    protected DateTime $createdAt;
+    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    protected DateTime $updatedAt;
+    #[ManyToOne(targetEntity: Cart::class)]
+    #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
+    #[Groups("cart_item")]
+    protected ?Cart $cart = null;
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
-
-    #[ManyToOne(targetEntity: Cart::class)]
-    #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
-    #[Groups("cart_item")]
-    private ?Cart $cart = null;
-
-    #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
-    private int $quantity;
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $updatedAt;
 
     public function getId(): int
     {
@@ -130,18 +131,6 @@ class CartItem implements SerializerInterface, CartItemInterface
         return 'cart_item';
     }
 
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
-    public function setQuantity(?int $quantity): self
-    {
-        $this->quantity = $quantity;
-
-        return $this;
-    }
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -167,5 +156,31 @@ class CartItem implements SerializerInterface, CartItemInterface
     public function getTotalPrice(): float
     {
         // TODO: Implement getTotalPrice() method.
+    }
+
+    public function getReferencedEntity(): CartInsertableInterface
+    {
+        // TODO: Implement getReferencedEntity() method.
+    }
+
+    public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
+    {
+        $this->referenceEntity = $entity;
+        return $this;
+    }
+
+    public function toCartItem(): CartItem
+    {
+        // TODO: Implement toCartItem() method.
+    }
+
+    public function getQuantity(): int
+    {
+        // TODO: Implement getQuantity() method.
+    }
+
+    public function setQuantity(int $quantity): CartItemInterface
+    {
+        // TODO: Implement setQuantity() method.
     }
 }

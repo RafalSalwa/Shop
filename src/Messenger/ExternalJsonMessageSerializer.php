@@ -28,7 +28,7 @@ class ExternalJsonMessageSerializer implements SerializerInterface
             $allStamps = array_merge($allStamps, $stamps);
         }
         return [
-            'body' => json_encode($message),
+            'body' => json_encode($message, JSON_THROW_ON_ERROR),
             'headers' => [
                 'stamps' => serialize($allStamps)
             ],

@@ -15,10 +15,10 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 class SubscriptionStockService
 {
     public function __construct(
-        private readonly LockFactory              $productLockFactory,
-        private readonly ProductRepository        $repository,
-        private readonly EventDispatcherInterface $eventDispatcher)
-    {
+        private readonly LockFactory $productLockFactory,
+        private readonly ProductRepository $repository,
+        private readonly EventDispatcherInterface $eventDispatcher
+    ) {
     }
 
     /**
@@ -39,7 +39,7 @@ class SubscriptionStockService
 
     public function restoreStock(CartItem $item, string $STOCK_INCREASE): void
     {
-        $this->changeStock($item->getDestinationEntity(), Product::STOCK_INCREASE, $item->getQuantity());
+        $this->changeStock($item->getReferenceEntity(), Product::STOCK_INCREASE, $item->getQuantity());
     }
 
     public function changeStock(CartItemInterface $entity, string $operation, int $qty = -1): void

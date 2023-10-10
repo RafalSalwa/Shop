@@ -8,18 +8,17 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-final class AccessTokenRepository implements AccessTokenRepositoryInterface
+final readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    private BaseAccessTokenRepository $baseAccessTokenRepository;
-
-    public function __construct(BaseAccessTokenRepository $baseAccessTokenRepository)
+    public function __construct(private readonly BaseAccessTokenRepository $baseAccessTokenRepository)
     {
-        $this->baseAccessTokenRepository = $baseAccessTokenRepository;
     }
 
-    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null): AccessTokenEntity
-    {
-        /** @var int|string|null $userIdentifier */
+    public function getNewToken(
+        ClientEntityInterface $clientEntity,
+        array $scopes,
+        $userIdentifier = null
+    ): AccessTokenEntity {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
         $accessToken->setUserIdentifier($userIdentifier);

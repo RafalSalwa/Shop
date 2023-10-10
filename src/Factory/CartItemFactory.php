@@ -2,38 +2,27 @@
 
 namespace App\Factory;
 
-use App\Entity\CartItem;
-use App\Entity\Product;
-use App\Entity\ProductCartItem;
-use App\Entity\SubscriptionPlan;
-use App\Entity\SubscriptionPlanCartItem;
+use App\Entity\CartInsertableInterface;
+use App\Entity\CartItemInterface;
+use App\Exception\ItemNotFoundException;
+use Doctrine\ORM\EntityManagerInterface;
 
 class CartItemFactory
 {
-    public function createCartItem($entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
+    public function __construct(private readonly EntityManagerInterface $entityRepository)
     {
-        return match (true) {
-            $entity instanceof Product => $this->createProductCartItem($entity),
-            $entity instanceof SubscriptionPlan => $this->createSubscriptionCartItem($entity),
-            default => new CartItem(),
-        };
     }
 
-    private function createProductCartItem(Product $product, int $quantity = 1): ProductCartItem
+    /**
+     * @throws ItemNotFoundException
+     */
+    public function createCartItem(string $entityType, int $id): CartItemInterface
     {
-        $cartItem = new ProductCartItem();
-        $cartItem->setDestinationEntity($product);
-        $cartItem->setQuantity($quantity);
-
-        return $cartItem;
-    }
-
-    private function createSubscriptionCartItem(SubscriptionPlan $plan, int $quantity = 1): SubscriptionPlanCartItem
-    {
-        $cartItem = new SubscriptionPlanCartItem();
-        $cartItem->setDestinationEntity($plan);
-        $cartItem->setQuantity($quantity);
-
-        return $cartItem;
+        /** @var CartInsertableInterface $entity */
+        $entity = $this->entityRepository->getRepository($entityType)->find($id);
+        if (!$entity) {
+            throw new ItemNotFoundException();
+        }
+        return $entity->toCartItem();
     }
 }

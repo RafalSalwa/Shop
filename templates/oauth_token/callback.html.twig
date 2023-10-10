@@ -37,6 +37,9 @@
     Try It out!
     <button class="btn btn-primary" id="api_test"> Go</button>
     <div id="api_test_result"></div>
+    <div id="api_test_result_hint" style="visibility: hidden">
+        Don't forget to copy access token, It can be usefull in <strong>OpenAPI Docs</strong> for api test calls
+    </div>
     <script>
         $.ajax({
             cache: false,
@@ -45,7 +48,6 @@
             data: "grant_type=authorization_code&client_id=testclient&client_secret=testpass&redirect_uri=https://interview.local/callback&code={{ parameters['code'] }}",
             contentType: 'application/x-www-form-urlencoded; charset=utf-8',
             success: function (data) {
-                console.log(data.token_type)
                 $("#access_token").text(data.access_token)
                 $("#refresh_token").text(data.refresh_token)
                 $("#token_type").text(data.token_type)
@@ -53,6 +55,7 @@
             }
             ,
             error: function (xhr, ajaxOptions, thrownError) {
+                window.location.replace("{{ path("oauth_token_index") }}");
             }
         })
         $("#api_test").click(function (e) {
@@ -67,6 +70,8 @@
                 success: function (result) {
                     console.log(result);
                     $("#api_test_result").text(JSON.stringify(result));
+                    $("#api_test_result_hint").css("visibility", "visible");
+                    $("#api_test").css("visibility", "hidden");
                 },
                 error: function (result) {
                     alert('error');

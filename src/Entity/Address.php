@@ -56,7 +56,7 @@ class Address
 
     #[OneToMany(mappedBy: 'address', targetEntity: Order::class)]
     private Collection $orders;
-    
+
     #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;
@@ -105,7 +105,7 @@ class Address
         return $this;
     }
 
-    public function getAddressLine2(): string
+    public function getAddressLine2(): ?string
     {
         return $this->addressLine2;
     }

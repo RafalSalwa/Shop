@@ -1,6 +1,6 @@
 <li class="list-group-item cart-item d-flex justify-content-between align-items-start">
     <div class="ms-2 me-auto">
-        <div class="fw-bold cart-item-name">{{ item.destinationEntity.name }}</div>
+        <div class="fw-bold cart-item-name">{{ item.getDisplayName }}</div>
         {{ item.type }}<br/>
         <a href="{{ path("cart_remove",{"id":item.id}) }}"><small>remove</small></a>
     </div>
