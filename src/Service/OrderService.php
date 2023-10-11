@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Entity\Cart;
-use App\Entity\CartInsertableInterface;
 use App\Entity\CartItemInterface;
 use App\Entity\Order;
 use App\Entity\OrderItem;
@@ -21,14 +20,22 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class OrderService
 {
-    public function __construct(private readonly WorkflowInterface $workflow, private readonly EntityManagerInterface $entityManager, private readonly Security $security, private readonly SerializerInterface $serializer, private readonly CartCalculator $cartCalculator, private readonly EventDispatcherInterface $eventDispatcher, private readonly CartService $cartService, private readonly SubscriptionService $subscriptionService)
-    {
+    public function __construct(
+        private readonly WorkflowInterface $orderProcessing,
+        private readonly EntityManagerInterface $entityManager,
+        private readonly Security $security,
+        private readonly SerializerInterface $serializer,
+        private readonly CartCalculator $cartCalculator,
+        private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly CartService $cartService,
+        private readonly SubscriptionService $subscriptionService
+    ) {
     }
 
     public function createPending(Cart $cart): Order
     {
         $order = new Order();
-        $this->workflow->getMarking($order);
+        $this->orderProcessing->getMarking($order);
         $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
         $user = $this->security->getUser();
@@ -46,12 +53,21 @@ class OrderService
             $order->setUser($user);
         }
         $repository->save($order);
+        $this->assignDeliveryAddress($order);
         return $order;
+    }
+
+    public function assignDeliveryAddress(Order $order): void
+    {
+        $repository = $this->entityManager->getRepository(Address::class);
+        $addressId = $this->cartService->getDefaultDeliveryAddressId();
+        $address = $repository->findOneBy(["id" => $addressId]);
+        $order->setAddress($address);
     }
 
     public function confirmOrder(Order $order)
     {
-        $this->workflow->apply($order, "to_completed");
+        $this->orderProcessing->apply($order, "to_completed");
 
         /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
@@ -59,15 +75,6 @@ class OrderService
 
         $event = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($event);
-//        $this->subscriptionService->assignSubscription();
-    }
-
-    public function assignDeliveryAddress(Order $order)
-    {
-        $repository = $this->entityManager->getRepository(Address::class);
-        $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $repository->findOneBy(["id" => $addressId]);
-        $order->setAddress($address);
     }
 
     public function deserializeOrderItems(Order $order)

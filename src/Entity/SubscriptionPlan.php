@@ -137,19 +137,12 @@ class SubscriptionPlan implements CartInsertableInterface
 
     public function toCartItem(): CartItem
     {
-        $cartItem = new CartItem();
-        $cartItem->setProdId($this->getId())
-            ->setType('plan')
+        $cartItem = new SubscriptionPlanCartItem();
+        $cartItem->setReferencedEntity($this)
             ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
+            ->setCreatedAt(new DateTime('now'));
 
         return $cartItem;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     #[PrePersist]
@@ -177,5 +170,10 @@ class SubscriptionPlan implements CartInsertableInterface
     public function getName(): string
     {
         return $this->planName;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
     }
 }

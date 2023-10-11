@@ -131,7 +131,7 @@ class Cart implements JsonSerializable
         }
     }
 
-    public function itemTypeExists(CartInsertableInterface $cartItem): bool
+    public function itemTypeExists(CartItemInterface $cartItem): bool
     {
         /* @var CartItem $element */
         return $this->getItems()->exists(fn($key, $element) => $element::class === $cartItem::class);

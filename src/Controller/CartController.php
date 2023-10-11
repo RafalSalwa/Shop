@@ -46,7 +46,8 @@ class CartController extends AbstractController
             return $this->redirectToRoute($type . '_index', ['id' => $id, "page" => 1]);
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash("error", $psd->getMessage());
-        } catch (AccessDeniedException) {
+        } catch (AccessDeniedException $ade) {
+            dd($ade);
             $this->addFlash(
                 "error",
                 "You cannot add this product to cart with current subscription. Consider upgrade:)"
