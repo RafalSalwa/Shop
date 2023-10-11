@@ -19,32 +19,35 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class OrderController extends AbstractController
 {
     #[Route('/order/create/', name: 'order_create_pending')]
-    public function createPendingOrder(CartService $cartService, OrderService $orderService, PaymentService $paymentService,): Response
-    {
+    public function createPendingOrder(
+        CartService $cartService,
+        OrderService $orderService,
+        PaymentService $paymentService,
+    ): Response {
         $cart = $cartService->getCurrentCart();
-        $order = $orderService->createPending($cart);
-        $orderService->assignDeliveryAddress($order);
-        $payment = $paymentService->createPendingPayment($order);
-        $paymentService->save($payment);
+        $pending = $orderService->createPending($cart);
+        $paymentService->createPendingPayment($pending);
 
-        if ($order->getId()) {
+
+        if ($pending->getId()) {
             $cartService->clearCart();
         }
-        return $this->redirectToRoute("order_show", ["id" => $order->getId()]);
+        return $this->redirectToRoute("order_show", ["id" => $pending->getId()]);
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
     public function pending(
-        Request        $request,
-        Order          $order,
-        OrderService   $orderService,
+        Request $request,
+        Order $order,
+        OrderService $orderService,
         PaymentService $paymentService,
-        CartService    $cartService
-    ): Response
-    {
+        CartService $cartService
+    ): Response {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
+
         $payment = $order->getLastPayment();
         $form = $this->createForm(PaymentType::class, $payment);
+
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             if ($form->get('yes')->isClicked()) {
@@ -70,13 +73,17 @@ class OrderController extends AbstractController
     }
 
     #[Route('/order/summary/{id}', name: 'order_summary')]
-    public function summaryOrder(int $id, OrderRepository $orderRepository, OrderService $orderService, TaxCalculator $taxCalculator): Response
-    {
+    public function summaryOrder(
+        int $id,
+        OrderRepository $orderRepository,
+        OrderService $orderService,
+        TaxCalculator $taxCalculator
+    ): Response {
         $order = $orderRepository->fetchOrderDetails($id);
 
         $orderService->proceedSubscriptionsIfAny($order);
         $orderService->deserializeOrderItems($order);
-        
+
         $taxCalculator->calculateOrderTax($order);
 
         return $this->render('order/summary.html.twig', [
@@ -88,6 +95,7 @@ class OrderController extends AbstractController
     public function index(int $page, #[CurrentUser] User $user, OrderRepository $orderRepository): Response
     {
         $orders = $orderRepository->fetchOrders($user, $page);
+
         return $this->render('order/index.html.twig', [
             'paginator' => $orders
         ]);
@@ -98,6 +106,7 @@ class OrderController extends AbstractController
     {
         $order = $orderRepository->fetchOrderDetails($id);
         $orderService->deserializeOrderItems($order);
+
         return $this->render('order/details.html.twig', [
             'order' => $order
         ]);

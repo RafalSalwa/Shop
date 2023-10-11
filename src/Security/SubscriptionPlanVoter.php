@@ -2,8 +2,7 @@
 
 namespace App\Security;
 
-use App\Entity\Product;
-use App\Entity\SubscriptionPlan;
+use App\Entity\SubscriptionPlanCartItem;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -14,11 +13,11 @@ class SubscriptionPlanVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ADD_TO_CART && $subject instanceof SubscriptionPlan;
+        return $attribute === self::ADD_TO_CART && $subject instanceof SubscriptionPlanCartItem;
     }
 
     /**
-     * @param Product $subject
+     * @param SubscriptionPlanCartItem $subject
      */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
@@ -27,8 +26,9 @@ class SubscriptionPlanVoter extends Voter
         if (!$user instanceof User) {
             return false;
         }
-        $requiredSubscription = $subject->getId();
+        $requiredSubscription = $subject->getReferencedEntity()->getId();
         $userSubscription = $user->getSubscription()->getSubscriptionPlan();
+ 
         if (!$requiredSubscription || !$userSubscription) {
             return false;
         }

@@ -19,14 +19,14 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
         return 'plan';
     }
 
+    public function getTypeName(): string
+    {
+        return 'plan';
+    }
+
     public function getReferenceEntity(): CartInsertableInterface
     {
         return $this->referenceEntity;
-    }
-
-    public function setReferenceEntity(CartInsertableInterface $plan): void
-    {
-        $this->referenceEntity = $plan;
     }
 
     public function getItemName(): string
@@ -36,12 +36,13 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
 
     public function getReferencedEntity(): CartInsertableInterface
     {
-        // TODO: Implement getReferencedEntity() method.
+        return $this->referenceEntity;
     }
 
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
-        // TODO: Implement setReferencedEntity() method.
+        $this->referenceEntity = $entity;
+        return $this;
     }
 
     public function toCartItem(): CartItem
@@ -51,11 +52,12 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
 
     public function getQuantity(): int
     {
-        // TODO: Implement getQuantity() method.
+        return $this->quantity;
     }
 
     public function setQuantity(int $quantity): CartItemInterface
     {
-        // TODO: Implement setQuantity() method.
+        $this->quantity = $quantity;
+        return $this;
     }
 }

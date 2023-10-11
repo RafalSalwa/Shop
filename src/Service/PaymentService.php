@@ -10,8 +10,11 @@ use Symfony\Component\Workflow\WorkflowInterface;
 
 class PaymentService
 {
-    public function __construct(private readonly WorkflowInterface $workflow, private readonly Security $security, private readonly PaymentRepository $paymentRepository)
-    {
+    public function __construct(
+        private readonly WorkflowInterface $paymentProcessing,
+        private readonly Security $security,
+        private readonly PaymentRepository $paymentRepository
+    ) {
     }
 
     public function createPendingPayment(Order $order): Payment
@@ -20,24 +23,25 @@ class PaymentService
         if (!$payment) {
             $payment = new Payment();
         }
-        $this->workflow->getMarking($payment);
+        $this->paymentProcessing->getMarking($payment);
         $payment->setUser($this->security->getUser());
         $payment->setAmount($order->getAmount());
         $order->addPayment($payment);
 
+        $this->save($payment);
         return $payment;
     }
 
-    public function confirmPayment(Payment $payment)
+    public function save(Payment $payment): void
     {
-        if ($this->workflow->can($payment, 'to_confirm')) {
-            $this->workflow->apply($payment, 'to_confirm');
-        }
         $this->paymentRepository->save($payment);
     }
 
-    public function save(Payment $payment)
+    public function confirmPayment(Payment $payment): void
     {
+        if ($this->paymentProcessing->can($payment, 'to_confirm')) {
+            $this->paymentProcessing->apply($payment, 'to_confirm');
+        }
         $this->paymentRepository->save($payment);
     }
 }

@@ -7,6 +7,7 @@ use App\Exception\ProductStockDepletedException;
 use App\Manager\CartManager;
 use App\Repository\ProductRepository;
 use App\Service\CartService;
+use JsonException;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +33,9 @@ class CartApiController extends AbstractController
         return JsonResponse::fromJsonString($serialized);
     }
 
+    /**
+     * @throws JsonException
+     */
     #[OA\Post(
         requestBody: new OA\RequestBody(
             required: true,
@@ -79,7 +83,7 @@ class CartApiController extends AbstractController
                 ], Response::HTTP_NOT_FOUND);
             }
 
-            $cartService->addProduct($product);
+            $cartService->add($product->toCartItem());
         } catch (ProductStockDepletedException $e) {
             return $this->json([
                 'status' => "something went wrong, please try again later",
