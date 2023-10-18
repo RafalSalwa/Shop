@@ -14,7 +14,7 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
 {
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(referencedColumnName: 'plan_id')]
-    private CartInsertableInterface $referenceEntity;
+    protected CartInsertableInterface $referenceEntity;
 
     public function getType(): string
     {
