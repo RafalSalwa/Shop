@@ -22,6 +22,10 @@ stan: ## Runs static analysis with phpstan
 bench: ## Runs benchmarks with phpbench
 	composer bench
 
+.PHONY: phpda
+phpda:
+	docker run --rm -v $PWD:/app mamuz/phpda
+
 test: ### run test
 	go test -v -cover -race ./internal/... ./pkg/... ./cmd/...
 .PHONY: test

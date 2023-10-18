@@ -59,7 +59,9 @@
       "php-http/discovery": true,
       "symfony/flex": true,
       "symfony/runtime": true,
-      "phpstan/extension-installer": true
+      "phpstan/extension-installer": true,
+      "infection/extension-installer": true,
+      "phpro/grumphp": true
     },
     "optimize-autoloader": true,
     "preferred-install": {
@@ -122,6 +124,11 @@
     "symfony": {
       "allow-contrib": false,
       "require": "6.3.*"
+    },
+    "grumphp": {
+      "config-default-path": "./grumphp.yml",
+      "project-path": "src/",
+      "disable-plugin": false
     }
   },
   "require-dev": {
@@ -131,10 +138,12 @@
     "doctrine/doctrine-fixtures-bundle": "^3.4",
     "dq5studios/psalm-junit": "^3.0",
     "friendsofphp/php-cs-fixer": "^3.4",
+    "infection/infection": "^0.27.6",
     "orklah/psalm-insane-comparison": "^2.2",
     "php-standard-library/psalm-plugin": "^2.2",
     "phpbench/phpbench": "^1.2",
     "phpmd/phpmd": "@stable",
+    "phpro/grumphp": "^1.16",
     "phpstan/extension-installer": "^1.3",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-doctrine": "^1.3",
