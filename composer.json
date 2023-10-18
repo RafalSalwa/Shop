@@ -61,7 +61,8 @@
       "symfony/runtime": true,
       "phpstan/extension-installer": true,
       "infection/extension-installer": true,
-      "phpro/grumphp": true
+      "phpro/grumphp": true,
+      "dealerdirect/phpcodesniffer-composer-installer": true
     },
     "optimize-autoloader": true,
     "preferred-install": {
@@ -139,6 +140,7 @@
     "dq5studios/psalm-junit": "^3.0",
     "friendsofphp/php-cs-fixer": "^3.4",
     "infection/infection": "^0.27.6",
+    "nunomaduro/phpinsights": "^2.8",
     "orklah/psalm-insane-comparison": "^2.2",
     "php-standard-library/psalm-plugin": "^2.2",
     "phpbench/phpbench": "^1.2",

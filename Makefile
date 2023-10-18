@@ -26,6 +26,10 @@ bench: ## Runs benchmarks with phpbench
 phpda:
 	docker run --rm -v $PWD:/app mamuz/phpda
 
+.PHONY: phpinsights
+phpinsights:
+	./vendor/bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
+
 test: ### run test
 	go test -v -cover -race ./internal/... ./pkg/... ./cmd/...
 .PHONY: test

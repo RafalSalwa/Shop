@@ -12,7 +12,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class OAuthTokenController extends AbstractController
 {
@@ -20,7 +19,7 @@ class OAuthTokenController extends AbstractController
      * @throws TransportExceptionInterface
      */
     #[Route('/callback', name: 'oauth_callback')]
-    public function callback(Request $request, Session $session, HttpClientInterface $client): Response
+    public function callback(Request $request, Session $session): Response
     {
         if ($request->query->has('code')) {
             $session->set('oauth2_code', $request->get('code'));
@@ -30,7 +29,7 @@ class OAuthTokenController extends AbstractController
             'client_id' => 'testclient',
             'client_secret' => 'testpass',
             'redirect_uri' => 'http://localhost:8080/callback',
-            'code' => urldecode((string) $request->get('code')),
+            'code' => urldecode((string)$request->get('code')),
         ];
 
         return $this->render('oauth_token/callback.html.twig', [
@@ -52,7 +51,7 @@ class OAuthTokenController extends AbstractController
         $appClient = $service->getClient();
         $user = $this->getUser();
         $userConsents = $user->getOAuth2UserConsents()->filter(
-            fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient
+            fn(OAuth2UserConsent $consent) => $consent->getClient() === $appClient
         )->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
         $requestedScopes = explode(' ', $request->query->get('scope'));
