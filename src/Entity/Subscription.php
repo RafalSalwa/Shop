@@ -133,5 +133,4 @@ class Subscription
     {
         $this->setCreatedAt(new DateTime('now'));
     }
-
 }

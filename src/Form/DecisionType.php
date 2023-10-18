@@ -14,5 +14,4 @@ class DecisionType extends AbstractType
             ->add('yes', SubmitType::class)
             ->add('no', SubmitType::class);
     }
-
 }

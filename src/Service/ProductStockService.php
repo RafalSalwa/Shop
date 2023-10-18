@@ -7,8 +7,6 @@ use App\Entity\Product;
 use App\Entity\StockManageableInterface;
 use App\Event\StockDepletedEvent;
 use App\Exception\ItemNotFoundException;
-use App\Exception\ProductNotFound;
-use App\Exception\ProductStockDepleted;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
@@ -16,7 +14,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductStockService
 {
-
     public function __construct(
         private readonly LockFactory $productLockFactory,
         private readonly ProductRepository $repository,

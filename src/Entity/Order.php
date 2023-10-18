@@ -207,5 +207,4 @@ class Order
     {
         return $this->createdAt;
     }
-
 }

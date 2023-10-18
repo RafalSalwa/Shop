@@ -12,5 +12,4 @@ class Get extends Route
     {
         return ["GET"];
     }
-
 }

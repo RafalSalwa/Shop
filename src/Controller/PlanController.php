@@ -10,7 +10,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class PlanController extends AbstractController
 {
-
     #[Route('/plan', name: 'plan_index')]
     public function index(PlanRepository $planRepository): Response
     {

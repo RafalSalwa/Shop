@@ -3,3 +3,7 @@ parameters:
     paths:
         - src/
         - tests/
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true

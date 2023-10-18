@@ -36,8 +36,7 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-//        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
+        //        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
         return null;
     }
-
 }

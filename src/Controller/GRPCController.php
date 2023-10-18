@@ -140,5 +140,4 @@ class GRPCController extends AbstractController
             'grpc_credentials' => $lastSignUp
         ]);
     }
-
 }

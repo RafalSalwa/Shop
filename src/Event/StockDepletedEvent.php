@@ -23,5 +23,4 @@ class StockDepletedEvent extends Event
     {
         return $this->arrProd;
     }
-
 }

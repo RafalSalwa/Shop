@@ -150,5 +150,4 @@ class CartService
             $cart->getItems()->removeElement($item);
         }
     }
-
 }

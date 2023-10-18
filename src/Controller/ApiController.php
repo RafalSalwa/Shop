@@ -11,7 +11,6 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ApiController extends AbstractController
 {
-
     #[Route('/api/test', name: 'app_api_test', methods: ['GET'])]
     #[OA\Response(
         response: 200,

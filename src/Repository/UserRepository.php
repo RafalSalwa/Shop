@@ -38,7 +38,6 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findOneByEmail()
     {
-
     }
 
     /**

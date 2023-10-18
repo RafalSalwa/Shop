@@ -16,6 +16,4 @@ class EntityVerifyCode
         $this->code = $code;
         return $this;
     }
-
-
 }

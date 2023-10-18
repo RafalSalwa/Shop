@@ -40,6 +40,4 @@ class SignUpUserInput
         $this->passwordConfirm = $passwordConfirm;
         return $this;
     }
-
-
 }

@@ -12,5 +12,4 @@ class Post extends Route
     {
         return ["POST"];
     }
-
 }

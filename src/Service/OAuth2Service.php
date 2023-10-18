@@ -16,8 +16,7 @@ class OAuth2Service
         private readonly EntityManagerInterface $entityManager,
         private readonly Security               $security,
         private readonly RequestStack           $requestStack
-    )
-    {
+    ) {
     }
 
     public function getProfile($appClient)
@@ -31,7 +30,7 @@ class OAuth2Service
         $request = $this->requestStack->getCurrentRequest();
 
         $userConsents = $user->getOAuth2UserConsents()->filter(
-            fn(OAuth2UserConsent $consent) => $consent->getClient() === $appClient
+            fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient
         )->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
 

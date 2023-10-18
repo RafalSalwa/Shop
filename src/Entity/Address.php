@@ -159,6 +159,4 @@ class Address
         $this->user = $user;
         return $this;
     }
-
-
 }

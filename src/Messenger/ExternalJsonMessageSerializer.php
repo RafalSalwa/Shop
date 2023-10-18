@@ -9,7 +9,6 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
 class ExternalJsonMessageSerializer implements SerializerInterface
 {
-
     public function decode(array $encodedEnvelope): Envelope
     {
     }

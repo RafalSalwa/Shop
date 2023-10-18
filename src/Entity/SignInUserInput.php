@@ -28,6 +28,4 @@ class SignInUserInput
         $this->password = $password;
         return $this;
     }
-
-
 }

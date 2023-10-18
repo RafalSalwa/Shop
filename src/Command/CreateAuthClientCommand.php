@@ -18,7 +18,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 )]
 class CreateAuthClientCommand extends Command
 {
-
     public function __construct(
         private readonly EntityManagerInterface $em,
         private readonly UserPasswordHasherInterface $passwordHasher
@@ -41,8 +40,8 @@ class CreateAuthClientCommand extends Command
         $user = $this->em->getRepository(User::class)->findOneBy(['user_id' => 1]);
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
-//        $this->em->persist($user);
-//        $this->em->flush();
+        //        $this->em->persist($user);
+        //        $this->em->flush();
 
         // Create the client
         $conn = $this->em->getConnection();

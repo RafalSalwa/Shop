@@ -97,8 +97,8 @@ class Cart implements JsonSerializable
     {
         /** @var CartItemInterface $element */
         return $this->getItems()->exists(
-            fn($key, $element) => $element->getReferenceEntity()->getId() === $cartItem->getReferenceEntity()->getId(
-                ) &&
+            fn ($key, $element) => $element->getReferenceEntity()->getId() === $cartItem->getReferenceEntity()->getId(
+            ) &&
                 $element::class === $cartItem::class
         );
     }
@@ -116,8 +116,8 @@ class Cart implements JsonSerializable
     public function getFilteredItems(CartItem $newItem): ReadableCollection
     {
         return $this->getItems()->filter(
-            fn(CartItem $cartItem) => $cartItem->getReferenceEntity()->getId() === $newItem->getReferenceEntity(
-                )->getId() &&
+            fn (CartItem $cartItem) => $cartItem->getReferenceEntity()->getId() === $newItem->getReferenceEntity(
+            )->getId() &&
                 $cartItem::class === $newItem::class
         );
     }
@@ -134,7 +134,7 @@ class Cart implements JsonSerializable
     public function itemTypeExists(CartItemInterface $cartItem): bool
     {
         /* @var CartItem $element */
-        return $this->getItems()->exists(fn($key, $element) => $element::class === $cartItem::class);
+        return $this->getItems()->exists(fn ($key, $element) => $element::class === $cartItem::class);
     }
 
     public function getUser(): User

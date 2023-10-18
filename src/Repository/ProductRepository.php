@@ -49,5 +49,4 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
-
 }

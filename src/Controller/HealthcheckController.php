@@ -18,5 +18,3 @@ class HealthcheckController extends AbstractController
         return new JsonResponse('Ok');
     }
 }
-
-

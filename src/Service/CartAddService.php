@@ -69,5 +69,4 @@ class CartAddService
             $lock->release();
         }
     }
-
 }

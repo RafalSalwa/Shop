@@ -1,18 +1,20 @@
 <?php
+
 // GENERATED CODE -- DO NOT EDIT!
 
 namespace App\Protobuf\Generated;
 
 /**
  */
-class UserServiceClient extends \Grpc\BaseStub {
-
+class UserServiceClient extends \Grpc\BaseStub
+{
     /**
      * @param string $hostname hostname
      * @param array $opts channel options
      * @param \Grpc\Channel $channel (optional) re-use channel object
      */
-    public function __construct($hostname, $opts, $channel = null) {
+    public function __construct($hostname, $opts, $channel = null)
+    {
         parent::__construct($hostname, $opts, $channel);
     }
 
@@ -22,12 +24,18 @@ class UserServiceClient extends \Grpc\BaseStub {
      * @param array $options call options
      * @return \Grpc\UnaryCall
      */
-    public function GetUserById(\App\Protobuf\Generated\GetUserRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/intrvproto.UserService/GetUserById',
-        $argument,
-        ['\App\Protobuf\Generated\UserResponse', 'decode'],
-        $metadata, $options);
+    public function GetUserById(
+        \App\Protobuf\Generated\GetUserRequest $argument,
+        $metadata = [],
+        $options = []
+    ) {
+        return $this->_simpleRequest(
+            '/intrvproto.UserService/GetUserById',
+            $argument,
+            ['\App\Protobuf\Generated\UserResponse', 'decode'],
+            $metadata,
+            $options
+        );
     }
 
     /**
@@ -36,12 +44,18 @@ class UserServiceClient extends \Grpc\BaseStub {
      * @param array $options call options
      * @return \Grpc\UnaryCall
      */
-    public function GetUserDetails(\App\Protobuf\Generated\GetUserRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/intrvproto.UserService/GetUserDetails',
-        $argument,
-        ['\App\Protobuf\Generated\UserDetails', 'decode'],
-        $metadata, $options);
+    public function GetUserDetails(
+        \App\Protobuf\Generated\GetUserRequest $argument,
+        $metadata = [],
+        $options = []
+    ) {
+        return $this->_simpleRequest(
+            '/intrvproto.UserService/GetUserDetails',
+            $argument,
+            ['\App\Protobuf\Generated\UserDetails', 'decode'],
+            $metadata,
+            $options
+        );
     }
 
     /**
@@ -50,12 +64,18 @@ class UserServiceClient extends \Grpc\BaseStub {
      * @param array $options call options
      * @return \Grpc\UnaryCall
      */
-    public function VerifyUser(\App\Protobuf\Generated\VerifyUserRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/intrvproto.UserService/VerifyUser',
-        $argument,
-        ['\App\Protobuf\Generated\VerificationResponse', 'decode'],
-        $metadata, $options);
+    public function VerifyUser(
+        \App\Protobuf\Generated\VerifyUserRequest $argument,
+        $metadata = [],
+        $options = []
+    ) {
+        return $this->_simpleRequest(
+            '/intrvproto.UserService/VerifyUser',
+            $argument,
+            ['\App\Protobuf\Generated\VerificationResponse', 'decode'],
+            $metadata,
+            $options
+        );
     }
 
     /**
@@ -64,12 +84,17 @@ class UserServiceClient extends \Grpc\BaseStub {
      * @param array $options call options
      * @return \Grpc\UnaryCall
      */
-    public function ChangePassword(\App\Protobuf\Generated\ChangePasswordRequest $argument,
-      $metadata = [], $options = []) {
-        return $this->_simpleRequest('/intrvproto.UserService/ChangePassword',
-        $argument,
-        ['\App\Protobuf\Generated\ChangePasswordResponse', 'decode'],
-        $metadata, $options);
+    public function ChangePassword(
+        \App\Protobuf\Generated\ChangePasswordRequest $argument,
+        $metadata = [],
+        $options = []
+    ) {
+        return $this->_simpleRequest(
+            '/intrvproto.UserService/ChangePassword',
+            $argument,
+            ['\App\Protobuf\Generated\ChangePasswordResponse', 'decode'],
+            $metadata,
+            $options
+        );
     }
-
 }

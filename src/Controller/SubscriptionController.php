@@ -18,6 +18,4 @@ class SubscriptionController extends AbstractController
         $this->addFlash("info", "Subscription removed");
         return $this->redirectToRoute("app_index");
     }
-
-
 }

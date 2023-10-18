@@ -16,7 +16,6 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'order_item')]
 class OrderItem
 {
-
     #[Id]
     #[GeneratedValue(strategy: 'AUTO')]
     #[Column(name: 'order_item_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -62,5 +61,4 @@ class OrderItem
         $this->itemType = $itemType;
         return $this;
     }
-
 }

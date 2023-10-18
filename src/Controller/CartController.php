@@ -4,8 +4,6 @@ namespace App\Controller;
 
 use App\Entity\CartItem;
 use App\Exception\ItemNotFoundException;
-use App\Exception\ProductNotFound;
-use App\Exception\ProductStockDepleted;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartItemFactory;
@@ -30,7 +28,8 @@ class CartController extends AbstractController
      */
     #[Route('/cart/add/{type}/{id}', name: 'cart_add')]
     public function addToCart(
-        #[ValueResolver('cart_item_type')] string $type,
+        #[ValueResolver('cart_item_type')]
+        string $type,
         int $id,
         CartService $cartService,
         CartItemFactory $cartItemFactory
@@ -46,8 +45,7 @@ class CartController extends AbstractController
             return $this->redirectToRoute($type . '_index', ['id' => $id, "page" => 1]);
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash("error", $psd->getMessage());
-        } catch (AccessDeniedException $ade) {
-            dd($ade);
+        } catch (AccessDeniedException) {
             $this->addFlash(
                 "error",
                 "You cannot add this product to cart with current subscription. Consider upgrade:)"

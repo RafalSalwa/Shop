@@ -27,7 +27,8 @@ class CartApiController extends AbstractController
     {
         $cart = $cartManager->getCurrentCart();
         $serialized = $serializer->serialize(
-            $cart, 'json',
+            $cart,
+            'json',
             ['groups' => ['carts', 'cart_item']]
         );
         return JsonResponse::fromJsonString($serialized);
@@ -43,7 +44,7 @@ class CartApiController extends AbstractController
         ),
         tags: ['Cart'],
         responses: [
-            new  OA\Response(
+            new OA\Response(
                 response: 200,
                 description: 'Returns the success response',
                 content: new OA\JsonContent(type: "object", example: "{'success': 'true'}")
@@ -52,8 +53,7 @@ class CartApiController extends AbstractController
                 response: 404,
                 description: "Product not found",
                 content: new OA\JsonContent(ref: "#/components/schemas/error")
-            )
-            ,
+            ),
             new OA\Response(ref: "#/components/responses/JwtTokenInvalid", response: 401)
         ]
     )]

@@ -8,7 +8,6 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class OrderStatusVoter extends Voter
 {
-
     protected function supports($attribute, $subject): bool
     {
         return $subject instanceof Order && $attribute === 'view' && $subject->getStatus() === Order::PENDING;

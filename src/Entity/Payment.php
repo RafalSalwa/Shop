@@ -154,5 +154,4 @@ class Payment
         $this->order = $order;
         return $this;
     }
-
 }

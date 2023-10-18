@@ -23,8 +23,8 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         private readonly Security              $security,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly RequestStack          $requestStack,
-        FirewallMapInterface                   $firewallMap)
-    {
+        FirewallMapInterface                   $firewallMap
+    ) {
         $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())->getName();
     }
 

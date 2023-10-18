@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class CartManager
 {
-
     public function __construct(
         private readonly CartSessionStorage $cartSessionStorage,
         private readonly CartFactory $cartFactory,

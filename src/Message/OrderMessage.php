@@ -4,7 +4,6 @@ namespace App\Message;
 
 class OrderMessage
 {
-
     public function __construct(private readonly int $orderId)
     {
     }

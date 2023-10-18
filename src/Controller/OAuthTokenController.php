@@ -14,7 +14,6 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class OAuthTokenController extends AbstractController
 {
-
     /**
      * @throws TransportExceptionInterface
      */
@@ -51,7 +50,7 @@ class OAuthTokenController extends AbstractController
         $appClient = $service->getClient();
         $user = $this->getUser();
         $userConsents = $user->getOAuth2UserConsents()->filter(
-            fn(OAuth2UserConsent $consent) => $consent->getClient() === $appClient
+            fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient
         )->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
         $requestedScopes = explode(' ', $request->query->get('scope'));
