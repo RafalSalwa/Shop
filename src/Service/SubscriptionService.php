@@ -18,11 +18,14 @@ class SubscriptionService
     ) {
     }
 
-    public function cancelSubscription()
+    public function cancelSubscription(): void
     {
         $this->assignSubscription('Freemium');
     }
 
+    /**
+     * @return void
+     */
     public function assignSubscription(string $type)
     {
         $plan = $this->planRepository->getByName($type);

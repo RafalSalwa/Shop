@@ -16,54 +16,80 @@ class UserDetails extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
+     *
+     * @var int|string
      */
     protected $Id = 0;
     /**
      * Generated from protobuf field <code>string Username = 2;</code>.
+     *
+     * @var string
      */
     protected $Username = '';
     /**
      * Generated from protobuf field <code>string Firstname = 3;</code>.
+     *
+     * @var string
      */
     protected $Firstname = '';
     /**
      * Generated from protobuf field <code>string Lastname = 4;</code>.
+     *
+     * @var string
      */
     protected $Lastname = '';
     /**
      * Generated from protobuf field <code>string Email = 5;</code>.
+     *
+     * @var string
      */
     protected $Email = '';
     /**
      * Generated from protobuf field <code>string Password = 6;</code>.
+     *
+     * @var string
      */
     protected $Password = '';
     /**
      * Generated from protobuf field <code>string RolesJson = 7;</code>.
+     *
+     * @var string
      */
     protected $RolesJson = '';
     /**
      * Generated from protobuf field <code>string Roles = 8;</code>.
+     *
+     * @var string
      */
     protected $Roles = '';
     /**
      * Generated from protobuf field <code>string Role = 9;</code>.
+     *
+     * @var string
      */
     protected $Role = '';
     /**
      * Generated from protobuf field <code>bool Verified = 10;</code>.
+     *
+     * @var bool
      */
     protected $Verified = false;
     /**
      * Generated from protobuf field <code>bool Active = 11;</code>.
+     *
+     * @var bool
      */
     protected $Active = false;
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp CreatedAt = 12;</code>.
+     *
+     * @var \Google\Protobuf\Timestamp|null
      */
     protected $CreatedAt;
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp LastLogin = 13;</code>.
+     *
+     * @var \Google\Protobuf\Timestamp|null
      */
     protected $LastLogin;
 

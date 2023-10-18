@@ -16,6 +16,8 @@ class UserResponse extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>.intrvproto.User user = 1;</code>.
+     *
+     * @var User|null
      */
     protected $user;
 

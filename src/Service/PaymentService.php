@@ -19,7 +19,7 @@ class PaymentService
     ) {
     }
 
-    public function createPendingPayment(Order $order): Payment
+    public function createPendingPayment(Order $order): \App\Entity\TValue|Payment
     {
         $payment = $order->getLastPayment();
         if (!$payment) {

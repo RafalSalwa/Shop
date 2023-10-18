@@ -23,7 +23,7 @@ class StockDepletedListener implements EventSubscriberInterface
         ];
     }
 
-    public function onStockDepleted(StockDepletedEvent $event)
+    public function onStockDepleted(StockDepletedEvent $event): void
     {
         $productData = $event->getEventData();
         $email = (new Email())

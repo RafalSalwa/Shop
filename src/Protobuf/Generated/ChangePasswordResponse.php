@@ -16,6 +16,8 @@ class ChangePasswordResponse extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
+     *
+     * @var string
      */
     protected $status = '';
 

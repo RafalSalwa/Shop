@@ -62,4 +62,8 @@ interface CartItemInterface
      * Calculate the total price for the cart item based on quantity.
      */
     public function getTotalPrice(): float;
+
+    public function setCart(Cart $cart): self;
+
+    public function getReferenceEntity(): CartInsertableInterface;
 }

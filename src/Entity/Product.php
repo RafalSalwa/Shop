@@ -98,7 +98,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->quantityPerUnit;
     }
 
-    public function getUnitsInStock()
+    public function getUnitsInStock(): int
     {
         return $this->unitsInStock;
     }
@@ -110,7 +110,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this;
     }
 
-    public function getUnitsOnOrder()
+    public function getUnitsOnOrder(): int
     {
         return $this->unitsOnOrder;
     }

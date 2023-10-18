@@ -3,6 +3,7 @@
         reportMixedIssues="true"
         findUnusedBaselineEntry="true"
         findUnusedCode="true"
+        memoizeMethodCallResults="true"
 >
     <projectFiles>
         <directory name="src"/>

@@ -16,14 +16,20 @@ class SignInUserResponse extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
+     *
+     * @var string
      */
     protected $status = '';
     /**
      * Generated from protobuf field <code>string access_token = 2;</code>.
+     *
+     * @var string
      */
     protected $access_token = '';
     /**
      * Generated from protobuf field <code>string refresh_token = 3;</code>.
+     *
+     * @var string
      */
     protected $refresh_token = '';
 

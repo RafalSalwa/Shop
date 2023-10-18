@@ -16,10 +16,14 @@ class ChangePasswordRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
+     *
+     * @var int|string
      */
     protected $Id = 0;
     /**
      * Generated from protobuf field <code>string Password = 2;</code>.
+     *
+     * @var string
      */
     protected $Password = '';
 

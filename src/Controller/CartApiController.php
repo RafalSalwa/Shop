@@ -5,10 +5,14 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
+use App\Exception\TooManySubscriptionsException;
 use App\Manager\CartManager;
 use App\Repository\ProductRepository;
 use App\Service\CartService;
+use Doctrine\DBAL\Exception;
+use JsonException;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +22,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
+
+use const JSON_THROW_ON_ERROR;
 
 class CartApiController extends AbstractController
 {
@@ -33,11 +39,11 @@ class CartApiController extends AbstractController
             ['groups' => ['carts', 'cart_item']]
         );
 
-        return JsonResponse::fromJsonString($serialized);
+        return new JsonResponse($serialized);
     }
 
     /**
-     * @throws \JsonException
+     * @throws JsonException
      */
     #[OA\Post(
         requestBody: new OA\RequestBody(
@@ -68,13 +74,13 @@ class CartApiController extends AbstractController
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (!$params['id']) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $prodId = (int) $params['id'];
+            $prodId = (int)$params['id'];
 
             /** @var Product $product */
             $product = $productRepository->find($prodId);
@@ -91,6 +97,8 @@ class CartApiController extends AbstractController
                 'status' => 'something went wrong, please try again later',
                 'message' => $e->getMessage(),
             ], Response::HTTP_NOT_FOUND);
+        } catch (ItemNotFoundException|TooManySubscriptionsException $e) {
+        } catch (Exception $e) {
         }
 
         return $this->json([

@@ -15,6 +15,11 @@ class AddressRepository extends ServiceEntityRepository
         parent::__construct($registry, Address::class);
     }
 
+    /**
+     * @param mixed|null $address
+     *
+     * @psalm-param T|null $address
+     */
     public function save(mixed $address)
     {
         $this->getEntityManager()->persist($address);

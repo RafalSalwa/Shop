@@ -20,6 +20,8 @@ class GetUsersResponse extends \Google\Protobuf\Internal\Message
     private $users;
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
+     *
+     * @var string
      */
     protected $email = '';
 

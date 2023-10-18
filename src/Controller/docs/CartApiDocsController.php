@@ -8,7 +8,7 @@ use App\Controller\CartApiController;
 
 class CartApiDocsController extends CartApiController
 {
-    public function addDocs()
+    public function addDocs(): void
     {
     }
 }

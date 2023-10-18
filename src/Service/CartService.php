@@ -32,7 +32,7 @@ class CartService
     ) {
     }
 
-    public function clearCart()
+    public function clearCart(): void
     {
         $cart = $this->getCurrentCart();
         foreach ($cart->getItems() as $item) {
@@ -68,7 +68,7 @@ class CartService
         $this->cartSessionStorage->setCart($cart);
     }
 
-    public function confirmCart()
+    public function confirmCart(): void
     {
         $cart = $this->getCurrentCart();
         $cart->setStatus(Cart::STATUS_CONFIRMED);
@@ -76,7 +76,7 @@ class CartService
         $this->entityManager->flush();
     }
 
-    public function setDefaultDeliveryAddress(int $deliveryAddressId)
+    public function setDefaultDeliveryAddress(int $deliveryAddressId): void
     {
         $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
     }
@@ -103,7 +103,7 @@ class CartService
     /**
      * @throws ItemNotFoundException
      */
-    public function makeCartItem($entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
+    public function makeCartItem(object $entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
     {
         return $this->cartItemFactory->createCartItem($entity);
     }
@@ -144,7 +144,7 @@ class CartService
         }
     }
 
-    public function removeItemIfExists(CartItem $item)
+    public function removeItemIfExists(CartItem $item): void
     {
         $cart = $this->getCurrentCart();
 

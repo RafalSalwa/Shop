@@ -20,7 +20,7 @@ class LoginSuccessSubscriber implements EventSubscriberInterface
         ];
     }
 
-    public function onSuccessfulLogin(LoginSuccessEvent $event)
+    public function onSuccessfulLogin(LoginSuccessEvent $event): void
     {
         /** @var User $user */
         $user = $event->getUser();

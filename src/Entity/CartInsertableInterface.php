@@ -6,6 +6,8 @@ namespace App\Entity;
 
 interface CartInsertableInterface
 {
+    public function getId(): int;
+
     public function toCartItem(): CartItem;
 
     public function getName(): string;

@@ -16,10 +16,14 @@ class GetUserResponse extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
+     *
+     * @var string
      */
     protected $username = '';
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
+     *
+     * @var string
      */
     protected $email = '';
 

@@ -96,7 +96,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getDeliveryAddresses(): Collection
+    public function getDeliveryAddresses(): Collection|null
     {
         return $this->deliveryAddresses;
     }
@@ -194,7 +194,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -209,7 +209,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getPhoneNo()
+    public function getPhoneNo(): string|null
     {
         return $this->phoneNo;
     }
@@ -243,7 +243,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getVerificationCode()
+    public function getVerificationCode(): string
     {
         return $this->verificationCode;
     }
@@ -258,7 +258,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getVerified()
+    public function getVerified(): bool
     {
         return $this->verified;
     }
@@ -273,7 +273,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -288,7 +288,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
@@ -303,7 +303,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getDeletedAt()
+    public function getDeletedAt(): \DateTime|null
     {
         return $this->deletedAt;
     }
@@ -318,7 +318,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getLastLogin()
+    public function getLastLogin(): \DateTime|null
     {
         return $this->lastLogin;
     }
@@ -333,7 +333,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getUpdatedAt()
+    public function getUpdatedAt(): \DateTime|null
     {
         return $this->updatedAt;
     }
@@ -380,10 +380,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this->username;
     }
 
-    /**
-     * @return Collection<int, OAuth2UserConsent>
-     */
-    public function getOAuth2UserConsents(): Collection
+    public function getOAuth2UserConsents(): Collection|null
     {
         return $this->oAuth2UserConsents;
     }

@@ -16,6 +16,8 @@ class GetUserRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>int64 user_id = 1;</code>.
+     *
+     * @var int|string
      */
     protected $user_id = 0;
 

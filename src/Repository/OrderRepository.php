@@ -41,7 +41,7 @@ class OrderRepository extends ServiceEntityRepository
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function fetchOrders(User $user, $page)
+    public function fetchOrders(User $user, int $page)
     {
         $qb = $this->createQueryBuilder('o')
             ->addSelect('o', 'i', 'p', 'a')

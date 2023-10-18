@@ -89,7 +89,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUnitPrice($userFriendly = false)
+    public function getUnitPrice($userFriendly = false): int|float
     {
         if ($userFriendly) {
             return $this->unitPrice / 100;
@@ -110,7 +110,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUpdatedAt(): \DateTime
+    public function getUpdatedAt(): \DateTime|null
     {
         return $this->updatedAt;
     }
@@ -122,7 +122,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getDeletedAt(): \DateTime
+    public function getDeletedAt(): \DateTime|null
     {
         return $this->deletedAt;
     }

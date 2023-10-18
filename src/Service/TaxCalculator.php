@@ -13,14 +13,14 @@ class TaxCalculator
     private string $netAmount;
     private string $vatAmount;
 
-    public function calculateOrderTax(Order $order)
+    public function calculateOrderTax(Order $order): void
     {
         $this->calculateTax($order->getAmount());
         $order->setNetAmount($this->getNetAmount(false));
         $order->setVatAmount($this->getVatAmount(false));
     }
 
-    public function calculateTax(int $total)
+    public function calculateTax(int $total): void
     {
         $this->total = $total;
         $vatDivisor = 1 + ($this->taxRate / 100);
@@ -28,7 +28,7 @@ class TaxCalculator
         $this->vatAmount = bcsub($this->total, $this->netAmount, 0);
     }
 
-    public function getNetAmount(bool $humanFriendly = false)
+    public function getNetAmount(bool $humanFriendly = false): string
     {
         if ($humanFriendly) {
             return number_format($this->netAmount / 100, 2, '.', ' ');
@@ -37,7 +37,7 @@ class TaxCalculator
         return $this->netAmount;
     }
 
-    public function getVatAmount(bool $humanFriendly = false)
+    public function getVatAmount(bool $humanFriendly = false): string
     {
         if ($humanFriendly) {
             return number_format($this->vatAmount / 100, 2, '.', ' ');

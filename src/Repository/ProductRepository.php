@@ -43,7 +43,7 @@ class ProductRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function increaseQty(Product $product, $qty)
+    public function increaseQty(Product $product, int $qty)
     {
         return $this
             ->createQueryBuilder('p')

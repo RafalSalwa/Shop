@@ -9,8 +9,11 @@ namespace App\Protobuf\Generated\GPBMetadata;
 
 class User
 {
-    public static $is_initialized = false;
+    public static bool $is_initialized = false;
 
+    /**
+     * @return void
+     */
     public static function initOnce()
     {
         $pool = \Google\Protobuf\Internal\DescriptorPool::getGeneratedPool();

@@ -68,7 +68,7 @@ class AuthGRPCService
         return $response;
     }
 
-    public function setUserCredentialsFromLastSignUp(array $arrUser)
+    public function setUserCredentialsFromLastSignUp(array $arrUser): void
     {
         $this->getSession()->set(self::GRPC_USER_KEY, $arrUser);
     }
@@ -85,7 +85,7 @@ class AuthGRPCService
         return $arrUser['vCode'];
     }
 
-    public function verifyCode(string $code)
+    public function verifyCode(string $code): array
     {
         $verifyCodeRequest = new VerifyUserRequest();
         $verifyCodeRequest->setCode($code);

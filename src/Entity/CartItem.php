@@ -98,28 +98,33 @@ class CartItem implements SerializerInterface, CartItemInterface
     }
 
     #[PrePersist]
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->setCreatedAt(new \DateTime('now'));
         $this->setCreatedAt(new \DateTime('now'));
     }
 
     #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    public function preUpdate(PreUpdateEventArgs $eventArgs): void
     {
         $this->value = 'changed from preUpdate callback!';
     }
 
-    public function setUser(UserInterface $getUser)
+    public function setUser(UserInterface $getUser): void
     {
     }
 
+    /**
+     * @return (int|mixed)[]
+     *
+     * @psalm-return array{id: int, username: mixed, verified: mixed, active: mixed}
+     */
     public function serialize(
         $data,
         string $format,
         SerializationContext $context = null,
         string $type = null
-    ): string {
+    ): array {
         return [
             'id' => $this->id,
             'username' => $this->username,
@@ -128,6 +133,9 @@ class CartItem implements SerializerInterface, CartItemInterface
         ];
     }
 
+    /**
+     * @return void
+     */
     public function deserialize(string $data, string $type, string $format, DeserializationContext $context = null)
     {
         // TODO: Implement deserialize() method.

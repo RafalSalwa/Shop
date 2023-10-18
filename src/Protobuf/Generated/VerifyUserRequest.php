@@ -16,6 +16,8 @@ class VerifyUserRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string code = 1;</code>.
+     *
+     * @var string
      */
     protected $code = '';
 

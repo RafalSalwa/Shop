@@ -16,6 +16,8 @@ class VerificationCodeRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>string email = 1;</code>.
+     *
+     * @var string
      */
     protected $email = '';
 

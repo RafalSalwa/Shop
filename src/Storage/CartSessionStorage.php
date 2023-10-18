@@ -77,7 +77,7 @@ class CartSessionStorage
         $this->getSession()->remove(self::CART_KEY_NAME);
     }
 
-    public function setDeliveryAddressId(int $addId)
+    public function setDeliveryAddressId(int $addId): void
     {
         $this->getSession()->set(self::ADDR_KEY_NAME, $addId);
     }

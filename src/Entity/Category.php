@@ -37,17 +37,17 @@ class Category
         $this->products = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getDescription()
+    public function getDescription(): string|null
     {
         return $this->description;
     }

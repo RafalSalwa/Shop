@@ -82,12 +82,12 @@ class Order
         return $this->address;
     }
 
-    public function setAddress(Address $address)
+    public function setAddress(Address $address): void
     {
         $this->address = $address;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -104,7 +104,7 @@ class Order
         return $this;
     }
 
-    public function getAmount(bool $userFriendly = false): int
+    public function getAmount(bool $userFriendly = false): int|float
     {
         if ($userFriendly) {
             return $this->amount / 100;
@@ -120,7 +120,7 @@ class Order
         return $this;
     }
 
-    public function getNetAmount(bool $humanFriendly)
+    public function getNetAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
             return number_format($this->netAmount / 100, 2, '.', ' ');
@@ -129,12 +129,12 @@ class Order
         return $this->netAmount;
     }
 
-    public function setNetAmount(int $amount)
+    public function setNetAmount(int $amount): void
     {
         $this->netAmount = $amount;
     }
 
-    public function getVatAmount(bool $humanFriendly)
+    public function getVatAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
             return number_format($this->vatAmount / 100, 2, '.', ' ');
@@ -143,12 +143,12 @@ class Order
         return $this->vatAmount;
     }
 
-    public function setVatAmount(int $amount)
+    public function setVatAmount(int $amount): void
     {
         $this->vatAmount = $amount;
     }
 
-    public function getItems(): Collection
+    public function getItems(): Collection|null
     {
         return $this->items;
     }
@@ -184,28 +184,36 @@ class Order
     }
 
     #[PrePersist]
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->createdAt = new \DateTime('now');
     }
 
     #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    public function preUpdate(PreUpdateEventArgs $eventArgs): void
     {
         $this->updatedAt = new \DateTime('now');
     }
 
-    public function addPayment($payment)
+    /**
+     * @param Payment|TValue $payment
+     */
+    public function addPayment(TValue|Payment $payment): void
     {
         $payment->setOrder($this);
         $this->payments[] = $payment;
     }
 
-    public function getPayments()
+    public function getPayments(): Collection|null
     {
         return $this->payments;
     }
 
+    /**
+     * @return false|mixed
+     *
+     * @psalm-return TValue|false
+     */
     public function getLastPayment()
     {
         return $this->payments->last();

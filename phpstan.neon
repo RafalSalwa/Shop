@@ -7,3 +7,7 @@ parameters:
         check:
             missingCheckedExceptionInThrows: true
             tooWideThrowType: true
+    ignoreErrors:
+        - '#Property [a-zA-Z0-9\\_]+::\$id is never written, only read.#'
+    doctrine:
+        objectManagerLoader: tests/object-manager.php

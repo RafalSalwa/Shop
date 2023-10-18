@@ -68,7 +68,7 @@ class OrderService
         $order->setAddress($address);
     }
 
-    public function confirmOrder(Order $order)
+    public function confirmOrder(Order $order): void
     {
         $this->orderProcessing->apply($order, 'to_completed');
 
@@ -80,7 +80,7 @@ class OrderService
         $this->eventDispatcher->dispatch($event);
     }
 
-    public function deserializeOrderItems(Order $order)
+    public function deserializeOrderItems(Order $order): void
     {
         $orderItems = new ArrayCollection();
         foreach ($order->getItems() as $item) {
@@ -95,7 +95,7 @@ class OrderService
         $order->setItems($orderItems);
     }
 
-    public function proceedSubscriptionsIfAny(Order $order)
+    public function proceedSubscriptionsIfAny(Order $order): void
     {
         /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {

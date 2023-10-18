@@ -25,7 +25,7 @@ class OrderConfirmedListener implements EventSubscriberInterface
         ];
     }
 
-    public function onOrderConfirmed(OrderConfirmedEvent $event)
+    public function onOrderConfirmed(OrderConfirmedEvent $event): void
     {
         $orderData = $event->getOrderData();
 

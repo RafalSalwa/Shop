@@ -16,18 +16,26 @@ class SignUpUserResponse extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
+     *
+     * @var int|string
      */
     protected $id = 0;
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
+     *
+     * @var string
      */
     protected $username = '';
     /**
      * Generated from protobuf field <code>string verification_token = 3;</code>.
+     *
+     * @var string
      */
     protected $verification_token = '';
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
+     *
+     * @var \Google\Protobuf\Timestamp|null
      */
     protected $created_at;
 

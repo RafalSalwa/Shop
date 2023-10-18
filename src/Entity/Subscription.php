@@ -59,7 +59,7 @@ class Subscription
         return $this;
     }
 
-    public function isTier(): bool
+    public function isTier(): int
     {
         return $this->tier;
     }
@@ -119,7 +119,7 @@ class Subscription
         return $this;
     }
 
-    public function getRequiredLevel()
+    public function getRequiredLevel(): int
     {
         return $this->getId();
     }

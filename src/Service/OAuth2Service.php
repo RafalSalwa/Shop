@@ -20,12 +20,12 @@ class OAuth2Service
     ) {
     }
 
-    public function getProfile($appClient)
+    public function getProfile($appClient): OAuth2ClientProfile|null
     {
         return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy(['client' => $appClient]);
     }
 
-    public function createConsent($appClient)
+    public function createConsent(Client|null $appClient)
     {
         $user = $this->security->getUser();
         $request = $this->requestStack->getCurrentRequest();
@@ -48,14 +48,14 @@ class OAuth2Service
         return $consents;
     }
 
-    public function getClient()
+    public function getClient(): Client|null
     {
         $clientId = 'testclient';
 
         return $this->entityManager->getRepository(Client::class)->findOneBy(['identifier' => $clientId]);
     }
 
-    public function save(OAuth2UserConsent $consents)
+    public function save(OAuth2UserConsent $consents): void
     {
         $this->entityManager->persist($consents);
         $this->entityManager->flush();
