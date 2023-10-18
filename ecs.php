@@ -9,10 +9,10 @@ use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([
-        __DIR__ . '/config',
-        __DIR__ . '/public',
-        __DIR__ . '/src',
-        __DIR__ . '/tests',
+        __DIR__.'/config',
+        __DIR__.'/public',
+        __DIR__.'/src',
+        __DIR__.'/tests',
     ]);
 
     // this way you add a single rule

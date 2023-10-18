@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\OAuth2ClientProfile;
 use App\Entity\OAuth2UserConsent;
-use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -14,8 +15,8 @@ class OAuth2Service
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
-        private readonly Security               $security,
-        private readonly RequestStack           $requestStack
+        private readonly Security $security,
+        private readonly RequestStack $requestStack
     ) {
     }
 
@@ -40,16 +41,17 @@ class OAuth2Service
         $consents = $userConsents ?? new OAuth2UserConsent();
         $consents->setScopes(array_merge($requestedScopes, $userScopes));
         $consents->setClient($appClient);
-        $consents->setCreated(new DateTimeImmutable());
-        $consents->setExpires(new DateTimeImmutable('+30 days'));
+        $consents->setCreated(new \DateTimeImmutable());
+        $consents->setExpires(new \DateTimeImmutable('+30 days'));
         $consents->setIpAddress($request->getClientIp());
-        
+
         return $consents;
     }
 
     public function getClient()
     {
-        $clientId = "testclient";
+        $clientId = 'testclient';
+
         return $this->entityManager->getRepository(Client::class)->findOneBy(['identifier' => $clientId]);
     }
 

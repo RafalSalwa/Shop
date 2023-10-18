@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Order;
@@ -47,7 +49,7 @@ class OrderRepository extends ServiceEntityRepository
             ->leftJoin('o.payments', 'p')
             ->leftJoin('o.address', 'a')
             ->where('o.user = :user')
-            ->orderBy('o.status', "DESC")
+            ->orderBy('o.status', 'DESC')
             ->addOrderBy('o.createdAt', 'DESC')
             ->setParameter('user', $user);
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\CartItem;
@@ -29,10 +31,10 @@ class SubscriptionStockService
         if ($entity instanceof Product) {
             $product = $this->repository->find($entity->getId());
             if (!$product) {
-                throw new ProductNotFound(sprintf("Product #%d not found.", $entity->getId()));
+                throw new ProductNotFound(sprintf('Product #%d not found.', $entity->getId()));
             }
-            if ($product->getUnitsInStock() == 0) {
-                throw new ProductStockDepleted("For this product stock is depleted.");
+            if (0 === $product->getUnitsInStock()) {
+                throw new ProductStockDepleted('For this product stock is depleted.');
             }
         }
     }
@@ -56,7 +58,7 @@ class SubscriptionStockService
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
-        if ($product->getUnitsInStock() == 1) {
+        if (1 === $product->getUnitsInStock()) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

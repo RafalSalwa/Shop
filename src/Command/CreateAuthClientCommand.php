@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Command;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -35,7 +36,7 @@ class CreateAuthClientCommand extends Command
         $clientDescription = 'Test Client App';
         $scopes = ['profile', 'email', 'cart'];
         $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
-        $redirectUris = explode(',', "https://interview.local/callback");
+        $redirectUris = explode(',', 'https://interview.local/callback');
 
         $user = $this->em->getRepository(User::class)->findOneBy(['user_id' => 1]);
         $user->setRoles(['ROLE_SUPER_ADMIN']);
@@ -59,12 +60,12 @@ class CreateAuthClientCommand extends Command
             ]);
 
             $conn->insert('oauth2_client_profile', [
-                "id" => 1,
+                'id' => 1,
                 'client_id' => $clientId,
                 'name' => $clientDescription,
             ]);
             $conn->commit();
-        } catch (Exception) {
+        } catch (\Exception) {
             $conn->rollBack();
         }
         $io->success('Bootstrap complete.');

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -43,23 +44,23 @@ class Order
     #[Column(name: 'amount', type: Types::INTEGER)]
     private int $amount;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
     private UserInterface $user;
 
     #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
-    #[JoinColumn(name: "address_id", referencedColumnName: 'address_id', nullable: true)]
+    #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
     private ?Address $address = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private ?Collection $payments = null;
 
-    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Collection $items = null;
 
     private int $netAmount = 0;
@@ -71,7 +72,7 @@ class Order
         $this->items = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updatedAt;
     }
@@ -96,9 +97,10 @@ class Order
         return $this->user;
     }
 
-    public function setUser(UserInterface $user): Order
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -107,20 +109,23 @@ class Order
         if ($userFriendly) {
             return $this->amount / 100;
         }
+
         return $this->amount;
     }
 
-    public function setAmount(int $amount): Order
+    public function setAmount(int $amount): self
     {
         $this->amount = $amount;
+
         return $this;
     }
 
     public function getNetAmount(bool $humanFriendly)
     {
         if ($humanFriendly) {
-            return number_format(($this->netAmount / 100), 2, '.', ' ');
+            return number_format($this->netAmount / 100, 2, '.', ' ');
         }
+
         return $this->netAmount;
     }
 
@@ -132,8 +137,9 @@ class Order
     public function getVatAmount(bool $humanFriendly)
     {
         if ($humanFriendly) {
-            return number_format(($this->vatAmount / 100), 2, '.', ' ');
+            return number_format($this->vatAmount / 100, 2, '.', ' ');
         }
+
         return $this->vatAmount;
     }
 
@@ -147,9 +153,10 @@ class Order
         return $this->items;
     }
 
-    public function setItems(ArrayCollection $items): Order
+    public function setItems(ArrayCollection $items): self
     {
         $this->items = $items;
+
         return $this;
     }
 
@@ -172,19 +179,20 @@ class Order
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
     #[PrePersist]
     public function prePersist()
     {
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
     #[PreUpdate]
     public function preUpdate(PreUpdateEventArgs $eventArgs)
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new \DateTime('now');
     }
 
     public function addPayment($payment)
@@ -203,7 +211,7 @@ class Order
         return $this->payments->last();
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }

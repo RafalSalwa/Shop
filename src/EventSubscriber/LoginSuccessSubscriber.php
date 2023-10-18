@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use App\Entity\User;
@@ -9,7 +11,7 @@ use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
 class LoginSuccessSubscriber implements EventSubscriberInterface
 {
-    private const EVENT_NAME = "customer_logged_in";
+    private const EVENT_NAME = 'customer_logged_in';
 
     public static function getSubscribedEvents()
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -15,13 +17,13 @@ class ApiController extends AbstractController
     #[OA\Response(
         response: 200,
         description: 'Returns the success response',
-        content: new OA\JsonContent(type: "object", example: "{'foo': 'bar', 'hello': 'world'}")
+        content: new OA\JsonContent(type: 'object', example: "{'foo': 'bar', 'hello': 'world'}")
     )]
-    #[OA\Response(response: 401, ref: "#/components/responses/JwtTokenInvalid")]
-    #[OA\Response(response: 404, description: "User not found", content: new OA\JsonContent(
-        ref: "#/components/schemas/error"
+    #[OA\Response(response: 401, ref: '#/components/responses/JwtTokenInvalid')]
+    #[OA\Response(response: 404, description: 'User not found', content: new OA\JsonContent(
+        ref: '#/components/schemas/error'
     ))]
-    #[Security(name: "Bearer")]
+    #[Security(name: 'Bearer')]
     #[OA\Tag(name: 'api_test')]
     public function user(): Response
     {

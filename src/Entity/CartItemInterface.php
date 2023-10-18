@@ -1,16 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 interface CartItemInterface
 {
     /**
-     * Get identifier of the cart item
+     * Get identifier of the cart item.
      */
     public function getId(): int;
 
     /**
-     * Get identifier of the base entity that is added
+     * Get identifier of the base entity that is added.
+     *
      * @return int
      */
     public function getReferencedEntity(): CartInsertableInterface;
@@ -31,7 +34,7 @@ interface CartItemInterface
     public function getTypeName(): string;
 
     /**
-     * Get the human-readable type name for frontend
+     * Get the human-readable type name for frontend.
      */
     public function getDisplayName(): string;
 
@@ -46,7 +49,7 @@ interface CartItemInterface
     public function getQuantity(): int;
 
     /**
-     * Get identifier of the base entity that is added
+     * Get identifier of the base entity that is added.
      */
     public function setReferencedEntity(CartInsertableInterface $entity): self;
 

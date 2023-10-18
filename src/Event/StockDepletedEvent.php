@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Event;
 
 use App\Entity\StockManageableInterface;
@@ -13,9 +15,9 @@ class StockDepletedEvent extends Event
     {
         $prod = $product->getReferenceEntity();
         $this->arrProd = [
-            "id" => $prod->getId(),
-            "name" => $prod->getName(),
-            "category" => $prod->getCategory()->getName()
+            'id' => $prod->getId(),
+            'name' => $prod->getName(),
+            'category' => $prod->getCategory()->getName(),
         ];
     }
 

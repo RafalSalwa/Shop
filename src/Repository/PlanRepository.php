@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\SubscriptionPlan;
@@ -36,6 +38,7 @@ class PlanRepository extends ServiceEntityRepository
             ->setCacheable(true)
             ->getQuery();
         $query->enableResultCache(86400, 'subscription_plans');
+
         return $query->getResult();
     }
 
@@ -45,6 +48,6 @@ class PlanRepository extends ServiceEntityRepository
 
     public function getByName(string $type)
     {
-        return $this->findOneBy(["planName" => strtolower($type)]);
+        return $this->findOneBy(['planName' => mb_strtolower($type)]);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Address;
@@ -32,9 +34,9 @@ class PaymentController extends AbstractController
 
         return $this->render('shipping/step_one.html.twig', [
             'form' => $form->createView(),
-            "deliveryAddresses" => $user->getDeliveryAddresses(),
-            "cart" => $cartService->getCurrentCart(),
-            "payment" => $cartCalculator->calculatePayment($cartService->getCurrentCart())
+            'deliveryAddresses' => $user->getDeliveryAddresses(),
+            'cart' => $cartService->getCurrentCart(),
+            'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
         ]);
     }
 }

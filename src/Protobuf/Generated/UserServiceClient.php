@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 // GENERATED CODE -- DO NOT EDIT!
 
 namespace App\Protobuf\Generated;
 
-/**
- */
 class UserServiceClient extends \Grpc\BaseStub
 {
     /**
-     * @param string $hostname hostname
-     * @param array $opts channel options
-     * @param \Grpc\Channel $channel (optional) re-use channel object
+     * @param string        $hostname hostname
+     * @param array         $opts     channel options
+     * @param \Grpc\Channel $channel  (optional) re-use channel object
      */
     public function __construct($hostname, $opts, $channel = null)
     {
@@ -20,12 +20,13 @@ class UserServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\GetUserRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                  $metadata metadata
+     * @param array                                  $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function GetUserById(
-        \App\Protobuf\Generated\GetUserRequest $argument,
+        GetUserRequest $argument,
         $metadata = [],
         $options = []
     ) {
@@ -40,12 +41,13 @@ class UserServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\GetUserRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                  $metadata metadata
+     * @param array                                  $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function GetUserDetails(
-        \App\Protobuf\Generated\GetUserRequest $argument,
+        GetUserRequest $argument,
         $metadata = [],
         $options = []
     ) {
@@ -60,12 +62,13 @@ class UserServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\VerifyUserRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                     $metadata metadata
+     * @param array                                     $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function VerifyUser(
-        \App\Protobuf\Generated\VerifyUserRequest $argument,
+        VerifyUserRequest $argument,
         $metadata = [],
         $options = []
     ) {
@@ -80,12 +83,13 @@ class UserServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\ChangePasswordRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                         $metadata metadata
+     * @param array                                         $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function ChangePassword(
-        \App\Protobuf\Generated\ChangePasswordRequest $argument,
+        ChangePasswordRequest $argument,
         $metadata = [],
         $options = []
     ) {

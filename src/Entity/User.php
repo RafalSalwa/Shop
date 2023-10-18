@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
-use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -18,17 +19,14 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
-use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-use function array_key_exists;
-
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user')]
 #[HasLifecycleCallbacks]
-class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -55,20 +53,20 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $active;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $deletedAt = null;
+    private ?\DateTime $deletedAt = null;
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $lastLogin = null;
+    private ?\DateTime $lastLogin = null;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
-    #[Groups("user_carts")]
+    #[Groups('user_carts')]
     private ?Collection $carts = null;
 
-    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
+    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ['persist'], orphanRemoval: true)]
     private ?Collection $deliveryAddresses;
 
     #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
@@ -76,8 +74,8 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private ?Collection $orders = null;
 
-    #[OneToOne(targetEntity: Subscription::class, fetch: "EAGER")]
-    #[JoinColumn(name: "subscription_id", referencedColumnName: 'subscription_id', nullable: true)]
+    #[OneToOne(targetEntity: Subscription::class, fetch: 'EAGER')]
+    #[JoinColumn(name: 'subscription_id', referencedColumnName: 'subscription_id', nullable: true)]
     private ?Subscription $subscription = null;
 
     public function __construct()
@@ -91,9 +89,10 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->subscription;
     }
 
-    public function setSubscription(Subscription $subscription): User
+    public function setSubscription(Subscription $subscription): self
     {
         $this->subscription = $subscription;
+
         return $this;
     }
 
@@ -102,9 +101,10 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->deliveryAddresses;
     }
 
-    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): User
+    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): self
     {
         $this->deliveryAddresses = $deliveryAddresses;
+
         return $this;
     }
 
@@ -226,11 +226,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getRoles(): array
     {
-        if (array_key_exists('roles', $this->roles)) {
-            $roles = $this->roles['roles'];
-        } else {
-            $roles = $this->roles;
-        }
+        $roles = \array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
         $roles[] = 'ROLE_USER';
 
@@ -365,13 +361,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
     #[PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new \DateTime('now');
     }
 
     public function eraseCredentials()
@@ -404,11 +400,9 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function removeOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
     {
-        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent)) {
-            // set the owning side to null (unless already changed)
-            if ($oAuth2UserConsent->getUser() === $this) {
-                $oAuth2UserConsent->setUser(null);
-            }
+        // set the owning side to null (unless already changed)
+        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent) && $oAuth2UserConsent->getUser() === $this) {
+            $oAuth2UserConsent->setUser(null);
         }
 
         return $this;

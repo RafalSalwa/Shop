@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -32,38 +33,39 @@ class Payment
     #[Column(name: 'operation_number', type: Types::STRING, length: 40)]
     private ?string $operationNumber;
     #[Column(name: 'operation_type', type: Types::STRING, length: 40)]
-    private string $operationType = "payment";
+    private string $operationType = 'payment';
     #[Column(name: 'amount', type: Types::INTEGER, nullable: false)]
     private int $amount;
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private string $status;
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $paymentDate;
+    private \DateTime $paymentDate;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
-    #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
     private ?User $user = null;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
-    #[JoinColumn(name: "order_id", referencedColumnName: 'order_id', nullable: true)]
+    #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: true)]
     private ?Order $order = null;
 
     public function __construct()
     {
         $this->operationNumber = Uuid::v4();
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
     public function getAmount($formatted = true): int|string
     {
-        return $formatted ? number_format($this->amount / 100, 2, ",", "") : $this->amount;
+        return $formatted ? number_format($this->amount / 100, 2, ',', '') : $this->amount;
     }
 
-    public function setAmount(int $amount): Payment
+    public function setAmount(int $amount): self
     {
         $this->amount = $amount;
+
         return $this;
     }
 
@@ -72,9 +74,10 @@ class Payment
         return $this->id;
     }
 
-    public function setId(int $id): Payment
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -83,9 +86,10 @@ class Payment
         return $this->operationNumber;
     }
 
-    public function setOperationNumber(?string $operationNumber): Payment
+    public function setOperationNumber(?string $operationNumber): self
     {
         $this->operationNumber = $operationNumber;
+
         return $this;
     }
 
@@ -94,9 +98,10 @@ class Payment
         return $this->operationType;
     }
 
-    public function setOperationType(?string $operationType): Payment
+    public function setOperationType(?string $operationType): self
     {
         $this->operationType = $operationType;
+
         return $this;
     }
 
@@ -108,28 +113,31 @@ class Payment
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
-    public function getPaymentDate(): DateTime
+    public function getPaymentDate(): \DateTime
     {
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(DateTime $paymentDate): Payment
+    public function setPaymentDate(\DateTime $paymentDate): self
     {
         $this->paymentDate = $paymentDate;
+
         return $this;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): Payment
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -141,6 +149,7 @@ class Payment
     public function setUser(User $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
@@ -152,6 +161,7 @@ class Payment
     public function setOrder(Order $order): self
     {
         $this->order = $order;
+
         return $this;
     }
 }

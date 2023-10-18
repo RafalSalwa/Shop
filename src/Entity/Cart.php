@@ -1,10 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CartRepository;
-use DateTime;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ReadableCollection;
@@ -20,13 +20,12 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
-use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart')]
 #[HasLifecycleCallbacks]
-class Cart implements JsonSerializable
+class Cart implements \JsonSerializable
 {
     final public const STATUS_CREATED = 'created';
     final public const STATUS_CONFIRMED = 'confirmed';
@@ -40,39 +39,39 @@ class Cart implements JsonSerializable
     #[OneToMany(
         mappedBy: 'cart',
         targetEntity: CartItem::class,
-        cascade: ["persist", "remove"],
+        cascade: ['persist', 'remove'],
         fetch: 'EAGER',
         orphanRemoval: true
     )
     ]
-    #[Groups("cart")]
+    #[Groups('cart')]
     private ?Collection $items;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
-    #[Groups("carts")]
+    #[Groups('carts')]
     private User $user;
 
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $updatedAt;
+    private \DateTime $updatedAt;
 
     public function __construct()
     {
         $this->items = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): self
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -95,11 +94,11 @@ class Cart implements JsonSerializable
 
     public function itemExists(CartItemInterface $cartItem): bool
     {
-        /** @var CartItemInterface $element */
+        /* @var CartItemInterface $element */
         return $this->getItems()->exists(
             fn ($key, $element) => $element->getReferenceEntity()->getId() === $cartItem->getReferenceEntity()->getId(
-            ) &&
-                $element::class === $cartItem::class
+            )
+                && $element::class === $cartItem::class
         );
     }
 
@@ -117,8 +116,8 @@ class Cart implements JsonSerializable
     {
         return $this->getItems()->filter(
             fn (CartItem $cartItem) => $cartItem->getReferenceEntity()->getId() === $newItem->getReferenceEntity(
-            )->getId() &&
-                $cartItem::class === $newItem::class
+            )->getId()
+                && $cartItem::class === $newItem::class
         );
     }
 
@@ -152,13 +151,13 @@ class Cart implements JsonSerializable
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new \DateTime('now');
     }
 
     public function jsonSerialize(): mixed
@@ -167,7 +166,6 @@ class Cart implements JsonSerializable
             'status' => $this->getStatus(),
             'items' => $this->getItems(),
             'created_at' => $this->getCreatedAt(),
-
         ];
     }
 
@@ -183,12 +181,12 @@ class Cart implements JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function setCreatedAt(\DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 

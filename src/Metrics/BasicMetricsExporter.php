@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Metrics;
 
 use OpenTelemetry\API\Metrics\ObserverInterface;

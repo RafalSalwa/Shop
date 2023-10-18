@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
@@ -57,7 +59,7 @@ class Address
     #[OneToMany(mappedBy: 'address', targetEntity: Order::class)]
     private Collection $orders;
 
-    #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
+    #[ManyToOne(targetEntity: User::class, inversedBy: 'deliveryAddresses')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;
 
@@ -69,6 +71,7 @@ class Address
     public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -80,6 +83,7 @@ class Address
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
@@ -91,6 +95,7 @@ class Address
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
@@ -102,6 +107,7 @@ class Address
     public function setAddressLine1(string $addressLine1): self
     {
         $this->addressLine1 = $addressLine1;
+
         return $this;
     }
 
@@ -113,6 +119,7 @@ class Address
     public function setAddressLine2(string $addressLine2): self
     {
         $this->addressLine2 = $addressLine2;
+
         return $this;
     }
 
@@ -124,6 +131,7 @@ class Address
     public function setCity(string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -135,6 +143,7 @@ class Address
     public function setState(string $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -146,6 +155,7 @@ class Address
     public function setPostalCode(string $postalCode): self
     {
         $this->postalCode = $postalCode;
+
         return $this;
     }
 
@@ -154,9 +164,10 @@ class Address
         return $this->user;
     }
 
-    public function setUser(UserInterface $user): Address
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 }

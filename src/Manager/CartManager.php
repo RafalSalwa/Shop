@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Manager;
 
 use App\Entity\Cart;
@@ -19,7 +21,7 @@ class CartManager
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (!$cart) {
+        if (!$cart instanceof \App\Entity\Cart) {
             $cart = $this->cartFactory->create();
         }
 

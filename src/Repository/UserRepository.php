@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\User;
@@ -27,12 +29,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
-        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($identifier, \FILTER_VALIDATE_EMAIL)) {
             return $this->findOneBy(['email' => $identifier]);
         }
         if (Uuid::isValid($identifier)) {
             return $this->findOneBy(['uuid' => Uuid::fromString($identifier)->toBinary()]);
         }
+
         return null;
     }
 

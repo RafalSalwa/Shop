@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Subscription;
@@ -30,6 +32,7 @@ class SubscriptionRepository extends ServiceEntityRepository
     {
         $subscription = new Subscription();
         $subscription->setSubscriptionPlan($plan);
+
         return $subscription;
     }
 }

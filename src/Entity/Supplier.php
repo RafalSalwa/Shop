@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SupplierRepository;
@@ -15,6 +17,8 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'suppliers')]
 class Supplier
 {
+    public $description;
+    public $picture;
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'supplier_id', type: Types::SMALLINT, unique: true, nullable: false)]

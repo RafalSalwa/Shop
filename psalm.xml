@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
-<psalm>
+<psalm
+        reportMixedIssues="true"
+        findUnusedBaselineEntry="true"
+        findUnusedCode="true"
+>
     <projectFiles>
         <directory name="src"/>
     </projectFiles>
@@ -9,5 +13,10 @@
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="Orklah\PsalmInsaneComparison\Plugin"/>
+        <pluginClass xmlns="https://getpsalm.org/schema/config" class="DQ5Studios\PsalmJunit\Plugin">
+            <filepath>./reports/junit.xml</filepath>
+            <always/>
+        </pluginClass>
     </plugins>
 </psalm>

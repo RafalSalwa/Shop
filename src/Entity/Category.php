@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
@@ -16,6 +18,10 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'categories')]
 class Category
 {
+    /**
+     * @var \Doctrine\Common\Collections\ArrayCollection
+     */
+    public $products;
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'category_id', type: Types::SMALLINT, unique: true, nullable: false)]

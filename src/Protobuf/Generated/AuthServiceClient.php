@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 // GENERATED CODE -- DO NOT EDIT!
 
 namespace App\Protobuf\Generated;
 
-/**
- */
 class AuthServiceClient extends \Grpc\BaseStub
 {
     /**
-     * @param string $hostname hostname
-     * @param array $opts channel options
-     * @param \Grpc\Channel $channel (optional) re-use channel object
+     * @param string        $hostname hostname
+     * @param array         $opts     channel options
+     * @param \Grpc\Channel $channel  (optional) re-use channel object
      */
     public function __construct($hostname, $opts, $channel = null)
     {
@@ -20,12 +20,13 @@ class AuthServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\SignUpUserInput $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                   $metadata metadata
+     * @param array                                   $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function SignUpUser(
-        \App\Protobuf\Generated\SignUpUserInput $argument,
+        SignUpUserInput $argument,
         $metadata = [],
         $options = []
     ) {
@@ -40,12 +41,13 @@ class AuthServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\SignInUserInput $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                   $metadata metadata
+     * @param array                                   $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function SignInUser(
-        \App\Protobuf\Generated\SignInUserInput $argument,
+        SignInUserInput $argument,
         $metadata = [],
         $options = []
     ) {
@@ -60,12 +62,13 @@ class AuthServiceClient extends \Grpc\BaseStub
 
     /**
      * @param \App\Protobuf\Generated\VerificationCodeRequest $argument input argument
-     * @param array $metadata metadata
-     * @param array $options call options
+     * @param array                                           $metadata metadata
+     * @param array                                           $options  call options
+     *
      * @return \Grpc\UnaryCall
      */
     public function GetVerificationKey(
-        \App\Protobuf\Generated\VerificationCodeRequest $argument,
+        VerificationCodeRequest $argument,
         $metadata = [],
         $options = []
     ) {

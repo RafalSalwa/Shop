@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventListener;
 
 use App\Event\OrderConfirmedEvent;
@@ -31,7 +33,7 @@ class OrderConfirmedListener implements EventSubscriberInterface
             ->from($this->fromEmail)
             ->to($this->fromEmail)
             ->subject('Order Confirmation')
-            ->html("Thank you for your order. Here are the details: <pre>" . print_r($orderData, true) . "</pre>");
+            ->html('Thank you for your order. Here are the details: <pre>'.print_r($orderData, true).'</pre>');
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface) {

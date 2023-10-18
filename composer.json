@@ -96,7 +96,23 @@
     ],
     "post-update-cmd": [
       "@auto-scripts"
-    ]
+    ],
+    "baseline": "phpstan --generate-baseline",
+    "bench": "phpbench run",
+    "check": [
+      "@fix",
+      "@stan",
+      "@test"
+    ],
+    "docs": "php generate-class-reference.php",
+    "fix": [
+      "@rector",
+      "@php-cs-fixer"
+    ],
+    "php-cs-fixer": "php-cs-fixer fix",
+    "rector": "rector process",
+    "stan": "phpstan",
+    "test": "phpunit"
   },
   "conflict": {
     "symfony/symfony": "*"
@@ -112,7 +128,9 @@
     "dama/doctrine-test-bundle": "^7.2",
     "dbrekelmans/bdi": "^1.0",
     "doctrine/doctrine-fixtures-bundle": "^3.4",
+    "dq5studios/psalm-junit": "^3.0",
     "friendsofphp/php-cs-fixer": "^3.4",
+    "orklah/psalm-insane-comparison": "^2.2",
     "php-standard-library/psalm-plugin": "^2.2",
     "phpbench/phpbench": "^1.2",
     "phpmd/phpmd": "@stable",
@@ -131,7 +149,7 @@
     "symfony/stopwatch": "6.3.*",
     "symfony/web-profiler-bundle": "6.3.*",
     "symplify/easy-coding-standard": "^12.0",
-    "vimeo/psalm": "^5.13",
+    "vimeo/psalm": "^5.15",
     "weirdan/doctrine-psalm-plugin": "^2.9"
   }
 }

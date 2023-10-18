@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 class SignUpUserInput
@@ -13,9 +15,10 @@ class SignUpUserInput
         return $this->email;
     }
 
-    public function setEmail(string $email): SignUpUserInput
+    public function setEmail(string $email): self
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -24,9 +27,10 @@ class SignUpUserInput
         return $this->password;
     }
 
-    public function setPassword(string $password): SignUpUserInput
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 
@@ -35,9 +39,10 @@ class SignUpUserInput
         return $this->passwordConfirm;
     }
 
-    public function setPasswordConfirm(string $passwordConfirm): SignUpUserInput
+    public function setPasswordConfirm(string $passwordConfirm): self
     {
         $this->passwordConfirm = $passwordConfirm;
+
         return $this;
     }
 }

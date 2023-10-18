@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Order;
@@ -29,16 +31,18 @@ class TaxCalculator
     public function getNetAmount(bool $humanFriendly = false)
     {
         if ($humanFriendly) {
-            return number_format(($this->netAmount / 100), 2, '.', ' ');
+            return number_format($this->netAmount / 100, 2, '.', ' ');
         }
+
         return $this->netAmount;
     }
 
     public function getVatAmount(bool $humanFriendly = false)
     {
         if ($humanFriendly) {
-            return number_format(($this->vatAmount / 100), 2, '.', ' ');
+            return number_format($this->vatAmount / 100, 2, '.', ' ');
         }
+
         return $this->vatAmount;
     }
 }

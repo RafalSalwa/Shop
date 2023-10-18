@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -53,7 +54,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->requiredSubscription;
     }
 
-
     public function getCategoryId()
     {
         return $this->categoryId;
@@ -69,6 +69,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         if ($userFriendly) {
             return $this->unitPrice / 100;
         }
+
         return $this->unitPrice;
     }
 
@@ -79,7 +80,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     public function getDisplayName(): string
     {
-        return sprintf("%s %s", $this->getTypeName(), $this->getName());
+        return sprintf('%s %s', $this->getTypeName(), $this->getName());
     }
 
     public function getTypeName(): string
@@ -97,9 +98,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->quantityPerUnit;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUnitsInStock()
     {
         return $this->unitsInStock;
@@ -108,12 +106,10 @@ class Product implements CartInsertableInterface, StockManageableInterface
     public function setUnitsInStock(int $unitsInStock): self
     {
         $this->unitsInStock = $unitsInStock;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUnitsOnOrder()
     {
         return $this->unitsOnOrder;
@@ -122,6 +118,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
     public function setUnitsOnOrder(int $unitsOnOrder): self
     {
         $this->unitsOnOrder = $unitsOnOrder;
+
         return $this;
     }
 
@@ -131,8 +128,8 @@ class Product implements CartInsertableInterface, StockManageableInterface
         $cartItem
             ->setQuantity(1)
             ->setReferencedEntity($this)
-            ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
+            ->setCreatedAt(new \DateTime('now'))
+            ->setUpdatedAt(new \DateTime('now'));
 
         return $cartItem;
     }

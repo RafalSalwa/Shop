@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Cart;
@@ -45,9 +47,10 @@ class CartService
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (!$cart) {
+        if (!$cart instanceof \App\Entity\Cart) {
             $cart = $this->cartFactory->create();
         }
+
         return $cart;
     }
 
@@ -56,7 +59,7 @@ class CartService
      */
     public function save(Cart $cart = null): void
     {
-        if (!$cart) {
+        if (!$cart instanceof \App\Entity\Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);
@@ -91,7 +94,6 @@ class CartService
         $cart = $this->getCurrentCart();
         $item = $this->makeCartItem($product);
         $this->productStockService->changeStock($product, Product::STOCK_DECREASE, 1);
-
 
         $cart->addItem($item);
 
@@ -138,14 +140,14 @@ class CartService
         $cart = $this->getCurrentCart();
 
         if ($item instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($item)) {
-            throw new TooManySubscriptionsException("You can have only one subscription in cart");
+            throw new TooManySubscriptionsException('You can have only one subscription in cart');
         }
     }
 
     public function removeItemIfExists(CartItem $item)
     {
         $cart = $this->getCurrentCart();
-        
+
         if ($cart->getItems()->contains($item)) {
             $cart->getItems()->removeElement($item);
         }

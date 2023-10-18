@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SubscriptionPlanCartItemRepository;
@@ -42,6 +44,7 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
         $this->referenceEntity = $entity;
+
         return $this;
     }
 
@@ -58,6 +61,7 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
     public function setQuantity(int $quantity): CartItemInterface
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

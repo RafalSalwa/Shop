@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PlanRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping\Column;
@@ -49,13 +50,13 @@ class SubscriptionPlan implements CartInsertableInterface
     private int $tier;
 
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private ?\DateTime $updatedAt = null;
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $deletedAt = null;
+    private ?\DateTime $deletedAt = null;
 
     public function setPlanName(?string $planName): self
     {
@@ -88,47 +89,45 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
     public function getUnitPrice($userFriendly = false)
     {
         if ($userFriendly) {
             return $this->unitPrice / 100;
         }
+
         return $this->unitPrice;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): self
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): DateTime
+    public function getDeletedAt(): \DateTime
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(DateTime $deletedAt): self
+    public function setDeletedAt(\DateTime $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
@@ -140,7 +139,7 @@ class SubscriptionPlan implements CartInsertableInterface
         $cartItem = new SubscriptionPlanCartItem();
         $cartItem->setReferencedEntity($this)
             ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'));
+            ->setCreatedAt(new \DateTime('now'));
 
         return $cartItem;
     }
@@ -148,18 +147,18 @@ class SubscriptionPlan implements CartInsertableInterface
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new DateTime('now'));
+        $this->setCreatedAt(new \DateTime('now'));
     }
 
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->setUpdatedAt(new DateTime('now'));
+        $this->setUpdatedAt(new \DateTime('now'));
     }
 
     public function getDisplayName(): string
     {
-        return sprintf("%s (%s) #%d", $this->getTypeName(), $this->getName(), $this->getId());
+        return sprintf('%s (%s) #%d', $this->getTypeName(), $this->getName(), $this->getId());
     }
 
     public function getTypeName(): string

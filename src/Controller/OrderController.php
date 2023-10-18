@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Order;
@@ -28,11 +30,11 @@ class OrderController extends AbstractController
         $pending = $orderService->createPending($cart);
         $paymentService->createPendingPayment($pending);
 
-
         if ($pending->getId()) {
             $cartService->clearCart();
         }
-        return $this->redirectToRoute("order_show", ["id" => $pending->getId()]);
+
+        return $this->redirectToRoute('order_show', ['id' => $pending->getId()]);
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
@@ -57,18 +59,20 @@ class OrderController extends AbstractController
                 $cartService->confirmCart();
 
                 $cartService->clearCart();
-                return $this->redirectToRoute("order_summary", [
-                    "id" => $order->getId()
+
+                return $this->redirectToRoute('order_summary', [
+                    'id' => $order->getId(),
                 ]);
             }
             if ($form->get('no')->isClicked()) {
-                return $this->redirectToRoute("order_index", ["page" => 1]);
+                return $this->redirectToRoute('order_index', ['page' => 1]);
             }
         }
+
         return $this->render('order/payment.html.twig', [
             'order' => $order,
             'payment' => $payment,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -87,7 +91,7 @@ class OrderController extends AbstractController
         $taxCalculator->calculateOrderTax($order);
 
         return $this->render('order/summary.html.twig', [
-            'order' => $order
+            'order' => $order,
         ]);
     }
 
@@ -97,7 +101,7 @@ class OrderController extends AbstractController
         $orders = $orderRepository->fetchOrders($user, $page);
 
         return $this->render('order/index.html.twig', [
-            'paginator' => $orders
+            'paginator' => $orders,
         ]);
     }
 
@@ -108,7 +112,7 @@ class OrderController extends AbstractController
         $orderService->deserializeOrderItems($order);
 
         return $this->render('order/details.html.twig', [
-            'order' => $order
+            'order' => $order,
         ]);
     }
 }

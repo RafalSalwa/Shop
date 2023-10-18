@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -16,8 +18,9 @@ trait SessionHelper
         $container = static::getContainer();
         $tokenGenerator = $container->get('security.csrf.token_generator');
         $csrfToken = $tokenGenerator->generateToken();
-        $session->set(SessionTokenStorage::SESSION_NAMESPACE . "/{$tokenId}", $csrfToken);
+        $session->set(SessionTokenStorage::SESSION_NAMESPACE."/{$tokenId}", $csrfToken);
         $session->save();
+
         return $csrfToken;
     }
 
@@ -28,7 +31,7 @@ trait SessionHelper
         // create a new session object
         $container = static::getContainer();
         $session = $container->get('session.factory')->createSession();
-        if ($cookie) {
+        if ($cookie instanceof \Symfony\Component\BrowserKit\Cookie) {
             // get the session id from the session cookie if it exists
             $session->setId($cookie->getValue());
             $session->start();
@@ -46,6 +49,7 @@ trait SessionHelper
             );
             $client->getCookieJar()->set($sessionCookie);
         }
+
         return $session;
     }
 

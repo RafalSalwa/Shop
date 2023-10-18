@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\User;
@@ -18,7 +20,7 @@ class SubscriptionService
 
     public function cancelSubscription()
     {
-        $this->assignSubscription("Freemium");
+        $this->assignSubscription('Freemium');
     }
 
     public function assignSubscription(string $type)
@@ -30,7 +32,7 @@ class SubscriptionService
         /** @var User $user */
         $user = $this->security->getUser();
         $subscription = $user->getSubscription();
-        if ($user->getSubscription()->getSubscriptionPlan()->getName() == $type) {
+        if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {
             return;
         }
         $subscription->setSubscriptionPlan($plan);

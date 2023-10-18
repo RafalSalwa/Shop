@@ -1,21 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Controller;
 
+use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Repository\UserRepository;
 use App\Service\CartService;
 use App\Tests\CartAssertionsTrait;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class CartControllerTest extends WebTestCase
 {
     use CartAssertionsTrait;
 
-    public function testCartIsEmpty()
+    /**
+     * @throws \Exception
+     */
+    public function testCartIsEmpty(): void
     {
         $client = static::createClient();
-
+        /** @var UserRepository $userRepository */
         $userRepository = static::getContainer()->get(UserRepository::class);
         $testUser = $userRepository->findOneByUsername('interview');
         $client->loginUser($testUser);
@@ -29,7 +36,10 @@ class CartControllerTest extends WebTestCase
         $this->assertCartIsEmpty($crawler);
     }
 
-    public function testAddProductToCart()
+    /**
+     * @throws \Exception
+     */
+    public function testAddProductToCart(): void
     {
         $client = $this->getClient();
         $crawler = $client->request('GET', '/cart/add/product/75');
@@ -49,23 +59,33 @@ class CartControllerTest extends WebTestCase
         /** @var CartService $cartService */
         $cartService = static::getContainer()->get(CartService::class);
         $cartService->clearCart();
-        $this->assertEquals(0, $cartService->getCurrentCart()->getItems()->count(), "Cart should be empty right now");
+        $this->assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
     }
 
-    private function getClient($withLoggedUser = true)
+    /**
+     * @throws \Exception
+     */
+    private function getClient(bool $withLoggedUser = true): KernelBrowser
     {
         $client = static::createClient([], ['HTTPS' => true]);
         if ($withLoggedUser) {
+            /** @var UserRepository $userRepository */
             $userRepository = static::getContainer()->get(UserRepository::class);
             $testUser = $userRepository->findOneByUsername('interview');
             $client->loginUser($testUser);
         }
+
         return $client;
     }
 
-    private function getTestProduct()
+    /**
+     * @throws \Exception
+     */
+    private function getTestProduct(): Product
     {
+        /** @var ProductRepository $productRepository */
         $productRepository = static::getContainer()->get(ProductRepository::class);
-        return $productRepository->findOneBy(["id" => 75]);
+
+        return $productRepository->find(75);
     }
 }

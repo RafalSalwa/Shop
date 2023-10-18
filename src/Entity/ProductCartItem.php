@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ProductCartItemRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use JsonSerializable;
 
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
-class ProductCartItem extends CartItem implements JsonSerializable, CartItemInterface
+class ProductCartItem extends CartItem implements \JsonSerializable, CartItemInterface
 {
     #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(referencedColumnName: 'product_id')]
@@ -58,7 +59,7 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     public function getDisplayName(): string
     {
         return sprintf(
-            "%s (%s)",
+            '%s (%s)',
             $this->getReferencedEntity()->getName(),
             $this->getReferencedEntity()->getCategory()->getName()
         );
@@ -94,6 +95,7 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     public function setQuantity(int $quantity): CartItemInterface
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

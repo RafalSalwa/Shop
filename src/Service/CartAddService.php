@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Product;
@@ -49,19 +51,20 @@ class CartAddService
             $this->entityManager->getConnection()->commit();
             $lock->release();
 
-            $this->addFlash("info", "successfully added " . $entity->getDisplayName() . " to cart");
+            $this->addFlash('info', 'successfully added '.$entity->getDisplayName().' to cart');
         } catch (ProductNotFound $pnf) {
-            $this->addFlash("error", $pnf->getMessage());
-            return $this->redirectToRoute($entity->getTypeName() . '_index', ['id' => $id, "page" => 1]);
+            $this->addFlash('error', $pnf->getMessage());
+
+            return $this->redirectToRoute($entity->getTypeName().'_index', ['id' => $id, 'page' => 1]);
         } catch (ProductStockDepletedException $psd) {
-            $this->addFlash("error", $psd->getMessage());
+            $this->addFlash('error', $psd->getMessage());
         } catch (AccessDeniedException) {
             $this->addFlash(
-                "error",
-                "You cannot add this product to cart with current subscription. Consider upgrade:)"
+                'error',
+                'You cannot add this product to cart with current subscription. Consider upgrade:)'
             );
         } catch (TooManySubscriptionsException $subex) {
-            $this->addFlash("error", $subex->getMessage());
+            $this->addFlash('error', $subex->getMessage());
         } catch (Exception $e) {
             $this->entityManager->getConnection()->rollback();
             throw $e;

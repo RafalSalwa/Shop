@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ValueResolver;
 
 use App\Entity\Product;
@@ -13,12 +15,12 @@ class CartItemTypeResolver implements ValueResolverInterface
 {
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ($argument->getName() !== "type") {
+        if ('type' !== $argument->getName()) {
             return [];
         }
 
         $value = $request->attributes->get($argument->getName());
-        if (!is_string($value)) {
+        if (!\is_string($value)) {
             return [];
         }
         $entityTypeMap = [
@@ -26,7 +28,7 @@ class CartItemTypeResolver implements ValueResolverInterface
             'plan' => SubscriptionPlan::class,
         ];
         if (!isset($entityTypeMap[$value])) {
-            throw new InvalidArgumentException("Unknown entity type:" . $value);
+            throw new InvalidArgumentException('Unknown entity type:'.$value);
         }
 
         return [$entityTypeMap[$value]];
