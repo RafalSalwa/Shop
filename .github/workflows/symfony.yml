@@ -26,9 +26,6 @@ jobs:
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
 
-      - name: Copy .env.test.local
-        run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
-
       - name: Docker Compose Action
         uses: isbang/compose-action@v1.5.1
 
@@ -45,9 +42,7 @@ jobs:
         run: composer install --no-interaction --no-progress --prefer-dist --no-suggest
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        env:
-          DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
-        run: vendor/bin/phpunit --coverage-clover coverage.xml .
+        run: vendor/bin/phpunit
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4-beta
