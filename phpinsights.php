@@ -104,7 +104,6 @@ return [
             'newlinesCountBetweenOpenTagAndDeclare' => 0,
         ],
         BinaryOperatorSpacesFixer::class => [
-            'align_double_arrow' => true,
         ],
         DocCommentSpacingSniff::class => [
             'linesCountBetweenAnnotationsGroups' => 0,
