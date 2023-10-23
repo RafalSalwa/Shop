@@ -29,6 +29,9 @@ jobs:
       - name: Copy .env.test.local
         run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
 
+      - name: Docker Compose Action
+        uses: isbang/compose-action@v1.5.1
+
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v3
