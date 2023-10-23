@@ -28,6 +28,7 @@ jobs:
 
       - name: Copy .env.test.local
         run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v3
@@ -36,25 +37,25 @@ jobs:
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-php-
+
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
-      - name: Create Database
-        run: |
-          mkdir -p data
-          touch data/database.sqlite
+        run: composer install -q --no-ansi --no-interaction --no-progress --prefer-dist --no-suggest
+
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         env:
           DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
         run: vendor/bin/phpunit --coverage-clover coverage.xml .
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4-beta
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
   phpinsights:
     runs-on: ubuntu-20.04
     name: PHP Insights checks
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
