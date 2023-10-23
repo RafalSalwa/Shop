@@ -37,7 +37,6 @@ class CartControllerTest extends WebTestCase
             $this->assertResponseIsSuccessful();
             $this->assertCartIsEmpty($crawler);
         } catch (Exception $e) {
-            dd(get_class($e));
             dd($e->getMessage(), $e->getPrevious()->getMessage(), $e->getTraceAsString());
         }
     }
