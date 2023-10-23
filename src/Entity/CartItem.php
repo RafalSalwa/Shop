@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CartItemRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
@@ -17,7 +19,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
+use Doctrine\ORM\Mapping\Table;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -25,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
+#[Table(name: 'cart_item', schema: "interview")]
 #[HasLifecycleCallbacks]
 #[InheritanceType('SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
@@ -33,14 +36,20 @@ class CartItem implements SerializerInterface, CartItemInterface
 {
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
     protected int $quantity;
+
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    protected DateTime $createdAt;
+    protected DateTimeInterface $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected DateTime $updatedAt;
+    protected ?DateTime $updatedAt = null;
+
     #[ManyToOne(targetEntity: Cart::class)]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
-    #[Groups("cart_item")]
+    #[Groups('cart_item')]
     protected ?Cart $cart = null;
+    /**
+     * @var CartInsertableInterface
+     */
+    protected CartInsertableInterface $referenceEntity;
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -86,27 +95,26 @@ class CartItem implements SerializerInterface, CartItemInterface
     }
 
     #[PrePersist]
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->setCreatedAt(new DateTime('now'));
         $this->setCreatedAt(new DateTime('now'));
     }
 
-    #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
-    {
-        $this->value = 'changed from preUpdate callback!';
-    }
-
-    public function setUser(UserInterface $getUser)
+    public function setUser(UserInterface $getUser): void
     {
     }
 
+    /**
+     * @return (int|mixed)[]
+     *
+     * @psalm-return array{id: int, username: mixed, verified: mixed, active: mixed}
+     */
     public function serialize(
         $data,
         string $format,
-        ?SerializationContext $context = null,
-        ?string $type = null
+        SerializationContext $context = null,
+        string $type = null
     ): string {
         return [
             'id' => $this->id,
@@ -116,7 +124,10 @@ class CartItem implements SerializerInterface, CartItemInterface
         ];
     }
 
-    public function deserialize(string $data, string $type, string $format, ?DeserializationContext $context = null)
+    /**
+     * @return void
+     */
+    public function deserialize(string $data, string $type, string $format, DeserializationContext $context = null)
     {
         // TODO: Implement deserialize() method.
     }
@@ -136,7 +147,7 @@ class CartItem implements SerializerInterface, CartItemInterface
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -166,10 +177,11 @@ class CartItem implements SerializerInterface, CartItemInterface
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
         $this->referenceEntity = $entity;
+
         return $this;
     }
 
-    public function toCartItem(): CartItem
+    public function toCartItem(): self
     {
         // TODO: Implement toCartItem() method.
     }
@@ -182,5 +194,10 @@ class CartItem implements SerializerInterface, CartItemInterface
     public function setQuantity(int $quantity): CartItemInterface
     {
         // TODO: Implement setQuantity() method.
+    }
+
+    public function getReferenceEntity(): CartInsertableInterface
+    {
+        // TODO: Implement getReferenceEntity() method.
     }
 }

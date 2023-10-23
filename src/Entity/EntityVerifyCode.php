@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 class EntityVerifyCode
@@ -11,11 +13,10 @@ class EntityVerifyCode
         return $this->code;
     }
 
-    public function setCode(string $code): EntityVerifyCode
+    public function setCode(string $code): self
     {
         $this->code = $code;
+
         return $this;
     }
-
-
 }

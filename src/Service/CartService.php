@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Cart;
@@ -30,7 +32,7 @@ class CartService
     ) {
     }
 
-    public function clearCart()
+    public function clearCart(): void
     {
         $cart = $this->getCurrentCart();
         foreach ($cart->getItems() as $item) {
@@ -45,9 +47,10 @@ class CartService
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (!$cart) {
+        if (!$cart instanceof \App\Entity\Cart) {
             $cart = $this->cartFactory->create();
         }
+
         return $cart;
     }
 
@@ -56,7 +59,7 @@ class CartService
      */
     public function save(Cart $cart = null): void
     {
-        if (!$cart) {
+        if (!$cart instanceof \App\Entity\Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);
@@ -65,7 +68,7 @@ class CartService
         $this->cartSessionStorage->setCart($cart);
     }
 
-    public function confirmCart()
+    public function confirmCart(): void
     {
         $cart = $this->getCurrentCart();
         $cart->setStatus(Cart::STATUS_CONFIRMED);
@@ -73,7 +76,7 @@ class CartService
         $this->entityManager->flush();
     }
 
-    public function setDefaultDeliveryAddress(int $deliveryAddressId)
+    public function setDefaultDeliveryAddress(int $deliveryAddressId): void
     {
         $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
     }
@@ -92,7 +95,6 @@ class CartService
         $item = $this->makeCartItem($product);
         $this->productStockService->changeStock($product, Product::STOCK_DECREASE, 1);
 
-
         $cart->addItem($item);
 
         $this->save($cart);
@@ -101,7 +103,7 @@ class CartService
     /**
      * @throws ItemNotFoundException
      */
-    public function makeCartItem($entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
+    public function makeCartItem(object $entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
     {
         return $this->cartItemFactory->createCartItem($entity);
     }
@@ -138,17 +140,16 @@ class CartService
         $cart = $this->getCurrentCart();
 
         if ($item instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($item)) {
-            throw new TooManySubscriptionsException("You can have only one subscription in cart");
+            throw new TooManySubscriptionsException('You can have only one subscription in cart');
         }
     }
 
-    public function removeItemIfExists(CartItem $item)
+    public function removeItemIfExists(CartItem $item): void
     {
         $cart = $this->getCurrentCart();
-        
+
         if ($cart->getItems()->contains($item)) {
             $cart->getItems()->removeElement($item);
         }
     }
-
 }

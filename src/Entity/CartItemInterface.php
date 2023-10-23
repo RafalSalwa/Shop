@@ -1,17 +1,22 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
+
+use DateTimeInterface;
 
 interface CartItemInterface
 {
     /**
-     * Get identifier of the cart item
+     * Get identifier of the cart item.
      */
     public function getId(): int;
 
     /**
-     * Get identifier of the base entity that is added
-     * @return int
+     * Get identifier of the base entity that is added.
+     *
+     * @return CartInsertableInterface
      */
     public function getReferencedEntity(): CartInsertableInterface;
 
@@ -31,7 +36,7 @@ interface CartItemInterface
     public function getTypeName(): string;
 
     /**
-     * Get the human-readable type name for frontend
+     * Get the human-readable type name for frontend.
      */
     public function getDisplayName(): string;
 
@@ -46,7 +51,7 @@ interface CartItemInterface
     public function getQuantity(): int;
 
     /**
-     * Get identifier of the base entity that is added
+     * Get identifier of the base entity that is added.
      */
     public function setReferencedEntity(CartInsertableInterface $entity): self;
 
@@ -59,4 +64,10 @@ interface CartItemInterface
      * Calculate the total price for the cart item based on quantity.
      */
     public function getTotalPrice(): float;
+
+    public function setCart(Cart $cart): self;
+
+    public function getReferenceEntity(): CartInsertableInterface;
+
+    public function setCreatedAt(DateTimeInterface $createdAt): self;
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SupplierRepository;
@@ -12,9 +14,11 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SupplierRepository::class)]
-#[Table(name: 'suppliers')]
+#[Table(name: 'suppliers', schema: "interview")]
 class Supplier
 {
+    public $description;
+    public $picture;
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'supplier_id', type: Types::SMALLINT, unique: true, nullable: false)]
@@ -24,12 +28,12 @@ class Supplier
     #[Column(name: 'company_name', type: Types::STRING, length: 40, nullable: false)]
     private ?string $name = null;
 
-    public function getId()
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
@@ -13,9 +15,13 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: CategoryRepository::class)]
-#[Table(name: 'categories')]
+#[Table(name: 'categories', schema: "interview")]
 class Category
 {
+    /**
+     * @var ArrayCollection
+     */
+    public $products;
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'category_id', type: Types::SMALLINT, unique: true, nullable: false)]
@@ -31,20 +37,18 @@ class Category
         $this->products = new ArrayCollection();
     }
 
-    public function getId()
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getName()
+    public function getName(): string|null
     {
         return $this->name;
     }
 
-    public function getDescription()
+    public function getDescription(): string|null
     {
         return $this->description;
     }
-
-    
 }

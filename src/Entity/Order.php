@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
@@ -23,7 +25,7 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Entity(repositoryClass: OrderRepository::class)]
-#[Table(name: 'orders')]
+#[Table(name: 'orders', schema: "interview")]
 #[HasLifecycleCallbacks]
 class Order
 {
@@ -49,17 +51,17 @@ class Order
     private ?DateTime $updatedAt = null;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    #[JoinColumn(name: "user_id", referencedColumnName: 'user_id', nullable: true)]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
     private UserInterface $user;
 
     #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
-    #[JoinColumn(name: "address_id", referencedColumnName: 'address_id', nullable: true)]
+    #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
     private ?Address $address = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private ?Collection $payments = null;
 
-    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private ?Collection $items = null;
 
     private int $netAmount = 0;
@@ -81,12 +83,12 @@ class Order
         return $this->address;
     }
 
-    public function setAddress(Address $address)
+    public function setAddress(Address $address): void
     {
         $this->address = $address;
     }
 
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -96,60 +98,66 @@ class Order
         return $this->user;
     }
 
-    public function setUser(UserInterface $user): Order
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
+
         return $this;
     }
 
-    public function getAmount(bool $userFriendly = false): int
+    public function getAmount(bool $userFriendly = false): int|float
     {
         if ($userFriendly) {
             return $this->amount / 100;
         }
+
         return $this->amount;
     }
 
-    public function setAmount(int $amount): Order
+    public function setAmount(int $amount): self
     {
         $this->amount = $amount;
+
         return $this;
     }
 
-    public function getNetAmount(bool $humanFriendly)
+    public function getNetAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
-            return number_format(($this->netAmount / 100), 2, '.', ' ');
+            return number_format($this->netAmount / 100, 2, '.', ' ');
         }
+
         return $this->netAmount;
     }
 
-    public function setNetAmount(int $amount)
+    public function setNetAmount(int $amount): void
     {
         $this->netAmount = $amount;
     }
 
-    public function getVatAmount(bool $humanFriendly)
+    public function getVatAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
-            return number_format(($this->vatAmount / 100), 2, '.', ' ');
+            return number_format($this->vatAmount / 100, 2, '.', ' ');
         }
+
         return $this->vatAmount;
     }
 
-    public function setVatAmount(int $amount)
+    public function setVatAmount(int $amount): void
     {
         $this->vatAmount = $amount;
     }
 
-    public function getItems(): Collection
+    public function getItems(): Collection|null
     {
         return $this->items;
     }
 
-    public function setItems(ArrayCollection $items): Order
+    public function setItems(ArrayCollection $items): self
     {
         $this->items = $items;
+
         return $this;
     }
 
@@ -172,32 +180,41 @@ class Order
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
         return $this;
     }
 
     #[PrePersist]
-    public function prePersist()
+    public function prePersist(): void
     {
         $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $eventArgs)
+    public function preUpdate(PreUpdateEventArgs $eventArgs): void
     {
         $this->updatedAt = new DateTime('now');
     }
 
-    public function addPayment($payment)
+    /**
+     * @param Payment|TValue $payment
+     */
+    public function addPayment(TValue|Payment $payment): void
     {
         $payment->setOrder($this);
         $this->payments[] = $payment;
     }
 
-    public function getPayments()
+    public function getPayments(): Collection|null
     {
         return $this->payments;
     }
 
+    /**
+     * @return false|mixed
+     *
+     * @psalm-return TValue|false
+     */
     public function getLastPayment()
     {
         return $this->payments->last();
@@ -207,5 +224,4 @@ class Order
     {
         return $this->createdAt;
     }
-
 }

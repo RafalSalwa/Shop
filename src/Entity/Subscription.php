@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\SubscriptionRepository;
@@ -16,7 +18,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SubscriptionRepository::class)]
-#[Table(name: 'subscription')]
+#[Table(name: 'subscription', schema: "interview")]
 #[HasLifecycleCallbacks]
 class Subscription
 {
@@ -26,7 +28,7 @@ class Subscription
     private int $id;
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
-    #[JoinColumn(name: "subscription_plan_id", referencedColumnName: 'plan_id', nullable: true)]
+    #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
     private ?SubscriptionPlan $subscriptionPlan = null;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: true)]
@@ -54,17 +56,19 @@ class Subscription
     public function setSubscriptionPlan(SubscriptionPlan $subscriptionPlan): self
     {
         $this->subscriptionPlan = $subscriptionPlan;
+
         return $this;
     }
 
-    public function isTier(): bool
+    public function isTier(): int
     {
         return $this->tier;
     }
 
-    public function setTier(bool $tier): Subscription
+    public function setTier(bool $tier): self
     {
         $this->tier = $tier;
+
         return $this;
     }
 
@@ -73,9 +77,10 @@ class Subscription
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): Subscription
+    public function setIsActive(bool $isActive): self
     {
         $this->isActive = $isActive;
+
         return $this;
     }
 
@@ -84,9 +89,10 @@ class Subscription
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): Subscription
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
+
         return $this;
     }
 
@@ -95,9 +101,10 @@ class Subscription
         return $this->startsAt;
     }
 
-    public function setStartsAt(?DateTime $startsAt): Subscription
+    public function setStartsAt(?DateTime $startsAt): self
     {
         $this->startsAt = $startsAt;
+
         return $this;
     }
 
@@ -106,13 +113,14 @@ class Subscription
         return $this->endsAt;
     }
 
-    public function setEndsAt(?DateTime $endsAt): Subscription
+    public function setEndsAt(?DateTime $endsAt): self
     {
         $this->endsAt = $endsAt;
+
         return $this;
     }
 
-    public function getRequiredLevel()
+    public function getRequiredLevel(): int
     {
         return $this->getId();
     }
@@ -122,9 +130,10 @@ class Subscription
         return $this->id;
     }
 
-    public function setId(int $id): Subscription
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -133,5 +142,4 @@ class Subscription
     {
         $this->setCreatedAt(new DateTime('now'));
     }
-
 }

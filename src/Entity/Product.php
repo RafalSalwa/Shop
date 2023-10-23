@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
@@ -15,7 +17,7 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: ProductRepository::class)]
-#[Table(name: 'products')]
+#[Table(name: 'products', schema: "interview")]
 class Product implements CartInsertableInterface, StockManageableInterface
 {
     final public const STOCK_DECREASE = 'decrease';
@@ -53,7 +55,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->requiredSubscription;
     }
 
-
     public function getCategoryId()
     {
         return $this->categoryId;
@@ -69,6 +70,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         if ($userFriendly) {
             return $this->unitPrice / 100;
         }
+
         return $this->unitPrice;
     }
 
@@ -79,7 +81,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     public function getDisplayName(): string
     {
-        return sprintf("%s %s", $this->getTypeName(), $this->getName());
+        return sprintf('%s %s', $this->getTypeName(), $this->getName());
     }
 
     public function getTypeName(): string
@@ -97,10 +99,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->quantityPerUnit;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUnitsInStock()
+    public function getUnitsInStock(): int
     {
         return $this->unitsInStock;
     }
@@ -108,13 +107,11 @@ class Product implements CartInsertableInterface, StockManageableInterface
     public function setUnitsInStock(int $unitsInStock): self
     {
         $this->unitsInStock = $unitsInStock;
+
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUnitsOnOrder()
+    public function getUnitsOnOrder(): int
     {
         return $this->unitsOnOrder;
     }
@@ -122,6 +119,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
     public function setUnitsOnOrder(int $unitsOnOrder): self
     {
         $this->unitsOnOrder = $unitsOnOrder;
+
         return $this;
     }
 

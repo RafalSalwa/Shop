@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Cart;
@@ -15,10 +17,11 @@ readonly class CartCalculator
     {
         $total = $this->calculateTotal($cart);
         $this->taxCalculator->calculateTax($total);
+
         return [
-            "total" => $total,
-            "vat" => $this->taxCalculator->getNetAmount(),
-            "net" => $this->taxCalculator->getNetAmount()
+            'total' => $total,
+            'vat' => $this->taxCalculator->getNetAmount(),
+            'net' => $this->taxCalculator->getNetAmount(),
         ];
     }
 
@@ -30,6 +33,7 @@ readonly class CartCalculator
             $price = $item->getReferencedEntity()->getUnitPrice() * $item->getQuantity();
             $total += $price;
         }
+
         return $total;
     }
 }

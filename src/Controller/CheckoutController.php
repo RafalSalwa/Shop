@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Address;
@@ -36,10 +38,10 @@ class CheckoutController extends AbstractController
 
         return $this->render('checkout/shipment.html.twig', [
             'form' => $form->createView(),
-            "deliveryAddresses" => $user->getDeliveryAddresses(),
-            "defaultAddress" => $cartService->getDefaultDeliveryAddressId(),
-            "cart" => $cartService->getCurrentCart(),
-            "payment" => $cartCalculator->calculatePayment($cartService->getCurrentCart())
+            'deliveryAddresses' => $user->getDeliveryAddresses(),
+            'defaultAddress' => $cartService->getDefaultDeliveryAddressId(),
+            'cart' => $cartService->getCurrentCart(),
+            'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
         ]);
     }
 }

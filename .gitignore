@@ -6,6 +6,8 @@
 /public/bundles/
 /var/
 /vendor/
+/reports
+!/reports/.gitkeep
 ###< symfony/framework-bundle ###
 .idea
 ###> league/oauth2-server-bundle ###
@@ -24,8 +26,8 @@
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
-/phpunit.xml
 bin/phpunit
+.phpunit.cache
 ###< symfony/phpunit-bridge ###
 
 ###> squizlabs/php_codesniffer ###

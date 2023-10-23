@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\ProductCartItemRepository;
@@ -13,7 +15,8 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
 {
     #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(referencedColumnName: 'product_id')]
-    private CartInsertableInterface $referenceEntity;
+    protected CartInsertableInterface $referenceEntity;
+
 
     public function getType(): string
     {
@@ -58,7 +61,7 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     public function getDisplayName(): string
     {
         return sprintf(
-            "%s (%s)",
+            '%s (%s)',
             $this->getReferencedEntity()->getName(),
             $this->getReferencedEntity()->getCategory()->getName()
         );
@@ -94,6 +97,7 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     public function setQuantity(int $quantity): CartItemInterface
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 }

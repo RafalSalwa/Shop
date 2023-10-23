@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\ProductCartItem;
@@ -11,11 +13,11 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
 class CartItemVoter extends Voter
 {
-    final public const ADD_TO_CART = "ADD_TO_CART";
+    final public const ADD_TO_CART = 'ADD_TO_CART';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ADD_TO_CART && $subject instanceof ProductCartItem;
+        return self::ADD_TO_CART === $attribute && $subject instanceof ProductCartItem;
     }
 
     /**
@@ -34,6 +36,7 @@ class CartItemVoter extends Voter
         if (!$requiredSubscription || !$userSubscription) {
             return false;
         }
+
         return $userSubscription->getRequiredLevel() >= $requiredSubscription->getId();
     }
 }

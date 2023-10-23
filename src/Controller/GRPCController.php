@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\EntityVerifyCode;
@@ -40,6 +42,7 @@ class GRPCController extends AbstractController
                 $signInInput->getPassword()
             );
         }
+
         return $this->render('grpc/sign_up.html.twig', [
             'form' => $form->createView(),
             'grpc_status' => $status,
@@ -88,7 +91,7 @@ class GRPCController extends AbstractController
                 $signInInput->getPassword()
             );
 
-            if ($status->code == 0 && $grpcResponse instanceof SignInUserResponse) {
+            if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
                 $arrUser = $authGRPCService->getUserCredentialsFromLastSignUp();
 
                 $arrUser['access_token'] = $grpcResponse->getAccessToken();
@@ -102,7 +105,7 @@ class GRPCController extends AbstractController
             'form' => $form->createView(),
             'grpc_status' => $status,
             'grpc_response' => $grpcResponse,
-            'grpc_credentials' => $lastSignUp
+            'grpc_credentials' => $lastSignUp,
         ]);
     }
 
@@ -123,7 +126,7 @@ class GRPCController extends AbstractController
                 $signInInput->getPassword()
             );
 
-            if ($status->code == 0 && $grpcResponse instanceof SignInUserResponse) {
+            if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
                 $arrUser = $authGRPCService->getUserCredentialsFromLastSignUp();
 
                 $arrUser['access_token'] = $grpcResponse->getAccessToken();
@@ -137,8 +140,7 @@ class GRPCController extends AbstractController
             'form' => $form->createView(),
             'grpc_status' => $status,
             'grpc_response' => $grpcResponse,
-            'grpc_credentials' => $lastSignUp
+            'grpc_credentials' => $lastSignUp,
         ]);
     }
-
 }

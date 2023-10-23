@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Address;
@@ -54,6 +56,7 @@ class OrderService
         }
         $repository->save($order);
         $this->assignDeliveryAddress($order);
+
         return $order;
     }
 
@@ -61,13 +64,13 @@ class OrderService
     {
         $repository = $this->entityManager->getRepository(Address::class);
         $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $repository->findOneBy(["id" => $addressId]);
+        $address = $repository->findOneBy(['id' => $addressId]);
         $order->setAddress($address);
     }
 
-    public function confirmOrder(Order $order)
+    public function confirmOrder(Order $order): void
     {
-        $this->orderProcessing->apply($order, "to_completed");
+        $this->orderProcessing->apply($order, 'to_completed');
 
         /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
@@ -77,7 +80,7 @@ class OrderService
         $this->eventDispatcher->dispatch($event);
     }
 
-    public function deserializeOrderItems(Order $order)
+    public function deserializeOrderItems(Order $order): void
     {
         $orderItems = new ArrayCollection();
         foreach ($order->getItems() as $item) {
@@ -92,15 +95,14 @@ class OrderService
         $order->setItems($orderItems);
     }
 
-    public function proceedSubscriptionsIfAny(Order $order)
+    public function proceedSubscriptionsIfAny(Order $order): void
     {
         /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {
-            if ($item->getItemType() == "plan") {
-                $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
-                $this->subscriptionService->assignSubscription($deserialized["plan_name"]);
+            if ('plan' === $item->getItemType()) {
+                $deserialized = json_decode($item->getCartItem(), true, 512, \JSON_THROW_ON_ERROR);
+                $this->subscriptionService->assignSubscription($deserialized['plan_name']);
             }
         }
     }
-
 }

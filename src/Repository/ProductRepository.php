@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Product;
@@ -8,6 +10,9 @@ use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @method find($id, $lockMode = null, $lockVersion = null): Product
+ */
 class ProductRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -18,9 +23,9 @@ class ProductRepository extends ServiceEntityRepository
     public function getPaginated(int $page)
     {
         $qb = $this->createQueryBuilder('p')
-            ->select("p", "s")
-            ->innerJoin("p.requiredSubscription", "s")
-            ->where("p.unitsInStock > 0")
+            ->select('p', 's')
+            ->innerJoin('p.requiredSubscription', 's')
+            ->where('p.unitsInStock > 0')
             ->orderBy('p.id', 'DESC');
 
         return (new Paginator($qb))->paginate($page);
@@ -38,7 +43,7 @@ class ProductRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function increaseQty(Product $product, $qty)
+    public function increaseQty(Product $product, int $qty)
     {
         return $this
             ->createQueryBuilder('p')
@@ -49,5 +54,4 @@ class ProductRepository extends ServiceEntityRepository
             ->getQuery()
             ->execute();
     }
-
 }

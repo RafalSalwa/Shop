@@ -1,11 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\CartItem;
 use App\Exception\ItemNotFoundException;
-use App\Exception\ProductNotFound;
-use App\Exception\ProductStockDepleted;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartItemFactory;
@@ -23,6 +23,9 @@ use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * @see \App\Tests\Controller\CartControllerTest
+ */
 class CartController extends AbstractController
 {
     /**
@@ -30,7 +33,8 @@ class CartController extends AbstractController
      */
     #[Route('/cart/add/{type}/{id}', name: 'cart_add')]
     public function addToCart(
-        #[ValueResolver('cart_item_type')] string $type,
+        #[ValueResolver('cart_item_type')]
+        string $type,
         int $id,
         CartService $cartService,
         CartItemFactory $cartItemFactory
@@ -40,23 +44,23 @@ class CartController extends AbstractController
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
             $cartService->add($item);
-            $this->addFlash("info", "successfully added " . $item->getDisplayName() . " to cart");
+            $this->addFlash('info', 'successfully added '.$item->getDisplayName().' to cart');
         } catch (ItemNotFoundException $pnf) {
-            $this->addFlash("error", $pnf->getMessage());
-            return $this->redirectToRoute($type . '_index', ['id' => $id, "page" => 1]);
+            $this->addFlash('error', $pnf->getMessage());
+
+            return $this->redirectToRoute($type.'_index', ['id' => $id, 'page' => 1]);
         } catch (ProductStockDepletedException $psd) {
-            $this->addFlash("error", $psd->getMessage());
-        } catch (AccessDeniedException $ade) {
-            dd($ade);
+            $this->addFlash('error', $psd->getMessage());
+        } catch (AccessDeniedException) {
             $this->addFlash(
-                "error",
-                "You cannot add this product to cart with current subscription. Consider upgrade:)"
+                'error',
+                'You cannot add this product to cart with current subscription. Consider upgrade:)'
             );
         } catch (TooManySubscriptionsException $subex) {
-            $this->addFlash("error", $subex->getMessage());
+            $this->addFlash('error', $subex->getMessage());
         }
 
-        return $this->redirectToRoute($item->getTypeName() . '_details', ['id' => $id]);
+        return $this->redirectToRoute($item->getTypeName().'_details', ['id' => $id]);
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
@@ -72,21 +76,23 @@ class CartController extends AbstractController
 
             $cartService->save($cart);
 
-            $this->addFlash("info", "successfully removed " . $item->getItemName() . " from cart");
+            $this->addFlash('info', 'successfully removed '.$item->getItemName().' from cart');
         } catch (ItemNotFoundException $pnf) {
-            $this->addFlash("error", $pnf->getMessage());
+            $this->addFlash('error', $pnf->getMessage());
         } catch (ProductStockDepletedException $psd) {
-            $this->addFlash("error", $psd->getMessage());
+            $this->addFlash('error', $psd->getMessage());
         }
+
         return $this->redirectToRoute('cart_index');
     }
 
     #[Route('/cart/set_delivery_address', name: 'cart_delivery_address_set')]
     public function deliveryAddress(Request $request, CartService $cartService): Response
     {
-        $deliveryAddressId = $request->request->get("addrId");
+        $deliveryAddressId = $request->request->get('addrId');
         $cartService->setDefaultDeliveryAddress($deliveryAddressId);
-        return new Response("ok");
+
+        return new Response('ok');
     }
 
     #[Route('/cart', name: 'cart_index')]
@@ -94,9 +100,10 @@ class CartController extends AbstractController
     {
         $cart = $cartManager->getCurrentCart();
         $payment = $cartCalculator->calculatePayment($cart);
+
         return $this->render('cart/index.html.twig', [
             'cart' => $cart,
-            'payment' => $payment
+            'payment' => $payment,
         ]);
     }
 }

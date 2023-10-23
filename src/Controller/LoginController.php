@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,7 +15,7 @@ class LoginController extends AbstractController
     #[Route('/login', name: 'app_login')]
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        if ($this->getUser()) {
+        if ($this->getUser() instanceof \Symfony\Component\Security\Core\User\UserInterface) {
             return $this->redirectToRoute('app_index');
         }
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -30,6 +32,6 @@ class LoginController extends AbstractController
     public function logout(Security $security): Response
     {
         $security->logout();
-        $this->redirectToRoute("app_login");
+        $this->redirectToRoute('app_login');
     }
 }

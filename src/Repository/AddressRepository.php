@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Address;
@@ -13,6 +15,11 @@ class AddressRepository extends ServiceEntityRepository
         parent::__construct($registry, Address::class);
     }
 
+    /**
+     * @param mixed|null $address
+     *
+     * @psalm-param T|null $address
+     */
     public function save(mixed $address)
     {
         $this->getEntityManager()->persist($address);

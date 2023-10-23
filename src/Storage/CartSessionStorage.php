@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Storage;
 
 use App\Entity\Cart;
@@ -44,10 +46,8 @@ class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request) {
-            if ($this->security->getFirewallConfig($request)?->isStateless()) {
-                return;
-            }
+        if ($request instanceof \Symfony\Component\HttpFoundation\Request && $this->security->getFirewallConfig($request)?->isStateless()) {
+            return;
         }
 
         $this->getSession()->set(self::CART_KEY_NAME, $cart->getId());
@@ -57,8 +57,8 @@ class CartSessionStorage
     {
         // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
         // that is the easiest solution for session storage between redis and filesystem
-        if ($this->parameterBag->get('kernel.environment') == "test") {
-            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
+        if ('test' === $this->parameterBag->get('kernel.environment')) {
+            $sessionSavePath = (string) $this->parameterBag->get('session.save_path');
 
             $sessionStorage = new MockFileSessionStorage($sessionSavePath);
             $session = new Session($sessionStorage);
@@ -68,6 +68,7 @@ class CartSessionStorage
 
             return $session;
         }
+
         return $this->requestStack->getSession();
     }
 
@@ -76,7 +77,7 @@ class CartSessionStorage
         $this->getSession()->remove(self::CART_KEY_NAME);
     }
 
-    public function setDeliveryAddressId(int $addId)
+    public function setDeliveryAddressId(int $addId): void
     {
         $this->getSession()->set(self::ADDR_KEY_NAME, $addId);
     }

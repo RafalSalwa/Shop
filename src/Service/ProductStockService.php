@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\CartItemInterface;
@@ -7,8 +9,6 @@ use App\Entity\Product;
 use App\Entity\StockManageableInterface;
 use App\Event\StockDepletedEvent;
 use App\Exception\ItemNotFoundException;
-use App\Exception\ProductNotFound;
-use App\Exception\ProductStockDepleted;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
@@ -16,7 +16,6 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 class ProductStockService
 {
-
     public function __construct(
         private readonly LockFactory $productLockFactory,
         private readonly ProductRepository $repository,
@@ -31,10 +30,8 @@ class ProductStockService
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
         $product = $entity->getReferenceEntity();
-        if ($product instanceof StockManageableInterface) {
-            if ($product->getUnitsInStock() == 0) {
-                throw new ProductStockDepletedException("For this product stock is depleted.");
-            }
+        if ($product instanceof StockManageableInterface && 0 === $product->getUnitsInStock()) {
+            throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
@@ -68,11 +65,11 @@ class ProductStockService
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
 
-        if ($product->getUnitsInStock() == 0) {
+        if (0 === $product->getUnitsInStock()) {
             throw new ProductStockDepletedException();
         }
 
-        if ($product->getUnitsInStock() == 1) {
+        if (1 === $product->getUnitsInStock()) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

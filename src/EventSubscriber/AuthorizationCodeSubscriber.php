@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber;
 
 use League\Bundle\OAuth2ServerBundle\Event\AuthorizationRequestResolveEvent;
@@ -20,11 +22,11 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
     private $firewallName;
 
     public function __construct(
-        private readonly Security              $security,
+        private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly RequestStack          $requestStack,
-        FirewallMapInterface                   $firewallMap)
-    {
+        private readonly RequestStack $requestStack,
+        FirewallMapInterface $firewallMap
+    ) {
         $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())->getName();
     }
 
@@ -45,6 +47,7 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
             if (null !== $request->getSession()->get('consent_granted')) {
                 $event->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()->remove('consent_granted');
+
                 return;
             }
             $response = new RedirectResponse($this->urlGenerator->generate('app_consent', $request->query->all()), Response::HTTP_TEMPORARY_REDIRECT);

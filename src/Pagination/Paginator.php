@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -14,8 +16,6 @@ namespace App\Pagination;
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
-use Traversable;
-use function count;
 
 /**
  * @author Javier Eguiluz <javier.eguiluz@gmail.com>
@@ -34,15 +34,14 @@ final class Paginator
     private int $numResults;
 
     /**
-     * @var Traversable<int, object>
+     * @var \Traversable<int, object>
      */
-    private Traversable $results;
+    private \Traversable $results;
 
     public function __construct(
         private readonly DoctrineQueryBuilder $queryBuilder,
-        private readonly int                  $pageSize = self::PAGE_SIZE
-    )
-    {
+        private readonly int $pageSize = self::PAGE_SIZE
+    ) {
     }
 
     public function paginate(int $page = 1): self
@@ -58,7 +57,7 @@ final class Paginator
         /** @var array<string, mixed> $joinDqlParts */
         $joinDqlParts = $this->queryBuilder->getDQLPart('join');
 
-        if (0 === count($joinDqlParts)) {
+        if ([] === $joinDqlParts) {
             $query->setHint(CountWalker::HINT_DISTINCT, false);
         }
 
@@ -67,7 +66,7 @@ final class Paginator
         /** @var array<string, mixed> $havingDqlParts */
         $havingDqlParts = $this->queryBuilder->getDQLPart('having');
 
-        $useOutputWalkers = count($havingDqlParts ?: []) > 0;
+        $useOutputWalkers = ($havingDqlParts ?: []) !== [];
         $paginator->setUseOutputWalkers($useOutputWalkers);
 
         $this->results = $paginator->getIterator();
@@ -103,7 +102,7 @@ final class Paginator
 
     public function getLastPage(): int
     {
-        return (int)ceil($this->numResults / $this->pageSize);
+        return (int) ceil($this->numResults / $this->pageSize);
     }
 
     public function getNextPage(): int
@@ -122,9 +121,9 @@ final class Paginator
     }
 
     /**
-     * @return Traversable<int, object>
+     * @return \Traversable<int, object>
      */
-    public function getResults(): Traversable
+    public function getResults(): \Traversable
     {
         return $this->results;
     }

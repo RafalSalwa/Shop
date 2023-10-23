@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -36,8 +38,7 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-//        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
+        //        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
         return null;
     }
-
 }

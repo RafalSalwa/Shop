@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message;
 
 use JsonSerializable;
@@ -7,7 +9,7 @@ use JsonSerializable;
 class AMQPMessage implements JsonSerializable
 {
     private string $name = '';
-    private string $id = '';
+    private int $id = 0;
     private string $sequenceId = '';
     private string $timestamp = '';
     private string $content = '';
@@ -19,9 +21,10 @@ class AMQPMessage implements JsonSerializable
         return $this->channel;
     }
 
-    public function setChannel(string $channel): AMQPMessage
+    public function setChannel(string $channel): self
     {
         $this->channel = $channel;
+
         return $this;
     }
 
@@ -34,18 +37,18 @@ class AMQPMessage implements JsonSerializable
             'ts' => $this->getTimestamp(),
             'content' => $this->getContent(),
             'store' => $this->getPersist(),
-
         ];
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(string $id): AMQPMessage
+    public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -54,9 +57,10 @@ class AMQPMessage implements JsonSerializable
         return $this->name;
     }
 
-    public function setName(string $name): AMQPMessage
+    public function setName(string $name): self
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -65,9 +69,10 @@ class AMQPMessage implements JsonSerializable
         return $this->sequenceId;
     }
 
-    public function setSequenceId(string $sequenceId): AMQPMessage
+    public function setSequenceId(string $sequenceId): self
     {
         $this->sequenceId = $sequenceId;
+
         return $this;
     }
 
@@ -76,9 +81,10 @@ class AMQPMessage implements JsonSerializable
         return $this->timestamp;
     }
 
-    public function setTimestamp(string $timestamp): AMQPMessage
+    public function setTimestamp(string $timestamp): self
     {
         $this->timestamp = $timestamp;
+
         return $this;
     }
 
@@ -87,9 +93,10 @@ class AMQPMessage implements JsonSerializable
         return $this->content;
     }
 
-    public function setContent(string $content): AMQPMessage
+    public function setContent(string $content): self
     {
         $this->content = $content;
+
         return $this;
     }
 
@@ -98,9 +105,10 @@ class AMQPMessage implements JsonSerializable
         return $this->persist;
     }
 
-    public function setPersist(string $persist): AMQPMessage
+    public function setPersist(string $persist): self
     {
         $this->persist = $persist;
+
         return $this;
     }
 }

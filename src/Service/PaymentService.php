@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service;
 
 use App\Entity\Order;
@@ -17,7 +19,7 @@ class PaymentService
     ) {
     }
 
-    public function createPendingPayment(Order $order): Payment
+    public function createPendingPayment(Order $order): \App\Entity\TValue|Payment
     {
         $payment = $order->getLastPayment();
         if (!$payment) {
@@ -29,6 +31,7 @@ class PaymentService
         $order->addPayment($payment);
 
         $this->save($payment);
+
         return $payment;
     }
 

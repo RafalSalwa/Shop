@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests;
 
 use PHPUnit\Framework\Assert;
@@ -7,7 +9,7 @@ use Symfony\Component\DomCrawler\Crawler;
 
 trait CartAssertionsTrait
 {
-    public static function assertCartItemsCountEquals(Crawler $crawler, $expectedCount): void
+    public static function assertCartItemsCountEquals(Crawler $crawler, int $expectedCount): void
     {
         $actualCount = $crawler
             ->filter('.cart-item')
@@ -53,8 +55,11 @@ trait CartAssertionsTrait
         );
     }
 
-    public static function assertCartContainsProductWithQuantity(Crawler $crawler, string $productName, int $expectedQuantity): void
-    {
+    public static function assertCartContainsProductWithQuantity(
+        Crawler $crawler,
+        string $productName,
+        int $expectedQuantity
+    ): void {
         $actualQuantity = (int)self::getItemByProductName($crawler, $productName)
             ->filter('.cart-item-qty')
             ->getNode(0)

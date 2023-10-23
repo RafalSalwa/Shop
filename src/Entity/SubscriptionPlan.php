@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\PlanRepository;
@@ -18,7 +20,7 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: PlanRepository::class)]
-#[Table(name: 'plan')]
+#[Table(name: 'plan', schema: "interview")]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
@@ -35,7 +37,7 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'description', type: Types::TEXT, nullable: false)]
     #[Assert\NotBlank(message: 'Description cannot be empty')]
     #[Assert\Length(min: 10, minMessage: 'You need to add any')]
-    private ?string $description = null;
+    private string $description;
 
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isActive = false;
@@ -57,7 +59,7 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $deletedAt = null;
 
-    public function setPlanName(?string $planName): self
+    public function setPlanName(string $planName): self
     {
         $this->planName = $planName;
 
@@ -69,7 +71,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string $description): self
     {
         $this->description = $description;
 
@@ -88,14 +90,12 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getUnitPrice($userFriendly = false)
+    public function getUnitPrice(bool $userFriendly = false): int|float
     {
         if ($userFriendly) {
             return $this->unitPrice / 100;
         }
+
         return $this->unitPrice;
     }
 
@@ -111,7 +111,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
@@ -123,7 +123,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getDeletedAt(): DateTime
+    public function getDeletedAt(): DateTime|null
     {
         return $this->deletedAt;
     }
@@ -135,10 +135,11 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function toCartItem(): CartItem
+    public function toCartItem(): CartItemInterface
     {
         $cartItem = new SubscriptionPlanCartItem();
-        $cartItem->setReferencedEntity($this)
+        $cartItem
+            ->setReferencedEntity($this)
             ->setQuantity(1)
             ->setCreatedAt(new DateTime('now'));
 
@@ -159,7 +160,7 @@ class SubscriptionPlan implements CartInsertableInterface
 
     public function getDisplayName(): string
     {
-        return sprintf("%s (%s) #%d", $this->getTypeName(), $this->getName(), $this->getId());
+        return sprintf('%s (%s) #%d', $this->getTypeName(), $this->getName(), $this->getId());
     }
 
     public function getTypeName(): string

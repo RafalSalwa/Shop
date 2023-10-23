@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Service\SubscriptionService;
@@ -15,9 +17,8 @@ class SubscriptionController extends AbstractController
     public function index(SubscriptionService $service): Response
     {
         $service->cancelSubscription();
-        $this->addFlash("info", "Subscription removed");
-        return $this->redirectToRoute("app_index");
+        $this->addFlash('info', 'Subscription removed');
+
+        return $this->redirectToRoute('app_index');
     }
-
-
 }

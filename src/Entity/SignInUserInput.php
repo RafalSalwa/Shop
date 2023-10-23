@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 class SignInUserInput
@@ -12,9 +14,10 @@ class SignInUserInput
         return $this->username;
     }
 
-    public function setUsername(string $username): SignInUserInput
+    public function setUsername(string $username): self
     {
         $this->username = $username;
+
         return $this;
     }
 
@@ -23,11 +26,10 @@ class SignInUserInput
         return $this->password;
     }
 
-    public function setPassword(string $password): SignInUserInput
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
-
-
 }

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\AddressRepository;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -11,14 +12,13 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: AddressRepository::class)]
-#[Table(name: 'address')]
+#[Table(name: 'address', schema: "interview")]
 class Address
 {
     #[Id]
@@ -54,10 +54,7 @@ class Address
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
     private string $postalCode;
 
-    #[OneToMany(mappedBy: 'address', targetEntity: Order::class)]
-    private Collection $orders;
-
-    #[ManyToOne(inversedBy: 'deliveryAddresses', targetEntity: User::class)]
+    #[ManyToOne(targetEntity: User::class, inversedBy: 'deliveryAddresses')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     private User $user;
 
@@ -69,6 +66,7 @@ class Address
     public function setId(int $id): self
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -80,6 +78,7 @@ class Address
     public function setFirstName(string $firstName): self
     {
         $this->firstName = $firstName;
+
         return $this;
     }
 
@@ -91,6 +90,7 @@ class Address
     public function setLastName(string $lastName): self
     {
         $this->lastName = $lastName;
+
         return $this;
     }
 
@@ -102,6 +102,7 @@ class Address
     public function setAddressLine1(string $addressLine1): self
     {
         $this->addressLine1 = $addressLine1;
+
         return $this;
     }
 
@@ -113,6 +114,7 @@ class Address
     public function setAddressLine2(string $addressLine2): self
     {
         $this->addressLine2 = $addressLine2;
+
         return $this;
     }
 
@@ -124,6 +126,7 @@ class Address
     public function setCity(string $city): self
     {
         $this->city = $city;
+
         return $this;
     }
 
@@ -135,6 +138,7 @@ class Address
     public function setState(string $state): self
     {
         $this->state = $state;
+
         return $this;
     }
 
@@ -146,6 +150,7 @@ class Address
     public function setPostalCode(string $postalCode): self
     {
         $this->postalCode = $postalCode;
+
         return $this;
     }
 
@@ -154,11 +159,10 @@ class Address
         return $this->user;
     }
 
-    public function setUser(UserInterface $user): Address
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
+
         return $this;
     }
-
-
 }

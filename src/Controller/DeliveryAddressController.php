@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Address;
@@ -26,11 +28,13 @@ class DeliveryAddressController extends AbstractController
             $user->addDeliveryAddress($address);
             $address->setUser($user);
             $repository->save($address);
-            return $this->redirectToRoute("checkout_shipment");
+
+            return $this->redirectToRoute('checkout_shipment');
         }
+
         return $this->render('shipping/address_new.html.twig', [
             'form' => $form->createView(),
-            "deliveryAddresses" => $user->getDeliveryAddresses()
+            'deliveryAddresses' => $user->getDeliveryAddresses(),
         ]);
     }
 }

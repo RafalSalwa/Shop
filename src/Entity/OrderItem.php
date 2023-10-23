@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
@@ -13,15 +15,14 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: OrderItemRepository::class)]
-#[Table(name: 'order_item')]
+#[Table(name: 'order_item', schema: "interview")]
 class OrderItem
 {
-
     #[Id]
     #[GeneratedValue(strategy: 'AUTO')]
     #[Column(name: 'order_item_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
-    #[ManyToOne(targetEntity: Order::class, cascade: ["persist"], inversedBy: 'items')]
+    #[ManyToOne(targetEntity: Order::class, cascade: ['persist'], inversedBy: 'items')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id')]
     private Order $order;
 
@@ -35,9 +36,10 @@ class OrderItem
         return $this->order;
     }
 
-    public function setOrder(Order $order): OrderItem
+    public function setOrder(Order $order): self
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -46,9 +48,10 @@ class OrderItem
         return $this->cartItem;
     }
 
-    public function setCartItem(string $cartItem): OrderItem
+    public function setCartItem(string $cartItem): self
     {
         $this->cartItem = $cartItem;
+
         return $this;
     }
 
@@ -57,10 +60,10 @@ class OrderItem
         return $this->itemType;
     }
 
-    public function setItemType(string $itemType): OrderItem
+    public function setItemType(string $itemType): self
     {
         $this->itemType = $itemType;
+
         return $this;
     }
-
 }

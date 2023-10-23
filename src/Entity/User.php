@@ -1,9 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -26,14 +29,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
-#[Table(name: 'intrv_user')]
+#[Table(name: 'intrv_user', schema: "interview")]
 #[HasLifecycleCallbacks]
 class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
-    private int $id;
+    private ?int $id = null;
     #[Column(name: 'username', type: Types::STRING, length: 180)]
     private string $username;
     #[Column(name: 'pass', type: Types::STRING, length: 100)]
@@ -54,21 +57,21 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     private bool $verified;
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $active;
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTime $createdAt;
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $updatedAt = null;
-    #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $deletedAt = null;
+    #[Column(name: 'deleted_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $deletedAt = null;
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $lastLogin = null;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
-    #[Groups("user_carts")]
+    #[Groups('user_carts')]
     private ?Collection $carts = null;
 
-    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ["persist"], orphanRemoval: true)]
+    #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ['persist'], orphanRemoval: true)]
     private ?Collection $deliveryAddresses;
 
     #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
@@ -76,14 +79,15 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private ?Collection $orders = null;
 
-    #[OneToOne(targetEntity: Subscription::class, fetch: "EAGER")]
-    #[JoinColumn(name: "subscription_id", referencedColumnName: 'subscription_id', nullable: true)]
+    #[OneToOne(targetEntity: Subscription::class, fetch: 'EAGER')]
+    #[JoinColumn(name: 'subscription_id', referencedColumnName: 'subscription_id', nullable: true)]
     private ?Subscription $subscription = null;
 
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
+        $this->payments = new ArrayCollection();
     }
 
     public function getSubscription(): ?Subscription
@@ -91,20 +95,22 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->subscription;
     }
 
-    public function setSubscription(Subscription $subscription): User
+    public function setSubscription(Subscription $subscription): self
     {
         $this->subscription = $subscription;
+
         return $this;
     }
 
-    public function getDeliveryAddresses(): Collection
+    public function getDeliveryAddresses(): Collection|null
     {
         return $this->deliveryAddresses;
     }
 
-    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): User
+    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): self
     {
         $this->deliveryAddresses = $deliveryAddresses;
+
         return $this;
     }
 
@@ -116,6 +122,18 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     public function getPayments(): ?Collection
     {
         return $this->payments;
+    }
+
+    public function setPayments(?Collection $payments): User
+    {
+        $this->payments = $payments;
+        return $this;
+    }
+
+    public function addPayment(Payment $payment): User
+    {
+        $this->payments->add($payment);
+        return $this;
     }
 
     public function getOrders(): ?Collection
@@ -134,7 +152,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         $this->deliveryAddresses->removeElement($address);
     }
 
-    public function getId(): int
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -151,23 +169,9 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
     }
 
     public function getFirstname(): ?string
@@ -175,62 +179,24 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
-    }
-
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    /**
-     * @return User
-     */
-    public function setEmail($email)
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getPhoneNo()
+    public function getPhoneNo(): string|null
     {
         return $this->phoneNo;
     }
 
-    /**
-     * @return User
-     */
-    public function setPhoneNo($phoneNo)
-    {
-        $this->phoneNo = $phoneNo;
-
-        return $this;
-    }
-
     public function getRoles(): array
     {
-        if (array_key_exists('roles', $this->roles)) {
-            $roles = $this->roles['roles'];
-        } else {
-            $roles = $this->roles;
-        }
+        $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
         $roles[] = 'ROLE_USER';
 
@@ -247,37 +213,12 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this;
     }
 
-    public function getVerificationCode()
+    public function getVerificationCode(): string
     {
         return $this->verificationCode;
     }
 
-    /**
-     * @return User
-     */
-    public function setVerificationCode($verificationCode)
-    {
-        $this->verificationCode = $verificationCode;
-
-        return $this;
-    }
-
-    public function getVerified()
-    {
-        return $this->verified;
-    }
-
-    /**
-     * @return User
-     */
-    public function setVerified($verified)
-    {
-        $this->verified = $verified;
-
-        return $this;
-    }
-
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->active;
     }
@@ -292,7 +233,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this;
     }
 
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -300,14 +241,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     /**
      * @return User
      */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDeletedAt()
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
@@ -315,14 +256,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     /**
      * @return User
      */
-    public function setDeletedAt($deletedAt)
+    public function setDeletedAt(DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    public function getLastLogin()
+    public function getLastLogin(): ?DateTime
     {
         return $this->lastLogin;
     }
@@ -330,14 +271,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     /**
      * @return User
      */
-    public function setLastLogin($lastLogin)
+    public function setLastLogin(DateTime $lastLogin)
     {
         $this->lastLogin = $lastLogin;
 
         return $this;
     }
 
-    public function getUpdatedAt()
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
@@ -345,7 +286,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     /**
      * @return User
      */
-    public function setUpdatedAt($updatedAt)
+    public function setUpdatedAt(DateTime $updatedAt)
     {
         $this->updatedAt = $updatedAt;
 
@@ -365,7 +306,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     #[PreUpdate]
@@ -384,10 +325,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
-    /**
-     * @return Collection<int, OAuth2UserConsent>
-     */
-    public function getOAuth2UserConsents(): Collection
+    public function getOAuth2UserConsents(): ?Collection
     {
         return $this->oAuth2UserConsents;
     }
@@ -404,11 +342,8 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function removeOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
     {
-        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent)) {
-            // set the owning side to null (unless already changed)
-            if ($oAuth2UserConsent->getUser() === $this) {
-                $oAuth2UserConsent->setUser(null);
-            }
+        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent) && $oAuth2UserConsent->getUser() === $this) {
+            $oAuth2UserConsent->setUser(null);
         }
 
         return $this;
