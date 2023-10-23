@@ -20,12 +20,10 @@
 ###< friendsofphp/php-cs-fixer ###
 
 ###> phpunit/phpunit ###
-/phpunit.xml
 .phpunit.result.cache
 ###< phpunit/phpunit ###
 
 ###> symfony/phpunit-bridge ###
-.phpunit.result.cache
 bin/phpunit
 .phpunit.cache
 ###< symfony/phpunit-bridge ###

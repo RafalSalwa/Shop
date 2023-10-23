@@ -38,9 +38,9 @@ services:
     user: postgres
     volumes:
       - pg-data:/var/lib/postgresql/data
-      - ./docker/pg/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - ./docker/pg/db.sql:/docker-entrypoint-initdb.d/db.sql
-      - ./docker/pg/testing_db.sql:/docker-entrypoint-initdb.d/testing_db.sql
+      - ./docker/pg/init.sql:/docker-entrypoint-initdb.d/10-init.sql
+      - ./docker/pg/db.sql:/docker-entrypoint-initdb.d/20-db.sql
+      - ./docker/pg/testing_db.sql:/docker-entrypoint-initdb.d/30-testing_db.sql
     environment:
       POSTGRES_USER: 'interview'
       POSTGRES_PASSWORD: 'interview'
