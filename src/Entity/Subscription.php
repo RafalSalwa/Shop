@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\SubscriptionRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -17,7 +18,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SubscriptionRepository::class)]
-#[Table(name: 'subscription')]
+#[Table(name: 'subscription', schema: "interview")]
 #[HasLifecycleCallbacks]
 class Subscription
 {
@@ -36,13 +37,13 @@ class Subscription
     private bool $isActive = false;
 
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
 
     #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $startsAt = null;
+    private ?DateTime $startsAt = null;
 
     #[Column(name: 'ends_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $endsAt = null;
+    private ?DateTime $endsAt = null;
 
     /**
      * @return mixed
@@ -83,36 +84,36 @@ class Subscription
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getStartsAt(): ?\DateTime
+    public function getStartsAt(): ?DateTime
     {
         return $this->startsAt;
     }
 
-    public function setStartsAt(?\DateTime $startsAt): self
+    public function setStartsAt(?DateTime $startsAt): self
     {
         $this->startsAt = $startsAt;
 
         return $this;
     }
 
-    public function getEndsAt(): ?\DateTime
+    public function getEndsAt(): ?DateTime
     {
         return $this->endsAt;
     }
 
-    public function setEndsAt(?\DateTime $endsAt): self
+    public function setEndsAt(?DateTime $endsAt): self
     {
         $this->endsAt = $endsAt;
 
@@ -139,6 +140,6 @@ class Subscription
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new \DateTime('now'));
+        $this->setCreatedAt(new DateTime('now'));
     }
 }

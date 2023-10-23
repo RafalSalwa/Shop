@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -19,14 +20,17 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
+use JsonSerializable;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use function array_key_exists;
+
 #[Entity(repositoryClass: UserRepository::class)]
-#[Table(name: 'intrv_user')]
+#[Table(name: 'intrv_user', schema: "interview")]
 #[HasLifecycleCallbacks]
-class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -53,13 +57,13 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $active;
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $updatedAt = null;
+    private ?DateTime $updatedAt = null;
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $deletedAt = null;
+    private ?DateTime $deletedAt = null;
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $lastLogin = null;
+    private ?DateTime $lastLogin = null;
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
@@ -226,7 +230,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
 
     public function getRoles(): array
     {
-        $roles = \array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
+        $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
         $roles[] = 'ROLE_USER';
 
@@ -288,7 +292,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
@@ -303,7 +307,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getDeletedAt(): \DateTime|null
+    public function getDeletedAt(): DateTime|null
     {
         return $this->deletedAt;
     }
@@ -318,7 +322,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getLastLogin(): \DateTime|null
+    public function getLastLogin(): DateTime|null
     {
         return $this->lastLogin;
     }
@@ -333,7 +337,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
         return $this;
     }
 
-    public function getUpdatedAt(): \DateTime|null
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
@@ -361,13 +365,13 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
     public function eraseCredentials()

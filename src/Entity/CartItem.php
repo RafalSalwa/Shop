@@ -19,6 +19,7 @@ use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\Table;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
@@ -26,6 +27,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
+#[Table(name: 'cart_item', schema: "interview")]
 #[HasLifecycleCallbacks]
 #[InheritanceType('SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]

@@ -15,7 +15,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: OrderItemRepository::class)]
-#[Table(name: 'order_item')]
+#[Table(name: 'order_item', schema: "interview")]
 class OrderItem
 {
     #[Id]

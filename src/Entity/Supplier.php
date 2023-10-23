@@ -14,7 +14,7 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SupplierRepository::class)]
-#[Table(name: 'suppliers')]
+#[Table(name: 'suppliers', schema: "interview")]
 class Supplier
 {
     public $description;

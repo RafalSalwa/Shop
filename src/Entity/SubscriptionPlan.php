@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: PlanRepository::class)]
-#[Table(name: 'plan')]
+#[Table(name: 'plan', schema: "interview")]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]

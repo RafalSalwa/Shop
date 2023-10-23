@@ -43,7 +43,7 @@ trait CartAssertionsTrait
 
     public static function assertCartTotalEquals(Crawler $crawler, $expectedTotal)
     {
-        $actualTotal = (float) $crawler
+        $actualTotal = (float)$crawler
             ->filter('.cart-payment-total')
             ->getNode(0)
             ->textContent;
@@ -60,7 +60,7 @@ trait CartAssertionsTrait
         string $productName,
         int $expectedQuantity
     ): void {
-        $actualQuantity = (int) self::getItemByProductName($crawler, $productName)
+        $actualQuantity = (int)self::getItemByProductName($crawler, $productName)
             ->filter('.cart-item-qty')
             ->getNode(0)
             ->textContent;

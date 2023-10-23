@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-class AMQPMessage implements \JsonSerializable
+use JsonSerializable;
+
+class AMQPMessage implements JsonSerializable
 {
     private string $name = '';
-    private string $id = '';
+    private int $id = 0;
     private string $sequenceId = '';
     private string $timestamp = '';
     private string $content = '';
@@ -38,12 +40,12 @@ class AMQPMessage implements \JsonSerializable
         ];
     }
 
-    public function getId(): string
+    public function getId(): int
     {
         return $this->id;
     }
 
-    public function setId(string $id): self
+    public function setId(int $id): self
     {
         $this->id = $id;
 

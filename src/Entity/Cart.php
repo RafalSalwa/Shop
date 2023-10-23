@@ -26,7 +26,7 @@ use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartRepository::class)]
-#[Table(name: 'cart')]
+#[Table(name: 'cart', schema: "interview")]
 #[HasLifecycleCallbacks]
 class Cart implements JsonSerializable
 {

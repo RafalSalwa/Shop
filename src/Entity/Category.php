@@ -15,11 +15,11 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: CategoryRepository::class)]
-#[Table(name: 'categories')]
+#[Table(name: 'categories', schema: "interview")]
 class Category
 {
     /**
-     * @var \Doctrine\Common\Collections\ArrayCollection
+     * @var ArrayCollection
      */
     public $products;
     #[Id]
