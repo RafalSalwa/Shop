@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b22b44442153908d603c28829a1224db",
+    "content-hash": "83d88ddf8b8f22a97c172b871587648b",
     "packages": [
         {
             "name": "defuse/php-encryption",

@@ -3,6 +3,8 @@
   "license": "proprietary",
   "minimum-stability": "stable",
   "prefer-stable": true,
+  "name": "interview/client",
+  "description": "Feature rich app with doctrine,postgress, grpc, amqp",
   "require": {
     "php": ">=8.2",
     "ext-amqp": "*",
@@ -15,7 +17,7 @@
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.15",
     "fakerphp/faker": "^1.23",
-    "friendsofsymfony/rest-bundle": "*",
+    "friendsofsymfony/rest-bundle": "^3.6.0",
     "google/protobuf": "^3.23",
     "grpc/grpc": "^1.52",
     "jms/serializer-bundle": "^5.2",
@@ -25,7 +27,7 @@
     "nelmio/api-doc-bundle": "^4.11",
     "nelmio/cors-bundle": "^2.3",
     "open-telemetry/sdk": "^0.0.17",
-    "php-amqplib/php-amqplib": ">=3.0",
+    "php-amqplib/php-amqplib": "^3.6",
     "php-http/httplug": "^2.4",
     "symfony/amqp-messenger": "6.3.*",
     "symfony/asset": "6.3.*",
@@ -73,8 +75,7 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/",
-      "": "proto/grpc"
+      "App\\": "src/"
     }
   },
   "autoload-dev": {
