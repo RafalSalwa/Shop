@@ -1,7 +1,7 @@
 all: test testrace
 
-compose-up:
-	docker compose up --build -d -f docker/docker-compose.yml && docker compose logs -f
+up:
+	docker compose up -d && docker compose logs -f
 
 compose-down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml

@@ -54,7 +54,7 @@ class Payment
 
     public function __construct()
     {
-        $this->operationNumber = Uuid::v4();
+        $this->operationNumber = Uuid::v4()->toBinary();
         $this->createdAt = new DateTime('now');
     }
 

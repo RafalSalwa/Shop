@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller;
+namespace App\Tests\Integration;
 
 use App\Entity\Product;
 use App\Repository\ProductRepository;

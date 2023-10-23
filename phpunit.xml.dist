@@ -3,17 +3,19 @@
 <!-- https://phpunit.readthedocs.io/en/latest/configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
-         backupGlobals="false"
          colors="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
          bootstrap="tests/bootstrap.php"
-         convertDeprecationsToExceptions="false"
          stopOnFailure="true"
          stopOnError="true"
 >
     <php>
         <ini name="display_errors" value="1"/>
         <ini name="error_reporting" value="-1"/>
-        <env name="SYMFONY_DEPRECATIONS_HELPER" value="/foobar/"/>
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <server name="KERNEL_CLASS" value="App\Kernel"/>
         <server name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
@@ -22,24 +24,34 @@
     </php>
 
     <testsuites>
-        <testsuite name="Project Test Suite">
+        <testsuite name="Unit">
             <directory>tests</directory>
+            <exclude>src/Protobuf</exclude>
+        </testsuite>
+
+        <testsuite name="integration">
+            <directory>tests/Integration</directory>
+        </testsuite>
+
+        <testsuite name="e2e">
+            <directory>tests/e2e</directory>
         </testsuite>
     </testsuites>
 
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
+
+    <coverage includeUncoveredFiles="true"
+              pathCoverage="false"
+              ignoreDeprecatedCodeUnits="true"
+              disableCodeCoverageIgnore="true">
+        <report>
+            <clover outputFile="reports/clover.xml"/>
+            <cobertura outputFile="reports/cobertura.xml"/>
+            <crap4j outputFile="reports/crap4j.xml" threshold="50"/>
+            <html outputDirectory="reports/html-coverage" lowUpperBound="50" highLowerBound="90"/>
+            <php outputFile="reports/coverage.php"/>
+            <text outputFile="reports/coverage.txt" showUncoveredFiles="false" showOnlySummary="true"/>
+            <xml outputDirectory="reports/xml-coverage/"/>
+        </report>
     </coverage>
 
-    <listeners>
-        <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
-    </listeners>
-
-    <!-- Run `composer require symfony/panther` before enabling this extension -->
-    <extensions>
-        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension"/>
-        <extension class="Symfony\Component\Panther\ServerExtension"/>
-    </extensions>
 </phpunit>
