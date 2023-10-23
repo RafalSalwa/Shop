@@ -16,7 +16,7 @@ permissions:
 
 jobs:
   symfony-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - uses: shivammathur/setup-php@v2
         with:
@@ -47,12 +47,12 @@ jobs:
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   phpinsights:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     name: PHP Insights checks
     steps:
       - uses: actions/checkout@v2
       - uses: shivammathur/setup-php@v2
         with:
-          php-version: 8.0
+          php-version: 8.2
       - run: composer install --prefer-dist --no-progress --no-suggest
       - run: vendor/bin/phpinsights -n --ansi --format=github-action

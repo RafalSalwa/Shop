@@ -6,11 +6,10 @@
   "name": "interview/client",
   "description": "Feature rich app with doctrine,postgress, grpc, amqp",
   "require": {
-    "php": ">=8.2",
+    "php": ">=8.1",
     "ext-amqp": "*",
     "ext-bcmath": "*",
     "ext-ctype": "*",
-    "ext-grpc": "*",
     "ext-iconv": "*",
     "ext-openssl": "*",
     "doctrine/doctrine-bundle": "^2.9",
