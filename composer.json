@@ -115,9 +115,9 @@
       "@php-cs-fixer"
     ],
     "php-cs-fixer": "php-cs-fixer fix",
-    "rector": "rector process",
+    "rector": "rector process --dry-run",
     "stan": "phpstan",
-    "test": "phpunit --coverage-html reports/"
+    "test": "phpunit --coverage-html reports/coverage"
   },
   "conflict": {
     "symfony/symfony": "*"
