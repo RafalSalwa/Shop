@@ -26,8 +26,8 @@
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache
-/phpunit.xml
 bin/phpunit
+.phpunit.cache
 ###< symfony/phpunit-bridge ###
 
 ###> squizlabs/php_codesniffer ###

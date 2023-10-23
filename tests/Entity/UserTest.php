@@ -8,10 +8,15 @@ use App\Entity\Subscription;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\AssertionFailedError;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
 use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
+#[CoversClass(User::class)]
+#[UsesClass(Payment::class)]
+#[UsesClass(Address::class)]
 class UserTest extends TestCase
 {
     public function testSetters(): void
