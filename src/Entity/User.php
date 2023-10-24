@@ -22,6 +22,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -31,6 +32,7 @@ use function array_key_exists;
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user', schema: "interview")]
 #[HasLifecycleCallbacks]
+#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
@@ -82,6 +84,9 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[OneToOne(targetEntity: Subscription::class, fetch: 'EAGER')]
     #[JoinColumn(name: 'subscription_id', referencedColumnName: 'subscription_id', nullable: true)]
     private ?Subscription $subscription = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private $isVerified = false;
 
     public function __construct()
     {
@@ -173,6 +178,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     {
         return $this->password;
     }
+
+    public function setPassword(string $password): User
+    {
+        $this->password = $password;
+        return $this;
+    }
+
 
     public function getFirstname(): ?string
     {
@@ -345,6 +357,18 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent) && $oAuth2UserConsent->getUser() === $this) {
             $oAuth2UserConsent->setUser(null);
         }
+
+        return $this;
+    }
+
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+
+    public function setIsVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
 
         return $this;
     }

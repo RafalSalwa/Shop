@@ -33,13 +33,21 @@
     </php>
     <testsuites>
         <testsuite name="unit">
-            <directory>tests/</directory>
+            <directory>tests/Unit</directory>
             <exclude>src/Protobuf</exclude>
         </testsuite>
 
         <testsuite name="integration">
             <directory>tests/Integration</directory>
             <exclude>src/Protobuf</exclude>
+        </testsuite>
+
+        <testsuite name="api">
+            <directory>tests/Api</directory>
+        </testsuite>
+
+        <testsuite name="functional">
+            <directory>tests/Functional</directory>
         </testsuite>
 
         <testsuite name="e2e">
@@ -62,7 +70,7 @@
             <!--            <xml outputDirectory="reports/xml-coverage/"/>-->
         </report>
     </coverage>
-
+    
     <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
         <include>
             <directory>src</directory>

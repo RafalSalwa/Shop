@@ -45,7 +45,7 @@ SET row_security = off;
 -- Name: testing; Type: DATABASE PROPERTIES; Schema: -; Owner: -
 --
 
-ALTER ROLE tester IN DATABASE testing SET search_path TO 'testing';
+ALTER ROLE tester IN DATABASE testing SET search_path TO 'interview';
 
 
 \connect testing

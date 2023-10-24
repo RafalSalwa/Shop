@@ -30,9 +30,9 @@ phpda:
 phpinsights:
 	./vendor/bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
 
+.PHONY: test
 test: ### run test
 	go test -v -cover -race ./internal/... ./pkg/... ./cmd/...
-.PHONY: test
 
 .PHONY: proto
 proto:

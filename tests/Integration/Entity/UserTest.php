@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Entity;
+namespace App\Tests\Integration\Entity;
 
 use App\Entity\Address;
 use App\Entity\Payment;
