@@ -18,7 +18,7 @@ class ProductVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return self::ADD_TO_CART === $attribute && $subject instanceof Product;
+        return $attribute === self::ADD_TO_CART && $subject instanceof Product;
     }
 
     /**
@@ -27,14 +27,14 @@ class ProductVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (!$user instanceof User) {
+        if (! $user instanceof User) {
             return false;
         }
         /** @var SubscriptionPlan $requiredSubscription */
         $requiredSubscription = $subject->getRequiredSubscription();
         /** @var Subscription $userSubscription */
         $userSubscription = $user->getSubscription();
-        if (!$requiredSubscription || !$userSubscription) {
+        if (! $requiredSubscription || ! $userSubscription) {
             return false;
         }
 

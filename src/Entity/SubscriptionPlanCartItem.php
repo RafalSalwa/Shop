@@ -50,7 +50,6 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
 
     public function toCartItem(): CartItem
     {
-        // TODO: Implement toCartItem() method.
     }
 
     public function getQuantity(): int

@@ -9,29 +9,34 @@ use Symplify\EasyCodingStandard\ValueObject\Set\SetList;
 
 return function (ECSConfig $ecsConfig): void {
     $ecsConfig->paths([
-        __DIR__.'/config',
-        __DIR__.'/public',
-        __DIR__.'/src',
-        __DIR__.'/tests',
+        __DIR__ . '/config',
+        __DIR__ . '/public',
+        __DIR__ . '/src',
+        __DIR__ . '/tests',
     ]);
 
     // this way you add a single rule
     $ecsConfig->rules([
         NoUnusedImportsFixer::class,
+        ArraySyntaxFixer::class,
     ]);
 
     $ecsConfig->ruleWithConfiguration(ArraySyntaxFixer::class, [
         'syntax' => 'short',
     ]);
 
-    // this way you can add sets - group of rules
     $ecsConfig->sets([
-        // run and fix, one by one
-        // SetList::SPACES,
-        // SetList::ARRAY,
-        // SetList::DOCBLOCK,
-        // SetList::NAMESPACES,
-        // SetList::COMMENTS,
+        SetList::SPACES,
+        SetList::ARRAY,
+        SetList::DOCBLOCK,
+        SetList::NAMESPACES,
+        SetList::COMMENTS,
         SetList::PSR_12,
+        SetList::CLEAN_CODE,
+        SetList::COMMON,
+        SetList::SYMPLIFY,
+        SetList::DOCTRINE_ANNOTATIONS,
+        SetList::STRICT
+
     ]);
 };

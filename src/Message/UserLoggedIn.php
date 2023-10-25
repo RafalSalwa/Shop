@@ -6,8 +6,9 @@ namespace App\Message;
 
 final readonly class UserLoggedIn
 {
-    public function __construct(private string $userId)
-    {
+    public function __construct(
+        private string $userId
+    ) {
     }
 
     public function getContent(): string

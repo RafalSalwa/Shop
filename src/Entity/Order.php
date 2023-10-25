@@ -25,14 +25,18 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[Entity(repositoryClass: OrderRepository::class)]
-#[Table(name: 'orders', schema: "interview")]
+#[Table(name: 'orders', schema: 'interview')]
 #[HasLifecycleCallbacks]
 class Order
 {
     final public const PENDING = 'pending';
+
     final public const PROCESSING = 'processing';
+
     final public const COMPLETED = 'completed';
+
     final public const CANCELLED = 'cancelled';
+
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'order_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -44,7 +48,10 @@ class Order
 
     #[Column(name: 'amount', type: Types::INTEGER)]
     private int $amount;
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -65,6 +72,7 @@ class Order
     private ?Collection $items = null;
 
     private int $netAmount = 0;
+
     private int $vatAmount = 0;
 
     public function __construct()
@@ -196,9 +204,6 @@ class Order
         $this->updatedAt = new DateTime('now');
     }
 
-    /**
-     * @param Payment|TValue $payment
-     */
     public function addPayment(TValue|Payment $payment): void
     {
         $payment->setOrder($this);

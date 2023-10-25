@@ -15,8 +15,6 @@ interface CartItemInterface
 
     /**
      * Get identifier of the base entity that is added.
-     *
-     * @return CartInsertableInterface
      */
     public function getReferencedEntity(): CartInsertableInterface;
 

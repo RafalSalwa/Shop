@@ -64,7 +64,9 @@ class OrderService
     {
         $repository = $this->entityManager->getRepository(Address::class);
         $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $repository->findOneBy(['id' => $addressId]);
+        $address = $repository->findOneBy([
+            'id' => $addressId,
+        ]);
         $order->setAddress($address);
     }
 
@@ -99,7 +101,7 @@ class OrderService
     {
         /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {
-            if ('plan' === $item->getItemType()) {
+            if ($item->getItemType() === 'plan') {
                 $deserialized = json_decode($item->getCartItem(), true, 512, \JSON_THROW_ON_ERROR);
                 $this->subscriptionService->assignSubscription($deserialized['plan_name']);
             }

@@ -8,7 +8,6 @@ use App\Entity\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\StockManageableInterface;
 use App\Event\StockDepletedEvent;
-use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
@@ -23,29 +22,19 @@ class ProductStockService
     ) {
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     * @throws ItemNotFoundException
-     */
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
         $product = $entity->getReferenceEntity();
-        if ($product instanceof StockManageableInterface && 0 === $product->getUnitsInStock()) {
+        if ($product instanceof StockManageableInterface && $product->getUnitsInStock() === 0) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
     public function restoreStock(CartItemInterface $item): void
     {
         $this->changeStock($item, Product::STOCK_INCREASE, $item->getQuantity());
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty): void
     {
         $product = $entity->getReferencedEntity();
@@ -57,19 +46,16 @@ class ProductStockService
         }
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
     private function decrease(StockManageableInterface $product, int $qty): void
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
 
-        if (0 === $product->getUnitsInStock()) {
+        if ($product->getUnitsInStock() === 0) {
             throw new ProductStockDepletedException();
         }
 
-        if (1 === $product->getUnitsInStock()) {
+        if ($product->getUnitsInStock() === 1) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

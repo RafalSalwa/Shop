@@ -16,7 +16,9 @@ class UserVerifyCodeType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('code', TextType::class, ['label' => 'code'])
+            ->add('code', TextType::class, [
+                'label' => 'code',
+            ])
             ->add('send', SubmitType::class);
     }
 

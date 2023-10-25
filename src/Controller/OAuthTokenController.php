@@ -11,13 +11,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 
 class OAuthTokenController extends AbstractController
 {
-    /**
-     * @throws TransportExceptionInterface
-     */
     #[Route('/callback', name: 'oauth_callback')]
     public function callback(Request $request, Session $session): Response
     {
@@ -29,7 +25,7 @@ class OAuthTokenController extends AbstractController
             'client_id' => 'testclient',
             'client_secret' => 'testpass',
             'redirect_uri' => 'http://localhost:8080/callback',
-            'code' => urldecode((string)$request->get('code')),
+            'code' => urldecode((string) $request->get('code')),
         ];
 
         return $this->render('oauth_token/callback.html.twig', [
@@ -41,8 +37,7 @@ class OAuthTokenController extends AbstractController
     #[Route('/oauth/token', name: 'oauth_token_index')]
     public function index(): Response
     {
-        return $this->render('oauth_token/index.html.twig', [
-        ]);
+        return $this->render('oauth_token/index.html.twig', []);
     }
 
     #[Route('/consent', name: 'app_consent', methods: ['GET', 'POST'])]
@@ -50,14 +45,15 @@ class OAuthTokenController extends AbstractController
     {
         $appClient = $service->getClient();
         $user = $this->getUser();
-        $userConsents = $user->getOAuth2UserConsents()->filter(
-            fn(OAuth2UserConsent $consent) => $consent->getClient() === $appClient
-        )->first() ?: null;
+        $userConsents = $user->getOAuth2UserConsents()
+            ->filter(fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient)
+            ->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
         $requestedScopes = explode(' ', $request->query->get('scope'));
         // If user has already consented to the scopes, give consent
-        if ([] === array_diff($requestedScopes, $userScopes)) {
-            $request->getSession()->set('consent_granted', true);
+        if (array_diff($requestedScopes, $userScopes) === []) {
+            $request->getSession()
+                ->set('consent_granted', true);
 
             return $this->redirectToRoute('oauth2_authorize', $request->query->all());
         }

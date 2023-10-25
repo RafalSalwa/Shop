@@ -34,7 +34,9 @@ class OrderController extends AbstractController
             $cartService->clearCart();
         }
 
-        return $this->redirectToRoute('order_show', ['id' => $pending->getId()]);
+        return $this->redirectToRoute('order_show', [
+            'id' => $pending->getId(),
+        ]);
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
@@ -65,7 +67,9 @@ class OrderController extends AbstractController
                 ]);
             }
             if ($form->get('no')->isClicked()) {
-                return $this->redirectToRoute('order_index', ['page' => 1]);
+                return $this->redirectToRoute('order_index', [
+                    'page' => 1,
+                ]);
             }
         }
 

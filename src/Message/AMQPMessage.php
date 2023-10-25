@@ -9,11 +9,17 @@ use JsonSerializable;
 class AMQPMessage implements JsonSerializable
 {
     private string $name = '';
+
     private int $id = 0;
+
     private string $sequenceId = '';
+
     private string $timestamp = '';
+
     private string $content = '';
+
     private string $persist = '';
+
     private string $channel = '';
 
     public function getChannel(): string

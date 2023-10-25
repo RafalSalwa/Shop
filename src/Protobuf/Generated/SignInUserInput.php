@@ -20,6 +20,7 @@ class SignInUserInput extends \Google\Protobuf\Internal\Message
      * @var string
      */
     protected $username = '';
+
     /**
      * Generated from protobuf field <code>string password = 2;</code>.
      *
@@ -33,8 +34,8 @@ class SignInUserInput extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *                    Optional. Data for populating the Message object.
      *
-     * @var string $username
-     * @var string $password
+     * @var string
+     * @var string
      *             }
      */
     public function __construct($data = null)

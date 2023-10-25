@@ -16,8 +16,12 @@ class PaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('operationNumber', TextType::class, ['label' => 'payment ID'])
-            ->add('amount', TextType::class, ['label' => 'Amount'])
+            ->add('operationNumber', TextType::class, [
+                'label' => 'payment ID',
+            ])
+            ->add('amount', TextType::class, [
+                'label' => 'Amount',
+            ])
             ->add('yes', SubmitType::class)
             ->add('no', SubmitType::class);
     }

@@ -8,7 +8,6 @@ use App\Entity\Order;
 use App\Entity\User;
 use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 class OrderRepository extends ServiceEntityRepository
@@ -20,13 +19,12 @@ class OrderRepository extends ServiceEntityRepository
 
     public function save(Order $order)
     {
-        $this->getEntityManager()->persist($order);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->persist($order);
+        $this->getEntityManager()
+            ->flush();
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
     public function fetchOrderDetails(int $id): ?Order
     {
         $qb = $this->createQueryBuilder('o')
@@ -38,7 +36,8 @@ class OrderRepository extends ServiceEntityRepository
             ->orderBy('o.createdAt', 'DESC')
             ->setParameter('id', $id);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function fetchOrders(User $user, int $page)

@@ -17,7 +17,6 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     #[JoinColumn(referencedColumnName: 'product_id')]
     protected CartInsertableInterface $referenceEntity;
 
-
     public function getType(): string
     {
         return 'product';
@@ -31,8 +30,11 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     public function jsonSerialize(): mixed
     {
         return [
-            'name' => $this->getReferenceEntity()->getName(),
-            'category' => $this->getReferenceEntity()->getCategory()->getName(),
+            'name' => $this->getReferenceEntity()
+                ->getName(),
+            'category' => $this->getReferenceEntity()
+                ->getCategory()
+                ->getName(),
             'type' => $this->getTypeName(),
             'quantity' => $this->getQuantity(),
         ];
@@ -62,8 +64,11 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     {
         return sprintf(
             '%s (%s)',
-            $this->getReferencedEntity()->getName(),
-            $this->getReferencedEntity()->getCategory()->getName()
+            $this->getReferencedEntity()
+                ->getName(),
+            $this->getReferencedEntity()
+                ->getCategory()
+                ->getName()
         );
     }
 
@@ -74,12 +79,10 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
 
     public function getPrice(): float
     {
-        // TODO: Implement getPrice() method.
     }
 
     public function getTotalPrice(): float
     {
-        // TODO: Implement getTotalPrice() method.
     }
 
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
@@ -91,7 +94,6 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
 
     public function toCartItem(): CartItem
     {
-        // TODO: Implement toCartItem() method.
     }
 
     public function setQuantity(int $quantity): CartItemInterface

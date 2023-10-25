@@ -22,7 +22,9 @@ class OAuth2Service
 
     public function getProfile($appClient): OAuth2ClientProfile|null
     {
-        return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy(['client' => $appClient]);
+        return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy([
+            'client' => $appClient,
+        ]);
     }
 
     public function createConsent(Client|null $appClient)
@@ -30,9 +32,9 @@ class OAuth2Service
         $user = $this->security->getUser();
         $request = $this->requestStack->getCurrentRequest();
 
-        $userConsents = $user->getOAuth2UserConsents()->filter(
-            fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient
-        )->first() ?: null;
+        $userConsents = $user->getOAuth2UserConsents()
+            ->filter(fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient)
+            ->first() ?: null;
         $userScopes = $userConsents?->getScopes() ?? [];
 
         $requestedScopes = ['profile', 'email', 'cart'];
@@ -52,7 +54,9 @@ class OAuth2Service
     {
         $clientId = 'testclient';
 
-        return $this->entityManager->getRepository(Client::class)->findOneBy(['identifier' => $clientId]);
+        return $this->entityManager->getRepository(Client::class)->findOneBy([
+            'identifier' => $clientId,
+        ]);
     }
 
     public function save(OAuth2UserConsent $consents): void

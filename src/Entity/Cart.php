@@ -26,12 +26,14 @@ use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartRepository::class)]
-#[Table(name: 'cart', schema: "interview")]
+#[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
 class Cart implements JsonSerializable
 {
     final public const STATUS_CREATED = 'created';
+
     final public const STATUS_CONFIRMED = 'confirmed';
+
     final public const STATUS_CANCELLED = 'cancelled';
 
     #[Id]
@@ -39,7 +41,9 @@ class Cart implements JsonSerializable
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /** @var  Collection<int, CartItem> */
+    /**
+     * @var  Collection<int, CartItem>
+     */
     #[OneToMany(
         mappedBy: 'cart',
         targetEntity: CartItem::class,
@@ -59,7 +63,9 @@ class Cart implements JsonSerializable
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTimeImmutable $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -84,13 +90,15 @@ class Cart implements JsonSerializable
 
     public function addItem(CartItemInterface $item): self
     {
-        if (!$this->itemExists($item)) {
+        if (! $this->itemExists($item)) {
             $item->setCart($this);
-            $this->getItems()->add($item);
+            $this->getItems()
+                ->add($item);
             return $this;
         }
         /** @var CartItem $existingItem */
-        $existingItem = $this->getFilteredItems($item)->first();
+        $existingItem = $this->getFilteredItems($item)
+            ->first();
         $existingItem->increaseQuantity();
 
         return $this;
@@ -98,11 +106,14 @@ class Cart implements JsonSerializable
 
     public function itemExists(CartItemInterface $cartItem): bool
     {
-        /* @var CartItemInterface $element */
-        return $this->getItems()->exists(
-            fn($key, $element) => $element->getReferenceEntity()->getId() === $cartItem->getReferenceEntity()->getId()
-                && $element::class === $cartItem::class
-        );
+        /** @var CartItemInterface $element */
+        return $this->getItems()
+            ->exists(
+                fn ($key, $element) => $element->getReferenceEntity()
+                    ->getId() === $cartItem->getReferenceEntity()
+                    ->getId()
+                    && $element::class === $cartItem::class
+            );
     }
 
     /**
@@ -118,14 +129,18 @@ class Cart implements JsonSerializable
         return $this->id;
     }
 
-    /** @return ReadableCollection<int,CartItem> */
+    /**
+     * @return ReadableCollection<int,CartItem>
+     */
     public function getFilteredItems(CartItemInterface $newItem): ReadableCollection
     {
-        return $this->getItems()->filter(
-            fn(CartItemInterface $cartItem) => $cartItem->getReferenceEntity()->getId(
-                ) === $newItem->getReferenceEntity()->getId()
-                && $cartItem::class === $newItem::class
-        );
+        return $this->getItems()
+            ->filter(
+                fn (CartItemInterface $cartItem) => $cartItem->getReferenceEntity()
+                    ->getId() === $newItem->getReferenceEntity()
+                    ->getId()
+                    && $cartItem::class === $newItem::class
+            );
     }
 
     public function removeItem(CartItem $item): void
@@ -139,8 +154,9 @@ class Cart implements JsonSerializable
 
     public function itemTypeExists(CartItemInterface $cartItem): bool
     {
-        /* @var CartItem $element */
-        return $this->getItems()->exists(fn($key, $element) => $element::class === $cartItem::class);
+        /** @var CartItem $element */
+        return $this->getItems()
+            ->exists(fn ($key, $element) => $element::class === $cartItem::class);
     }
 
     public function getUser(): User

@@ -10,13 +10,10 @@ use App\Entity\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 use App\Entity\SubscriptionPlanCartItem;
-use App\Exception\ItemNotFoundException;
-use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
-use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
 
@@ -40,14 +37,15 @@ class CartService
             $this->productStockService->restoreStock($item);
             $this->save($cart);
         }
-        $cart->getItems()->clear();
+        $cart->getItems()
+            ->clear();
         $this->cartSessionStorage->removeCart();
     }
 
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (!$cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof \App\Entity\Cart) {
             $cart = $this->cartFactory->create();
         }
 
@@ -59,7 +57,7 @@ class CartService
      */
     public function save(Cart $cart = null): void
     {
-        if (!$cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof \App\Entity\Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);
@@ -86,9 +84,6 @@ class CartService
         return $this->cartSessionStorage->getDeliveryAddressId();
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
     public function addProduct(Product $product): void
     {
         $cart = $this->getCurrentCart();
@@ -100,20 +95,11 @@ class CartService
         $this->save($cart);
     }
 
-    /**
-     * @throws ItemNotFoundException
-     */
     public function makeCartItem(object $entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
     {
         return $this->cartItemFactory->createCartItem($entity);
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     * @throws Exception
-     * @throws TooManySubscriptionsException
-     * @throws ItemNotFoundException
-     */
     public function add(CartItemInterface $item): void
     {
         $lock = $this->cartLockFactory->createLock('cart_item_add');
@@ -132,9 +118,6 @@ class CartService
         $lock->release();
     }
 
-    /**
-     * @throws TooManySubscriptionsException
-     */
     public function checkSubscriptionsCount(CartItemInterface $item): void
     {
         $cart = $this->getCurrentCart();
@@ -149,7 +132,8 @@ class CartService
         $cart = $this->getCurrentCart();
 
         if ($cart->getItems()->contains($item)) {
-            $cart->getItems()->removeElement($item);
+            $cart->getItems()
+                ->removeElement($item);
         }
     }
 }

@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SubscriptionRepository::class)]
-#[Table(name: 'subscription', schema: "interview")]
+#[Table(name: 'subscription', schema: 'interview')]
 #[HasLifecycleCallbacks]
 class Subscription
 {
@@ -33,10 +33,15 @@ class Subscription
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: true)]
     private int $tier;
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
+
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
+        'default' => false,
+    ])]
     private bool $isActive = false;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTime $createdAt;
 
     #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true)]

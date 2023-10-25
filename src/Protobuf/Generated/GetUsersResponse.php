@@ -15,15 +15,16 @@ use Google\Protobuf\Internal\GPBUtil;
 class GetUsersResponse extends \Google\Protobuf\Internal\Message
 {
     /**
-     * Generated from protobuf field <code>repeated .intrvproto.GetUserResponse users = 1;</code>.
-     */
-    private $users;
-    /**
      * Generated from protobuf field <code>string email = 2;</code>.
      *
      * @var string
      */
     protected $email = '';
+
+    /**
+     * Generated from protobuf field <code>repeated .intrvproto.GetUserResponse users = 1;</code>.
+     */
+    private $users;
 
     /**
      * Constructor.
@@ -32,7 +33,7 @@ class GetUsersResponse extends \Google\Protobuf\Internal\Message
      *                    Optional. Data for populating the Message object.
      *
      * @var \App\Protobuf\Generated\GetUserResponse[]|\Google\Protobuf\Internal\RepeatedField $users
-     * @var string                                                                            $email
+     * @var string
      *                                                                                        }
      */
     public function __construct($data = null)
@@ -60,7 +61,11 @@ class GetUsersResponse extends \Google\Protobuf\Internal\Message
      */
     public function setUsers($var)
     {
-        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \App\Protobuf\Generated\GetUserResponse::class);
+        $arr = GPBUtil::checkRepeatedField(
+            $var,
+            \Google\Protobuf\Internal\GPBType::MESSAGE,
+            \App\Protobuf\Generated\GetUserResponse::class
+        );
         $this->users = $arr;
 
         return $this;

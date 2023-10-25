@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: PlanRepository::class)]
-#[Table(name: 'plan', schema: "interview")]
+#[Table(name: 'plan', schema: 'interview')]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
@@ -39,9 +39,14 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Assert\Length(min: 10, minMessage: 'You need to add any')]
     private string $description;
 
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
+        'default' => false,
+    ])]
     private bool $isActive = false;
-    #[Column(name: 'is_visible', type: Types::BOOLEAN, options: ['default' => false])]
+
+    #[Column(name: 'is_visible', type: Types::BOOLEAN, options: [
+        'default' => false,
+    ])]
     private bool $isVisible = false;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
@@ -50,7 +55,9 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: false)]
     private int $tier;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]

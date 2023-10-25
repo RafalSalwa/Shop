@@ -25,11 +25,8 @@ class AuthServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function SignUpUser(
-        SignUpUserInput $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function SignUpUser(SignUpUserInput $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/SignUpUser',
             $argument,
@@ -46,11 +43,8 @@ class AuthServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function SignInUser(
-        SignInUserInput $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function SignInUser(SignInUserInput $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/SignInUser',
             $argument,
@@ -67,11 +61,8 @@ class AuthServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function GetVerificationKey(
-        VerificationCodeRequest $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function GetVerificationKey(VerificationCodeRequest $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/GetVerificationKey',
             $argument,

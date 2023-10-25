@@ -18,12 +18,15 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Uid\Uuid;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
-#[Table(name: 'payment', schema: "interview")]
+#[Table(name: 'payment', schema: 'interview')]
 class Payment
 {
     final public const PENDING = 'pending';
+
     final public const PROCESSING = 'processing';
+
     final public const COMPLETED = 'completed';
+
     final public const CANCELLED = 'cancelled';
 
     #[Id]
@@ -31,17 +34,25 @@ class Payment
     #[Column(name: 'payment_id', type: Types::INTEGER, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'payment_paymentID_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
+
     #[Column(name: 'operation_number', type: Types::STRING, length: 40)]
     private ?string $operationNumber;
+
     #[Column(name: 'operation_type', type: Types::STRING, length: 40)]
     private string $operationType = 'payment';
+
     #[Column(name: 'amount', type: Types::INTEGER, nullable: false)]
     private int $amount;
+
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private string $status;
+
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $paymentDate;
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTime $createdAt;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]

@@ -30,7 +30,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use function array_key_exists;
 
 #[Entity(repositoryClass: UserRepository::class)]
-#[Table(name: 'intrv_user', schema: "interview")]
+#[Table(name: 'intrv_user', schema: 'interview')]
 #[HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
@@ -39,36 +39,58 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[GeneratedValue]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
     private ?int $id = null;
+
     #[Column(name: 'username', type: Types::STRING, length: 180)]
     private string $username;
+
     #[Column(name: 'pass', type: Types::STRING, length: 100)]
     private string $password;
+
     #[Column(name: 'first_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $firstname = null;
+
     #[Column(name: 'last_name', type: Types::STRING, length: 255, nullable: true)]
     private ?string $lastname = null;
+
     #[Column(name: 'email', type: Types::STRING, length: 255)]
     private string $email;
+
     #[Column(name: 'phone_no', type: Types::STRING, length: 11, nullable: true)]
     private ?string $phoneNo = null;
+
     #[Column(name: 'roles', type: Types::JSON, length: 255, nullable: true)]
     private ?array $roles = null;
+
     #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
     private string $verificationCode;
-    #[Column(name: 'is_verified', type: Types::BOOLEAN, options: ['default' => false])]
+
+    #[Column(name: 'is_verified', type: Types::BOOLEAN, options: [
+        'default' => false,
+    ])]
     private bool $verified;
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
+
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
+        'default' => false,
+    ])]
     private bool $active;
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private DateTimeImmutable $createdAt;
+
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $updatedAt = null;
+
     #[Column(name: 'deleted_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $deletedAt = null;
+
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $lastLogin = null;
+
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
+
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     #[Groups('user_carts')]
     private ?Collection $carts = null;
@@ -78,6 +100,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private ?Collection $payments = null;
+
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private ?Collection $orders = null;
 
@@ -129,13 +152,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->payments;
     }
 
-    public function setPayments(?Collection $payments): User
+    public function setPayments(?Collection $payments): self
     {
         $this->payments = $payments;
         return $this;
     }
 
-    public function addPayment(Payment $payment): User
+    public function addPayment(Payment $payment): self
     {
         $this->payments->add($payment);
         return $this;
@@ -179,12 +202,11 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->password;
     }
 
-    public function setPassword(string $password): User
+    public function setPassword(string $password): self
     {
         $this->password = $password;
         return $this;
     }
-
 
     public function getFirstname(): ?string
     {
@@ -250,9 +272,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->createdAt;
     }
 
-    /**
-     * @return User
-     */
     public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
@@ -265,9 +284,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->deletedAt;
     }
 
-    /**
-     * @return User
-     */
     public function setDeletedAt(DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
@@ -329,7 +345,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function eraseCredentials()
     {
-        // TODO: Implement eraseCredentials() method.
     }
 
     public function getUserIdentifier(): string
@@ -344,7 +359,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function addOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
     {
-        if (!$this->oAuth2UserConsents->contains($oAuth2UserConsent)) {
+        if (! $this->oAuth2UserConsents->contains($oAuth2UserConsent)) {
             $this->oAuth2UserConsents->add($oAuth2UserConsent);
             $oAuth2UserConsent->setUser($this);
         }

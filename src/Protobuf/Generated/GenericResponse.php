@@ -20,6 +20,7 @@ class GenericResponse extends \Google\Protobuf\Internal\Message
      * @var string
      */
     protected $status = '';
+
     /**
      * Generated from protobuf field <code>string message = 2;</code>.
      *
@@ -33,8 +34,8 @@ class GenericResponse extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *                    Optional. Data for populating the Message object.
      *
-     * @var string $status
-     * @var string $message
+     * @var string
+     * @var string
      *             }
      */
     public function __construct($data = null)

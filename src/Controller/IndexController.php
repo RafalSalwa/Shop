@@ -12,7 +12,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class IndexController extends AbstractController
 {
-    #[Route('/', name: 'app_index', defaults: ['_format' => 'html'], methods: ['GET'])]
+    #[Route('/', name: 'app_index', defaults: [
+        '_format' => 'html',
+    ], methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED')]
     #[Cache(maxage: 3600, public: true, mustRevalidate: true)]
     public function index(): Response

@@ -20,12 +20,14 @@ class SignInUserResponse extends \Google\Protobuf\Internal\Message
      * @var string
      */
     protected $status = '';
+
     /**
      * Generated from protobuf field <code>string access_token = 2;</code>.
      *
      * @var string
      */
     protected $access_token = '';
+
     /**
      * Generated from protobuf field <code>string refresh_token = 3;</code>.
      *
@@ -39,9 +41,9 @@ class SignInUserResponse extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *                    Optional. Data for populating the Message object.
      *
-     * @var string $status
-     * @var string $access_token
-     * @var string $refresh_token
+     * @var string
+     * @var string
+     * @var string
      *             }
      */
     public function __construct($data = null)

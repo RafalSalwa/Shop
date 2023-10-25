@@ -23,13 +23,10 @@ class SubscriptionService
         $this->assignSubscription('Freemium');
     }
 
-    /**
-     * @return void
-     */
     public function assignSubscription(string $type)
     {
         $plan = $this->planRepository->getByName($type);
-        if (!$plan) {
+        if (! $plan) {
             return;
         }
         /** @var User $user */

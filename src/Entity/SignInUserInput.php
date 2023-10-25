@@ -7,6 +7,7 @@ namespace App\Entity;
 class SignInUserInput
 {
     protected string $username = '';
+
     protected string $password = '';
 
     public function getUsername(): string

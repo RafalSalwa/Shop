@@ -15,20 +15,20 @@ class CartItemTypeResolver implements ValueResolverInterface
 {
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ('type' !== $argument->getName()) {
+        if ($argument->getName() !== 'type') {
             return [];
         }
 
         $value = $request->attributes->get($argument->getName());
-        if (!\is_string($value)) {
+        if (! \is_string($value)) {
             return [];
         }
         $entityTypeMap = [
             'product' => Product::class,
             'plan' => SubscriptionPlan::class,
         ];
-        if (!isset($entityTypeMap[$value])) {
-            throw new InvalidArgumentException('Unknown entity type:'.$value);
+        if (! isset($entityTypeMap[$value])) {
+            throw new InvalidArgumentException('Unknown entity type:' . $value);
         }
 
         return [$entityTypeMap[$value]];

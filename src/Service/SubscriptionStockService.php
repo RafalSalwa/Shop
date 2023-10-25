@@ -23,17 +23,14 @@ class SubscriptionStockService
     ) {
     }
 
-    /**
-     * @throws ProductStockDepleted
-     */
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
         if ($entity instanceof Product) {
             $product = $this->repository->find($entity->getId());
-            if (!$product) {
+            if (! $product) {
                 throw new ProductNotFound(sprintf('Product #%d not found.', $entity->getId()));
             }
-            if (0 === $product->getUnitsInStock()) {
+            if ($product->getUnitsInStock() === 0) {
                 throw new ProductStockDepleted('For this product stock is depleted.');
             }
         }
@@ -58,7 +55,7 @@ class SubscriptionStockService
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
-        if (1 === $product->getUnitsInStock()) {
+        if ($product->getUnitsInStock() === 1) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

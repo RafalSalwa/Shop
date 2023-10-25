@@ -12,7 +12,6 @@ use App\Manager\CartManager;
 use App\Repository\ProductRepository;
 use App\Service\CartService;
 use Doctrine\DBAL\Exception;
-use JsonException;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -33,18 +32,13 @@ class CartApiController extends AbstractController
     public function index(CartManager $cartManager, SerializerInterface $serializer): JsonResponse
     {
         $cart = $cartManager->getCurrentCart();
-        $serialized = $serializer->serialize(
-            $cart,
-            'json',
-            ['groups' => ['carts', 'cart_item']]
-        );
+        $serialized = $serializer->serialize($cart, 'json', [
+            'groups' => ['carts', 'cart_item'],
+        ]);
 
         return new JsonResponse($serialized);
     }
 
-    /**
-     * @throws JsonException
-     */
     #[OA\Post(
         requestBody: new OA\RequestBody(
             required: true,
@@ -69,22 +63,24 @@ class CartApiController extends AbstractController
     #[Route(
         '/api/cart/add/product',
         name: 'api_cart_add',
-        requirements: ['id' => Requirement::POSITIVE_INT],
+        requirements: [
+            'id' => Requirement::POSITIVE_INT,
+        ],
         methods: ['POST']
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
         $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
-        if (!$params['id']) {
+        if (! $params['id']) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $prodId = (int)$params['id'];
+            $prodId = (int) $params['id'];
 
             /** @var Product $product */
             $product = $productRepository->find($prodId);
-            if (!$product) {
+            if (! $product) {
                 return $this->json([
                     'status' => 'product not found',
                     'message' => sprintf('There is no such product with prvided ID #%s', $prodId),

@@ -15,19 +15,21 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: OrderItemRepository::class)]
-#[Table(name: 'order_item', schema: "interview")]
+#[Table(name: 'order_item', schema: 'interview')]
 class OrderItem
 {
     #[Id]
     #[GeneratedValue(strategy: 'AUTO')]
     #[Column(name: 'order_item_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
+
     #[ManyToOne(targetEntity: Order::class, cascade: ['persist'], inversedBy: 'items')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id')]
     private Order $order;
 
     #[Column(name: 'cart_item_entity', type: Types::JSON)]
     private string $cartItem;
+
     #[Column(name: 'cart_item_type', type: Types::STRING, length: 25)]
     private string $itemType;
 

@@ -9,8 +9,9 @@ use App\Entity\CartItem;
 
 readonly class CartCalculator
 {
-    public function __construct(private TaxCalculator $taxCalculator)
-    {
+    public function __construct(
+        private TaxCalculator $taxCalculator
+    ) {
     }
 
     public function calculatePayment(Cart $cart): array
@@ -30,7 +31,8 @@ readonly class CartCalculator
         $total = 0;
         /** @var CartItem $item */
         foreach ($cart->getItems() as $item) {
-            $price = $item->getReferencedEntity()->getUnitPrice() * $item->getQuantity();
+            $price = $item->getReferencedEntity()
+                ->getUnitPrice() * $item->getQuantity();
             $total += $price;
         }
 
