@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CartItemRepository;
-use DateTime;
-use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -37,6 +35,12 @@ use Symfony\Component\Serializer\Annotation\Groups;
 ])]
 class CartItem implements SerializerInterface, CartItemInterface
 {
+    public $username;
+
+    public $verified;
+
+    public $active;
+
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: [
         'default' => '1',
     ])]
@@ -45,10 +49,10 @@ class CartItem implements SerializerInterface, CartItemInterface
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
         'default' => 'CURRENT_TIMESTAMP',
     ])]
-    protected DateTimeInterface $createdAt;
+    protected \DateTimeInterface $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected ?DateTime $updatedAt = null;
+    protected ?\DateTime $updatedAt = null;
 
     #[ManyToOne(targetEntity: Cart::class)]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
@@ -89,12 +93,12 @@ class CartItem implements SerializerInterface, CartItemInterface
         $this->quantity += $qty;
     }
 
-    public function getUpdatedAt(): DateTime
+    public function getUpdatedAt(): \DateTime
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(DateTime $updatedAt): self
+    public function setUpdatedAt(\DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -104,8 +108,8 @@ class CartItem implements SerializerInterface, CartItemInterface
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new DateTime('now'));
-        $this->setCreatedAt(new DateTime('now'));
+        $this->setCreatedAt(new \DateTime('now'));
+        $this->setCreatedAt(new \DateTime('now'));
     }
 
     public function setUser(UserInterface $getUser): void
@@ -145,12 +149,12 @@ class CartItem implements SerializerInterface, CartItemInterface
         return 'cart_item';
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeInterface $createdAt): self
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 

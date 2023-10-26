@@ -22,7 +22,165 @@ grumphp:
   environment:
     files: [ ]
     variables: { }
-    paths: [ ]
-  tasks: { }
-  testsuites: [ ]
+    paths:
+      - bin
+  tasks:
+    codeception:
+      config_file: ~
+      fail_fast: false
+      suite: ~
+      test: ~
+      xml: false
+      html: false
+    deptrac:
+      cache_file: ~
+      depfile: ~
+      formatter: ~
+      output: ~
+    doctrine_orm:
+      skip_mapping: false
+      skip_sync: false
+      triggered_by: [ 'php', 'xml', 'yml' ]
+    ecs:
+      config: ~
+      level: ~
+      paths: [ ]
+      files_on_pre_commit: false
+      triggered_by: [ 'php' ]
+      clear-cache: false
+      no-progress-bar: true
+    git_blacklist:
+      keywords:
+        - "die\\("
+        - "var_dump\\("
+        - "exit;"
+        - "dd\\("
+        - "dump"
+      whitelist_patterns: [ ]
+      triggered_by: [ 'php' ]
+      regexp_type: G
+      match_word: false
+      ignore_patterns: [ ]
+    infection:
+      threads: ~
+      test_framework: ~
+      only_covered: false
+      show_mutations: false
+      verbose: false
+      configuration: ~
+      min_msi: ~
+      min_covered_msi: ~
+      mutators: [ ]
+      ignore_patterns: [ ]
+      triggered_by: [ php ]
+    phparkitect:
+      config: ~
+      target_php_version: 8.2
+      stop_on_failure: ~
+    phpcpd:
+      directory: [ '.' ]
+      exclude: [ 'vendor' ]
+      fuzzy: false
+      min_lines: 5
+      min_tokens: 70
+      triggered_by: [ 'php' ]
+    phpcs:
+      standard: [ 'PSR2', 'PSR12', 'Squiz', 'Doctrine', 'Symfony', 'SlevomatCodingStandard' ]
+      severity: ~
+      error_severity: ~
+      warning_severity: ~
+      tab_width: ~
+      report: full
+      report_width: ~
+      whitelist_patterns: [ ]
+      encoding: ~
+      ignore_patterns: [ ]
+      sniffs: [ ]
+      triggered_by: [ php ]
+      exclude: [ ]
+      show_sniffs_error_path: true
+    phpcsfixer:
+      allow_risky: ~
+      cache_file: ~
+      config: ~
+      rules: [ ]
+      using_cache: ~
+      config_contains_finder: true
+      verbose: true
+      diff: false
+      triggered_by: [ 'php' ]
+    phplint:
+      exclude: [ ]
+      jobs: ~
+      short_open_tag: false
+      ignore_patterns: [ ]
+      triggered_by: [ 'php' ]
+    phpmd:
+      whitelist_patterns:
+        - /^src\/Protobuf\/(.*)/
+      exclude: [ 'vendor' ]
+      report_format: text
+      ruleset: [ 'cleancode', 'codesize', 'naming', 'unusedcode' ]
+      triggered_by: [ 'php' ]
+    phpmnd:
+      directory: .
+      whitelist_patterns: [ ]
+      exclude: [ ]
+      exclude_name: [ ]
+      exclude_path: [ ]
+      extensions: [ ]
+      hint: false
+      ignore_funcs: [ ]
+      ignore_numbers: [ ]
+      ignore_strings: [ ]
+      strings: false
+      triggered_by: [ 'php' ]
+    phpstan: ~
+    phpunit:
+      config_file: reports/config/phpunit.xml
+      testsuite: unit
+      group: [ ]
+      exclude_group: [ ]
+      always_execute: true
+      order: null
+    phpunitbridge: ~
+    phpversion: ~
+    #    psalm:
+    #      config: psalm.xml
+    #      ignore_patterns: [ ]
+    #      no_cache: false
+    #      report: ~
+    #      output_format: null
+    #      threads: 1
+    #      triggered_by: [ 'php' ]
+    #      show_info: false
+    rector:
+      config: null
+      triggered_by: [ 'php' ]
+      ignore_patterns: [ ]
+      clear_cache: true
+      no_diffs: false
+    securitychecker_enlightn:
+      lockfile: ./composer.lock
+      run_always: true
+    securitychecker_local:
+      lockfile: ./composer.lock
+      format: ~
+      run_always: true
+      no_dev: false
+    securitychecker_roave:
+      jsonfile: ./composer.json
+      lockfile: ./composer.lock
+      run_always: true
+    securitychecker_symfony:
+      lockfile: ./composer.lock
+      format: ~
+      run_always: false
+  testsuites:
+    # Specify the test-suite for the git:commit-msg command:
+    git_commit_msg:
+      tasks: [ ]
+    # Specify the test-suite for the git:pre-commit command:
+    git_pre_commit:
+      tasks: [ ]
   extensions: [ ]

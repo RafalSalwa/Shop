@@ -7,7 +7,11 @@
 >
     <projectFiles>
         <directory name="src"/>
+        <ignoreFiles>
+            <directory name="vendor"/>
+        </ignoreFiles>
     </projectFiles>
+
     <plugins>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\MockeryPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\SymfonyPsalmPlugin\Plugin"/>
@@ -16,7 +20,7 @@
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Orklah\PsalmInsaneComparison\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="DQ5Studios\PsalmJunit\Plugin">
-            <filepath>./reports/junit.xml</filepath>
+            <filepath>./reports/psalm_junit_report.xml</filepath>
             <always/>
         </pluginClass>
     </plugins>

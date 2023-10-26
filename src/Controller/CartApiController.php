@@ -22,8 +22,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
 
-use const JSON_THROW_ON_ERROR;
-
 class CartApiController extends AbstractController
 {
     #[Route('/api/cart', name: 'api_cart_index', methods: ['GET'])]
@@ -70,7 +68,7 @@ class CartApiController extends AbstractController
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
         if (! $params['id']) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
@@ -93,8 +91,7 @@ class CartApiController extends AbstractController
                 'status' => 'something went wrong, please try again later',
                 'message' => $e->getMessage(),
             ], Response::HTTP_NOT_FOUND);
-        } catch (ItemNotFoundException|TooManySubscriptionsException $e) {
-        } catch (Exception $e) {
+        } catch (ItemNotFoundException|TooManySubscriptionsException|Exception) {
         }
 
         return $this->json([

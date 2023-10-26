@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-use JsonSerializable;
-
-class AMQPMessage implements JsonSerializable
+class AMQPMessage implements \JsonSerializable
 {
     private string $name = '';
 

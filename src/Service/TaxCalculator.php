@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Order;
-use DivisionByZeroError;
 
 class TaxCalculator
 {
@@ -21,13 +20,10 @@ class TaxCalculator
     {
         $this->calculateTax($order->getAmount());
 
-        $order->setNetAmount(intval($this->getNetAmount()));
-        $order->setVatAmount(intval($this->getVatAmount()));
+        $order->setNetAmount((int) $this->getNetAmount());
+        $order->setVatAmount((int) $this->getVatAmount());
     }
 
-    /**
-     * @param int $total
-     */
     public function calculateTax(int|float $total): void
     {
         try {
@@ -36,7 +32,7 @@ class TaxCalculator
             $this->netAmount = bcdiv((string) $this->total, $vatDivisor);
 
             $this->vatAmount = bcsub((string) $this->total, $this->netAmount);
-        } catch (DivisionByZeroError) {
+        } catch (\DivisionByZeroError) {
             // no chance to throw this error, but we need to handle that for static analysis and coverage.
         }
     }
@@ -44,7 +40,7 @@ class TaxCalculator
     public function getNetAmount(bool $humanFriendly = false): string
     {
         if ($humanFriendly) {
-            return number_format(intval($this->netAmount) / 100, 2, '.', ' ');
+            return number_format((int) $this->netAmount / 100, 2, '.', ' ');
         }
 
         return $this->netAmount;
@@ -53,7 +49,7 @@ class TaxCalculator
     public function getVatAmount(bool $humanFriendly = false): string
     {
         if ($humanFriendly) {
-            return number_format(intval($this->vatAmount) / 100, 2, '.', ' ');
+            return number_format((int) $this->vatAmount / 100, 2, '.', ' ');
         }
 
         return $this->vatAmount;

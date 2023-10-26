@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -48,12 +47,12 @@ class Payment
     private string $status;
 
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime $paymentDate;
+    private \DateTime $paymentDate;
 
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
         'default' => 'CURRENT_TIMESTAMP',
     ])]
-    private DateTime $createdAt;
+    private \DateTime $createdAt;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
@@ -66,7 +65,7 @@ class Payment
     public function __construct()
     {
         $this->operationNumber = Uuid::v4()->toBinary();
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new \DateTime('now');
     }
 
     public function getAmount($formatted = true): int|string
@@ -129,24 +128,24 @@ class Payment
         return $this;
     }
 
-    public function getPaymentDate(): DateTime
+    public function getPaymentDate(): \DateTime
     {
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(DateTime $paymentDate): self
+    public function setPaymentDate(\DateTime $paymentDate): self
     {
         $this->paymentDate = $paymentDate;
 
         return $this;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): \DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(\DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 

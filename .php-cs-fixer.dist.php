@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $finder = (new PhpCsFixer\Finder())
     ->in(__DIR__)
     ->exclude('config')
@@ -15,32 +17,54 @@ return (new PhpCsFixer\Config())
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'array_syntax' => [
-            'syntax' => 'short',
-        ],
-        'braces' => [
-            'allow_single_line_closure' => true,
-        ],
-        'ordered_imports' => true,
-        'modernize_types_casting' => true,
-        'phpdoc_add_missing_param_annotation' => [
-            'only_untyped' => true,
-        ],
-        'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
+        '@PHP82Migration' => true,
+        '@PHP80Migration:risky' => true,
+        '@PHPUnit100Migration:risky' => true,
+        '@PhpCsFixer' => true,
+        '@PhpCsFixer:risky' => true,
+        '@PSR2' => true,
+        'array_syntax' => ['syntax' => 'short'],
+        'binary_operator_spaces' => ['default' => 'at_least_single_space'],
+        'blank_line_after_opening_tag' => true,
+        'blank_line_between_import_groups' => false,
+        'blank_lines_before_namespace' => true,
+        'braces' => ['allow_single_line_closure' => true],
+        'compact_nullable_type_declaration' => true,
+        'declare_equal_normalize' => true,
         'declare_strict_types' => true,
+        'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']],
         'linebreak_after_opening_tag' => true,
+        'lowercase_cast' => true,
+        'lowercase_static_reference' => true,
         'mb_str_functions' => true,
+        'modernize_strpos' => true,
+        'modernize_types_casting' => true,
+        'native_function_invocation' => ['include' => ['@compiler_optimized'], 'scope' => 'namespaced'],
+        'new_with_parentheses' => true,
+        'no_blank_lines_after_class_opening' => true,
+        'no_leading_import_slash' => true,
         'no_php4_constructor' => true,
         'no_unreachable_default_argument_value' => true,
+        'no_useless_concat_operator' => false,
         'no_useless_else' => true,
         'no_useless_return' => true,
+        'no_whitespace_in_blank_line' => true,
+        'ordered_imports' => true,
+        'phpdoc_add_missing_param_annotation' => ['only_untyped' => true],
         'php_unit_strict' => true,
         'phpdoc_order' => true,
+        'phpdoc_to_param_type' => true,
+        'phpdoc_to_return_type' => true,
+        'return_type_declaration' => true,
         'strict_comparison' => true,
         'semicolon_after_instruction' => true,
+        'short_scalar_cast' => true,
+        'single_import_per_statement ' => true,
+        'single_trait_insert_per_statement' => true,
         'strict_param' => true,
-        'blank_line_between_import_groups' => false,
         'ternary_to_null_coalescing' => true,
+        'ternary_operator_spaces' => true,
+        'visibility_required' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache');
+    ->setCacheFile(__DIR__.'/var/.php-cs-fixer.cache');

@@ -30,7 +30,7 @@ class OrderController extends AbstractController
         $pending = $orderService->createPending($cart);
         $paymentService->createPendingPayment($pending);
 
-        if ($pending->getId()) {
+        if ($pending->getId() !== 0) {
             $cartService->clearCart();
         }
 
