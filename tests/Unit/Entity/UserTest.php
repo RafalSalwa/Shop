@@ -14,7 +14,6 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\ExpectationFailedException;
 use PHPUnit\Framework\TestCase;
-use SebastianBergmann\RecursionContext\InvalidArgumentException;
 
 /**
  * @internal
@@ -22,7 +21,6 @@ use SebastianBergmann\RecursionContext\InvalidArgumentException;
 #[CoversClass(User::class)]
 #[UsesClass(Payment::class)]
 #[UsesClass(Address::class)]
-#[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserTest extends TestCase
 {
     public function testSetters(): void
@@ -39,7 +37,7 @@ final class UserTest extends TestCase
         try {
             $this->assertNotNull($user->getSubscription());
             $this->assertNotNull($user->getDeliveryAddresses());
-        } catch (AssertionFailedError|ExpectationFailedException|InvalidArgumentException) {
+        } catch (AssertionFailedError|ExpectationFailedException) {
         }
     }
 

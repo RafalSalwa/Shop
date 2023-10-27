@@ -13,8 +13,7 @@ trait CartAssertionsTrait
     {
         $actualCount = $crawler
             ->filter('.cart-item')
-            ->count()
-        ;
+            ->count();
 
         Assert::assertEquals(
             $expectedCount,
@@ -28,19 +27,22 @@ trait CartAssertionsTrait
         $infoText = $crawler
             ->filter('.cart-items')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
         $infoText = self::normalizeWhitespace($infoText);
         Assert::assertEquals('Cart is empty', $infoText, 'The cart should be empty.');
     }
 
-    public static function assertCartTotalEquals(Crawler $crawler, $expectedTotal): void
+    private static function normalizeWhitespace(string $value): string
     {
-        $actualTotal = (float) $crawler
+        return trim(preg_replace('/(?:\s{2,}+|[^\S ])/', ' ', $value));
+    }
+
+    public static function assertCartTotalEquals(Crawler $crawler, int $expectedTotal): void
+    {
+        $actualTotal = (float)$crawler
             ->filter('.cart-payment-total')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
 
         Assert::assertEquals(
             $expectedTotal,
@@ -54,11 +56,10 @@ trait CartAssertionsTrait
         string $productName,
         int $expectedQuantity
     ): void {
-        $actualQuantity = (int) self::getItemByProductName($crawler, $productName)
+        $actualQuantity = (int)self::getItemByProductName($crawler, $productName)
             ->filter('.cart-item-qty')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
 
         Assert::assertEquals(
             $expectedQuantity,
@@ -67,20 +68,7 @@ trait CartAssertionsTrait
         );
     }
 
-    public static function assertCartNotContainsProduct(Crawler $crawler, string $productName): void
-    {
-        Assert::assertEmpty(
-            self::getItemByProductName($crawler, $productName),
-            sprinf('The cart should not contain the product %s.', $productName)
-        );
-    }
-
-    private static function normalizeWhitespace(string $value): string
-    {
-        return trim(preg_replace('/(?:\s{2,}+|[^\S ])/', ' ', $value));
-    }
-
-    private static function getItemByProductName(Crawler $crawler, string $productName)
+    private static function getItemByProductName(Crawler $crawler, string $productName): Crawler
     {
         $items = $crawler->filter('.cart-item')
             ->reduce(
@@ -91,9 +79,16 @@ trait CartAssertionsTrait
 
                     return false;
                 }
-            )
-        ;
+            );
 
-        return empty($items) ? null : $items->eq(0);
+        return $items->eq(0);
+    }
+
+    public static function assertCartNotContainsProduct(Crawler $crawler, string $productName): void
+    {
+        Assert::assertEmpty(
+            self::getItemByProductName($crawler, $productName),
+            sprintf('The cart should not contain the product %s.', $productName)
+        );
     }
 }

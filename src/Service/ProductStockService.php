@@ -13,15 +13,18 @@ use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ProductStockService
+readonly class ProductStockService
 {
     public function __construct(
-        private readonly LockFactory $productLockFactory,
-        private readonly ProductRepository $repository,
-        private readonly EventDispatcherInterface $eventDispatcher
+        private LockFactory $productLockFactory,
+        private ProductRepository $repository,
+        private EventDispatcherInterface $eventDispatcher
     ) {
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     */
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
         $product = $entity->getReferenceEntity();
@@ -35,6 +38,7 @@ class ProductStockService
         $this->changeStock($item, Product::STOCK_INCREASE, $item->getQuantity());
     }
 
+    /** @psalm-param Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty): void
     {
         $product = $entity->getReferencedEntity();
@@ -46,6 +50,9 @@ class ProductStockService
         }
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     */
     private function decrease(StockManageableInterface $product, int $qty): void
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');

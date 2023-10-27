@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -73,7 +74,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->category;
     }
 
-    public function getUnitPrice($userFriendly = false)
+    public function getUnitPrice($userFriendly = false): float|int
     {
         if ($userFriendly) {
             return $this->unitPrice / 100;
@@ -137,8 +138,8 @@ class Product implements CartInsertableInterface, StockManageableInterface
         $cartItem
             ->setQuantity(1)
             ->setReferencedEntity($this)
-            ->setCreatedAt(new \DateTime('now'))
-            ->setUpdatedAt(new \DateTime('now'));
+            ->setCreatedAt(new DateTime('now'))
+            ->setUpdatedAt(new DateTime('now'));
 
         return $cartItem;
     }

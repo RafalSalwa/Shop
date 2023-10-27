@@ -26,7 +26,7 @@ readonly class SubscriptionService
     public function assignSubscription(string $type): void
     {
         $plan = $this->planRepository->getByName($type);
-        if (!$plan) {
+        if (! $plan) {
             return;
         }
         /** @var User $user */

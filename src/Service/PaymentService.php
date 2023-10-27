@@ -10,19 +10,19 @@ use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-class PaymentService
+readonly class PaymentService
 {
     public function __construct(
-        private readonly WorkflowInterface $paymentProcessing,
-        private readonly Security $security,
-        private readonly PaymentRepository $paymentRepository
+        private WorkflowInterface $paymentProcessing,
+        private Security $security,
+        private PaymentRepository $paymentRepository
     ) {
     }
 
-    public function createPendingPayment(Order $order): \App\Entity\TValue|Payment
+    public function createPendingPayment(Order $order): Payment
     {
         $payment = $order->getLastPayment();
-        if (! $payment) {
+        if (!$payment) {
             $payment = new Payment();
         }
         $this->paymentProcessing->getMarking($payment);

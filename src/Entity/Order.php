@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -51,10 +52,10 @@ class Order
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
         'default' => 'CURRENT_TIMESTAMP',
     ])]
-    private \DateTime $createdAt;
+    private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $updatedAt = null;
+    private ?DateTime $updatedAt = null;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
@@ -80,7 +81,7 @@ class Order
         $this->items = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
@@ -194,13 +195,13 @@ class Order
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     #[PreUpdate]
     public function preUpdate(PreUpdateEventArgs $eventArgs): void
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
     public function addPayment(TValue|Payment $payment): void
@@ -214,17 +215,12 @@ class Order
         return $this->payments;
     }
 
-    /**
-     * @return false|mixed
-     *
-     * @psalm-return TValue|false
-     */
-    public function getLastPayment()
+    public function getLastPayment(): ?Payment
     {
-        return $this->payments->last();
+        return $this->payments?->last();
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }

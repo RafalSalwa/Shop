@@ -4,7 +4,7 @@
          xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
     <description>Check the code of the sniffs.</description>
-    <config name="installed_paths" value="vendor/slevomat/coding-standard/"/>
+    <config name="installed_paths" value="vendor/slevomat/coding-standard"/>
 
     <arg name="extensions" value="php"/>
     <arg name="tab-width" value="4"/>
