@@ -33,7 +33,7 @@ trait SessionHelper
         $container = static::getContainer();
         $session = $container->get('session.factory')
             ->createSession();
-        if ($cookie instanceof \Symfony\Component\BrowserKit\Cookie) {
+        if ($cookie instanceof Cookie) {
             // get the session id from the session cookie if it exists
             $session->setId($cookie->getValue());
             $session->start();

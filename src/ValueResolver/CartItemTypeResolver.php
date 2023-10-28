@@ -11,8 +11,11 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
 
+use function is_string;
+
 class CartItemTypeResolver implements ValueResolverInterface
 {
+    /** @return array<int, class-string> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
         if ($argument->getName() !== 'type') {
@@ -20,14 +23,14 @@ class CartItemTypeResolver implements ValueResolverInterface
         }
 
         $value = $request->attributes->get($argument->getName());
-        if (! \is_string($value)) {
+        if (!is_string($value)) {
             return [];
         }
         $entityTypeMap = [
             'product' => Product::class,
             'plan' => SubscriptionPlan::class,
         ];
-        if (! isset($entityTypeMap[$value])) {
+        if (!isset($entityTypeMap[$value])) {
             throw new InvalidArgumentException('Unknown entity type:' . $value);
         }
 

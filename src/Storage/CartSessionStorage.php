@@ -8,6 +8,7 @@ use App\Entity\Cart;
 use App\Repository\CartRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -44,9 +45,11 @@ class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request instanceof \Symfony\Component\HttpFoundation\Request && $this->security->getFirewallConfig(
-            $request
-        )?->isStateless()) {
+        if (
+            $request instanceof Request && $this->security->getFirewallConfig(
+                $request
+            )?->isStateless()
+        ) {
             return;
         }
 
@@ -66,7 +69,7 @@ class CartSessionStorage
             ->set(self::ADDR_KEY_NAME, $addId);
     }
 
-    public function getDeliveryAddressId()
+    public function getDeliveryAddressId(): mixed
     {
         return $this->getSession()
             ->get(self::ADDR_KEY_NAME);
@@ -82,7 +85,7 @@ class CartSessionStorage
         // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
         // that is the easiest solution for session storage between redis and filesystem
         if ($this->parameterBag->get('kernel.environment') === 'test') {
-            $sessionSavePath = (string) $this->parameterBag->get('session.save_path');
+            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
 
             $sessionStorage = new MockFileSessionStorage($sessionSavePath);
             $session = new Session($sessionStorage);

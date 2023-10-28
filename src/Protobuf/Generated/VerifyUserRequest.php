@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
+use App\Protobuf\Generated\GPBMetadata\User;
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
 
 /**
  * Generated from protobuf message <code>intrvproto.VerifyUserRequest</code>.
  */
-class VerifyUserRequest extends \Google\Protobuf\Internal\Message
+class VerifyUserRequest extends Message
 {
     /**
      * Generated from protobuf field <code>string code = 1;</code>.
@@ -32,7 +34,7 @@ class VerifyUserRequest extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\User::initOnce();
+        User::initOnce();
         parent::__construct($data);
     }
 

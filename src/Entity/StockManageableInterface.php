@@ -11,4 +11,6 @@ interface StockManageableInterface
     public function increaseStock(self $product, int $quantity): self;
 
     public function changeStock(self $product, int $quantity): self;
+
+    public function getUnitsInStock(): int;
 }

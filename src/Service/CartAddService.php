@@ -20,7 +20,7 @@ class CartAddService
         private readonly EntityManagerInterface $entityManager,
         private readonly ProductStockService $productStockService,
         private readonly LockFactory $cartLockFactory,
-        private readonly CartService $cartService
+        private readonly CartService $cartService,
     ) {
     }
 
@@ -57,22 +57,26 @@ class CartAddService
         } catch (ProductNotFound $pnf) {
             $this->addFlash('error', $pnf->getMessage());
 
-            return $this->redirectToRoute($entity->getTypeName() . '_index', [
-                'id' => $id,
-                'page' => 1,
-            ]);
+            return $this->redirectToRoute(
+                $entity->getTypeName() . '_index',
+                [
+                    'id' => $id,
+                    'page' => 1,
+                ],
+            );
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash('error', $psd->getMessage());
         } catch (AccessDeniedException) {
             $this->addFlash(
                 'error',
-                'You cannot add this product to cart with current subscription. Consider upgrade:)'
+                'You cannot add this product to cart with current subscription. Consider upgrade:)',
             );
         } catch (TooManySubscriptionsException $subex) {
             $this->addFlash('error', $subex->getMessage());
         } catch (Exception $e) {
             $this->entityManager->getConnection()
                 ->rollback();
+
             throw $e;
         } finally {
             $lock->release();

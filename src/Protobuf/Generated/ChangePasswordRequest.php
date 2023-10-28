@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
+use App\Protobuf\Generated\GPBMetadata\User;
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
 
 /**
  * Generated from protobuf message <code>intrvproto.ChangePasswordRequest</code>.
  */
-class ChangePasswordRequest extends \Google\Protobuf\Internal\Message
+class ChangePasswordRequest extends Message
 {
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
@@ -40,7 +42,7 @@ class ChangePasswordRequest extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\User::initOnce();
+        User::initOnce();
         parent::__construct($data);
     }
 

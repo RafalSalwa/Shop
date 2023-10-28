@@ -8,12 +8,16 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
+use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(UserRepository::class)]
 #[UsesClass(User::class)]
 class UserRepositoryTest extends TestCase
 {
+    /**
+     * @throws Exception
+     */
     public function testMethodReturnsUserObject(): void
     {
         $user = new User();

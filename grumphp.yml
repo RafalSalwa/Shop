@@ -23,15 +23,13 @@ grumphp:
     files: [ ]
     variables: { }
     paths:
-      - bin
+      - bin/
   tasks:
     codeception:
       config_file: ~
       fail_fast: false
       suite: ~
       test: ~
-      xml: false
-      html: false
     deptrac:
       cache_file: ~
       depfile: ~
@@ -75,15 +73,8 @@ grumphp:
       triggered_by: [ php ]
     phparkitect:
       config: ~
-      target_php_version: 8.2
-      stop_on_failure: ~
-    phpcpd:
-      directory: [ '.' ]
-      exclude: [ 'vendor' ]
-      fuzzy: false
-      min_lines: 5
-      min_tokens: 70
-      triggered_by: [ 'php' ]
+      target_php_version: ~
+      stop_on_failure: false
     phpcs:
       standard: [ 'PSR2', 'PSR12', 'Squiz', 'Doctrine', 'Symfony', 'SlevomatCodingStandard' ]
       severity: ~
@@ -135,7 +126,15 @@ grumphp:
       ignore_strings: [ ]
       strings: false
       triggered_by: [ 'php' ]
-    phpstan: ~
+    phpstan:
+      autoload_file: ~
+      configuration: ~
+      level: null
+      force_patterns: [ ]
+      ignore_patterns: [ ]
+      triggered_by: [ 'php' ]
+      memory_limit: "-1"
+      use_grumphp_paths: true
     phpunit:
       config_file: reports/config/phpunit.xml
       testsuite: unit
@@ -143,7 +142,6 @@ grumphp:
       exclude_group: [ ]
       always_execute: true
       order: null
-    phpunitbridge: ~
     phpversion: ~
     #    psalm:
     #      config: psalm.xml

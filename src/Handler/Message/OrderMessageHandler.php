@@ -8,7 +8,7 @@ use App\Message\OrderMessage;
 
 class OrderMessageHandler
 {
-    public function __invoke(OrderMessage $message)
+    public function __invoke(OrderMessage $message): void
     {
         //        $orderId = $message->getOrderId();
 

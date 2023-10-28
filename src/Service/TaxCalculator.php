@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Order;
+use DivisionByZeroError;
 
 class TaxCalculator
 {
@@ -32,7 +33,7 @@ class TaxCalculator
             $this->netAmount = bcdiv((string) $this->total, $vatDivisor);
 
             $this->vatAmount = bcsub((string) $this->total, $this->netAmount);
-        } catch (\DivisionByZeroError) {
+        } catch (DivisionByZeroError) {
             // no chance to throw this error, but we need to handle that for static analysis and coverage.
         }
     }

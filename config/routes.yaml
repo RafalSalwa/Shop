@@ -1,19 +1,20 @@
 oauth2:
-    resource: '@LeagueOAuth2ServerBundle/Resources/config/routes.php'
-    type: php
+  resource: '@LeagueOAuth2ServerBundle/Resources/config/routes.php'
+  type: php
 
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
-    type: attribute
+  resource:
+    path: ../src/Controller/
+    namespace: App\Controller
+  type: attribute
+  prefix: /php/app
 
 app.swagger_ui:
-    path: /doc
-    methods: GET
-    defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
+  path: /php/app/doc
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
 app.swagger:
-    path: /doc.json
-    methods: GET
-    defaults: { _controller: nelmio_api_doc.controller.swagger }
+  path: /php/app/doc.json
+  methods: GET
+  defaults: { _controller: nelmio_api_doc.controller.swagger }

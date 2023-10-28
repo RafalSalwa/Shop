@@ -7,10 +7,10 @@ namespace App\Service;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 
-readonly class CartCalculator
+class CartCalculator
 {
     public function __construct(
-        private TaxCalculator $taxCalculator
+        private readonly TaxCalculator $taxCalculator
     ) {
     }
 
@@ -32,7 +32,7 @@ readonly class CartCalculator
         /** @var CartItem $item */
         foreach ($cart->getItems() as $item) {
             $price = $item->getReferencedEntity()
-                ->getUnitPrice() * $item->getQuantity();
+                    ->getUnitPrice() * $item->getQuantity();
             $total += $price;
         }
 

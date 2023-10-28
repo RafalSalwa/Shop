@@ -26,17 +26,20 @@ class OrderController extends AbstractController
         OrderService $orderService,
         PaymentService $paymentService,
     ): Response {
-        $cart = $cartService->getCurrentCart();
+        $cart    = $cartService->getCurrentCart();
         $pending = $orderService->createPending($cart);
         $paymentService->createPendingPayment($pending);
 
-        if ($pending->getId() !== 0) {
+        if (0 !== $pending->getId()) {
             $cartService->clearCart();
         }
 
-        return $this->redirectToRoute('order_show', [
-            'id' => $pending->getId(),
-        ]);
+        return $this->redirectToRoute(
+            'order_show',
+            [
+                'id' => $pending->getId(),
+            ],
+        );
     }
 
     #[Route('/order/pending/{id}', name: 'order_show')]
@@ -45,16 +48,16 @@ class OrderController extends AbstractController
         Order $order,
         OrderService $orderService,
         PaymentService $paymentService,
-        CartService $cartService
+        CartService $cartService,
     ): Response {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
 
         $payment = $order->getLastPayment();
-        $form = $this->createForm(PaymentType::class, $payment);
+        $form    = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            if ($form->get('yes')->isClicked()) {
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            if (true === $form->get('yes')->isClicked()) {
                 $paymentService->confirmPayment($payment);
                 $orderService->confirmOrder($order);
 
@@ -62,22 +65,29 @@ class OrderController extends AbstractController
 
                 $cartService->clearCart();
 
-                return $this->redirectToRoute('order_summary', [
-                    'id' => $order->getId(),
-                ]);
+                return $this->redirectToRoute(
+                    'order_summary',
+                    [
+                        'id' => $order->getId(),
+                    ],
+                );
             }
-            if ($form->get('no')->isClicked()) {
-                return $this->redirectToRoute('order_index', [
-                    'page' => 1,
-                ]);
+            if (true === $form->get('no')->isClicked()) {
+                return $this->redirectToRoute(
+                    'order_index',
+                    ['page' => 1],
+                );
             }
         }
 
-        return $this->render('order/payment.html.twig', [
-            'order' => $order,
-            'payment' => $payment,
-            'form' => $form->createView(),
-        ]);
+        return $this->render(
+            'order/payment.html.twig',
+            [
+                'order'   => $order,
+                'payment' => $payment,
+                'form'    => $form->createView(),
+            ],
+        );
     }
 
     #[Route('/order/summary/{id}', name: 'order_summary')]
@@ -85,7 +95,7 @@ class OrderController extends AbstractController
         int $id,
         OrderRepository $orderRepository,
         OrderService $orderService,
-        TaxCalculator $taxCalculator
+        TaxCalculator $taxCalculator,
     ): Response {
         $order = $orderRepository->fetchOrderDetails($id);
 
@@ -94,9 +104,10 @@ class OrderController extends AbstractController
 
         $taxCalculator->calculateOrderTax($order);
 
-        return $this->render('order/summary.html.twig', [
-            'order' => $order,
-        ]);
+        return $this->render(
+            'order/summary.html.twig',
+            ['order' => $order],
+        );
     }
 
     #[Route('/orders/{page<\d+>}', name: 'order_index')]
@@ -104,9 +115,10 @@ class OrderController extends AbstractController
     {
         $orders = $orderRepository->fetchOrders($user, $page);
 
-        return $this->render('order/index.html.twig', [
-            'paginator' => $orders,
-        ]);
+        return $this->render(
+            'order/index.html.twig',
+            ['paginator' => $orders],
+        );
     }
 
     #[Route('/order/{id<\d+>}', name: 'order_details')]
@@ -115,8 +127,9 @@ class OrderController extends AbstractController
         $order = $orderRepository->fetchOrderDetails($id);
         $orderService->deserializeOrderItems($order);
 
-        return $this->render('order/details.html.twig', [
-            'order' => $order,
-        ]);
+        return $this->render(
+            'order/details.html.twig',
+            ['order' => $order],
+        );
     }
 }

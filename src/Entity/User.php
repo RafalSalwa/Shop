@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -19,16 +21,20 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
+use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use function array_key_exists;
+use function array_unique;
+
 #[Entity(repositoryClass: UserRepository::class)]
 #[Table(name: 'intrv_user', schema: 'interview')]
 #[HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
-class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -59,29 +65,35 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[Column(name: 'verification_code', type: Types::STRING, length: 12)]
     private string $verificationCode;
 
-    #[Column(name: 'is_verified', type: Types::BOOLEAN, options: [
-        'default' => false,
-    ])]
+    #[Column(
+        name: 'is_verified',
+        type: Types::BOOLEAN,
+        options: ['default' => false],
+    )]
     private bool $verified;
 
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
-        'default' => false,
-    ])]
+    #[Column(
+        name: 'is_active',
+        type: Types::BOOLEAN,
+        options: ['default' => false],
+    )]
     private bool $active;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
-    private \DateTimeImmutable $createdAt;
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_IMMUTABLE,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
+    private DateTimeImmutable $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $updatedAt = null;
+    private ?DateTime $updatedAt = null;
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private ?\DateTimeImmutable $deletedAt = null;
+    private ?DateTimeImmutable $deletedAt = null;
 
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $lastLogin = null;
+    private ?DateTime $lastLogin = null;
 
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private ?Collection $oAuth2UserConsents = null;
@@ -228,7 +240,7 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
 
     public function getRoles(): array
     {
-        $roles = \array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
+        $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
         $roles[] = 'ROLE_USER';
 
@@ -236,9 +248,9 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     }
 
     /**
-     * @return User
-     */
-    public function setRoles($roles)
+ * @return User 
+*/
+    public function setRoles($roles): self
     {
         $this->roles = $roles;
 
@@ -256,63 +268,63 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     }
 
     /**
-     * @return User
-     */
-    public function setActive($active)
+ * @return User 
+*/
+    public function setActive($active): self
     {
         $this->active = $active;
 
         return $this;
     }
 
-    public function getCreatedAt(): \DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?DateTimeImmutable
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(\DateTimeImmutable $deletedAt): self
+    public function setDeletedAt(DateTimeImmutable $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
         return $this;
     }
 
-    public function getLastLogin(): ?\DateTime
+    public function getLastLogin(): ?DateTime
     {
         return $this->lastLogin;
     }
 
     /**
-     * @return User
-     */
-    public function setLastLogin(\DateTime $lastLogin)
+ * @return User 
+*/
+    public function setLastLogin(DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTime
+    public function getUpdatedAt(): ?DateTime
     {
         return $this->updatedAt;
     }
 
     /**
-     * @return User
-     */
-    public function setUpdatedAt(\DateTime $updatedAt)
+ * @return User 
+*/
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -332,16 +344,16 @@ class User implements \JsonSerializable, UserInterface, PasswordAuthenticatedUse
     #[PrePersist]
     public function onPrePersist(): void
     {
-        $this->createdAt = new \DateTimeImmutable('now');
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     #[PreUpdate]
     public function onPreUpdate(): void
     {
-        $this->updatedAt = new \DateTime('now');
+        $this->updatedAt = new DateTime('now');
     }
 
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
     }
 

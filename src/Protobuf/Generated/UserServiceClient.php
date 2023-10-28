@@ -6,7 +6,9 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
-class UserServiceClient extends \Grpc\BaseStub
+use Grpc\BaseStub;
+
+class UserServiceClient extends BaseStub
 {
     /**
      * @param string        $hostname hostname

@@ -8,9 +8,11 @@ use App\Repository\ProductCartItemRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use JsonSerializable;
+use function sprintf;
 
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
-class ProductCartItem extends CartItem implements \JsonSerializable, CartItemInterface
+class ProductCartItem extends CartItem implements JsonSerializable, CartItemInterface
 {
     #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(referencedColumnName: 'product_id')]
@@ -67,7 +69,7 @@ class ProductCartItem extends CartItem implements \JsonSerializable, CartItemInt
                 ->getName(),
             $this->getReferencedEntity()
                 ->getCategory()
-                ->getName()
+                ->getName(),
         );
     }
 

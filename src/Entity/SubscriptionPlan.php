@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\PlanRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping\Column;
@@ -17,6 +18,7 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
+use function sprintf;
 
 #[Entity(repositoryClass: PlanRepository::class)]
 #[Table(name: 'plan', schema: 'interview')]
@@ -38,14 +40,18 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Assert\Length(min: 10, minMessage: 'You need to add any')]
     private string $description;
 
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
-        'default' => false,
-    ])]
+    #[Column(
+        name: 'is_active',
+        type: Types::BOOLEAN,
+        options: ['default' => false],
+    )]
     private bool $isActive = false;
 
-    #[Column(name: 'is_visible', type: Types::BOOLEAN, options: [
-        'default' => false,
-    ])]
+    #[Column(
+        name: 'is_visible',
+        type: Types::BOOLEAN,
+        options: ['default' => false],
+    )]
     private bool $isVisible = false;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
@@ -54,16 +60,18 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: false)]
     private int $tier;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
-    private \DateTime $createdAt;
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_MUTABLE,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
+    private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $updatedAt = null;
+    private ?DateTime $updatedAt = null;
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $deletedAt = null;
+    private ?DateTime $deletedAt = null;
 
     public function setPlanName(string $planName): self
     {
@@ -105,36 +113,36 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->unitPrice;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): \DateTime|null
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTime $updatedAt): self
+    public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    public function getDeletedAt(): \DateTime|null
+    public function getDeletedAt(): DateTime|null
     {
         return $this->deletedAt;
     }
 
-    public function setDeletedAt(\DateTime $deletedAt): self
+    public function setDeletedAt(DateTime $deletedAt): self
     {
         $this->deletedAt = $deletedAt;
 
@@ -147,7 +155,7 @@ class SubscriptionPlan implements CartInsertableInterface
         $cartItem
             ->setReferencedEntity($this)
             ->setQuantity(1)
-            ->setCreatedAt(new \DateTime('now'));
+            ->setCreatedAt(new DateTime('now'));
 
         return $cartItem;
     }
@@ -155,13 +163,13 @@ class SubscriptionPlan implements CartInsertableInterface
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->setCreatedAt(new \DateTime('now'));
+        $this->setCreatedAt(new DateTime('now'));
     }
 
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->setUpdatedAt(new \DateTime('now'));
+        $this->setUpdatedAt(new DateTime('now'));
     }
 
     public function getDisplayName(): string

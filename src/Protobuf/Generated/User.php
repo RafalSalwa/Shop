@@ -8,11 +8,13 @@ declare(strict_types=1);
 namespace App\Protobuf\Generated;
 
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
+use Google\Protobuf\Timestamp;
 
 /**
  * Generated from protobuf message <code>intrvproto.User</code>.
  */
-class User extends \Google\Protobuf\Internal\Message
+class User extends Message
 {
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
@@ -154,7 +156,7 @@ class User extends \Google\Protobuf\Internal\Message
      */
     public function setCreatedAt($var)
     {
-        GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
+        GPBUtil::checkMessage($var, Timestamp::class);
         $this->created_at = $var;
 
         return $this;

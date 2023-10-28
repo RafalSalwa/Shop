@@ -16,6 +16,10 @@ namespace App\Pagination;
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Traversable;
+use function ceil;
+use function max;
+use function min;
 
 final class Paginator
 {
@@ -32,39 +36,43 @@ final class Paginator
     private int $numResults;
 
     /**
-     * @var \Traversable<int, object>
-     */
-    private \Traversable $results;
+ * @var Traversable<int, object> 
+*/
+    private Traversable $results;
 
     public function __construct(
         private readonly DoctrineQueryBuilder $queryBuilder,
-        private readonly int $pageSize = self::PAGE_SIZE
+        private readonly int $pageSize = self::PAGE_SIZE,
     ) {
     }
 
     public function paginate(int $page = 1): self
     {
         $this->currentPage = max(1, $page);
-        $firstResult = ($this->currentPage - 1) * $this->pageSize;
+        $firstResult = (($this->currentPage - 1) * $this->pageSize);
 
         $query = $this->queryBuilder
             ->setFirstResult($firstResult)
             ->setMaxResults($this->pageSize)
             ->getQuery();
 
-        /** @var array<string, mixed> $joinDqlParts */
+        /**
+ * @var array<string, mixed> $joinDqlParts 
+*/
         $joinDqlParts = $this->queryBuilder->getDQLPart('join');
 
-        if ($joinDqlParts === []) {
+        if ([] === $joinDqlParts) {
             $query->setHint(CountWalker::HINT_DISTINCT, false);
         }
 
         $paginator = new DoctrinePaginator($query, true);
 
-        /** @var array<string, mixed> $havingDqlParts */
+        /**
+ * @var array<string, mixed> $havingDqlParts 
+*/
         $havingDqlParts = $this->queryBuilder->getDQLPart('having');
 
-        $useOutputWalkers = ($havingDqlParts ?: []) !== [];
+        $useOutputWalkers = [] !== ($havingDqlParts ?: []);
         $paginator->setUseOutputWalkers($useOutputWalkers);
 
         $this->results = $paginator->getIterator();
@@ -90,7 +98,7 @@ final class Paginator
 
     public function getPreviousPage(): int
     {
-        return max(1, $this->currentPage - 1);
+        return max(1, ($this->currentPage - 1));
     }
 
     public function hasNextPage(): bool
@@ -100,12 +108,12 @@ final class Paginator
 
     public function getLastPage(): int
     {
-        return (int) ceil($this->numResults / $this->pageSize);
+        return (int)ceil($this->numResults / $this->pageSize);
     }
 
     public function getNextPage(): int
     {
-        return min($this->getLastPage(), $this->currentPage + 1);
+        return min($this->getLastPage(), ($this->currentPage + 1));
     }
 
     public function hasToPaginate(): bool
@@ -119,9 +127,9 @@ final class Paginator
     }
 
     /**
-     * @return \Traversable<int, object>
-     */
-    public function getResults(): \Traversable
+ * @return Traversable<int, object> 
+*/
+    public function getResults(): Traversable
     {
         return $this->results;
     }

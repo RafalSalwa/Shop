@@ -7,12 +7,14 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
+use App\Protobuf\Generated\GPBMetadata\RpcSignin;
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
 
 /**
  * Generated from protobuf message <code>intrvproto.SignInUserInput</code>.
  */
-class SignInUserInput extends \Google\Protobuf\Internal\Message
+class SignInUserInput extends Message
 {
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
@@ -40,7 +42,7 @@ class SignInUserInput extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\RpcSignin::initOnce();
+        RpcSignin::initOnce();
         parent::__construct($data);
     }
 

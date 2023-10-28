@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Message;
 
-final readonly class UserLoggedIn
+class UserLoggedIn
 {
-    public function __construct(
-        private string $userId
-    ) {
+    public function __construct(private readonly string $userId)
+    {
     }
 
     public function getContent(): string

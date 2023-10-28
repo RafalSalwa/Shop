@@ -21,7 +21,7 @@ class PaymentController extends AbstractController
         Request $request,
         CartService $cartService,
         CartCalculator $cartCalculator,
-        AddressRepository $repository
+        AddressRepository $repository,
     ): Response {
         $user = $this->getUser();
 
@@ -36,11 +36,14 @@ class PaymentController extends AbstractController
             $repository->save($address);
         }
 
-        return $this->render('shipping/step_one.html.twig', [
-            'form' => $form->createView(),
-            'deliveryAddresses' => $user->getDeliveryAddresses(),
-            'cart' => $cartService->getCurrentCart(),
-            'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
-        ]);
+        return $this->render(
+            'shipping/step_one.html.twig',
+            [
+                'form' => $form->createView(),
+                'deliveryAddresses' => $user->getDeliveryAddresses(),
+                'cart' => $cartService->getCurrentCart(),
+                'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
+            ],
+        );
     }
 }

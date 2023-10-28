@@ -9,20 +9,17 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
+use function print_r;
 
 class OrderConfirmedListener implements EventSubscriberInterface
 {
-    public function __construct(
-        private readonly MailerInterface $mailer,
-        private readonly string $fromEmail
-    ) {
+    public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail)
+    {
     }
 
     public static function getSubscribedEvents()
     {
-        return [
-            OrderConfirmedEvent::class => 'onOrderConfirmed',
-        ];
+        return [OrderConfirmedEvent::class => 'onOrderConfirmed'];
     }
 
     public function onOrderConfirmed(OrderConfirmedEvent $event): void

@@ -9,12 +9,12 @@ use App\Repository\PlanRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
-readonly class SubscriptionService
+class SubscriptionService
 {
     public function __construct(
-        private PlanRepository $planRepository,
-        private UserRepository $userRepository,
-        private Security $security
+        private readonly PlanRepository $planRepository,
+        private readonly UserRepository $userRepository,
+        private readonly Security $security,
     ) {
     }
 
@@ -26,10 +26,12 @@ readonly class SubscriptionService
     public function assignSubscription(string $type): void
     {
         $plan = $this->planRepository->getByName($type);
-        if (!$plan) {
+        if (! $plan) {
             return;
         }
-        /** @var User $user */
+        /**
+ * @var User $user 
+*/
         $user = $this->security->getUser();
         $subscription = $user->getSubscription();
         if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {

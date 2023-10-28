@@ -14,14 +14,14 @@ class CartManager
     public function __construct(
         private readonly CartSessionStorage $cartSessionStorage,
         private readonly CartFactory $cartFactory,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (! $cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof Cart) {
             $cart = $this->cartFactory->create();
         }
 

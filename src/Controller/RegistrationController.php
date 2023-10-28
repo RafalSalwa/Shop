@@ -22,9 +22,8 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
-    public function __construct(
-        private readonly EmailVerifier $emailVerifier
-    ) {
+    public function __construct(private readonly EmailVerifier $emailVerifier)
+    {
     }
 
     #[Route('/register', name: 'app_register')]
@@ -33,7 +32,7 @@ class RegistrationController extends AbstractController
         UserPasswordHasherInterface $userPasswordHasher,
         UserAuthenticatorInterface $userAuthenticator,
         AppInterviewAuthenticator $authenticator,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -54,16 +53,19 @@ class RegistrationController extends AbstractController
                     ->from(new Address('noreply@interview.com', 'Interview Email Bot'))
                     ->to($user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('registration/confirmation_email.html.twig'),
             );
             // do anything else you need here, like send an email
 
             return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
 
-        return $this->render('registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
-        ]);
+        return $this->render(
+            'registration/register.html.twig',
+            [
+                'registrationForm' => $form->createView(),
+            ],
+        );
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]

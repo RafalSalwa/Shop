@@ -20,6 +20,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
+use const JSON_THROW_ON_ERROR;
+
 class OrderService
 {
     public function __construct(
@@ -102,7 +104,7 @@ class OrderService
         /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {
             if ($item->getItemType() === 'plan') {
-                $deserialized = json_decode($item->getCartItem(), true, 512, \JSON_THROW_ON_ERROR);
+                $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
                 $this->subscriptionService->assignSubscription($deserialized['plan_name']);
             }
         }

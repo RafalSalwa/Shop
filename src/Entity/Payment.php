@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\PaymentRepository;
+use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -14,7 +15,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use function number_format;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment', schema: 'interview')]
@@ -47,16 +50,18 @@ class Payment
     private string $status;
 
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private \DateTime $paymentDate;
+    private DateTime $paymentDate;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
-    private \DateTime $createdAt;
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_MUTABLE,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
+    private DateTime $createdAt;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
-    private ?User $user = null;
+    private ?UserInterface $user = null;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: true)]
@@ -65,7 +70,7 @@ class Payment
     public function __construct()
     {
         $this->operationNumber = Uuid::v4()->toBinary();
-        $this->createdAt = new \DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     public function getAmount($formatted = true): int|string
@@ -128,24 +133,24 @@ class Payment
         return $this;
     }
 
-    public function getPaymentDate(): \DateTime
+    public function getPaymentDate(): DateTime
     {
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(\DateTime $paymentDate): self
+    public function setPaymentDate(DateTime $paymentDate): self
     {
         $this->paymentDate = $paymentDate;
 
         return $this;
     }
 
-    public function getCreatedAt(): \DateTime
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTime $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): self
     {
         $this->createdAt = $createdAt;
 
@@ -157,7 +162,7 @@ class Payment
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(UserInterface $user): self
     {
         $this->user = $user;
 

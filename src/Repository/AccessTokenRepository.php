@@ -10,17 +10,16 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-final readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
+readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(
-        private readonly BaseAccessTokenRepository $baseAccessTokenRepository
-    ) {
-    }
+        private readonly BaseAccessTokenRepository $baseAccessTokenRepository,
+    ) {}
 
     public function getNewToken(
         ClientEntityInterface $clientEntity,
         array $scopes,
-        $userIdentifier = null
+        $userIdentifier = null,
     ): AccessTokenEntity {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
@@ -38,17 +37,11 @@ final readonly class AccessTokenRepository implements AccessTokenRepositoryInter
         $this->baseAccessTokenRepository->persistNewAccessToken($accessTokenEntity);
     }
 
-    /**
-     * @param string $tokenId
-     */
     public function revokeAccessToken($tokenId): void
     {
         $this->baseAccessTokenRepository->revokeAccessToken($tokenId);
     }
 
-    /**
-     * @param string $tokenId
-     */
     public function isAccessTokenRevoked($tokenId): bool
     {
         return $this->baseAccessTokenRepository->isAccessTokenRevoked($tokenId);

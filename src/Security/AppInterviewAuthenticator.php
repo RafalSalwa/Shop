@@ -18,14 +18,16 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 {
     public function supports(Request $request): ?bool
     {
-        return ! $request->headers->has('x-api-key');
+        return !$request->headers->has('x-api-key');
     }
 
     public function authenticate(Request $request): Passport
     {
         $apiToken = $request->headers->get('X-API-KEY');
-        if ($apiToken === null) {
-            throw new CustomUserMessageAuthenticationException('No API key provided');
+        if (null === $apiToken) {
+            throw new CustomUserMessageAuthenticationException(
+                'No API key provided'
+            );
         }
 
         return new SelfValidatingPassport(new UserBadge($apiToken));
@@ -36,8 +38,10 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
-    {
+    public function onAuthenticationFailure(
+        Request $request,
+        AuthenticationException $exception,
+    ): ?Response {
         //        return new JsonResponse("unauthorized", Response::HTTP_UNAUTHORIZED);
         return null;
     }

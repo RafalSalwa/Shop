@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OAuth2UserConsentRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
@@ -18,10 +19,10 @@ class OAuth2UserConsent
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $created = null;
+    private ?DateTimeImmutable $created = null;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $expires = null;
+    private ?DateTimeImmutable $expires = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private array $scopes = [];
@@ -54,24 +55,24 @@ class OAuth2UserConsent
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeImmutable
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function setCreated(\DateTimeImmutable $created): self
+    public function setCreated(DateTimeImmutable $created): self
     {
         $this->created = $created;
 
         return $this;
     }
 
-    public function getExpires(): ?\DateTimeImmutable
+    public function getExpires(): ?DateTimeImmutable
     {
         return $this->expires;
     }
 
-    public function setExpires(?\DateTimeImmutable $expires): self
+    public function setExpires(?DateTimeImmutable $expires): self
     {
         $this->expires = $expires;
 

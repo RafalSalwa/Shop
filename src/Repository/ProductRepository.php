@@ -10,9 +10,6 @@ use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/**
- * @method find($id, $lockMode = null, $lockVersion = null): Product
- */
 class ProductRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -43,7 +40,7 @@ class ProductRepository extends ServiceEntityRepository
             ->execute();
     }
 
-    public function increaseQty(Product $product, int $qty)
+    public function increaseQty(StockManageableInterface $product, int $qty)
     {
         return $this
             ->createQueryBuilder('p')

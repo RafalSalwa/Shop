@@ -16,19 +16,19 @@ class EmailVerifier
     public function __construct(
         private readonly VerifyEmailHelperInterface $verifyEmailHelper,
         private readonly MailerInterface $mailer,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
     ) {
     }
 
     public function sendEmailConfirmation(
         string $verifyEmailRouteName,
         UserInterface $user,
-        TemplatedEmail $email
+        TemplatedEmail $email,
     ): void {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
             $user->getId(),
-            $user->getEmail()
+            $user->getEmail(),
         );
 
         $context = $email->getContext();

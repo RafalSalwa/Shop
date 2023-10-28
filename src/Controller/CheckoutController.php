@@ -21,7 +21,7 @@ class CheckoutController extends AbstractController
         Request $request,
         CartService $cartService,
         CartCalculator $cartCalculator,
-        AddressRepository $repository
+        AddressRepository $repository,
     ): Response {
         $user = $this->getUser();
 
@@ -36,12 +36,15 @@ class CheckoutController extends AbstractController
             $repository->save($address);
         }
 
-        return $this->render('checkout/shipment.html.twig', [
-            'form' => $form->createView(),
-            'deliveryAddresses' => $user->getDeliveryAddresses(),
-            'defaultAddress' => $cartService->getDefaultDeliveryAddressId(),
-            'cart' => $cartService->getCurrentCart(),
-            'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
-        ]);
+        return $this->render(
+            'checkout/shipment.html.twig',
+            [
+                'form' => $form->createView(),
+                'deliveryAddresses' => $user->getDeliveryAddresses(),
+                'defaultAddress' => $cartService->getDefaultDeliveryAddressId(),
+                'cart' => $cartService->getCurrentCart(),
+                'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
+            ],
+        );
     }
 }

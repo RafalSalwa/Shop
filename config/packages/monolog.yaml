@@ -1,15 +1,17 @@
 monolog:
   channels:
     - deprecation # Deprecations are logged in the dedicated "deprecation" channel when it exists
+  use_microseconds: false
 
 when@dev:
   monolog:
     handlers:
       main:
+        formatter: App\Formatter\CustomLineFormatter
         type: stream
-        path: "%kernel.logs_dir%/%kernel.environment%.log"
-        level: debug
-        channels: [ "!event" ]
+        path: php://stderr
+        level: info
+        channels: [ "!event", "!deprecation" ]
       console:
         type: console
         process_psr_3_messages: false

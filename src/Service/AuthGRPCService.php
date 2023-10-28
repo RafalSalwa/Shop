@@ -25,7 +25,7 @@ class AuthGRPCService
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly string $authServiceDsn,
-        private readonly string $userServiceDsn
+        private readonly string $userServiceDsn,
     ) {
     }
 
@@ -42,10 +42,13 @@ class AuthGRPCService
 
     public function getAuthClient(): AuthServiceClient
     {
-        if (! $this->authClient instanceof \App\Protobuf\Generated\AuthServiceClient) {
-            $this->authClient = new AuthServiceClient($this->authServiceDsn, [
-                'credentials' => ChannelCredentials::createInsecure(),
-            ]);
+        if (! $this->authClient instanceof AuthServiceClient) {
+            $this->authClient = new AuthServiceClient(
+                $this->authServiceDsn,
+                [
+                    'credentials' => ChannelCredentials::createInsecure(),
+                ],
+            );
         }
 
         return $this->authClient;
@@ -108,10 +111,13 @@ class AuthGRPCService
 
     public function getUserClient(): UserServiceClient
     {
-        if (! $this->userClient instanceof \App\Protobuf\Generated\UserServiceClient) {
-            $this->userClient = new UserServiceClient($this->userServiceDsn, [
-                'credentials' => ChannelCredentials::createInsecure(),
-            ]);
+        if (! $this->userClient instanceof UserServiceClient) {
+            $this->userClient = new UserServiceClient(
+                $this->userServiceDsn,
+                [
+                    'credentials' => ChannelCredentials::createInsecure(),
+                ],
+            );
         }
 
         return $this->userClient;
