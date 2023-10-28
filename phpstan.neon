@@ -13,5 +13,3 @@ parameters:
     symfony:
         containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
         consoleApplicationLoader: tests/console-application.php
-    scanDirectories:
-        - var/cache/dev/Symfony/Config

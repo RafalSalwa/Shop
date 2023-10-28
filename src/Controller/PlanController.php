@@ -17,18 +17,24 @@ class PlanController extends AbstractController
     {
         $plans = $planRepository->fetchAvailablePlans();
 
-        return $this->render('plan/index.html.twig', [
-            'controller_name' => 'IndexController',
-            'plans' => $plans,
-        ]);
+        return $this->render(
+            'plan/index.html.twig',
+            [
+                'controller_name' => 'IndexController',
+                'plans'           => $plans,
+            ],
+        );
     }
 
     #[Route('/plan/{id<\d+>}', name: 'plan_details', methods: ['GET'])]
     public function details(SubscriptionPlan $plan): Response
     {
-        return $this->render('plan/details.html.twig', [
-            'controller_name' => 'IndexController',
-            'plan' => $plan,
-        ]);
+        return $this->render(
+            'plan/details.html.twig',
+            [
+                'controller_name' => 'IndexController',
+                'plan'            => $plan,
+            ],
+        );
     }
 }

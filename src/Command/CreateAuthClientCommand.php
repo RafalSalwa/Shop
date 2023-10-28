@@ -6,19 +6,18 @@ namespace App\Command;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[AsCommand(name: 'auth:client:create', description: 'creates auth client',)]
+#[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
 class CreateAuthClientCommand extends Command
 {
     public function __construct(
-        private readonly EntityManagerInterface $em,
-        private readonly UserPasswordHasherInterface $passwordHasher
+        private readonly EntityManagerInterface $em
     ) {
         parent::__construct();
     }
@@ -64,7 +63,7 @@ class CreateAuthClientCommand extends Command
                 'name' => $clientDescription,
             ]);
             $conn->commit();
-        } catch (\Exception) {
+        } catch (Exception) {
             $conn->rollBack();
         }
         $io->success('Bootstrap complete.');

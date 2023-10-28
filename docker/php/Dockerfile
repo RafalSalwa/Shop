@@ -13,6 +13,7 @@ RUN apt update && apt install -y --no-install-recommends \
     && pecl install grpc-1.57.0 protobuf && docker-php-ext-enable grpc protobuf \
     && pecl install amqp && docker-php-ext-enable amqp \
     && pecl install -o -f redis \
+    && pecl install excimer \
     && pecl install opentelemetry \
     && rm -rf /tmp/pear \
     && docker-php-ext-enable redis \

@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
+use function sprintf;
 
 #[Entity(repositoryClass: ProductRepository::class)]
 #[Table(name: 'products', schema: 'interview')]

@@ -12,15 +12,15 @@ use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function sprintf;
 
 readonly class SubscriptionStockService
 {
     public function __construct(
         private LockFactory $productLockFactory,
         private ProductRepository $repository,
-        private EventDispatcherInterface $eventDispatcher
-    ) {
-    }
+        private EventDispatcherInterface $eventDispatcher,
+    ) {}
 
     /**
      * @throws ProductStockDepletedException
@@ -33,7 +33,7 @@ readonly class SubscriptionStockService
             if (!$product) {
                 throw new ItemNotFoundException(sprintf('Product #%d not found.', $entity->getId()));
             }
-            if ($product->getUnitsInStock() === 0) {
+            if (0 === $product->getUnitsInStock()) {
                 throw new ProductStockDepletedException('For this product stock is depleted.');
             }
         }
@@ -47,19 +47,21 @@ readonly class SubscriptionStockService
     /** @phpstan-param Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty = -1): void
     {
-        if ($entity instanceof Product) {
-            match ($operation) {
-                Product::STOCK_DECREASE => $this->decrease($entity),
-                Product::STOCK_INCREASE => $this->increase($entity, $qty)
-            };
+        if (!$entity instanceof Product) {
+            return;
         }
+
+        match ($operation) {
+            Product::STOCK_DECREASE => $this->decrease($entity),
+            Product::STOCK_INCREASE => $this->increase($entity, $qty)
+        };
     }
 
     private function decrease(Product $product): void
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
-        if ($product->getUnitsInStock() === 1) {
+        if (1 === $product->getUnitsInStock()) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

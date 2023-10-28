@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+use function number_format;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment', schema: 'interview')]
@@ -51,9 +52,11 @@ class Payment
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime $paymentDate;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_MUTABLE,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
     private DateTime $createdAt;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]

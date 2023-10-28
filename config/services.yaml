@@ -1,5 +1,6 @@
 parameters:
   .container.dumper.inline_factories: true
+  debug.container.dump: false
 
 services:
   _defaults:

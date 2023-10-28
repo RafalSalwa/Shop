@@ -16,35 +16,53 @@ class AddressType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstName', TextType::class, [
-                'label' => 'First Name',
-            ])
-            ->add('lastName', TextType::class, [
-                'label' => 'Last Name',
-            ])
-            ->add('addressLine1', TextType::class, [
-                'label' => 'Address Line 1',
-            ])
-            ->add('addressLine2', TextType::class, [
-                'label' => 'Address Line 2',
-                'required' => false,
-            ])
-            ->add('city', TextType::class, [
-                'label' => 'City',
-            ])
-            ->add('state', TextType::class, [
-                'label' => 'State',
-            ])
-            ->add('postalCode', TextType::class, [
-                'label' => 'Postal Code',
-            ])
+            ->add(
+                'firstName',
+                TextType::class,
+                ['label' => 'First Name'],
+            )
+            ->add(
+                'lastName',
+                TextType::class,
+                ['label' => 'Last Name'],
+            )
+            ->add(
+                'addressLine1',
+                TextType::class,
+                ['label' => 'Address Line 1'],
+            )
+            ->add(
+                'addressLine2',
+                TextType::class,
+                [
+                    'label' => 'Address Line 2',
+                    'required' => false,
+                ],
+            )
+            ->add(
+                'city',
+                TextType::class,
+                ['label' => 'City'],
+            )
+            ->add(
+                'state',
+                TextType::class,
+                ['label' => 'State'],
+            )
+            ->add(
+                'postalCode',
+                TextType::class,
+                ['label' => 'Postal Code'],
+            )
             ->add('save', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Address::class,
-        ]);
+        $resolver->setDefaults(
+            [
+                'data_class' => Address::class,
+            ],
+        );
     }
 }

@@ -37,7 +37,7 @@ final class UserTest extends TestCase
         try {
             $this->assertNotNull($user->getSubscription());
             $this->assertNotNull($user->getDeliveryAddresses());
-        } catch (AssertionFailedError|ExpectationFailedException) {
+        } catch (AssertionFailedError | ExpectationFailedException) {
         }
     }
 

@@ -42,22 +42,42 @@ class CartSessionStorage
         ]);
     }
 
-    private function getUser(): ?UserInterface
-    {
-        return $this->security->getUser();
-    }
-
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request instanceof Request && $this->security->getFirewallConfig(
+        if (
+            $request instanceof Request && $this->security->getFirewallConfig(
                 $request
-            )?->isStateless()) {
+            )?->isStateless()
+        ) {
             return;
         }
 
         $this->getSession()
             ->set(self::CART_KEY_NAME, $cart->getId());
+    }
+
+    public function removeCart(): void
+    {
+        $this->getSession()
+            ->remove(self::CART_KEY_NAME);
+    }
+
+    public function setDeliveryAddressId(int $addId): void
+    {
+        $this->getSession()
+            ->set(self::ADDR_KEY_NAME, $addId);
+    }
+
+    public function getDeliveryAddressId(): mixed
+    {
+        return $this->getSession()
+            ->get(self::ADDR_KEY_NAME);
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        return $this->security->getUser();
     }
 
     private function getSession(): SessionInterface
@@ -77,23 +97,5 @@ class CartSessionStorage
         }
 
         return $this->requestStack->getSession();
-    }
-
-    public function removeCart(): void
-    {
-        $this->getSession()
-            ->remove(self::CART_KEY_NAME);
-    }
-
-    public function setDeliveryAddressId(int $addId): void
-    {
-        $this->getSession()
-            ->set(self::ADDR_KEY_NAME, $addId);
-    }
-
-    public function getDeliveryAddressId(): mixed
-    {
-        return $this->getSession()
-            ->get(self::ADDR_KEY_NAME);
     }
 }

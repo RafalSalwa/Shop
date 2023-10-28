@@ -45,7 +45,7 @@ class CartService
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (! $cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof Cart) {
             $cart = $this->cartFactory->create();
         }
 
@@ -55,9 +55,9 @@ class CartService
     /**
      * Persists the cart in database and session.
      */
-    public function save(Cart $cart = null): void
+    public function save(?Cart $cart = null): void
     {
-        if (! $cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);
@@ -123,7 +123,7 @@ class CartService
         $cart = $this->getCurrentCart();
 
         if ($item instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($item)) {
-            throw new TooManySubscriptionsException('You can have only one subscription in cart');
+            throw new \App\Exception\TooManySubscriptionsException('You can have only one subscription in cart');
         }
     }
 
@@ -131,9 +131,11 @@ class CartService
     {
         $cart = $this->getCurrentCart();
 
-        if ($cart->getItems()->contains($item)) {
-            $cart->getItems()
-                ->removeElement($item);
+        if (! $cart->getItems()->contains($item)) {
+            return;
         }
+
+        $cart->getItems()
+            ->removeElement($item);
     }
 }

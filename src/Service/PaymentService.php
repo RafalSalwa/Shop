@@ -15,9 +15,8 @@ readonly class PaymentService
     public function __construct(
         private WorkflowInterface $paymentProcessing,
         private Security $security,
-        private PaymentRepository $paymentRepository
-    ) {
-    }
+        private PaymentRepository $paymentRepository,
+    ) {}
 
     public function createPendingPayment(Order $order): Payment
     {

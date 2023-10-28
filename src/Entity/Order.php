@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function number_format;
 
 #[Entity(repositoryClass: OrderRepository::class)]
 #[Table(name: 'orders', schema: 'interview')]
@@ -49,9 +50,11 @@ class Order
     #[Column(name: 'amount', type: Types::INTEGER)]
     private int $amount;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_MUTABLE,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]

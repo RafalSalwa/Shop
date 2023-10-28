@@ -11,16 +11,13 @@ use Symfony\Component\Mime\Email;
 
 class StockDepletedListener implements EventSubscriberInterface
 {
-    public function __construct(
-        private readonly MailerInterface $mailer
-    ) {
+    public function __construct(private readonly MailerInterface $mailer)
+    {
     }
 
     public static function getSubscribedEvents()
     {
-        return [
-            StockDepletedEvent::class => 'onStockDepleted',
-        ];
+        return [StockDepletedEvent::class => 'onStockDepleted'];
     }
 
     public function onStockDepleted(StockDepletedEvent $event): void

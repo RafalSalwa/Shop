@@ -20,10 +20,10 @@ class DeliveryAddressController extends AbstractController
         $user = $this->getUser();
 
         $address = new Address();
-        $form = $this->createForm(AddressType::class, $address);
+        $form    = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
@@ -32,9 +32,12 @@ class DeliveryAddressController extends AbstractController
             return $this->redirectToRoute('checkout_shipment');
         }
 
-        return $this->render('shipping/address_new.html.twig', [
-            'form' => $form->createView(),
-            'deliveryAddresses' => $user->getDeliveryAddresses(),
-        ]);
+        return $this->render(
+            'shipping/address_new.html.twig',
+            [
+                'form'              => $form->createView(),
+                'deliveryAddresses' => $user->getDeliveryAddresses(),
+            ],
+        );
     }
 }

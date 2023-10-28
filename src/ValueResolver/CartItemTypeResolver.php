@@ -31,7 +31,7 @@ class CartItemTypeResolver implements ValueResolverInterface
             'plan' => SubscriptionPlan::class,
         ];
         if (!isset($entityTypeMap[$value])) {
-            throw new InvalidArgumentException('Unknown entity type:'.$value);
+            throw new InvalidArgumentException('Unknown entity type:' . $value);
         }
 
         return [$entityTypeMap[$value]];

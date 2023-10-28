@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
+use App\Protobuf\Generated\GPBMetadata\User;
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
+use Google\Protobuf\Timestamp;
 
 /**
  * Generated from protobuf message <code>intrvproto.UserDetails</code>.
  */
-class UserDetails extends \Google\Protobuf\Internal\Message
+class UserDetails extends Message
 {
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
@@ -128,7 +131,7 @@ class UserDetails extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\User::initOnce();
+        User::initOnce();
         parent::__construct($data);
     }
 
@@ -426,7 +429,7 @@ class UserDetails extends \Google\Protobuf\Internal\Message
      */
     public function setCreatedAt($var)
     {
-        GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
+        GPBUtil::checkMessage($var, Timestamp::class);
         $this->CreatedAt = $var;
 
         return $this;
@@ -451,7 +454,7 @@ class UserDetails extends \Google\Protobuf\Internal\Message
      */
     public function setLastLogin($var)
     {
-        GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
+        GPBUtil::checkMessage($var, Timestamp::class);
         $this->LastLogin = $var;
 
         return $this;

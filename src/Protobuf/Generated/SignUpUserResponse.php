@@ -7,12 +7,15 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
+use App\Protobuf\Generated\GPBMetadata\RpcSignin;
 use Google\Protobuf\Internal\GPBUtil;
+use Google\Protobuf\Internal\Message;
+use Google\Protobuf\Timestamp;
 
 /**
  * Generated from protobuf message <code>intrvproto.SignUpUserResponse</code>.
  */
-class SignUpUserResponse extends \Google\Protobuf\Internal\Message
+class SignUpUserResponse extends Message
 {
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
@@ -56,7 +59,7 @@ class SignUpUserResponse extends \Google\Protobuf\Internal\Message
      */
     public function __construct($data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\RpcSignin::initOnce();
+        RpcSignin::initOnce();
         parent::__construct($data);
     }
 
@@ -154,7 +157,7 @@ class SignUpUserResponse extends \Google\Protobuf\Internal\Message
      */
     public function setCreatedAt($var)
     {
-        GPBUtil::checkMessage($var, \Google\Protobuf\Timestamp::class);
+        GPBUtil::checkMessage($var, Timestamp::class);
         $this->created_at = $var;
 
         return $this;

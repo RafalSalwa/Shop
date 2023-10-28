@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
@@ -21,6 +20,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
+use function json_decode;
+use function sprintf;
+use const JSON_THROW_ON_ERROR;
 
 class CartApiController extends AbstractController
 {
@@ -30,9 +32,7 @@ class CartApiController extends AbstractController
     public function index(CartManager $cartManager, SerializerInterface $serializer): JsonResponse
     {
         $cart = $cartManager->getCurrentCart();
-        $serialized = $serializer->serialize($cart, 'json', [
-            'groups' => ['carts', 'cart_item'],
-        ]);
+        $serialized = $serializer->serialize($cart, 'json', ['groups' => ['carts', 'cart_item']]);
 
         return new JsonResponse($serialized);
     }
@@ -40,14 +40,14 @@ class CartApiController extends AbstractController
     #[OA\Post(
         requestBody: new OA\RequestBody(
             required: true,
-            content: new OA\JsonContent(ref: '#/components/schemas/prod_id')
+            content: new OA\JsonContent(ref: '#/components/schemas/prod_id'),
         ),
         tags: ['Cart'],
         responses: [
             new OA\Response(
                 response: 200,
                 description: 'Returns the success response',
-                content: new OA\JsonContent(type: 'object', example: "{'success': 'true'}")
+                content: new OA\JsonContent(type: 'object', example: "{'success': 'true'}"),
             ),
             new OA\Response(
                 response: 404,
@@ -68,30 +68,35 @@ class CartApiController extends AbstractController
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
-        if (! $params['id']) {
+        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        if (true === (null === $params['id'])) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
 
         try {
-            $prodId = (int) $params['id'];
+            $prodId = (int)$params['id'];
 
-            /** @var Product $product */
             $product = $productRepository->find($prodId);
-            if (! $product) {
-                return $this->json([
-                    'status' => 'product not found',
-                    'message' => sprintf('There is no such product with prvided ID #%s', $prodId),
-                ], Response::HTTP_NOT_FOUND);
+            if (null === $product) {
+                return $this->json(
+                    [
+                        'status' => 'product not found',
+                        'message' => sprintf('There is no such product with prvided ID #%s', $prodId),
+                    ],
+                    Response::HTTP_NOT_FOUND,
+                );
             }
 
             $cartService->add($product->toCartItem());
         } catch (ProductStockDepletedException $e) {
-            return $this->json([
-                'status' => 'something went wrong, please try again later',
-                'message' => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
-        } catch (ItemNotFoundException|TooManySubscriptionsException|Exception) {
+            return $this->json(
+                [
+                    'status' => 'something went wrong, please try again later',
+                    'message' => $e->getMessage(),
+                ],
+                Response::HTTP_NOT_FOUND,
+            );
+        } catch (Exception|ItemNotFoundException|TooManySubscriptionsException) {
         }
 
         return $this->json([

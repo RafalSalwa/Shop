@@ -26,7 +26,7 @@ class PaymentRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function save(Payment $payment)
+    public function save(Payment $payment): void
     {
         $this->getEntityManager()
             ->persist($payment);

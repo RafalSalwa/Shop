@@ -12,11 +12,11 @@ class OrderStatusVoter extends Voter
 {
     protected function supports($attribute, $subject): bool
     {
-        return $subject instanceof Order && $attribute === 'view' && $subject->getStatus() === Order::PENDING;
+        return $subject instanceof Order && 'view' === $attribute && Order::PENDING === $subject->getStatus();
     }
 
     protected function voteOnAttribute($attribute, $subject, TokenInterface $token): bool
     {
-        return $subject->getStatus() === Order::PENDING;
+        return Order::PENDING === $subject->getStatus();
     }
 }
