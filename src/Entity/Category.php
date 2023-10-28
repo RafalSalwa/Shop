@@ -15,20 +15,23 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: CategoryRepository::class)]
-#[Table(name: 'categories', schema: "interview")]
+#[Table(name: 'categories', schema: 'interview')]
 class Category
 {
     /**
      * @var ArrayCollection
      */
     public $products;
+
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'category_id', type: Types::SMALLINT, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'categories_categoryID_seq', allocationSize: 1, initialValue: 10)]
     private ?int $id = null;
+
     #[Column(name: 'category_name', type: Types::STRING, length: 15, nullable: false)]
     private ?string $name = null;
+
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 

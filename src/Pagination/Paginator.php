@@ -17,9 +17,6 @@ use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
-/**
- * @author Javier Eguiluz <javier.eguiluz@gmail.com>
- */
 final class Paginator
 {
     /**
@@ -31,6 +28,7 @@ final class Paginator
     final public const PAGE_SIZE = 20;
 
     private int $currentPage;
+
     private int $numResults;
 
     /**
@@ -57,7 +55,7 @@ final class Paginator
         /** @var array<string, mixed> $joinDqlParts */
         $joinDqlParts = $this->queryBuilder->getDQLPart('join');
 
-        if ([] === $joinDqlParts) {
+        if ($joinDqlParts === []) {
             $query->setHint(CountWalker::HINT_DISTINCT, false);
         }
 

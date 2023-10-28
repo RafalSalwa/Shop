@@ -28,7 +28,7 @@ class CartAddService
     {
         $repository = $this->entityManager->getRepository($type);
         $entity = $repository->find($id);
-        if (!$entity) {
+        if (! $entity) {
             throw $this->createNotFoundException('Item not found');
         }
 
@@ -36,7 +36,8 @@ class CartAddService
             $lock = $this->cartLockFactory->createLock('cart_item_add');
             $lock->acquire(true);
             $this->denyAccessUnlessGranted(ProductVoter::ADD_TO_CART, $entity);
-            $this->entityManager->getConnection()->beginTransaction();
+            $this->entityManager->getConnection()
+                ->beginTransaction();
 
             $this->productStockService->checkStockIsAvailable($entity);
 
@@ -48,14 +49,18 @@ class CartAddService
             $this->cartService->save($cart);
             $this->productStockService->changeStock($entity, Product::STOCK_DECREASE);
 
-            $this->entityManager->getConnection()->commit();
+            $this->entityManager->getConnection()
+                ->commit();
             $lock->release();
 
-            $this->addFlash('info', 'successfully added '.$entity->getDisplayName().' to cart');
+            $this->addFlash('info', 'successfully added ' . $entity->getDisplayName() . ' to cart');
         } catch (ProductNotFound $pnf) {
             $this->addFlash('error', $pnf->getMessage());
 
-            return $this->redirectToRoute($entity->getTypeName().'_index', ['id' => $id, 'page' => 1]);
+            return $this->redirectToRoute($entity->getTypeName() . '_index', [
+                'id' => $id,
+                'page' => 1,
+            ]);
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash('error', $psd->getMessage());
         } catch (AccessDeniedException) {
@@ -66,7 +71,8 @@ class CartAddService
         } catch (TooManySubscriptionsException $subex) {
             $this->addFlash('error', $subex->getMessage());
         } catch (Exception $e) {
-            $this->entityManager->getConnection()->rollback();
+            $this->entityManager->getConnection()
+                ->rollback();
             throw $e;
         } finally {
             $lock->release();

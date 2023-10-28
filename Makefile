@@ -1,3 +1,5 @@
+export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+
 all: test testrace
 
 up:
@@ -9,6 +11,10 @@ compose-down:
 .PHONY: rector
 rector: vendor ## Automatic code fixes with Rector
 	composer rector
+
+.PHONY: phpcs
+phpcs:
+	vendor/bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 -spv src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer: vendor ## Fix code style
@@ -30,9 +36,35 @@ phpda:
 phpinsights:
 	./vendor/bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
 
-test: ### run test
-	go test -v -cover -race ./internal/... ./pkg/... ./cmd/...
-.PHONY: test
+.PHONY: test_unit phpmetrics
+phpmetrics:
+	$(MAKE) test_unit
+	${ROOT_DIR}/vendor/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
+
+.PHONY: phpunit
+phpunit: ### run test
+	${ROOT_DIR}/vendor/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml
+
+.PHONY: test_unit
+test_unit: ### run test
+	./vendor/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit
+
+.PHONY: test_integration
+test_integration: ### run test
+	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=integration
+
+.PHONY: test_api
+test_api: ### run test
+	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=api
+
+.PHONY: test_functional
+test_functional: ### run test
+	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=functional
+
+.PHONY: test_e2e
+test_e2e: ### run test
+	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
+
 
 .PHONY: proto
 proto:
@@ -41,3 +73,4 @@ proto:
 		exit 1; \
 	fi
 		protoc --proto_path=proto --php_out=src/ --grpc_out=src/ --plugin=protoc-gen-grpc=bin/grpc_php_plugin proto/*.proto;
+

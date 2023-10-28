@@ -20,18 +20,21 @@ class SignUpUserResponse extends \Google\Protobuf\Internal\Message
      * @var int|string
      */
     protected $id = 0;
+
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
      *
      * @var string
      */
     protected $username = '';
+
     /**
      * Generated from protobuf field <code>string verification_token = 3;</code>.
      *
      * @var string
      */
     protected $verification_token = '';
+
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
      *
@@ -45,10 +48,10 @@ class SignUpUserResponse extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *                    Optional. Data for populating the Message object.
      *
-     * @var int|string                 $id
-     * @var string                     $username
-     * @var string                     $verification_token
-     * @var \Google\Protobuf\Timestamp $created_at
+     * @var int|string
+     * @var string
+     * @var string
+     * @var \Google\Protobuf\Timestamp
      *                                 }
      */
     public function __construct($data = null)

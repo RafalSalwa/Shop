@@ -17,7 +17,8 @@ class StockDepletedEvent extends Event
         $this->arrProd = [
             'id' => $prod->getId(),
             'name' => $prod->getName(),
-            'category' => $prod->getCategory()->getName(),
+            'category' => $prod->getCategory()
+                ->getName(),
         ];
     }
 

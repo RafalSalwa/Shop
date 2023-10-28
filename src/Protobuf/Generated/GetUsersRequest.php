@@ -53,7 +53,11 @@ class GetUsersRequest extends \Google\Protobuf\Internal\Message
      */
     public function setUsers($var)
     {
-        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::MESSAGE, \App\Protobuf\Generated\GetUserRequest::class);
+        $arr = GPBUtil::checkRepeatedField(
+            $var,
+            \Google\Protobuf\Internal\GPBType::MESSAGE,
+            \App\Protobuf\Generated\GetUserRequest::class
+        );
         $this->users = $arr;
 
         return $this;

@@ -17,8 +17,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class PaymentController extends AbstractController
 {
     #[Route('/cart/step/shipment', name: 'cart_shipment')]
-    public function shipment(Request $request, CartService $cartService, CartCalculator $cartCalculator, AddressRepository $repository): Response
-    {
+    public function shipment(
+        Request $request,
+        CartService $cartService,
+        CartCalculator $cartCalculator,
+        AddressRepository $repository
+    ): Response {
         $user = $this->getUser();
 
         $address = new Address();

@@ -14,7 +14,6 @@ use App\Security\CartItemVoter;
 use App\Service\CartCalculator;
 use App\Service\CartService;
 use App\Service\ProductStockService;
-use Doctrine\DBAL\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +27,6 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
  */
 class CartController extends AbstractController
 {
-    /**
-     * @throws Exception
-     */
     #[Route('/cart/add/{type}/{id}', name: 'cart_add')]
     public function addToCart(
         #[ValueResolver('cart_item_type')]
@@ -44,11 +40,14 @@ class CartController extends AbstractController
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
             $cartService->add($item);
-            $this->addFlash('info', 'successfully added '.$item->getDisplayName().' to cart');
+            $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
         } catch (ItemNotFoundException $pnf) {
             $this->addFlash('error', $pnf->getMessage());
 
-            return $this->redirectToRoute($type.'_index', ['id' => $id, 'page' => 1]);
+            return $this->redirectToRoute($type . '_index', [
+                'id' => $id,
+                'page' => 1,
+            ]);
         } catch (ProductStockDepletedException $psd) {
             $this->addFlash('error', $psd->getMessage());
         } catch (AccessDeniedException) {
@@ -60,7 +59,9 @@ class CartController extends AbstractController
             $this->addFlash('error', $subex->getMessage());
         }
 
-        return $this->redirectToRoute($item->getTypeName().'_details', ['id' => $id]);
+        return $this->redirectToRoute($item->getTypeName() . '_details', [
+            'id' => $id,
+        ]);
     }
 
     #[Route('/cart/remove/{id}', name: 'cart_remove')]
@@ -76,7 +77,7 @@ class CartController extends AbstractController
 
             $cartService->save($cart);
 
-            $this->addFlash('info', 'successfully removed '.$item->getItemName().' from cart');
+            $this->addFlash('info', 'successfully removed ' . $item->getItemName() . ' from cart');
         } catch (ItemNotFoundException $pnf) {
             $this->addFlash('error', $pnf->getMessage());
         } catch (ProductStockDepletedException $psd) {

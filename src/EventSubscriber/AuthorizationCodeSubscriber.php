@@ -27,7 +27,8 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         private readonly RequestStack $requestStack,
         FirewallMapInterface $firewallMap
     ) {
-        $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())->getName();
+        $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())
+            ->getName();
     }
 
     public static function getSubscribedEvents(): array
@@ -44,13 +45,17 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         $this->saveTargetPath($request->getSession(), $this->firewallName, $request->getUri());
         $response = new RedirectResponse($this->urlGenerator->generate('app_login'), Response::HTTP_TEMPORARY_REDIRECT);
         if ($user instanceof UserInterface) {
-            if (null !== $request->getSession()->get('consent_granted')) {
+            if ($request->getSession()->get('consent_granted') !== null) {
                 $event->resolveAuthorization($request->getSession()->get('consent_granted'));
-                $request->getSession()->remove('consent_granted');
+                $request->getSession()
+                    ->remove('consent_granted');
 
                 return;
             }
-            $response = new RedirectResponse($this->urlGenerator->generate('app_consent', $request->query->all()), Response::HTTP_TEMPORARY_REDIRECT);
+            $response = new RedirectResponse($this->urlGenerator->generate(
+                'app_consent',
+                $request->query->all()
+            ), Response::HTTP_TEMPORARY_REDIRECT);
         }
         $event->setResponse($response);
     }

@@ -21,7 +21,7 @@ class CartManager
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (!$cart instanceof \App\Entity\Cart) {
+        if (! $cart instanceof \App\Entity\Cart) {
             $cart = $this->cartFactory->create();
         }
 

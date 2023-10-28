@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use DateTimeInterface;
-
 interface CartItemInterface
 {
     /**
@@ -15,8 +13,6 @@ interface CartItemInterface
 
     /**
      * Get identifier of the base entity that is added.
-     *
-     * @return CartInsertableInterface
      */
     public function getReferencedEntity(): CartInsertableInterface;
 
@@ -69,5 +65,5 @@ interface CartItemInterface
 
     public function getReferenceEntity(): CartInsertableInterface;
 
-    public function setCreatedAt(DateTimeInterface $createdAt): self;
+    public function setCreatedAt(\DateTimeInterface $createdAt): self;
 }

@@ -29,7 +29,7 @@ class StockDepletedListener implements EventSubscriberInterface
         $email = (new Email())
             ->from('system@interview.com')
             ->to('system@interview.com')
-            ->subject('[PHP] Stock depleted for product '.$productData['name'].' with ID #'.$productData['id'])
+            ->subject('[PHP] Stock depleted for product ' . $productData['name'] . ' with ID #' . $productData['id'])
             ->html('We need to restock :)');
 
         $this->mailer->send($email);

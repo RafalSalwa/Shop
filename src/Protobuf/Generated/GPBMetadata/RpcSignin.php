@@ -11,14 +11,11 @@ class RpcSignin
 {
     public static bool $is_initialized = false;
 
-    /**
-     * @return void
-     */
     public static function initOnce()
     {
         $pool = \Google\Protobuf\Internal\DescriptorPool::getGeneratedPool();
 
-        if (true === static::$is_initialized) {
+        if (static::$is_initialized === true) {
             return;
         }
         \GPBMetadata\Google\Protobuf\Timestamp::initOnce();

@@ -13,10 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
-#[AsCommand(
-    name: 'auth:client:create',
-    description: 'creates auth client',
-)]
+#[AsCommand(name: 'auth:client:create', description: 'creates auth client',)]
 class CreateAuthClientCommand extends Command
 {
     public function __construct(
@@ -38,7 +35,9 @@ class CreateAuthClientCommand extends Command
         $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
         $redirectUris = explode(',', 'https://interview.local/callback');
 
-        $user = $this->em->getRepository(User::class)->findOneBy(['user_id' => 1]);
+        $user = $this->em->getRepository(User::class)->findOneBy([
+            'user_id' => 1,
+        ]);
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
         //        $this->em->persist($user);

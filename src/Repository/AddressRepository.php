@@ -22,7 +22,9 @@ class AddressRepository extends ServiceEntityRepository
      */
     public function save(mixed $address)
     {
-        $this->getEntityManager()->persist($address);
-        $this->getEntityManager()->flush();
+        $this->getEntityManager()
+            ->persist($address);
+        $this->getEntityManager()
+            ->flush();
     }
 }

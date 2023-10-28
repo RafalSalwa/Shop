@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 class PlanRepository extends ServiceEntityRepository
@@ -17,16 +16,14 @@ class PlanRepository extends ServiceEntityRepository
         parent::__construct($registry, SubscriptionPlan::class);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
     public function findById(int $id)
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.id = :id')
             ->setParameter('id', $id);
 
-        return $qb->getQuery()->getOneOrNullResult();
+        return $qb->getQuery()
+            ->getOneOrNullResult();
     }
 
     public function fetchAvailablePlans()
@@ -48,6 +45,8 @@ class PlanRepository extends ServiceEntityRepository
 
     public function getByName(string $type)
     {
-        return $this->findOneBy(['planName' => mb_strtolower($type)]);
+        return $this->findOneBy([
+            'planName' => mb_strtolower($type),
+        ]);
     }
 }

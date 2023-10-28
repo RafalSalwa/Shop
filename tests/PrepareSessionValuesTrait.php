@@ -20,7 +20,8 @@ trait PrepareSessionValuesTrait
                 foreach ($values as $k => $v) {
                     $session->set($k, $v);
                 }
-                $event->getRequest()->setSession($session);
+                $event->getRequest()
+                    ->setSession($session);
             }
         );
     }

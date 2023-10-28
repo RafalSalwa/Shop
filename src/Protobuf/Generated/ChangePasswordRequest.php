@@ -20,6 +20,7 @@ class ChangePasswordRequest extends \Google\Protobuf\Internal\Message
      * @var int|string
      */
     protected $Id = 0;
+
     /**
      * Generated from protobuf field <code>string Password = 2;</code>.
      *
@@ -33,8 +34,8 @@ class ChangePasswordRequest extends \Google\Protobuf\Internal\Message
      * @param array $data {
      *                    Optional. Data for populating the Message object.
      *
-     * @var int|string $Id
-     * @var string     $Password
+     * @var int|string
+     * @var string
      *                 }
      */
     public function __construct($data = null)

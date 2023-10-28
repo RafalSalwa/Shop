@@ -17,9 +17,6 @@ class CartControllerTest extends WebTestCase
 {
     use CartAssertionsTrait;
 
-    /**
-     * @throws Exception
-     */
     public function testCartIsEmpty(): void
     {
         try {
@@ -37,14 +34,10 @@ class CartControllerTest extends WebTestCase
             $this->assertResponseIsSuccessful();
             $this->assertCartIsEmpty($crawler);
         } catch (Exception $e) {
-            dd(get_class($e));
             dd($e->getMessage(), $e->getPrevious()->getMessage(), $e->getTraceAsString());
         }
     }
 
-    /**
-     * @throws Exception
-     */
     public function testAddProductToCart(): void
     {
         $client = $this->getClient();
@@ -53,12 +46,12 @@ class CartControllerTest extends WebTestCase
         $cartService->clearCart();
         $this->assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
 
-
         $client->request('GET', '/cart/add/product/75');
         $client->followRedirect();
         $this->assertResponseIsSuccessful();
 
-        $product = $this->getTestProduct()->toCartItem();
+        $product = $this->getTestProduct()
+            ->toCartItem();
 
         $crawler = $client->request('POST', '/cart');
         $this->assertResponseIsSuccessful();
@@ -67,12 +60,11 @@ class CartControllerTest extends WebTestCase
         $this->assertCartTotalEquals($crawler, $product->getReferenceEntity()->getUnitPrice());
     }
 
-    /**
-     * @throws Exception
-     */
     private function getClient(bool $withLoggedUser = true): KernelBrowser
     {
-        $client = static::createClient([], ['HTTPS' => true]);
+        $client = static::createClient([], [
+            'HTTPS' => true,
+        ]);
         if ($withLoggedUser) {
             $testUser = static::getContainer()->get(UserRepository::class)->findOneByUsername('interview');
             $client->loginUser($testUser);
@@ -81,9 +73,6 @@ class CartControllerTest extends WebTestCase
         return $client;
     }
 
-    /**
-     * @throws Exception
-     */
     private function getTestProduct(): Product
     {
         /** @var ProductRepository $productRepository */

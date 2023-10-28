@@ -22,8 +22,7 @@ class GRPCController extends AbstractController
     #[Route('/grpc', name: 'grpc_index')]
     public function index(): Response
     {
-        return $this->render('grpc/index.html.twig', [
-        ]);
+        return $this->render('grpc/index.html.twig', []);
     }
 
     #[Route('/grpc/user/create', name: 'grpc_user_create')]
@@ -91,7 +90,7 @@ class GRPCController extends AbstractController
                 $signInInput->getPassword()
             );
 
-            if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
+            if ($status->code === 0 && $grpcResponse instanceof SignInUserResponse) {
                 $arrUser = $authGRPCService->getUserCredentialsFromLastSignUp();
 
                 $arrUser['access_token'] = $grpcResponse->getAccessToken();
@@ -126,7 +125,7 @@ class GRPCController extends AbstractController
                 $signInInput->getPassword()
             );
 
-            if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
+            if ($status->code === 0 && $grpcResponse instanceof SignInUserResponse) {
                 $arrUser = $authGRPCService->getUserCredentialsFromLastSignUp();
 
                 $arrUser['access_token'] = $grpcResponse->getAccessToken();

@@ -18,7 +18,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: AddressRepository::class)]
-#[Table(name: 'address', schema: "interview")]
+#[Table(name: 'address', schema: 'interview')]
 class Address
 {
     #[Id]

@@ -25,11 +25,8 @@ class UserServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function GetUserById(
-        GetUserRequest $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function GetUserById(GetUserRequest $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.UserService/GetUserById',
             $argument,
@@ -46,11 +43,8 @@ class UserServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function GetUserDetails(
-        GetUserRequest $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function GetUserDetails(GetUserRequest $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.UserService/GetUserDetails',
             $argument,
@@ -67,11 +61,8 @@ class UserServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function VerifyUser(
-        VerifyUserRequest $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function VerifyUser(VerifyUserRequest $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.UserService/VerifyUser',
             $argument,
@@ -88,11 +79,8 @@ class UserServiceClient extends \Grpc\BaseStub
      *
      * @return \Grpc\UnaryCall
      */
-    public function ChangePassword(
-        ChangePasswordRequest $argument,
-        $metadata = [],
-        $options = []
-    ) {
+    public function ChangePassword(ChangePasswordRequest $argument, $metadata = [], $options = [])
+    {
         return $this->_simpleRequest(
             '/intrvproto.UserService/ChangePassword',
             $argument,

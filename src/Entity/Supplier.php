@@ -14,11 +14,13 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SupplierRepository::class)]
-#[Table(name: 'suppliers', schema: "interview")]
+#[Table(name: 'suppliers', schema: 'interview')]
 class Supplier
 {
     public $description;
+
     public $picture;
+
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'supplier_id', type: Types::SMALLINT, unique: true, nullable: false)]

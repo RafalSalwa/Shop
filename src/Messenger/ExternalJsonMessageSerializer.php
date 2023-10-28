@@ -14,13 +14,10 @@ class ExternalJsonMessageSerializer implements SerializerInterface
     {
     }
 
-    /**
-     * @throws \Exception
-     */
     public function encode(Envelope $envelope): array
     {
         $message = $envelope->getMessage();
-        if (!$message instanceof AMQPMessage) {
+        if (! $message instanceof AMQPMessage) {
             throw new \Exception('Unsupported message class');
         }
         $allStamps = [];

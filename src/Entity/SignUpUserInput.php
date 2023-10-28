@@ -7,7 +7,9 @@ namespace App\Entity;
 class SignUpUserInput
 {
     protected string $email = '';
+
     protected string $password = '';
+
     protected string $passwordConfirm = '';
 
     public function getEmail(): string

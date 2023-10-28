@@ -18,13 +18,13 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 {
     public function supports(Request $request): ?bool
     {
-        return !$request->headers->has('x-api-key');
+        return ! $request->headers->has('x-api-key');
     }
 
     public function authenticate(Request $request): Passport
     {
         $apiToken = $request->headers->get('X-API-KEY');
-        if (null === $apiToken) {
+        if ($apiToken === null) {
             throw new CustomUserMessageAuthenticationException('No API key provided');
         }
 

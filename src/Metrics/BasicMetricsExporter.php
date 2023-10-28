@@ -17,8 +17,10 @@ use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
 
 class BasicMetricsExporter
 {
-    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock)
-    {
+    public function __construct(
+        private readonly ExportingReader $reader,
+        private readonly ClockInterface $clock
+    ) {
     }
 
     public function generate(): void
@@ -46,27 +48,54 @@ class BasicMetricsExporter
             ->createHistogram('http.server.duration', 'ms', 'measures the duration inbound HTTP requests');
 
         // During the time range (T0, T1]:
-        $serverDuration->record(50, ['http.method' => 'GET', 'http.status_code' => 200]);
-        $serverDuration->record(100, ['http.method' => 'GET', 'http.status_code' => 200]);
-        $serverDuration->record(1, ['http.method' => 'GET', 'http.status_code' => 500]);
+        $serverDuration->record(50, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
+        $serverDuration->record(100, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
+        $serverDuration->record(1, [
+            'http.method' => 'GET',
+            'http.status_code' => 500,
+        ]);
         $this->reader->collect();
 
         // During the time range (T1, T2]:
         $this->reader->collect();
 
         // During the time range (T2, T3]:
-        $serverDuration->record(5, ['http.method' => 'GET', 'http.status_code' => 500]);
-        $serverDuration->record(2, ['http.method' => 'GET', 'http.status_code' => 500]);
+        $serverDuration->record(5, [
+            'http.method' => 'GET',
+            'http.status_code' => 500,
+        ]);
+        $serverDuration->record(2, [
+            'http.method' => 'GET',
+            'http.status_code' => 500,
+        ]);
         $this->reader->collect();
 
         // During the time range (T3, T4]:
-        $serverDuration->record(100, ['http.method' => 'GET', 'http.status_code' => 200]);
+        $serverDuration->record(100, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
         $this->reader->collect();
 
         // During the time range (T4, T5]:
-        $serverDuration->record(100, ['http.method' => 'GET', 'http.status_code' => 200]);
-        $serverDuration->record(30, ['http.method' => 'GET', 'http.status_code' => 200]);
-        $serverDuration->record(50, ['http.method' => 'GET', 'http.status_code' => 200]);
+        $serverDuration->record(100, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
+        $serverDuration->record(30, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
+        $serverDuration->record(50, [
+            'http.method' => 'GET',
+            'http.status_code' => 200,
+        ]);
         $this->reader->collect();
 
         $meterProvider->shutdown();
