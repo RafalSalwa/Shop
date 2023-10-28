@@ -19,15 +19,16 @@ class LoginController extends AbstractController
         if ($this->getUser() instanceof UserInterface) {
             return $this->redirectToRoute('app_index');
         }
-        $error        = $authenticationUtils->getLastAuthenticationError();
+
+        $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
         return $this->render(
             'login/index.html.twig',
             [
                 'controller_name' => 'LoginController',
-                'error'           => $error,
-                'last_username'   => $lastUsername,
+                'error' => $error,
+                'last_username' => $lastUsername,
             ],
         );
     }

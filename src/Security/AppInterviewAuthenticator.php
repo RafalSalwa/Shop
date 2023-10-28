@@ -18,7 +18,7 @@ class AppInterviewAuthenticator extends AbstractAuthenticator
 {
     public function supports(Request $request): ?bool
     {
-        return ! $request->headers->has('x-api-key');
+        return !$request->headers->has('x-api-key');
     }
 
     public function authenticate(Request $request): Passport
