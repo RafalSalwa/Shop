@@ -13,21 +13,26 @@ use Exception;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class CartControllerTest extends WebTestCase
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
+final class CartControllerTest extends WebTestCase
 {
     use CartAssertionsTrait;
 
     public function testCartIsEmpty(): void
     {
         try {
-            $client = static::createClient();
-            $userRepository = static::getContainer()->get(UserRepository::class);
+            $client = self::createClient();
+            $userRepository = self::getContainer()->get(UserRepository::class);
 
             $testUser = $userRepository->findOneByUsername('interview');
             $client->loginUser($testUser);
 
             /** @var CartService $cartService */
-            $cartService = static::getContainer()->get(CartService::class);
+            $cartService = self::getContainer()->get(CartService::class);
             $cartService->clearCart();
             $crawler = $client->request('GET', '/cart');
 
@@ -42,31 +47,32 @@ class CartControllerTest extends WebTestCase
     {
         $client = $this->getClient();
 
-        $cartService = static::getContainer()->get(CartService::class);
+        $cartService = self::getContainer()->get(CartService::class);
         $cartService->clearCart();
-        $this->assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
+        self::assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
 
         $client->request('GET', '/cart/add/product/75');
         $client->followRedirect();
         $this->assertResponseIsSuccessful();
 
         $product = $this->getTestProduct()
-            ->toCartItem();
+            ->toCartItem()
+        ;
 
         $crawler = $client->request('POST', '/cart');
         $this->assertResponseIsSuccessful();
         $this->assertCartItemsCountEquals($crawler, 1);
         $this->assertCartContainsProductWithQuantity($crawler, $product->getDisplayName(), 1);
-        $this->assertCartTotalEquals($crawler, $product->getReferenceEntity()->getUnitPrice());
+        $this->assertCartTotalEquals($crawler, $product->getReferenceEntity()->getPrice());
     }
 
     private function getClient(bool $withLoggedUser = true): KernelBrowser
     {
-        $client = static::createClient([], [
+        $client = self::createClient([], [
             'HTTPS' => true,
         ]);
         if ($withLoggedUser) {
-            $testUser = static::getContainer()->get(UserRepository::class)->findOneByUsername('interview');
+            $testUser = self::getContainer()->get(UserRepository::class)->findOneByUsername('interview');
             $client->loginUser($testUser);
         }
 
@@ -76,7 +82,7 @@ class CartControllerTest extends WebTestCase
     private function getTestProduct(): Product
     {
         /** @var ProductRepository $productRepository */
-        $productRepository = static::getContainer()->get(ProductRepository::class);
+        $productRepository = self::getContainer()->get(ProductRepository::class);
 
         return $productRepository->find(75);
     }

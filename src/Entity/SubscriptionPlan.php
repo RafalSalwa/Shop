@@ -104,7 +104,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUnitPrice(bool $userFriendly = false): int|float
+    public function getPrice(bool $userFriendly = false): float|int
     {
         if ($userFriendly) {
             return $this->unitPrice / 100;
@@ -125,7 +125,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUpdatedAt(): DateTime|null
+    public function getUpdatedAt(): null|DateTime
     {
         return $this->updatedAt;
     }
@@ -137,7 +137,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getDeletedAt(): DateTime|null
+    public function getDeletedAt(): null|DateTime
     {
         return $this->deletedAt;
     }
@@ -155,7 +155,8 @@ class SubscriptionPlan implements CartInsertableInterface
         $cartItem
             ->setReferencedEntity($this)
             ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'));
+            ->setCreatedAt(new DateTime('now'))
+        ;
 
         return $cartItem;
     }

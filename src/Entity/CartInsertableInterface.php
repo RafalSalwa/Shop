@@ -10,7 +10,7 @@ interface CartInsertableInterface
 
     public function toCartItem(): CartItemInterface;
 
-    public function getUnitPrice(bool $userFriendly = false): int|float;
+    public function getPrice(): float|int;
 
     public function getName(): string;
 }

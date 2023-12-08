@@ -18,6 +18,7 @@ services:
     image: nginx:1.25-alpine
     volumes:
       - .:/var/www/symfony
+      - ./public:/var/www/html/public
       - ./docker/nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./docker/nginx/interview_host.conf:/etc/nginx/sites-enabled/interview_host.conf
       - ./docker/nginx/fragments/:/etc/nginx/fragments/

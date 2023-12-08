@@ -8,6 +8,13 @@ up:
 compose-down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
+.PHONY: lint
+lint:
+	vendor/bin/parallel-lint src
+
+.PHONY: ecs
+ecs:
+	vendor/bin/ecs check src --config reports/config/ecs.php
 .PHONY: rector
 rector: vendor ## Automatic code fixes with Rector
 	composer rector

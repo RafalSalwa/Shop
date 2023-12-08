@@ -30,28 +30,57 @@ class Category
     private ?int $id = null;
 
     #[Column(name: 'category_name', type: Types::STRING, length: 15, nullable: false)]
-    private ?string $name = null;
+    private string $name;
 
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
     private ?string $description = null;
+
+    #[Column(name: 'slug', type: Types::STRING, length: 32, nullable: false)]
+    private string $slug;
 
     public function __construct()
     {
         $this->products = new ArrayCollection();
     }
 
-    public function getId(): int|null
+    public function getId(): null|int
     {
         return $this->id;
     }
 
-    public function getName(): string|null
+    public function getName(): null|string
     {
         return $this->name;
     }
 
-    public function getDescription(): string|null
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getDescription(): null|string
     {
         return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
     }
 }

@@ -1,135 +1,422 @@
-{% extends 'logged.html.twig' %}
-
-{% block title %}Hello IndexController!{% endblock %}
-
+{% extends 'base.html.twig' %}
 {% block body %}
-
-    <!-- Header-->
-    <header class="py-5">
-        <div class="container px-lg-5">
-            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
-                <div class="m-4 m-lg-5">
-                    <h1 class="display-5 fw-bold">A warm welcome!</h1>
-                    <p class="fs-5">To interview App based on symfony 6.3 with PHP 8.2 and nginx 1.25, based on docker
-                        containers</p>
+    {% include 'partials/navbar_top/_navbar_top.html.twig' %}
+    <!-- Featured Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-4 col-md-4 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-check text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Feature rich</h5>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fa fa-shipping-fast text-primary m-0 mr-2"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Fast</h5>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-12 pb-1">
+                <div class="d-flex align-items-center border mb-4" style="padding: 30px;">
+                    <h1 class="fas fa-exchange-alt text-primary m-0 mr-3"></h1>
+                    <h5 class="font-weight-semi-bold m-0">Multiple Api's and microservices</h5>
                 </div>
             </div>
         </div>
-    </header>
+    </div>
+    <!-- Featured End -->
 
-    <!-- Page Content-->
-    <section class="pt-4">
-        <div class="container px-lg-5">
-            <!-- Page Features-->
-            <div class="row gx-lg-5">
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Doctrine</h2>
-                            <p class="mb-0">Postgress as DB, <br/>Entities have #[Attribute] mappings, <br/>Class Table
-                                inheritance for CartItems (Products, Subscriptions)<br/></p>
-                        </div>
+    <!-- Categories Start -->
+    {#    <div class="container-fluid pt-5"> #}
+    {#        <div class="row px-xl-5 pb-3"> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-1.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Men's dresses</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-2.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Women's dresses</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-3.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-4.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Accerssories</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-5.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Bags</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
+    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
+    {#                    <p class="text-right">15 Products</p> #}
+    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
+    {#                        <img class="img-fluid" src={{ asset('img/cat-6.jpg') }} alt=""> #}
+    {#                    </a> #}
+    {#                    <h5 class="font-weight-semi-bold m-0">Shoes</h5> #}
+    {#                </div> #}
+    {#            </div> #}
+    {#        </div> #}
+    {#    </div> #}
+    <!-- Categories End -->
+
+
+    <!-- Offer Start -->
+    <div class="container-fluid offer pt-5">
+        <div class="row px-xl-5">
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-right text-white mb-2 py-5 px-5">
+                    <div class="position-relative" style="z-index: 1;">
+                        <h5 class="text-uppercase text-primary mb-3 fas fa-percent"> 10% off the all order</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">Code: discount10</h1>
+                        <a href="{{ path("shop_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Rest</h2>
-                            <p class="mb-0">Rest server used for fetching and adding products and subscriptions</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">gRPC</h2>
-                            <p class="mb-0">Test functionality that allow to create, verify and authentication via gRPC
-                                server written in Go.</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">OAuth2</h2>
-                            <p class="mb-0">Authorization to resources that allow to read user account and cart</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Messenger</h2>
-                            <p class="mb-0">used to send events that can be generated in backend (Invoices, emails,
-                                notifications)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Workflows</h2>
-                            <p class="mb-0">State machine implementation <br/>with flow controll for <br/>Order state
-                                change
-                                (processing,completed,cancelled)<br/> Payment (processing,completed,cancelled)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Resolvers & Mappers</h2>
-                            <p class="mb-0">Sample usage of data resolvers for controllers actions that map doctrine CTI
-                                classes ito human-readable names</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Voters</h2>
-                            <p class="mb-0">Authorization to add_to_cart items based on subscription level and
-                                access</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Swagger</h2>
-                            <p class="mb-0">Docs for API for Products, subscriptions and cart</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">PHP CS-Fixer, PHPStan, Psalm</h2>
-                            <p class="mb-0">Coding standards and configuration files, Following symfony rules for Psalm
-                                and PHPStan, following PSR-12 for cs-Fixer</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">PHP Unit, Behat</h2>
-                            <p class="mb-0">Coding standards and configuration files, Following symfony rules for Psalm
-                                and PHPStan, following PSR-12 for cs-Fixer</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-xxl-4 mb-5">
-                    <div class="card bg-light border-0 h-100">
-                        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-                            <h2 class="fs-4 fw-bold mt-20 mb-20">Sessions & Cache</h2>
-                            <p class="mb-0">Statefull part of app is based on sessions with Redis Adapter, Separate
-                                cache pool manages authentication<br/> Cart is based on Doctrine and cache for faster
-                                reads</p>
-                        </div>
+            </div>
+            <div class="col-md-6 pb-4">
+                <div class="position-relative bg-secondary text-center text-md-left text-white mb-2 py-5 px-5">
+                    <div class="position-relative" style="z-index: 1;">
+                        <h5 class="text-uppercase text-primary mb-3 fa fa-shipping-fast text-primary m-0 mr-2">
+                            Free shipping</h5>
+                        <h1 class="mb-4 font-weight-semi-bold">Code: freeshipping</h1>
+                        <a href="{{ path("shop_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+    <!-- Offer End -->
+
+    <!-- Products Start -->
+    <div class="container-fluid pt-5">
+        <div class="text-center mb-4">
+            <h2 class="section-title px-5"><span class="px-2">Features</span></h2>
+        </div>
+        <div class="row px-xl-5 pb-3">
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Base</h6>
+                        <div class="d-flex justify-content-center">
+                        </div>
+                    </div>
+                    <div class="card-footer bg-light border text-center">
+                        <p class="text-center">
+                            <a href="" class="btn btn-sm text-dark p-0 text-center"><i
+                                        class="fas fa-eye text-primary mr-1"></i>View
+                                Detail</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-12 pb-1">
+                <div class="card product-item border-0 mb-4">
+                    <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                        <ul>
+                            <li>PHP 8.2</li>
+                            <li>Symfony 6.3</li>
+                            <li>nginx 1.25</li>
+                            <li>Docker compose</li>
+                        </ul>
+                    </div>
+                    <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                        <h6 class="text-truncate mb-3">Colorful Stylish Shirt</h6>
+                        <div class="d-flex justify-content-center">
+                            <h6>$123.00</h6>
+                            <h6 class="text-muted ml-2">
+                                <del>$123.00</del>
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between bg-light border">
+                        <a href="" class="btn btn-sm text-dark p-0"><i class="fas fa-eye text-primary mr-1"></i>View
+                            Detail</a>
+                        <a href="" class="btn btn-sm text-dark p-0"><i
+                                    class="fas fa-shopping-cart text-primary mr-1"></i>Add
+                            To Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Products End -->
+
+
+    <!-- Subscribe Start -->
+    <div class="container-fluid bg-secondary my-5">
+        <div class="row justify-content-md-center py-5 px-xl-5">
+            <div class="col-md-6 col-12 py-5">
+                <div class="text-center mb-2 pb-2">
+                    <h2 class="section-title px-5 mb-3"><span class="bg-secondary px-2">Stay Updated</span></h2>
+                    <p>Amet lorem at rebum amet dolores. Elitr lorem dolor sed amet diam labore at justo ipsum eirmod
+                        duo
+                        labore labore.</p>
+                </div>
+                <form action="">
+                    <div class="input-group">
+                        <input type="text" class="form-control border-white p-4" placeholder="Email Goes Here">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary px-4">Subscribe</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Subscribe End -->
+
+    <!-- Vendor Start -->
+    <div class="container-fluid py-5">
+        <div class="row px-xl-5">
+            <div class="col">
+                <div class="owl-carousel vendor-carousel">
+                    <div class="vendor-item border p-3">
+                        <img src="https://blog.sensiolabs.com/wp-content/uploads/2021/11/Symfony-6-3-768x473.png"
+                             alt=" Symfony 6.3">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://miro.medium.com/v2/resize:fit:640/1*GzS6w9CqENMqRbNEFTeYUQ.png"
+                             alt="Doctrine 2">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://cdn.icon-icons.com/icons2/2699/PNG/512/postgresql_vertical_logo_icon_168900.png"
+                             alt="Postgresql">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="data:image/png;base64,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"
+                             alt="REST API">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Oauth_logo.svg/2041px-Oauth_logo.svg.png"
+                             alt="OAuth2">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://files.speakerdeck.com/presentations/5b872b6ea3c54798866db4519ed463c1/slide_69.jpg"
+                             alt=" Symfony Messenger">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="data:image/png;base64,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"
+                             alt="gRPC">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://symfony.com/uploads/projects/shopsysframework.png"
+                             alt="Symfony Workflows">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://seeklogo.com/images/S/swagger-logo-A49F73BAF4-seeklogo.com.png"
+                             alt="Swagger">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="https://image.slidesharecdn.com/20-php-static-analysis-and-documentation-generators-burningkeyboards-170713175202/85/20-php-static-analysis-and-documentation-generators-burningkeyboards-2-320.jpg?cb=1670638305"
+                             alt="Static Analysis">
+                    </div>
+                    <div class="vendor-item border p-3">
+                        <img src="data:image/png;base64,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"
+                             alt="PHPUnit">
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Vendor End -->
 {% endblock %}

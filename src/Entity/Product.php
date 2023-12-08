@@ -48,7 +48,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
     private string $quantityPerUnit;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
-    private $unitPrice;
+    private $price;
 
     #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: true)]
     private int $unitsInStock;
@@ -75,13 +75,14 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->category;
     }
 
-    public function getUnitPrice($userFriendly = false): float|int
+    public function getPrice(): float|int
     {
-        if ($userFriendly) {
-            return $this->unitPrice / 100;
-        }
+        return $this->price;
+    }
 
-        return $this->unitPrice;
+    public function formatedPrice(): float|int
+    {
+        return $this->getPrice() / 100;
     }
 
     public function getId(): int
@@ -140,20 +141,15 @@ class Product implements CartInsertableInterface, StockManageableInterface
             ->setQuantity(1)
             ->setReferencedEntity($this)
             ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
+            ->setUpdatedAt(new DateTime('now'))
+        ;
 
         return $cartItem;
     }
 
-    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
-    {
-    }
+    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
 
-    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
-    {
-    }
+    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
 
-    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface
-    {
-    }
+    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
 }
