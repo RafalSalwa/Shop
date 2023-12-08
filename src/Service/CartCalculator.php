@@ -11,8 +11,7 @@ class CartCalculator
 {
     public function __construct(
         private readonly TaxCalculator $taxCalculator
-    ) {
-    }
+    ) {}
 
     public function calculatePayment(Cart $cart): array
     {
@@ -29,10 +28,12 @@ class CartCalculator
     public function calculateTotal(Cart $cart): float|int
     {
         $total = 0;
+
         /** @var CartItem $item */
         foreach ($cart->getItems() as $item) {
             $price = $item->getReferencedEntity()
-                    ->getUnitPrice() * $item->getQuantity();
+                ->getPrice() * $item->getQuantity()
+            ;
             $total += $price;
         }
 

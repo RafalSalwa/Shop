@@ -637,15 +637,15 @@ ALTER TABLE interview.product_cart_item OWNER TO interview;
 --
 
 CREATE TABLE interview.products (
-                                    product_id integer NOT NULL,
-                                    product_name character varying(40) NOT NULL,
-                                    supplier_id smallint,
-                                    category_id smallint,
-                                    quantity_per_unit character varying(20),
-                                    unit_price smallint NOT NULL,
-                                    units_in_stock smallint,
-                                    units_on_order smallint,
-                                    required_subscription_id integer
+product_id integer NOT NULL,
+product_name character varying(40) NOT NULL,
+supplier_id smallint,
+category_id smallint,
+quantity_per_unit character varying(20),
+unit_price smallint NOT NULL,
+units_in_stock smallint,
+units_on_order smallint,
+required_subscription_id integer
 );
 
 

@@ -16,6 +16,16 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class CheckoutController extends AbstractController
 {
+    #[Route('/cart/checkout/', name: 'checkout_index')]
+    public function index(): Response
+    {
+        return $this->render(
+            'checkout/index.html.twig',
+            [
+            ],
+        );
+    }
+
     #[Route('/cart/checkout/shipment', name: 'checkout_shipment')]
     public function shipment(
         Request $request,

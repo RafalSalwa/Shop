@@ -22,12 +22,12 @@ security:
       pattern: ^/(_(profiler|wdt)|css|images|js)/
       security: false
     main:
-      #      login_throttling:
-      #        max_attempts: 3
-      #        interval: '5 minutes'
+      login_throttling:
+        max_attempts: 5
+        interval: '5 minutes'
       lazy: true
       provider: app_user_provider
-      #      custom_authenticator: App\Security\AppInterviewAuthenticator
+      custom_authenticator: App\Security\AppInterviewAuthenticator
       form_login:
         login_path: app_login
         check_path: app_login
@@ -42,13 +42,13 @@ security:
     ROLE_SUPER_ADMIN: ROLE_ADMIN
 
   access_control:
-    - { path: ^/php/app/authorize, roles: PUBLIC_ACCESS }
-    - { path: ^/php/app/login, role: PUBLIC_ACCESS }
-    - { path: ^/php/app/token, role: PUBLIC_ACCESS }
-    - { path: ^/php/app/.well-known, roles: PUBLIC_ACCESS }
-    - { path: ^/php/app/cart, role: ROLE_USER }
-    - { path: ^/php/app/api, role: ROLE_OAUTH2_EMAIL }
-    - { path: ^/php/app/*, roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/authorize, roles: PUBLIC_ACCESS }
+    - { path: ^/login, role: PUBLIC_ACCESS }
+    - { path: ^/token, role: PUBLIC_ACCESS }
+    - { path: ^/.well-known, roles: PUBLIC_ACCESS }
+    - { path: ^/cart, role: ROLE_USER }
+    - { path: ^/api, role: ROLE_OAUTH2_EMAIL }
+    - { path: ^/*, roles: PUBLIC_ACCESS }
 
 when@test:
   security:

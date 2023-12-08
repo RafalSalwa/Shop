@@ -1,0 +1,32 @@
+{% extends 'logged.html.twig' %}
+
+{% block title %}Cart summary{% endblock %}
+
+{% block body %}
+    <div class="row mt-5">
+        <div class="col-md-9">
+            <section class="pt-4">
+                <div class="container px-lg-3">
+                    <div class="row gx-lg-5 cart-items">
+                        {% if cart.items is not empty %}
+                            <div class="list-group ">
+                                {% for item in cart.items %}
+                                    {% include "cart/partials/_item_simple.html.twig" %}
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            Cart is empty
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="col-md-3">
+            {{ include('cart/_summary.html.twig') }}
+            <div class="row ml-3 mr-3 mt-4">
+                <a href="{{ path("checkout_shipment") }}"
+                   class="btn btn- input-block-level {% if cart.items is empty %} disabled {% endif %}">Shipping</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

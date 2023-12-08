@@ -44,7 +44,7 @@ class CartController extends AbstractController
             return $this->redirectToRoute(
                 $type . '_index',
                 [
-                    'id'   => $id,
+                    'id' => $id,
                     'page' => 1,
                 ],
             );
@@ -86,7 +86,7 @@ class CartController extends AbstractController
     }
 
     #[Route('/cart/set_delivery_address', name: 'cart_delivery_address_set')]
-    public function deliveryAddress(Request $request, CartService $cartService): Response
+    public function setDeliveryAddress(Request $request, CartService $cartService): Response
     {
         $deliveryAddressId = $request->request->get('addrId');
         $cartService->setDefaultDeliveryAddress($deliveryAddressId);
@@ -97,13 +97,13 @@ class CartController extends AbstractController
     #[Route('/cart', name: 'cart_index')]
     public function show(CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
-        $cart    = $cartManager->getCurrentCart();
+        $cart = $cartManager->getCurrentCart();
         $payment = $cartCalculator->calculatePayment($cart);
 
         return $this->render(
             'cart/index.html.twig',
             [
-                'cart'    => $cart,
+                'cart' => $cart,
                 'payment' => $payment,
             ],
         );
