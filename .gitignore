@@ -43,3 +43,10 @@ bin/phpunit
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
+<<<<<<< ours
+=======
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
+>>>>>>> theirs
