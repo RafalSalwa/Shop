@@ -8,7 +8,7 @@ framework:
         dsn: '%env(RABBITMQ_URL)%'
         serializer: App\Messenger\ExternalJsonMessageSerializer
         options:
-          auto_setup: false
+          auto_setup: true
           exchange:
             name: ex_interview
             type: direct

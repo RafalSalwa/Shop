@@ -11,3 +11,26 @@ services:
       interview-net:
         aliases:
           - iphpmailhog
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=interview
+      - RABBITMQ_DEFAULT_PASS=interview
+      - RABBITMQ_DEFAULT_VHOST=interview
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+      - "15692:15692"
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 1s
+      timeout: 3s
+      retries: 30
+    volumes:
+      - ./docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.config:ro
+      - ./docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      interview-net:
+        aliases:
+          - irabbitmq
