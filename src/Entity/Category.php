@@ -29,13 +29,13 @@ class Category
     #[SequenceGenerator(sequenceName: 'categories_categoryID_seq', allocationSize: 1, initialValue: 10)]
     private ?int $id = null;
 
-    #[Column(name: 'category_name', type: Types::STRING, length: 15, nullable: false)]
+    #[Column(name: 'category_name', type: Types::STRING, length: 32, nullable: false)]
     private string $name;
 
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
-    #[Column(name: 'slug', type: Types::STRING, length: 32, nullable: false)]
+    #[Column(name: 'slug', type: Types::STRING, length: 64, nullable: true)]
     private string $slug;
 
     public function __construct()

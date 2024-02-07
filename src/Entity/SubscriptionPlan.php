@@ -113,6 +113,24 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->unitPrice;
     }
 
+    public function getUnitPrice(): int
+    {
+        return $this->unitPrice;
+    }
+
+    public function setUnitPrice(int $unitPrice): SubscriptionPlan
+    {
+        $this->unitPrice = $unitPrice;
+
+        return $this;
+    }
+
+    public function getTaxedPrice()
+    {
+        $taxedPrice = bcmul((string)$this->getUnitPrice(), '1.23');
+
+        return bcdiv($taxedPrice, '100', 2);
+    }
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;

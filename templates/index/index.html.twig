@@ -1,6 +1,5 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    {% include 'partials/navbar_top/_navbar_top.html.twig' %}
     <!-- Featured Start -->
     <div class="container-fluid pt-5">
         <div class="row px-xl-5 pb-3">
@@ -27,64 +26,64 @@
     <!-- Featured End -->
 
     <!-- Categories Start -->
-    {#    <div class="container-fluid pt-5"> #}
-    {#        <div class="row px-xl-5 pb-3"> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-1.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Men's dresses</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-2.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Women's dresses</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-3.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-4.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Accerssories</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-5.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Bags</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#            <div class="col-lg-4 col-md-6 pb-1"> #}
-    {#                <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;"> #}
-    {#                    <p class="text-right">15 Products</p> #}
-    {#                    <a href="" class="cat-img position-relative overflow-hidden mb-3"> #}
-    {#                        <img class="img-fluid" src={{ asset('img/cat-6.jpg') }} alt=""> #}
-    {#                    </a> #}
-    {#                    <h5 class="font-weight-semi-bold m-0">Shoes</h5> #}
-    {#                </div> #}
-    {#            </div> #}
-    {#        </div> #}
-    {#    </div> #}
+{#        <div class="container-fluid pt-5">#}
+{#            <div class="row px-xl-5 pb-3">#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-1.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Men's dresses</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-2.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Women's dresses</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-3.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Baby's dresses</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-4.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Accerssories</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-5.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Bags</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#                <div class="col-lg-4 col-md-6 pb-1">#}
+{#                    <div class="cat-item d-flex flex-column border mb-4" style="padding: 30px;">#}
+{#                        <p class="text-right">15 Products</p>#}
+{#                        <a href="" class="cat-img position-relative overflow-hidden mb-3">#}
+{#                            <img class="img-fluid" src={{ asset('img/cat-6.jpg') }} alt="">#}
+{#                        </a>#}
+{#                        <h5 class="font-weight-semi-bold m-0">Shoes</h5>#}
+{#                    </div>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div> #}
     <!-- Categories End -->
 
 
@@ -96,7 +95,7 @@
                     <div class="position-relative" style="z-index: 1;">
                         <h5 class="text-uppercase text-primary mb-3 fas fa-percent"> 10% off the all order</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Code: discount10</h1>
-                        <a href="{{ path("shop_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                        <a href="{{ path("products_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
             </div>
@@ -106,7 +105,7 @@
                         <h5 class="text-uppercase text-primary mb-3 fa fa-shipping-fast text-primary m-0 mr-2">
                             Free shipping</h5>
                         <h1 class="mb-4 font-weight-semi-bold">Code: freeshipping</h1>
-                        <a href="{{ path("shop_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
+                        <a href="{{ path("products_index") }}" class="btn btn-outline-primary py-md-2 px-md-3">Shop Now</a>
                     </div>
                 </div>
             </div>

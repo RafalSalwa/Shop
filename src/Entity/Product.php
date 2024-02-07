@@ -80,9 +80,11 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->price;
     }
 
-    public function formatedPrice(): float|int
+    public function grossPrice(): string
     {
-        return $this->getPrice() / 100;
+        $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
+
+        return bcdiv($taxedPrice, '100', 2);
     }
 
     public function getId(): int

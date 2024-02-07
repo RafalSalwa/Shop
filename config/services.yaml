@@ -19,15 +19,19 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Tests/'
+
+  app.twig_extension:
+    class: Twig\DeferredExtension\DeferredExtension
+    public: false
+    tags:
+      - { name: twig.extension }
+
   App\ValueResolver\CartItemTypeResolver:
     tags:
       - controller.argument_value_resolver:
           name: cart_item_type
           priority: 150
 
-  Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
-    arguments:
-      - '@Redis'
   League\Bundle\OAuth2ServerBundle\Entity\AccessToken:
     class: App\Entity\AccessToken
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:

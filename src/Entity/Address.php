@@ -24,7 +24,7 @@ class Address
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'address_id', type: Types::INTEGER, unique: true, nullable: false)]
-    #[SequenceGenerator(sequenceName: 'address_addressId_seq', allocationSize: 1, initialValue: 1)]
+    #[SequenceGenerator(sequenceName: 'address_addressID_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
     #[Assert\NotBlank]
@@ -56,7 +56,7 @@ class Address
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'deliveryAddresses')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
-    private User $user;
+    private UserInterface $user;
 
     public function getId(): int
     {

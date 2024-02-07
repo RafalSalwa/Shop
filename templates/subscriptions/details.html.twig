@@ -1,0 +1,26 @@
+{% extends 'shop.html.twig' %}
+
+{% block title %}{{ plan.name|capitalize }} Subscription{% endblock %}
+
+{% block body %}
+    <div class="container py-5">
+        <div class="row px-xl-5 justify-content-center">
+            <div class="col-lg-7 pb-5 ">
+                <h3 class="font-weight-semi-bold">{{ plan.name|capitalize }}</h3>
+                <h3 class="font-weight-semi-bold mb-4">{{ plan.taxedPrice|format_currency('USD') }}</h3>
+                <p class="mb-4">{{ plan.description }}</p>
+                <div class="d-flex align-items-center mb-4 pt-2">
+                    <a href="{{ path("cart_add", {type:"plan", id: plan.id, quantity:1}) }}"
+                       class="btn btn-sm text-dark p-0">
+                    <button class="btn btn-primary px-3 btn-cart-add" data-url="/cart/add" data-type="product" data-id="77">
+                        <i class="fa fa-shopping-cart mr-1"></i>
+                        Add To Cart
+                    </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{#        {% include "subscriptions/partials/card.html.twig" with {"add_to_cart": "true"} %}#}
+{% endblock %}
