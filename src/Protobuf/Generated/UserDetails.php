@@ -97,14 +97,14 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp CreatedAt = 12;</code>.
      *
-     * @var \Google\Protobuf\Timestamp|null
+     * @var null|\Google\Protobuf\Timestamp
      */
     protected $CreatedAt;
 
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp LastLogin = 13;</code>.
      *
-     * @var \Google\Protobuf\Timestamp|null
+     * @var null|\Google\Protobuf\Timestamp
      */
     protected $LastLogin;
 
@@ -125,11 +125,11 @@ class UserDetails extends Message
      * @var string
      * @var bool
      * @var bool
-     * @var \Google\Protobuf\Timestamp
-     * @var \Google\Protobuf\Timestamp
-     *                                 }
+     * @var Timestamp
+     * @var Timestamp
+     *                 }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -137,10 +137,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
-     *
-     * @return int|string
      */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->Id;
     }
@@ -148,11 +146,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
      *
-     * @param int|string $var
-     *
      * @return $this
      */
-    public function setId($var)
+    public function setId(int|string $var)
     {
         GPBUtil::checkInt64($var);
         $this->Id = $var;
@@ -162,10 +158,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Username = 2;</code>.
-     *
-     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->Username;
     }
@@ -173,11 +167,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Username = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setUsername($var)
+    public function setUsername(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Username = $var;
@@ -187,10 +179,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Firstname = 3;</code>.
-     *
-     * @return string
      */
-    public function getFirstname()
+    public function getFirstname(): string
     {
         return $this->Firstname;
     }
@@ -198,11 +188,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Firstname = 3;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setFirstname($var)
+    public function setFirstname(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Firstname = $var;
@@ -212,10 +200,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Lastname = 4;</code>.
-     *
-     * @return string
      */
-    public function getLastname()
+    public function getLastname(): string
     {
         return $this->Lastname;
     }
@@ -223,11 +209,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Lastname = 4;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setLastname($var)
+    public function setLastname(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Lastname = $var;
@@ -237,10 +221,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Email = 5;</code>.
-     *
-     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->Email;
     }
@@ -248,11 +230,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Email = 5;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setEmail($var)
+    public function setEmail(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Email = $var;
@@ -262,10 +242,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Password = 6;</code>.
-     *
-     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->Password;
     }
@@ -273,11 +251,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Password = 6;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setPassword($var)
+    public function setPassword(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Password = $var;
@@ -287,10 +263,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string RolesJson = 7;</code>.
-     *
-     * @return string
      */
-    public function getRolesJson()
+    public function getRolesJson(): string
     {
         return $this->RolesJson;
     }
@@ -298,11 +272,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string RolesJson = 7;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setRolesJson($var)
+    public function setRolesJson(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->RolesJson = $var;
@@ -312,10 +284,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Roles = 8;</code>.
-     *
-     * @return string
      */
-    public function getRoles()
+    public function getRoles(): string
     {
         return $this->Roles;
     }
@@ -323,11 +293,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Roles = 8;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setRoles($var)
+    public function setRoles(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Roles = $var;
@@ -337,10 +305,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>string Role = 9;</code>.
-     *
-     * @return string
      */
-    public function getRole()
+    public function getRole(): string
     {
         return $this->Role;
     }
@@ -348,11 +314,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>string Role = 9;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setRole($var)
+    public function setRole(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Role = $var;
@@ -362,10 +326,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>bool Verified = 10;</code>.
-     *
-     * @return bool
      */
-    public function getVerified()
+    public function getVerified(): bool
     {
         return $this->Verified;
     }
@@ -373,11 +335,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>bool Verified = 10;</code>.
      *
-     * @param bool $var
-     *
      * @return $this
      */
-    public function setVerified($var)
+    public function setVerified(bool $var)
     {
         GPBUtil::checkBool($var);
         $this->Verified = $var;
@@ -387,10 +347,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>bool Active = 11;</code>.
-     *
-     * @return bool
      */
-    public function getActive()
+    public function getActive(): bool
     {
         return $this->Active;
     }
@@ -398,11 +356,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>bool Active = 11;</code>.
      *
-     * @param bool $var
-     *
      * @return $this
      */
-    public function setActive($var)
+    public function setActive(bool $var)
     {
         GPBUtil::checkBool($var);
         $this->Active = $var;
@@ -412,10 +368,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp CreatedAt = 12;</code>.
-     *
-     * @return \Google\Protobuf\Timestamp
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): Timestamp
     {
         return $this->CreatedAt;
     }
@@ -423,11 +377,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp CreatedAt = 12;</code>.
      *
-     * @param \Google\Protobuf\Timestamp $var
-     *
      * @return $this
      */
-    public function setCreatedAt($var)
+    public function setCreatedAt(Timestamp $var)
     {
         GPBUtil::checkMessage($var, Timestamp::class);
         $this->CreatedAt = $var;
@@ -437,10 +389,8 @@ class UserDetails extends Message
 
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp LastLogin = 13;</code>.
-     *
-     * @return \Google\Protobuf\Timestamp
      */
-    public function getLastLogin()
+    public function getLastLogin(): Timestamp
     {
         return $this->LastLogin;
     }
@@ -448,11 +398,9 @@ class UserDetails extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp LastLogin = 13;</code>.
      *
-     * @param \Google\Protobuf\Timestamp $var
-     *
      * @return $this
      */
-    public function setLastLogin($var)
+    public function setLastLogin(Timestamp $var)
     {
         GPBUtil::checkMessage($var, Timestamp::class);
         $this->LastLogin = $var;

@@ -11,9 +11,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 
 class CartFactory
 {
-    public function __construct(private readonly Security $security)
-    {
-    }
+    public function __construct(private readonly Security $security) {}
 
     public function create(): Cart
     {
@@ -22,7 +20,8 @@ class CartFactory
             ->setStatus(Cart::STATUS_CREATED)
             ->setUser($this->security->getUser())
             ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(new DateTime());
+            ->setUpdatedAt(new DateTime())
+        ;
 
         return $order;
     }

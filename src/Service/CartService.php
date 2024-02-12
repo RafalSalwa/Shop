@@ -15,6 +15,7 @@ use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Lock\LockFactory;
 
@@ -28,8 +29,7 @@ class CartService
         private readonly ProductStockService $productStockService,
         private readonly LockFactory $cartLockFactory,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function clearCart(): void
     {
@@ -40,7 +40,8 @@ class CartService
             $this->save($cart);
         }
         $cart->getItems()
-            ->clear();
+            ->clear()
+        ;
         $this->cartSessionStorage->removeCart();
     }
 
@@ -76,7 +77,7 @@ class CartService
         $this->entityManager->flush();
     }
 
-    public function setDefaultDeliveryAddress(int $deliveryAddressId): void
+    public function useDefaultDeliveryAddress(int $deliveryAddressId): void
     {
         $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
     }
@@ -97,29 +98,29 @@ class CartService
         $this->save($cart);
     }
 
-    public function makeCartItem(object $entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
+    public function makeCartItem(object $entity): CartItem|ProductCartItem|SubscriptionPlanCartItem
     {
         return $this->cartItemFactory->create($entity);
     }
 
     public function add(CartItemInterface $item, int $quantity): void
     {
-        try{
-        $lock = $this->cartLockFactory->createLock('cart_item_add');
-        $lock->acquire(true);
+        try {
+            $lock = $this->cartLockFactory->createLock('cart_item_add');
+            $lock->acquire(true);
 
-        $this->productStockService->checkStockIsAvailable($item);
+            $this->productStockService->checkStockIsAvailable($item);
 
-        $this->checkSubscriptionsCount($item);
+            $this->checkSubscriptionsCount($item);
 
-        $cart = $this->getCurrentCart();
-        $cart->addItem($item);
-        $this->save($cart);
+            $cart = $this->getCurrentCart();
+            $cart->addItem($item);
+            $this->save($cart);
 
-        $this->productStockService->changeStock($item, Product::STOCK_DECREASE, $quantity);
+            $this->productStockService->changeStock($item, Product::STOCK_DECREASE, $quantity);
 
-        $lock->release();
-        }catch(\Exception $e){
+            $lock->release();
+        } catch (Exception $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
         }
     }
@@ -129,7 +130,7 @@ class CartService
         $cart = $this->getCurrentCart();
 
         if ($item instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($item)) {
-            throw new \App\Exception\TooManySubscriptionsException('You can have only one subscription in cart');
+            throw new TooManySubscriptionsException('You can have only one subscription in cart');
         }
     }
 
@@ -142,6 +143,7 @@ class CartService
         }
 
         $cart->getItems()
-            ->removeElement($item);
+            ->removeElement($item)
+        ;
     }
 }

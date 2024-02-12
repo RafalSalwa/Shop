@@ -26,8 +26,7 @@ class CartSessionStorage
         private readonly CartRepository $cartRepository,
         private readonly Security $security,
         private readonly ParameterBagInterface $parameterBag
-    ) {
-    }
+    ) {}
 
     /**
      * Gets the cart in session.
@@ -54,25 +53,29 @@ class CartSessionStorage
         }
 
         $this->getSession()
-            ->set(self::CART_KEY_NAME, $cart->getId());
+            ->set(self::CART_KEY_NAME, $cart->getId())
+        ;
     }
 
     public function removeCart(): void
     {
         $this->getSession()
-            ->remove(self::CART_KEY_NAME);
+            ->remove(self::CART_KEY_NAME)
+        ;
     }
 
     public function setDeliveryAddressId(int $addId): void
     {
         $this->getSession()
-            ->set(self::ADDR_KEY_NAME, $addId);
+            ->set(self::ADDR_KEY_NAME, $addId)
+        ;
     }
 
     public function getDeliveryAddressId(): mixed
     {
         return $this->getSession()
-            ->get(self::ADDR_KEY_NAME);
+            ->get(self::ADDR_KEY_NAME)
+        ;
     }
 
     private function getUser(): ?UserInterface
@@ -84,7 +87,7 @@ class CartSessionStorage
     {
         // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
         // that is the easiest solution for session storage between redis and filesystem
-        if ($this->parameterBag->get('kernel.environment') === 'test') {
+        if ('test' === $this->parameterBag->get('kernel.environment')) {
             $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
 
             $sessionStorage = new MockFileSessionStorage($sessionSavePath);

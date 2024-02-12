@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Mime\Address;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 
 class EmailVerifier
@@ -16,38 +17,43 @@ class EmailVerifier
     public function __construct(
         private readonly VerifyEmailHelperInterface $verifyEmailHelper,
         private readonly MailerInterface $mailer,
-        private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+        private UrlGeneratorInterface $router,
+    ) {}
 
-    public function sendEmailConfirmation(
-        string $verifyEmailRouteName,
-        UserInterface $user,
-        TemplatedEmail $email,
-    ): void {
-        $signatureComponents = $this->verifyEmailHelper->generateSignature(
-            $verifyEmailRouteName,
-            $user->getUserIdentifier(),
-            $user->getEmail(),
-        );
-
-        $context = $email->getContext();
-        $context['signedUrl'] = $signatureComponents->getSignedUrl();
-        $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
-        $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
-
-        $email->context($context);
-
-        $this->mailer->send($email);
-    }
-
-    public function handleEmailConfirmation(Request $request, UserInterface $user): void
+    public function sendEmailConfirmation(string $email, string $verificationCode): void
     {
-        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri(), $user->getUserIdentifier(), $user->getEmail());
+        $templatedEmail = (new TemplatedEmail())
+            ->from(new Address('noreply@interview.com', 'Interview Shop Bot'))
+            ->to($email)
+            ->subject('Please Confirm your Email')
+            ->htmlTemplate('registration/email/confirmation_email.html.twig')
+        ;
 
-        $user->setIsVerified(true);
+        $context = $templatedEmail->getContext();
+        $context['signedUrl'] = $this->router->generate(
+            'register_verify_email',
+            [
+                'verificationCode' => $verificationCode,
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $context['confirmationUrl'] = $this->router->generate(
+            'register_confirm_email',
+            [],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $context['verificationCode'] = $verificationCode;
+        $templatedEmail->context($context);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->mailer->send($templatedEmail);
+        } catch (TransportExceptionInterface $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function handleEmailConfirmation(Request $request): void
+    {
+        $this->verifyEmailHelper->validateEmailConfirmation($request->getUri());
     }
 }

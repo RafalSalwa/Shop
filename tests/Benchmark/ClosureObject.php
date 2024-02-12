@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Benchmark;
 
 use Closure;
+use function count;
 
 class ClosureObject
 {
@@ -11,7 +14,7 @@ class ClosureObject
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(static fn($item) => $item * $multipier, $list);
+        return array_map(static fn ($item) => $item * $multipier, $list);
     }
 
     public function getItemProcessorArrowFunction()
@@ -19,7 +22,7 @@ class ClosureObject
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(fn($item) => $item * $multipier, $list);
+        return array_map(static fn ($item) => $item * $multipier, $list);
     }
 
     public function getItemProcessorStatic(): Closure
@@ -28,15 +31,13 @@ class ClosureObject
         $multipier = 10;
 
         // Try with and without 'static' here
-        return static function ($list) {
+        return static function ($list): void {
             count($list);
         };
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(static function ($item) use ($list, $multipier) {
-            return $item * $multipier;
-        }, $list);
+        return array_map(static fn ($item) => $item * $multipier, $list);
     }
 
     public function getItemProcessor()
@@ -44,8 +45,6 @@ class ClosureObject
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(function ($item) use ($list, $multipier) {
-            return $item * $multipier;
-        }, $list);
+        return array_map(static fn ($item) => $item * $multipier, $list);
     }
 }

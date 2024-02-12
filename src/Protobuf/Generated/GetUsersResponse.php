@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace App\Protobuf\Generated;
 
-use App\Protobuf\Generated\GetUserResponse;
 use App\Protobuf\Generated\GPBMetadata\User;
 use Google\Protobuf\Internal\GPBType;
 use Google\Protobuf\Internal\GPBUtil;
@@ -40,7 +39,7 @@ class GetUsersResponse extends Message
      * @var string
      *                                                                                        }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -48,10 +47,8 @@ class GetUsersResponse extends Message
 
     /**
      * Generated from protobuf field <code>repeated .intrvproto.GetUserResponse users = 1;</code>.
-     *
-     * @return \Google\Protobuf\Internal\RepeatedField
      */
-    public function getUsers()
+    public function getUsers(): \Google\Protobuf\Internal\RepeatedField
     {
         return $this->users;
     }
@@ -63,7 +60,7 @@ class GetUsersResponse extends Message
      *
      * @return $this
      */
-    public function setUsers($var)
+    public function setUsers(array|\Google\Protobuf\Internal\RepeatedField $var)
     {
         $arr = GPBUtil::checkRepeatedField(
             $var,
@@ -77,10 +74,8 @@ class GetUsersResponse extends Message
 
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
-     *
-     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -88,11 +83,9 @@ class GetUsersResponse extends Message
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setEmail($var)
+    public function setEmail(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->email = $var;

@@ -40,7 +40,7 @@ class GetUserResponse extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -48,10 +48,8 @@ class GetUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
-     *
-     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -59,11 +57,9 @@ class GetUserResponse extends Message
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setUsername($var)
+    public function setUsername(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->username = $var;
@@ -73,10 +69,8 @@ class GetUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
-     *
-     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -84,11 +78,9 @@ class GetUserResponse extends Message
     /**
      * Generated from protobuf field <code>string email = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setEmail($var)
+    public function setEmail(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->email = $var;

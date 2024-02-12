@@ -27,7 +27,8 @@ class PaymentType extends AbstractType
                 ['label' => 'Amount'],
             )
             ->add('yes', SubmitType::class)
-            ->add('no', SubmitType::class);
+            ->add('no', SubmitType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -41,7 +41,7 @@ class SignUpUserResponse extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
      *
-     * @var \Google\Protobuf\Timestamp|null
+     * @var null|\Google\Protobuf\Timestamp
      */
     protected $created_at;
 
@@ -54,10 +54,10 @@ class SignUpUserResponse extends Message
      * @var int|string
      * @var string
      * @var string
-     * @var \Google\Protobuf\Timestamp
-     *                                 }
+     * @var Timestamp
+     *                 }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         RpcSignin::initOnce();
         parent::__construct($data);
@@ -65,10 +65,8 @@ class SignUpUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
-     *
-     * @return int|string
      */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->id;
     }
@@ -76,11 +74,9 @@ class SignUpUserResponse extends Message
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
      *
-     * @param int|string $var
-     *
      * @return $this
      */
-    public function setId($var)
+    public function setId(int|string $var)
     {
         GPBUtil::checkInt64($var);
         $this->id = $var;
@@ -90,10 +86,8 @@ class SignUpUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
-     *
-     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -101,11 +95,9 @@ class SignUpUserResponse extends Message
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setUsername($var)
+    public function setUsername(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->username = $var;
@@ -115,10 +107,8 @@ class SignUpUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string verification_token = 3;</code>.
-     *
-     * @return string
      */
-    public function getVerificationToken()
+    public function getVerificationToken(): string
     {
         return $this->verification_token;
     }
@@ -126,11 +116,9 @@ class SignUpUserResponse extends Message
     /**
      * Generated from protobuf field <code>string verification_token = 3;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setVerificationToken($var)
+    public function setVerificationToken(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->verification_token = $var;
@@ -140,10 +128,8 @@ class SignUpUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
-     *
-     * @return \Google\Protobuf\Timestamp
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): Timestamp
     {
         return $this->created_at;
     }
@@ -151,11 +137,9 @@ class SignUpUserResponse extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
      *
-     * @param \Google\Protobuf\Timestamp $var
-     *
      * @return $this
      */
-    public function setCreatedAt($var)
+    public function setCreatedAt(Timestamp $var)
     {
         GPBUtil::checkMessage($var, Timestamp::class);
         $this->created_at = $var;

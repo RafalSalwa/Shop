@@ -48,9 +48,7 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
         return $this;
     }
 
-    public function toCartItem(): CartItem
-    {
-    }
+    public function toCartItem(): CartItem {}
 
     public function getQuantity(): int
     {

@@ -21,8 +21,7 @@ class CartAddService
         private readonly ProductStockService $productStockService,
         private readonly LockFactory $cartLockFactory,
         private readonly CartService $cartService,
-    ) {
-    }
+    ) {}
 
     public function addToCart(string $type, int $id)
     {
@@ -37,7 +36,8 @@ class CartAddService
             $lock->acquire(true);
             $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $entity);
             $this->entityManager->getConnection()
-                ->beginTransaction();
+                ->beginTransaction()
+            ;
 
             $this->productStockService->checkStockIsAvailable($entity);
 
@@ -50,7 +50,8 @@ class CartAddService
             $this->productStockService->changeStock($entity, Product::STOCK_DECREASE);
 
             $this->entityManager->getConnection()
-                ->commit();
+                ->commit()
+            ;
             $lock->release();
 
             $this->addFlash('info', 'successfully added ' . $entity->getDisplayName() . ' to cart');
@@ -75,7 +76,8 @@ class CartAddService
             $this->addFlash('error', $subex->getMessage());
         } catch (Exception $e) {
             $this->entityManager->getConnection()
-                ->rollback();
+                ->rollback()
+            ;
 
             throw $e;
         } finally {

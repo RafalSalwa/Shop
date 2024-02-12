@@ -11,8 +11,8 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @extends ServiceEntityRepository<OAuth2ClientProfile>
  *
- * @method OAuth2ClientProfile|null find($id, $lockMode = null, $lockVersion = null)
- * @method OAuth2ClientProfile|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|OAuth2ClientProfile find($id, $lockMode = null, $lockVersion = null)
+ * @method null|OAuth2ClientProfile findOneBy(array $criteria, array $orderBy = null)
  * @method OAuth2ClientProfile[]    findAll()
  * @method OAuth2ClientProfile[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
@@ -26,22 +26,26 @@ class OAuth2ClientProfileRepository extends ServiceEntityRepository
     public function add(OAuth2ClientProfile $entity, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->persist($entity);
+            ->persist($entity)
+        ;
 
         if ($flush) {
             $this->getEntityManager()
-                ->flush();
+                ->flush()
+            ;
         }
     }
 
     public function remove(OAuth2ClientProfile $entity, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->remove($entity);
+            ->remove($entity)
+        ;
 
         if ($flush) {
             $this->getEntityManager()
-                ->flush();
+                ->flush()
+            ;
         }
     }
 }

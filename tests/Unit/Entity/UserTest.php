@@ -17,6 +17,8 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ *
+ * @coversNothing
  */
 #[CoversClass(User::class)]
 #[UsesClass(Payment::class)]
@@ -35,9 +37,9 @@ final class UserTest extends TestCase
         $user->setDeliveryAddresses($addressess);
 
         try {
-            $this->assertNotNull($user->getSubscription());
-            $this->assertNotNull($user->getDeliveryAddresses());
-        } catch (AssertionFailedError | ExpectationFailedException) {
+            self::assertNotNull($user->getSubscription());
+            self::assertNotNull($user->getDeliveryAddresses());
+        } catch (AssertionFailedError|ExpectationFailedException) {
         }
     }
 
@@ -50,6 +52,6 @@ final class UserTest extends TestCase
 
         $user->addPayment($payment);
         $user->setPayments($payments);
-        $this->assertNotNull($user->getPayments());
+        self::assertNotNull($user->getPayments());
     }
 }

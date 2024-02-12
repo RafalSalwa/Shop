@@ -16,15 +16,17 @@ class AddressRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param mixed|null $address
+     * @param null|mixed $address
      *
      * @psalm-param T|null $address
      */
-    public function save(mixed $address)
+    public function save(mixed $address): void
     {
         $this->getEntityManager()
-            ->persist($address);
+            ->persist($address)
+        ;
         $this->getEntityManager()
-            ->flush();
+            ->flush()
+        ;
     }
 }

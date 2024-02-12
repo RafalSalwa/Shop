@@ -13,10 +13,9 @@ class SubscriptionService
 {
     public function __construct(
         private readonly SubscriptionPlanRepository $planRepository,
-        private readonly UserRepository             $userRepository,
-        private readonly Security                   $security,
-    ) {
-    }
+        private readonly UserRepository $userRepository,
+        private readonly Security $security,
+    ) {}
 
     public function cancelSubscription(): void
     {
@@ -29,9 +28,10 @@ class SubscriptionService
         if (! $plan) {
             return;
         }
+
         /**
- * @var User $user 
-*/
+         * @var User $user
+         */
         $user = $this->security->getUser();
         $subscription = $user->getSubscription();
         if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {

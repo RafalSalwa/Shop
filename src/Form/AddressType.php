@@ -54,7 +54,8 @@ class AddressType extends AbstractType
                 TextType::class,
                 ['label' => 'Postal Code'],
             )
-            ->add('save', SubmitType::class);
+            ->add('save', SubmitType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

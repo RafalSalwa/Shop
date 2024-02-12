@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -22,7 +24,7 @@ class RegistrationConfirmationFormType extends AbstractType
                 'attr' => [
                     'class' => 'bg-white  rounded-5 shadow-5-strong p-5',
                     'autocomplete' => 'off',
-                ]
+                ],
             ],
         );
     }

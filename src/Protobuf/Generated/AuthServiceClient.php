@@ -15,19 +15,17 @@ class AuthServiceClient extends BaseStub
      * @param array         $opts     channel options
      * @param \Grpc\Channel $channel  (optional) re-use channel object
      */
-    public function __construct($hostname, $opts, $channel = null)
+    public function __construct(string $hostname, array $opts, \Grpc\Channel $channel = null)
     {
         parent::__construct($hostname, $opts, $channel);
     }
 
     /**
-     * @param \App\Protobuf\Generated\SignUpUserInput $argument input argument
-     * @param array                                   $metadata metadata
-     * @param array                                   $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param SignUpUserInput $argument input argument
+     * @param array           $metadata metadata
+     * @param array           $options  call options
      */
-    public function SignUpUser(SignUpUserInput $argument, $metadata = [], $options = [])
+    public function SignUpUser(SignUpUserInput $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/SignUpUser',
@@ -39,13 +37,11 @@ class AuthServiceClient extends BaseStub
     }
 
     /**
-     * @param \App\Protobuf\Generated\SignInUserInput $argument input argument
-     * @param array                                   $metadata metadata
-     * @param array                                   $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param SignInUserInput $argument input argument
+     * @param array           $metadata metadata
+     * @param array           $options  call options
      */
-    public function SignInUser(SignInUserInput $argument, $metadata = [], $options = [])
+    public function SignInUser(SignInUserInput $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/SignInUser',
@@ -57,13 +53,11 @@ class AuthServiceClient extends BaseStub
     }
 
     /**
-     * @param \App\Protobuf\Generated\VerificationCodeRequest $argument input argument
-     * @param array                                           $metadata metadata
-     * @param array                                           $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param VerificationCodeRequest $argument input argument
+     * @param array                   $metadata metadata
+     * @param array                   $options  call options
      */
-    public function GetVerificationKey(VerificationCodeRequest $argument, $metadata = [], $options = [])
+    public function GetVerificationKey(VerificationCodeRequest $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.AuthService/GetVerificationKey',

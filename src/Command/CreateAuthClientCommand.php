@@ -45,6 +45,7 @@ class CreateAuthClientCommand extends Command
         // Create the client
         $conn = $this->em->getConnection();
         $conn->beginTransaction();
+
         try {
             $conn->insert('oauth2_client', [
                 'identifier' => $clientId,

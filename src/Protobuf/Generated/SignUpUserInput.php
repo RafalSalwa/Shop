@@ -48,7 +48,7 @@ class SignUpUserInput extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         RpcSignin::initOnce();
         parent::__construct($data);
@@ -56,10 +56,8 @@ class SignUpUserInput extends Message
 
     /**
      * Generated from protobuf field <code>string email = 1;</code>.
-     *
-     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -67,11 +65,9 @@ class SignUpUserInput extends Message
     /**
      * Generated from protobuf field <code>string email = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setEmail($var)
+    public function setEmail(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->email = $var;
@@ -81,10 +77,8 @@ class SignUpUserInput extends Message
 
     /**
      * Generated from protobuf field <code>string password = 2;</code>.
-     *
-     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -92,11 +86,9 @@ class SignUpUserInput extends Message
     /**
      * Generated from protobuf field <code>string password = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setPassword($var)
+    public function setPassword(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->password = $var;
@@ -106,10 +98,8 @@ class SignUpUserInput extends Message
 
     /**
      * Generated from protobuf field <code>string passwordConfirm = 3;</code>.
-     *
-     * @return string
      */
-    public function getPasswordConfirm()
+    public function getPasswordConfirm(): string
     {
         return $this->passwordConfirm;
     }
@@ -117,11 +107,9 @@ class SignUpUserInput extends Message
     /**
      * Generated from protobuf field <code>string passwordConfirm = 3;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setPasswordConfirm($var)
+    public function setPasswordConfirm(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->passwordConfirm = $var;

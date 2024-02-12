@@ -78,13 +78,9 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         return $this->referenceEntity;
     }
 
-    public function getPrice(): float
-    {
-    }
+    public function getPrice(): float {}
 
-    public function getTotalPrice(): float
-    {
-    }
+    public function getTotalPrice(): float {}
 
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
@@ -93,9 +89,7 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         return $this;
     }
 
-    public function toCartItem(): CartItem
-    {
-    }
+    public function toCartItem(): CartItem {}
 
     public function setQuantity(int $quantity): CartItemInterface
     {

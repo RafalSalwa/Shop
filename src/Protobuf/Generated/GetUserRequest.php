@@ -32,7 +32,7 @@ class GetUserRequest extends Message
      * @var int|string
      *                 }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -40,10 +40,8 @@ class GetUserRequest extends Message
 
     /**
      * Generated from protobuf field <code>int64 user_id = 1;</code>.
-     *
-     * @return int|string
      */
-    public function getUserId()
+    public function getUserId(): int|string
     {
         return $this->user_id;
     }
@@ -51,11 +49,9 @@ class GetUserRequest extends Message
     /**
      * Generated from protobuf field <code>int64 user_id = 1;</code>.
      *
-     * @param int|string $var
-     *
      * @return $this
      */
-    public function setUserId($var)
+    public function setUserId(int|string $var)
     {
         GPBUtil::checkInt64($var);
         $this->user_id = $var;

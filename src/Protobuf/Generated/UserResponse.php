@@ -19,7 +19,7 @@ class UserResponse extends Message
     /**
      * Generated from protobuf field <code>.intrvproto.User user = 1;</code>.
      *
-     * @var User|null
+     * @var null|User
      */
     protected $user;
 
@@ -32,7 +32,7 @@ class UserResponse extends Message
      * @var \App\Protobuf\Generated\User
      *                                   }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -40,10 +40,8 @@ class UserResponse extends Message
 
     /**
      * Generated from protobuf field <code>.intrvproto.User user = 1;</code>.
-     *
-     * @return \App\Protobuf\Generated\User
      */
-    public function getUser()
+    public function getUser(): \App\Protobuf\Generated\User
     {
         return $this->user;
     }
@@ -51,11 +49,9 @@ class UserResponse extends Message
     /**
      * Generated from protobuf field <code>.intrvproto.User user = 1;</code>.
      *
-     * @param \App\Protobuf\Generated\User $var
-     *
      * @return $this
      */
-    public function setUser($var)
+    public function setUser(\App\Protobuf\Generated\User $var)
     {
         GPBUtil::checkMessage($var, \App\Protobuf\Generated\User::class);
         $this->user = $var;

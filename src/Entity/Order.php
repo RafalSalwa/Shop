@@ -116,7 +116,7 @@ class Order
         return $this;
     }
 
-    public function getAmount(bool $userFriendly = false): int|float
+    public function getAmount(bool $userFriendly = false): float|int
     {
         if ($userFriendly) {
             return $this->amount / 100;
@@ -160,7 +160,7 @@ class Order
         $this->vatAmount = $amount;
     }
 
-    public function getItems(): Collection|null
+    public function getItems(): null|Collection
     {
         return $this->items;
     }
@@ -207,13 +207,13 @@ class Order
         $this->updatedAt = new DateTime('now');
     }
 
-    public function addPayment(TValue|Payment $payment): void
+    public function addPayment(Payment|TValue $payment): void
     {
         $payment->setOrder($this);
         $this->payments[] = $payment;
     }
 
-    public function getPayments(): Collection|null
+    public function getPayments(): null|Collection
     {
         return $this->payments;
     }

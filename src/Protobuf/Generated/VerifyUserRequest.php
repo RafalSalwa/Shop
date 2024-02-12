@@ -32,7 +32,7 @@ class VerifyUserRequest extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -40,10 +40,8 @@ class VerifyUserRequest extends Message
 
     /**
      * Generated from protobuf field <code>string code = 1;</code>.
-     *
-     * @return string
      */
-    public function getCode()
+    public function getCode(): string
     {
         return $this->code;
     }
@@ -51,11 +49,9 @@ class VerifyUserRequest extends Message
     /**
      * Generated from protobuf field <code>string code = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setCode($var)
+    public function setCode(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->code = $var;

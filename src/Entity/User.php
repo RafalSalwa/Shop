@@ -22,13 +22,11 @@ use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
-use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 use function array_key_exists;
 use function array_unique;
 
@@ -125,7 +123,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         $this->carts = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
         $this->payments = new ArrayCollection();
-        $this->verificationCode = substr(str_shuffle(str_repeat("abcdefghijklmnopqrstuvwxyz", 5)), 0, 5);
+        $this->verificationCode = mb_substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyz', 5)), 0, 5);
         $this->verified = false;
         $this->active = false;
     }
@@ -142,7 +140,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this;
     }
 
-    public function getDeliveryAddresses(): Collection|null
+    public function getDeliveryAddresses(): null|Collection
     {
         return $this->deliveryAddresses;
     }
@@ -211,7 +209,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -235,20 +233,19 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): User
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): User
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -260,19 +257,19 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->email;
     }
 
-    public function setEmail(string $email): User
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
         return $this;
     }
 
-    public function getPhoneNo(): string|null
+    public function getPhoneNo(): null|string
     {
         return $this->phoneNo;
     }
 
-    public function setPhoneNo(?string $phoneNo): User
+    public function setPhoneNo(?string $phoneNo): self
     {
         $this->phoneNo = $phoneNo;
 
@@ -281,12 +278,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getRoles(): array
     {
-        if (null !== $this->roles){
-        $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
+        if (null !== $this->roles) {
+            $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
-        $roles[] = 'ROLE_USER';
+            $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);}
+            return array_unique($roles);
+        }
+
         return [];
     }
 
@@ -302,7 +301,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->verificationCode;
     }
 
-    public function setVerificationCode(string $verificationCode): User
+    public function setVerificationCode(string $verificationCode): self
     {
         $this->verificationCode = $verificationCode;
 
@@ -314,10 +313,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->active;
     }
 
-    /**
- * @return User 
-*/
-    public function setActive($active): self
+    public function setActive(mixed $active): self
     {
         $this->active = $active;
 
@@ -353,9 +349,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->lastLogin;
     }
 
-    /**
- * @return User 
-*/
     public function setLastLogin(DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
@@ -368,9 +361,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->updatedAt;
     }
 
-    /**
- * @return User 
-*/
     public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
@@ -400,9 +390,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         $this->updatedAt = new DateTime('now');
     }
 
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 
     public function getUserIdentifier(): string
     {
@@ -438,7 +426,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->isVerified;
     }
 
-    public function setVerified(bool $verified): User
+    public function setVerified(bool $verified): self
     {
         $this->verified = $verified;
 
@@ -452,25 +440,24 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this;
     }
 
-    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): User
+    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): self
     {
         $this->oAuth2UserConsents = $oAuth2UserConsents;
 
         return $this;
     }
 
-    public function setCarts(?Collection $carts): User
+    public function setCarts(?Collection $carts): self
     {
         $this->carts = $carts;
 
         return $this;
     }
 
-    public function setOrders(?Collection $orders): User
+    public function setOrders(?Collection $orders): self
     {
         $this->orders = $orders;
 
         return $this;
     }
-
 }

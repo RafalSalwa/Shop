@@ -18,10 +18,7 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'categories', schema: 'interview')]
 class Category
 {
-    /**
-     * @var ArrayCollection
-     */
-    public $products;
+
 
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
@@ -40,7 +37,6 @@ class Category
 
     public function __construct()
     {
-        $this->products = new ArrayCollection();
     }
 
     public function getId(): null|int

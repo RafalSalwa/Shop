@@ -40,7 +40,7 @@ class GenericResponse extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -48,10 +48,8 @@ class GenericResponse extends Message
 
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
-     *
-     * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -59,11 +57,9 @@ class GenericResponse extends Message
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setStatus($var)
+    public function setStatus(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->status = $var;
@@ -73,10 +69,8 @@ class GenericResponse extends Message
 
     /**
      * Generated from protobuf field <code>string message = 2;</code>.
-     *
-     * @return string
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -84,11 +78,9 @@ class GenericResponse extends Message
     /**
      * Generated from protobuf field <code>string message = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setMessage($var)
+    public function setMessage(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->message = $var;

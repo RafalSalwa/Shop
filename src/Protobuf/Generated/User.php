@@ -40,7 +40,7 @@ class User extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
      *
-     * @var \Google\Protobuf\Timestamp|null
+     * @var null|\Google\Protobuf\Timestamp
      */
     protected $created_at;
 
@@ -53,21 +53,19 @@ class User extends Message
      * @var int|string
      * @var string
      * @var string
-     * @var \Google\Protobuf\Timestamp
-     *                                 }
+     * @var Timestamp
+     *                 }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
-        \App\Protobuf\Generated\GPBMetadata\User::initOnce();
+        GPBMetadata\User::initOnce();
         parent::__construct($data);
     }
 
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
-     *
-     * @return int|string
      */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->id;
     }
@@ -75,11 +73,9 @@ class User extends Message
     /**
      * Generated from protobuf field <code>int64 id = 1;</code>.
      *
-     * @param int|string $var
-     *
      * @return $this
      */
-    public function setId($var)
+    public function setId(int|string $var)
     {
         GPBUtil::checkInt64($var);
         $this->id = $var;
@@ -89,10 +85,8 @@ class User extends Message
 
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
-     *
-     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -100,11 +94,9 @@ class User extends Message
     /**
      * Generated from protobuf field <code>string username = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setUsername($var)
+    public function setUsername(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->username = $var;
@@ -114,10 +106,8 @@ class User extends Message
 
     /**
      * Generated from protobuf field <code>string email = 3;</code>.
-     *
-     * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -125,11 +115,9 @@ class User extends Message
     /**
      * Generated from protobuf field <code>string email = 3;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setEmail($var)
+    public function setEmail(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->email = $var;
@@ -139,10 +127,8 @@ class User extends Message
 
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
-     *
-     * @return \Google\Protobuf\Timestamp
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): Timestamp
     {
         return $this->created_at;
     }
@@ -150,11 +136,9 @@ class User extends Message
     /**
      * Generated from protobuf field <code>.google.protobuf.Timestamp created_at = 4;</code>.
      *
-     * @param \Google\Protobuf\Timestamp $var
-     *
      * @return $this
      */
-    public function setCreatedAt($var)
+    public function setCreatedAt(Timestamp $var)
     {
         GPBUtil::checkMessage($var, Timestamp::class);
         $this->created_at = $var;

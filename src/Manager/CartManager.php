@@ -15,8 +15,7 @@ class CartManager
         private readonly CartSessionStorage $cartSessionStorage,
         private readonly CartFactory $cartFactory,
         private readonly EntityManagerInterface $entityManager,
-    ) {
-    }
+    ) {}
 
     public function getCurrentCart(): Cart
     {

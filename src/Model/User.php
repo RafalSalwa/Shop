@@ -5,36 +5,15 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\Address;
-use App\Entity\Cart;
 use App\Entity\OAuth2UserConsent;
-use App\Entity\Order;
 use App\Entity\Payment;
 use App\Entity\Subscription;
-use App\Model\ApiTokenPair;
-use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
-use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\OneToOne;
-use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
-use Doctrine\ORM\Mapping\SequenceGenerator;
-use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
-
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -103,7 +82,7 @@ class User implements JsonSerializable, UserInterface
         return $this;
     }
 
-    public function getDeliveryAddresses(): Collection|null
+    public function getDeliveryAddresses(): null|Collection
     {
         return $this->deliveryAddresses;
     }
@@ -172,7 +151,7 @@ class User implements JsonSerializable, UserInterface
         return $this->username;
     }
 
-    public function setUsername(string $username): User
+    public function setUsername(string $username): self
     {
         $this->username = $username;
 
@@ -184,20 +163,19 @@ class User implements JsonSerializable, UserInterface
         return $this->firstname;
     }
 
-    public function setFirstname(?string $firstname): User
+    public function setFirstname(?string $firstname): self
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-
     public function getLastname(): ?string
     {
         return $this->lastname;
     }
 
-    public function setLastname(?string $lastname): User
+    public function setLastname(?string $lastname): self
     {
         $this->lastname = $lastname;
 
@@ -209,7 +187,7 @@ class User implements JsonSerializable, UserInterface
         return $this->email;
     }
 
-    public function setEmail(string $email): User
+    public function setEmail(string $email): self
     {
         $this->email = $email;
 
@@ -218,12 +196,14 @@ class User implements JsonSerializable, UserInterface
 
     public function getRoles(): array
     {
-        if (null !== $this->roles){
-        $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
+        if (null !== $this->roles) {
+            $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
-        $roles[] = 'ROLE_USER';
+            $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);}
+            return array_unique($roles);
+        }
+
         return [];
     }
 
@@ -233,7 +213,6 @@ class User implements JsonSerializable, UserInterface
 
         return $this;
     }
-
 
     public function getCreatedAt(): DateTimeImmutable
     {
@@ -264,9 +243,6 @@ class User implements JsonSerializable, UserInterface
         return $this->lastLogin;
     }
 
-    /**
- * @return User 
-*/
     public function setLastLogin(DateTime $lastLogin): self
     {
         $this->lastLogin = $lastLogin;
@@ -279,9 +255,6 @@ class User implements JsonSerializable, UserInterface
         return $this->updatedAt;
     }
 
-    /**
- * @return User 
-*/
     public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
@@ -299,9 +272,7 @@ class User implements JsonSerializable, UserInterface
         ];
     }
 
-    public function eraseCredentials(): void
-    {
-    }
+    public function eraseCredentials(): void {}
 
     public function getUserIdentifier(): string
     {
@@ -332,22 +303,21 @@ class User implements JsonSerializable, UserInterface
         return $this;
     }
 
-
-    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): User
+    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): self
     {
         $this->oAuth2UserConsents = $oAuth2UserConsents;
 
         return $this;
     }
 
-    public function setCarts(?Collection $carts): User
+    public function setCarts(?Collection $carts): self
     {
         $this->carts = $carts;
 
         return $this;
     }
 
-    public function setOrders(?Collection $orders): User
+    public function setOrders(?Collection $orders): self
     {
         $this->orders = $orders;
 
@@ -359,9 +329,10 @@ class User implements JsonSerializable, UserInterface
         return $this->token;
     }
 
-    public function setToken(string $token): User
+    public function setToken(string $token): self
     {
         $this->token = $token;
+
         return $this;
     }
 
@@ -370,9 +341,10 @@ class User implements JsonSerializable, UserInterface
         return $this->refreshToken;
     }
 
-    public function setRefreshToken(?string $refreshToken): User
+    public function setRefreshToken(?string $refreshToken): self
     {
         $this->refreshToken = $refreshToken;
+
         return $this;
     }
 
@@ -387,16 +359,17 @@ class User implements JsonSerializable, UserInterface
         $arrResponse = json_decode($response->getContent(), true);
         $this->setId($arrResponse['user']['id']);
         $this->setEmail($arrResponse['user']['email']);
-
     }
 
     public function getPassword(): string
     {
         return $this->password;
     }
-    public function setPassword(string $password): User
+
+    public function setPassword(string $password): self
     {
         $this->password = $password;
+
         return $this;
     }
 }

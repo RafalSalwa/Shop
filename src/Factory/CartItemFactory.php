@@ -10,16 +10,15 @@ use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
 use App\Exception\ItemNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
-use Mockery\Exception;
 use Psr\Log\LoggerInterface;
+use function is_string;
 
 class CartItemFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityRepository,
         private readonly LoggerInterface $logger
-    ) {
-    }
+    ) {}
 
     public function create(string $entityType, int $id): CartItemInterface
     {
@@ -34,13 +33,14 @@ class CartItemFactory
 
             /** @var CartInsertableInterface $entity */
             $entity = $this->entityRepository->getRepository($entityType)
-                ->find($id);
+                ->find($id)
+            ;
             if (null === $entity) {
                 throw new ItemNotFoundException();
             }
 
             return $entity->toCartItem();
-        }catch(\Exception $e){
+        } catch (\Exception $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
         }
     }

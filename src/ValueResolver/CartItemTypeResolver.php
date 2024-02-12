@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\OptionsResolver\Exception\InvalidArgumentException;
-
 use function is_string;
 
 class CartItemTypeResolver implements ValueResolverInterface
@@ -18,7 +17,7 @@ class CartItemTypeResolver implements ValueResolverInterface
     /** @return array<int, class-string> */
     public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ($argument->getName() !== 'type') {
+        if ('type' !== $argument->getName()) {
             return [];
         }
 

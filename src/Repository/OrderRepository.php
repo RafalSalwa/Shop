@@ -20,9 +20,11 @@ class OrderRepository extends ServiceEntityRepository
     public function save(Order $order): void
     {
         $this->getEntityManager()
-            ->persist($order);
+            ->persist($order)
+        ;
         $this->getEntityManager()
-            ->flush();
+            ->flush()
+        ;
     }
 
     public function fetchOrderDetails(int $id): ?Order
@@ -34,10 +36,12 @@ class OrderRepository extends ServiceEntityRepository
             ->leftJoin('o.address', 'a')
             ->where('o.id = :id')
             ->orderBy('o.createdAt', 'DESC')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+        ;
 
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     public function fetchOrders(User $user, int $page)
@@ -50,7 +54,8 @@ class OrderRepository extends ServiceEntityRepository
             ->where('o.user = :user')
             ->orderBy('o.status', 'DESC')
             ->addOrderBy('o.createdAt', 'DESC')
-            ->setParameter('user', $user);
+            ->setParameter('user', $user)
+        ;
 
         return (new Paginator($qb))->paginate($page);
     }

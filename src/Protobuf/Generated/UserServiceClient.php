@@ -15,19 +15,17 @@ class UserServiceClient extends BaseStub
      * @param array         $opts     channel options
      * @param \Grpc\Channel $channel  (optional) re-use channel object
      */
-    public function __construct($hostname, $opts, $channel = null)
+    public function __construct(string $hostname, array $opts, \Grpc\Channel $channel = null)
     {
         parent::__construct($hostname, $opts, $channel);
     }
 
     /**
-     * @param \App\Protobuf\Generated\GetUserRequest $argument input argument
-     * @param array                                  $metadata metadata
-     * @param array                                  $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param GetUserRequest $argument input argument
+     * @param array          $metadata metadata
+     * @param array          $options  call options
      */
-    public function GetUserById(GetUserRequest $argument, $metadata = [], $options = [])
+    public function GetUserById(GetUserRequest $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.UserService/GetUserById',
@@ -39,13 +37,11 @@ class UserServiceClient extends BaseStub
     }
 
     /**
-     * @param \App\Protobuf\Generated\GetUserRequest $argument input argument
-     * @param array                                  $metadata metadata
-     * @param array                                  $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param GetUserRequest $argument input argument
+     * @param array          $metadata metadata
+     * @param array          $options  call options
      */
-    public function GetUserDetails(GetUserRequest $argument, $metadata = [], $options = [])
+    public function GetUserDetails(GetUserRequest $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.UserService/GetUserDetails',
@@ -57,13 +53,11 @@ class UserServiceClient extends BaseStub
     }
 
     /**
-     * @param \App\Protobuf\Generated\VerifyUserRequest $argument input argument
-     * @param array                                     $metadata metadata
-     * @param array                                     $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param VerifyUserRequest $argument input argument
+     * @param array             $metadata metadata
+     * @param array             $options  call options
      */
-    public function VerifyUser(VerifyUserRequest $argument, $metadata = [], $options = [])
+    public function VerifyUser(VerifyUserRequest $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.UserService/VerifyUser',
@@ -75,13 +69,11 @@ class UserServiceClient extends BaseStub
     }
 
     /**
-     * @param \App\Protobuf\Generated\ChangePasswordRequest $argument input argument
-     * @param array                                         $metadata metadata
-     * @param array                                         $options  call options
-     *
-     * @return \Grpc\UnaryCall
+     * @param ChangePasswordRequest $argument input argument
+     * @param array                 $metadata metadata
+     * @param array                 $options  call options
      */
-    public function ChangePassword(ChangePasswordRequest $argument, $metadata = [], $options = [])
+    public function ChangePassword(ChangePasswordRequest $argument, array $metadata = [], array $options = []): \Grpc\UnaryCall
     {
         return $this->_simpleRequest(
             '/intrvproto.UserService/ChangePassword',

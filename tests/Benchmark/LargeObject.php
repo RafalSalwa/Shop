@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Benchmark;
 
 use Closure;
@@ -15,23 +17,21 @@ class LargeObject
 
     public function getItemProcessorStatic(): Closure
     {
-        return static function () {
-        };
+        return static function (): void {};
     }
 
     public function getItemProcessor(): Closure
     {
-        return function () {
-        };
+        return static function (): void {};
     }
 
     public function getItemProcessorArrowStatic(): Closure
     {
-        return static fn() => "";
+        return static fn () => '';
     }
 
     public function getItemProcessorArrow(): Closure
     {
-        return fn() => "";
+        return static fn () => '';
     }
 }

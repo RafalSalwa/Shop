@@ -33,7 +33,7 @@ readonly class SubscriptionStockService
             if (!$product) {
                 throw new ItemNotFoundException(sprintf('Product #%d not found.', $entity->getId()));
             }
-            if (0 === $product->getUnitsInStock()) {
+            if ($product->getUnitsInStock() ===0) {
                 throw new ProductStockDepletedException('For this product stock is depleted.');
             }
         }
@@ -61,7 +61,7 @@ readonly class SubscriptionStockService
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
-        if (1 === $product->getUnitsInStock()) {
+        if ($product->getUnitsInStock() === 1) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

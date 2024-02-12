@@ -32,7 +32,7 @@ class ChangePasswordResponse extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -40,10 +40,8 @@ class ChangePasswordResponse extends Message
 
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
-     *
-     * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -51,11 +49,9 @@ class ChangePasswordResponse extends Message
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setStatus($var)
+    public function setStatus(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->status = $var;

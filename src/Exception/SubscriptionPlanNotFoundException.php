@@ -1,13 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
+use Exception;
 use Throwable;
 
-class SubscriptionPlanNotFoundException extends \Exception
+class SubscriptionPlanNotFoundException extends Exception
 {
-    public function __construct(string $message = '', Throwable $previous = null)
+    public function __construct(string $message = '', int $code=404, ?Throwable $previous = null)
     {
-        parent::__construct($message, 404, $previous);
+        parent::__construct($message, $code, $previous);
     }
 }

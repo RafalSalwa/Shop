@@ -18,9 +18,7 @@ use function memory_get_usage;
 
 class BasicMetricsExporter
 {
-    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock)
-    {
-    }
+    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock) {}
 
     public function generate(): void
     {
@@ -43,10 +41,12 @@ class BasicMetricsExporter
                 static function (ObserverInterface $observer): void {
                     $observer->observe(memory_get_usage(true));
                 },
-            );
+            )
+        ;
 
         $serverDuration = $meter
-            ->createHistogram('http.server.duration', 'ms', 'measures the duration inbound HTTP requests');
+            ->createHistogram('http.server.duration', 'ms', 'measures the duration inbound HTTP requests')
+        ;
 
         // During the time range (T0, T1]:
         $serverDuration->record(

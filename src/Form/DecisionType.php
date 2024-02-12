@@ -14,6 +14,7 @@ class DecisionType extends AbstractType
     {
         $builder
             ->add('yes', SubmitType::class)
-            ->add('no', SubmitType::class);
+            ->add('no', SubmitType::class)
+        ;
     }
 }
