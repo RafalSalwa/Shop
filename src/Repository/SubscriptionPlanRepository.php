@@ -10,7 +10,7 @@ use Doctrine\ORM\Cache;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
-class PlanRepository extends ServiceEntityRepository
+class SubscriptionPlanRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {

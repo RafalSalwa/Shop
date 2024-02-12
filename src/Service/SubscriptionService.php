@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\User;
-use App\Repository\PlanRepository;
+use App\Repository\SubscriptionPlanRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 
 class SubscriptionService
 {
     public function __construct(
-        private readonly PlanRepository $planRepository,
-        private readonly UserRepository $userRepository,
-        private readonly Security $security,
+        private readonly SubscriptionPlanRepository $planRepository,
+        private readonly UserRepository             $userRepository,
+        private readonly Security                   $security,
     ) {
     }
 

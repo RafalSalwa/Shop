@@ -35,7 +35,7 @@ class CartSessionStorage
     public function getCart(): ?Cart
     {
         return $this->cartRepository->findOneBy([
-            'user' => $this->getUser(),
+            'userId' => $this->getUser()->getId(),
             'status' => Cart::STATUS_CREATED,
         ], [
             'createdAt' => 'DESC',

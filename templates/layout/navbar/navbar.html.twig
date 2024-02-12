@@ -40,18 +40,18 @@
                 <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse" style="margin-top:-1px; height: 66px;">
+                <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse" style="height: 65px;">
                     <div class="navbar-nav mr-auto py-0">
                         <a href="{{ path("app_index") }}" class="nav-item nav-link active">Home</a>
                         <a href="{{ path("products_index") }}" class="nav-item nav-link">Shop</a>
                         <a href="{{ path("subscriptions_index") }}" class="nav-item nav-link">Subscriptions</a>
                     </div>
-                    <div class="navbar-nav ml-auto py-0" style="height:100%;">
+                    <div class="navbar-nav ml-auto py-0">
                         {% if not app.user %}
                             <a href="{{ path('app_login') }}" class="nav-item nav-link">Login</a>
-                            <a href="{{ path('app_register') }}" class="nav-item nav-link">Register</a>
+                            <a href="{{ path('register_index') }}" class="nav-item nav-link">Register</a>
                         {% else %}
-                            <a href="{{ path('user_profile') }}" class="btn border">
+                            <a href="{{ path('user_profile') }}" class="btn">
                                 <i class="fas fa-user text-primary m-1" style="font-size: 22px"></i>
                                     {% if app.user.subscription is not empty %}
                                        <p class="subscription-status text-primary" style="font-size: 12px; margin:0;">

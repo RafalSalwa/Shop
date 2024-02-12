@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirm{% endblock %}
+
+{% block body %}
+    {% for flash_error in app.flashes('verify_email_error') %}
+        <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+    {% endfor %}
+
+    <div class="container-fluid d-flex flex-column bg-secondary text-dark py-5 py-10">
+        <div id="intro" class="bg-image shadow-2-strong">
+            <div class="mask d-flex align-items-center">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-xl-5 col-md-8">
+
+                            {{ form_errors(confirmationForm) }}
+                            {{ form_start(confirmationForm) }}
+                            <p class="text-center mb-5" style="font-size: 10px;">
+                                It's great to have you here, in the last step please enter the code sent to your email address.<br/>
+                                Psst. If you don't receive email, you can check <a href="{{ mailer_client_url }}">mailpit</a>.
+                            </p>
+                            <div class="form-outline mb-4">
+                                {{ form_row(confirmationForm.confirmationCode) }}
+                            </div>
+
+                            <div class="row mb-4">
+                                {% if error is defined and error is not empty %}
+                                    {% if error.messageKey == 'Invalid credentials.' %}
+                                        <p class="w3-error">&#x26D4;&#xFE0F; Invalid email address or password.<br>Please
+                                            check your
+                                            details and try again.</p>
+                                    {% else %}
+                                        <p class="w3-error">
+                                            &#x26D4;&#xFE0F; {{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            <!-- Submit button -->
+                            <button type="submit" class="btn btn-primary btn-block">Confirm</button>
+                            {{ form_end(confirmationForm) }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+{% block scripts %}
+    <script>
+        $( document ).ready(function() {
+            min = 100;
+            max = 999999;
+            result = Math.floor(Math.random() * (max - min) + min);
+
+            $("#registration_form_email").val('interview' + result + '@interview.com');
+            $("#registration_form_password_first").val('VeryG00dPass!');
+            $("#registration_form_password_second").val('VeryG00dPass!');
+        });
+    </script>
+{% endblock %}
