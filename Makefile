@@ -3,7 +3,12 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 all: test testrace
 
 up:
-	docker compose up -d && docker compose logs -f
+	symfony server:stop
+	docker compose up -d
+	symfony server:start -d --no-tls
+	symfony run -d --watch=config,src,templates,vendor symfony
+	symfony run -d yarn encore dev-server --port 9001
+	symfony server:log
 
 compose-down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml

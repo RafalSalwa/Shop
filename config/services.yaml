@@ -1,6 +1,4 @@
 parameters:
-  .container.dumper.inline_factories: true
-  debug.container.dump: false
 
 services:
   _defaults:
@@ -12,6 +10,8 @@ services:
       - connect:
           - '%env(REDIS_HOST)%'
           - '%env(int:REDIS_PORT)%'
+      - auth:
+          - '%env(REDIS_PASSWORD)%'
   App\:
     resource: '../src/'
     exclude:
@@ -19,15 +19,19 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Tests/'
+
+  app.twig_extension:
+    class: Twig\DeferredExtension\DeferredExtension
+    public: false
+    tags:
+      - { name: twig.extension }
+
   App\ValueResolver\CartItemTypeResolver:
     tags:
       - controller.argument_value_resolver:
           name: cart_item_type
           priority: 150
 
-  Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
-    arguments:
-      - '@Redis'
   League\Bundle\OAuth2ServerBundle\Entity\AccessToken:
     class: App\Entity\AccessToken
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:
@@ -40,14 +44,12 @@ services:
   App\EventListener\OrderConfirmedListener:
     arguments:
       $fromEmail: '%env(MAILER_FROM)%'
-  App\EventListener\ProductDepletedListener:
-    tags:
-      - { name: 'kernel.event_listener', event: 'product.depleted', method: 'onProductDepleted' }
   App\Service\AuthGRPCService:
     arguments:
       $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
       $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
-  App\Security\ProductVoter:
+
+  App\Security\CartAddVoter:
     tags: [ 'security.voter' ]
   App\Security\SubscriptionPlanVoter:
     tags: [ 'security.voter' ]

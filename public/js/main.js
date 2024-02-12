@@ -59,46 +59,51 @@
         }
     });
 
-
-    // Related carousel
-    $('.related-carousel').owlCarousel({
-        loop: true,
-        margin: 29,
-        nav: false,
-        autoplay: true,
-        smartSpeed: 1000,
-        responsive: {
-            0:{
-                items:1
-            },
-            576:{
-                items:2
-            },
-            768:{
-                items:3
-            },
-            992:{
-                items:4
-            }
-        }
-    });
-
-
     // Product Quantity
     $('.quantity button').on('click', function () {
         var button = $(this);
         var oldValue = button.parent().parent().find('input').val();
         if (button.hasClass('btn-plus')) {
             var newVal = parseFloat(oldValue) + 1;
+            if(newVal>= 10){
+                newVal =10;
+            }
         } else {
-            if (oldValue > 0) {
+            if (oldValue > 1) {
                 var newVal = parseFloat(oldValue) - 1;
             } else {
-                newVal = 0;
+                newVal = 1;
             }
         }
         button.parent().parent().find('input').val(newVal);
     });
-    
+    $('.btn-cart-add').on('click', function () {
+        var button = $(this);
+        var quantity = button.parent().parent().find('input').val();
+        $.ajax({
+            url: button.data('url'),
+            method: "post",
+            dataType: "json",
+            contentType: "application/json",
+            data:
+                JSON.stringify({
+                    'id': button.data('id'),
+                    'type': button.data('type'),
+                    'quantity':parseInt(quantity)
+                })
+        })
+            .done(res => {
+                console.log(res);
+            });
+    });
+    /*
+    data:
+                JSON.stringify({
+                    'type': button.data('type'),
+                    'id': button.data('id'),
+                    'quantity':quantity
+            })
+     */
+
 })(jQuery);
 

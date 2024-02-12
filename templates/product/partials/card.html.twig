@@ -1,28 +1,27 @@
-<div class="col-lg-6 col-xxl-3 mb-5">
-    <div class="card bg-light border-0 h-100">
-        <div class="card-body text-center p-4 p-lg-5 pt-0 pt-lg-0">
-            <h3 class="fs-6 fw-bold card-product-title mt-20 mb-20">{{ product.name|capitalize }}</h3>
-            <p class="mb-0">{{ product.category.name }}<br/>
-                price: {{ product.unitPrice(true)|format_currency('USD') }}<br/>
-                stock: {{ product.unitsInStock }}
-            </p>
-            {% if product.unitsInStock > 0 %}
-                {% if is_granted('ADD_TO_CART', product) %}
-                    {% if add_to_cart == "true" %}
-                        <a class="btn btn-primary" href={{ path("cart_add", {type:"product", id: product.id}) }}>Add to
-                            cart</a>
-                    {% else %}
-                        <a class="btn btn-primary" href={{ path("product_details", { id: product.id}) }}>Show</a>
-                    {% endif %}
-                {% else %}
-                    <span class="d-inline-block" tabindex="0" data-bs-toggle="tooltip"
-                          title="Higher subscription plan required({{ product.getRequiredSubscription().getName() }})">
-                        <button class="btn btn-primary" type="button" disabled>Show</button>
-                    </span>
+{% if product.unitsInStock > 0 %}
+    <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+        <div class="card product-item border-0 mb-4">
+            <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                <img class="img-fluid w-100" src="https://picsum.photos/seed/{{ random() }}/500" alt="">
+            </div>
+            <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                <h6 class="text-truncate mb-3">{{ product.name|capitalize }} ({{ product.unitsInStock }})</h6>
+                <div class="d-flex justify-content-center">
+                    <h6>{{ product.grossPrice|number_format(2, '.', ',') }}</h6>
+                    <h6 class="text-muted ml-2">
+                        <del>{{ product.price }}</del>
+                    </h6>
+                </div>
+            </div>
+            <div class="card-footer d-flex justify-content-between bg-light border">
+                <a href="{{ path("products_details", { id: product.id}) }}" class="btn btn-sm text-dark p-0"><i
+                            class="fas fa-eye text-primary mr-1"></i>View
+                    Detail</a>
+                {% if app.user and is_granted('ADD_TO_CART', product) %}
+                    <a href="{{ path("cart_add", {type:"product", id: product.id, quantity:1}) }}" class="btn btn-sm text-dark p-0"><i
+                                class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                 {% endif %}
-            {% else %}
-                <a class="btn btn-primary disabled" href="#">No stock</a>
-            {% endif %}
+            </div>
         </div>
     </div>
-</div>
+{% endif %}

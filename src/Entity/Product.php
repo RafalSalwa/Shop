@@ -29,10 +29,10 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'product_id', type: Types::INTEGER, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'products_ProductID_seq', allocationSize: 1, initialValue: 80)]
-    private $id;
+    private readonly int $id;
 
     #[Column(name: 'product_name', type: Types::STRING, length: 40)]
-    private $name;
+    private readonly string $name;
 
     #[Column(name: 'supplier_id', type: Types::SMALLINT, nullable: true)]
     private $supplierId;
@@ -57,10 +57,10 @@ class Product implements CartInsertableInterface, StockManageableInterface
     private int $unitsOnOrder;
 
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
-    #[JoinColumn(referencedColumnName: 'plan_id', nullable: true)]
-    private ?SubscriptionPlan $requiredSubscription = null;
+    #[JoinColumn(referencedColumnName: 'plan_id', nullable: false)]
+    private SubscriptionPlan $requiredSubscription;
 
-    public function getRequiredSubscription(): ?SubscriptionPlan
+    public function getRequiredSubscription(): SubscriptionPlan
     {
         return $this->requiredSubscription;
     }
@@ -80,9 +80,11 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->price;
     }
 
-    public function formatedPrice(): float|int
+    public function grossPrice(): string
     {
-        return $this->getPrice() / 100;
+        $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
+
+        return bcdiv($taxedPrice, '100', 2);
     }
 
     public function getId(): int

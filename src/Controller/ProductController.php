@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class ProductController extends AbstractController
 {
-    #[Route('/products/{page}', name: 'product_index')]
+    #[Route('/products/{page}', name: 'products_index', defaults: ['page' => '1',], methods: ['GET'])]
     public function index(int $page, ProductRepository $productRepository): Response
     {
         return $this->render(
@@ -20,7 +20,7 @@ class ProductController extends AbstractController
         );
     }
 
-    #[Route('/product/{id}', name: 'product_details')]
+    #[Route('/product/{id}', name: 'products_details')]
     public function details(int $id, ProductRepository $productRepository): Response
     {
         $product = $productRepository->find($id);

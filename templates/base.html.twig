@@ -22,63 +22,16 @@
     <!-- Libraries Stylesheet -->
     <link href="{{ asset('lib/owlcarousel/assets/owl.carousel.min.css') }}" rel="stylesheet">
 
-
     <!-- Customized Bootstrap Stylesheet -->
-
-    {#    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" #}
-    {#          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> #}
-    {#    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" #}
-    {#            integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" #}
-    {#            crossorigin="anonymous"></script> #}
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
 </head>
 
 <body>
-<!-- Topbar Start -->
-<div class="container-fluid">
-    <div class="row align-items-center py-3 px-xl-5">
-        <div class="col-lg-3 d-none d-lg-block">
-            <a href="{{ path("app_index") }}" class="text-decoration-none">
-                <h1 class="m-0 display-5 font-weight-semi-bold"><span
-                            class="text-primary font-weight-bold border px-3 mr-1">R</span>Shop</h1>
-            </a>
-        </div>
-        <div class="col-lg-6 col-6 text-left">
-            <form action="">
-                <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Search">
-                    <div class="input-group-append">
-                            <span class="input-group-text bg-transparent text-primary">
-                                <i class="fa fa-search"></i>
-                            </span>
-                    </div>
-                </div>
-            </form>
-        </div>
-        <div class="col-lg-3 col-6 text-right">
-            <a href="{{ path('whishlist_index') }}" class="btn border">
-                <i class="fas fa-heart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-            <a href="{{ path('cart_index') }}" class="btn border">
-                <i class="fas fa-shopping-cart text-primary"></i>
-                <span class="badge">0</span>
-            </a>
-            {% if app.user is not empty %}
-                <a href="{{ path('account_index') }}" class="btn border">
-                    <i class="fas fa-user text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
-            {% endif %}
-        </div>
+{% include 'layout/topbar/topbar.html.twig' %}
+{% include 'layout/navbar/navbar.html.twig' %}
 
-    </div>
-</div>
-<!-- Topbar End -->
-
-{% block body %}
-{% endblock %}
+{% block body %}{% endblock %}
 
 <!-- Footer Start -->
 <div class="container-fluid bg-secondary text-dark mt-5 pt-5">
@@ -160,7 +113,6 @@
 </div>
 <!-- Footer End -->
 
-
 <!-- Back to Top -->
 <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
@@ -177,6 +129,7 @@
 
 <!-- Template Javascript -->
 <script src="{{ asset('js/main.js') }}"></script>
+{% block scripts %}{% endblock %}
 </body>
 
 </html>

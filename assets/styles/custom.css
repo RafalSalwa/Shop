@@ -1,0 +1,25 @@
+.card.product-item {
+    min-height: 520px;
+
+    .product-img {
+        min-height: 320px;
+    }
+}
+
+.py-10 {
+    padding-top: 6rem !important;
+    padding-bottom: 6rem !important;
+}
+
+.vendor-item {
+    min-height: 350px;
+    object-fit: contain;
+    display: flex;
+    justify-content: center;
+}
+
+.vendor-carousel .owl-item img {
+    margin: auto;
+    display: block;
+    width: 90%;
+}

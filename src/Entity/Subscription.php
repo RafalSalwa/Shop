@@ -29,7 +29,7 @@ class Subscription
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
     #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
-    private ?SubscriptionPlan $subscriptionPlan = null;
+    private ?SubscriptionPlan $plan = null;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: true)]
     private int $tier;
@@ -50,14 +50,14 @@ class Subscription
     #[Column(name: 'ends_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $endsAt = null;
 
-    public function getSubscriptionPlan(): ?SubscriptionPlan
+    public function getPlan(): ?SubscriptionPlan
     {
-        return $this->subscriptionPlan;
+        return $this->plan;
     }
 
-    public function setSubscriptionPlan(SubscriptionPlan $subscriptionPlan): self
+    public function setPlan(SubscriptionPlan $plan): self
     {
-        $this->subscriptionPlan = $subscriptionPlan;
+        $this->plan = $plan;
 
         return $this;
     }

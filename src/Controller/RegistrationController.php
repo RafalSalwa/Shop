@@ -6,9 +6,10 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\RegistrationFormType;
-use App\Security\AppInterviewAuthenticator;
+use App\Security\AuthApiAuthenticator;
 use App\Security\EmailVerifier;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,8 +31,6 @@ class RegistrationController extends AbstractController
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
-        UserAuthenticatorInterface $userAuthenticator,
-        AppInterviewAuthenticator $authenticator,
         EntityManagerInterface $entityManager,
     ): Response {
         $user = new User();
@@ -55,9 +54,6 @@ class RegistrationController extends AbstractController
                     ->subject('Please Confirm your Email')
                     ->htmlTemplate('registration/confirmation_email.html.twig'),
             );
-            // do anything else you need here, like send an email
-
-            return $userAuthenticator->authenticateUser($user, $authenticator, $request);
         }
 
         return $this->render(

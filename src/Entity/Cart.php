@@ -55,10 +55,9 @@ class Cart implements JsonSerializable
     #[Groups('cart')]
     private Collection $items;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
+    #[Column(name: 'user_id', type: Types::INTEGER, nullable: false)]
     #[Groups('carts')]
-    private User $user;
+    private int $userId;
 
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
@@ -159,14 +158,21 @@ class Cart implements JsonSerializable
             ->exists(fn($key, $element) => $element::class === $cartItem::class);
     }
 
-    public function getUser(): User
+    public function getUserId(): int
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(User $user): self
+    public function setUserId(int $userId): self
     {
-        $this->user = $user;
+        $this->userId = $userId;
+
+        return $this;
+    }
+
+    public function setUser(\App\Model\User $user): self
+    {
+        $this->setUserId($user->getId());
 
         return $this;
     }

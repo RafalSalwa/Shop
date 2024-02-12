@@ -34,9 +34,8 @@ class OAuth2UserConsent
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
     private ?Client $client = null;
 
-    #[ORM\ManyToOne(inversedBy: 'oAuth2UserConsents')]
-    #[ORM\JoinColumn(nullable: false, referencedColumnName: 'user_id')]
-    private ?User $user = null;
+    #[ORM\Column]
+    private int $userId;
 
     public function getId(): ?int
     {

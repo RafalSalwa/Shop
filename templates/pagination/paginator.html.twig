@@ -1,40 +1,21 @@
-<ul class="pagination pagination-md justify-content-center">
-    {% if paginator.hasPreviousPage %}
-        <li class="page-item">
-            <a class="page-link"
-               href="{{ path(app.request.get('_route'), {page: paginator.previousPage}) }}"
-               rel="previous">
-                <i class="fa fw fa-long-arrow-left"></i> previous
-            </a>
-        </li>
-    {% else %}
-        <li class="page-item disabled">
-            <span class="page-link"><i class="fa fw fa-arrow-left"></i> previous</span>
-        </li>
-    {% endif %}
-
-    {% for i in 1..paginator.lastPage %}
-        {% if i == paginator.currentPage %}
-            <li class="page-item active">
-                <span class="page-link">{{ i }} <span class="sr-only">current</span></span>
+<div class="col-12 pb-1">
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center mb-3">
+            <li class="page-item {% if not paginator.hasPreviousPage %}disabled{% endif %}">
+                <a class="page-link" href="{{ path(app.request.get('_route'), {page: paginator.previousPage}) }}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
             </li>
-        {% else %}
-            <li class="page-item"><a class="page-link"
-                                     href="{{ path(app.request.get('_route'), {page: i}) }}">{{ i }}</a>
+            {% for i in 1..paginator.lastPage %}
+                <li class="page-item {% if i == paginator.currentPage %}active{% endif%}"><a class="page-link" href="{{ path(app.request.get('_route'), {page: i}) }}">{{ i }}</a></li>
+            {% endfor %}
+            <li class="page-item {% if not paginator.hasNextPage %} disabled {% endif %}">
+                <a class="page-link" href="{{ path(app.request.get('_route'), {page: paginator.nextPage}) }}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
             </li>
-        {% endif %}
-    {% endfor %}
-
-    {% if paginator.hasNextPage %}
-        <li class="page-item">
-            <a class="page-link"
-               href="{{ path(app.request.get('_route'), {page: paginator.nextPage}) }}">
-                <span>next <i class="fa fw fa-long-arrow-right"></i></span>
-            </a>
-        </li>
-    {% else %}
-        <li class="page-item disabled">
-            <span class="page-link">next <i class="fa fw fa-long-arrow-right"></i></span>
-        </li>
-    {% endif %}
-</ul>
+        </ul>
+    </nav>
+</div>

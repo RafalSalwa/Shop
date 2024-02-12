@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Model\ApiTokenPair;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -20,6 +21,7 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
+use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -31,17 +33,17 @@ use function array_key_exists;
 use function array_unique;
 
 #[Entity(repositoryClass: UserRepository::class)]
-#[Table(name: 'intrv_user', schema: 'interview')]
 #[HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[UniqueEntity(fields: ['email'], message: 'address is already in use')]
 class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
     #[Id]
-    #[GeneratedValue]
+    #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
+    #[SequenceGenerator(sequenceName: 'user_userID_seq', allocationSize: 1, initialValue: 1)]
     private ?int $id = null;
 
-    #[Column(name: 'username', type: Types::STRING, length: 180)]
+    #[Column(name: 'username', type: Types::STRING, length: 180, nullable: true)]
     private string $username;
 
     #[Column(name: 'pass', type: Types::STRING, length: 100)]
@@ -115,14 +117,17 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[JoinColumn(name: 'subscription_id', referencedColumnName: 'subscription_id', nullable: true)]
     private ?Subscription $subscription = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $isVerified = false;
+    protected ApiTokenPair $tokenPair;
+    protected string $refreshToken;
 
     public function __construct()
     {
         $this->carts = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
         $this->payments = new ArrayCollection();
+        $this->verificationCode = substr(str_shuffle(str_repeat("abcdefghijklmnopqrstuvwxyz", 5)), 0, 5);
+        $this->verified = false;
+        $this->active = false;
     }
 
     public function getSubscription(): ?Subscription
@@ -206,6 +211,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->username;
     }
 
+    public function setUsername(string $username): User
+    {
+        $this->username = $username;
+
+        return $this;
+    }
+
     public function getPassword(): string
     {
         return $this->password;
@@ -223,9 +235,24 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->firstname;
     }
 
+    public function setFirstname(?string $firstname): User
+    {
+        $this->firstname = $firstname;
+
+        return $this;
+    }
+
+
     public function getLastname(): ?string
     {
         return $this->lastname;
+    }
+
+    public function setLastname(?string $lastname): User
+    {
+        $this->lastname = $lastname;
+
+        return $this;
     }
 
     public function getEmail(): string
@@ -233,23 +260,36 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->email;
     }
 
+    public function setEmail(string $email): User
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
     public function getPhoneNo(): string|null
     {
         return $this->phoneNo;
     }
 
+    public function setPhoneNo(?string $phoneNo): User
+    {
+        $this->phoneNo = $phoneNo;
+
+        return $this;
+    }
+
     public function getRoles(): array
     {
+        if (null !== $this->roles){
         $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
         $roles[] = 'ROLE_USER';
 
-        return array_unique($roles);
+        return array_unique($roles);}
+        return [];
     }
 
-    /**
- * @return User 
-*/
     public function setRoles($roles): self
     {
         $this->roles = $roles;
@@ -260,6 +300,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     public function getVerificationCode(): string
     {
         return $this->verificationCode;
+    }
+
+    public function setVerificationCode(string $verificationCode): User
+    {
+        $this->verificationCode = $verificationCode;
+
+        return $this;
     }
 
     public function getActive(): bool
@@ -359,7 +406,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getUserIdentifier(): string
     {
-        return $this->username;
+        return (string)$this->id;
     }
 
     public function getOAuth2UserConsents(): ?Collection
@@ -391,10 +438,39 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->isVerified;
     }
 
+    public function setVerified(bool $verified): User
+    {
+        $this->verified = $verified;
+
+        return $this;
+    }
+
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
 
         return $this;
     }
+
+    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): User
+    {
+        $this->oAuth2UserConsents = $oAuth2UserConsents;
+
+        return $this;
+    }
+
+    public function setCarts(?Collection $carts): User
+    {
+        $this->carts = $carts;
+
+        return $this;
+    }
+
+    public function setOrders(?Collection $orders): User
+    {
+        $this->orders = $orders;
+
+        return $this;
+    }
+
 }

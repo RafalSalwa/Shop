@@ -15,6 +15,7 @@ use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Lock\LockFactory;
 
 class CartService
@@ -26,6 +27,7 @@ class CartService
         private readonly CartItemFactory $cartItemFactory,
         private readonly ProductStockService $productStockService,
         private readonly LockFactory $cartLockFactory,
+        private readonly LoggerInterface $logger
     ) {
     }
 
@@ -97,11 +99,12 @@ class CartService
 
     public function makeCartItem(object $entity): CartItem|SubscriptionPlanCartItem|ProductCartItem
     {
-        return $this->cartItemFactory->createCartItem($entity);
+        return $this->cartItemFactory->create($entity);
     }
 
-    public function add(CartItemInterface $item): void
+    public function add(CartItemInterface $item, int $quantity): void
     {
+        try{
         $lock = $this->cartLockFactory->createLock('cart_item_add');
         $lock->acquire(true);
 
@@ -113,9 +116,12 @@ class CartService
         $cart->addItem($item);
         $this->save($cart);
 
-        $this->productStockService->changeStock($item, Product::STOCK_DECREASE, 1);
+        $this->productStockService->changeStock($item, Product::STOCK_DECREASE, $quantity);
 
         $lock->release();
+        }catch(\Exception $e){
+            $this->logger->error($e->getMessage(), $e->getTrace());
+        }
     }
 
     public function checkSubscriptionsCount(CartItemInterface $item): void
