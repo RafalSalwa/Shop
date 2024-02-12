@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Repository\SubscriptionPlanRepository;
+use App\Repository\PlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Cache;
@@ -20,7 +20,7 @@ use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 use function sprintf;
 
-#[Entity(repositoryClass: SubscriptionPlanRepository::class)]
+#[Entity(repositoryClass: PlanRepository::class)]
 #[Table(name: 'plan', schema: 'interview')]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
@@ -33,7 +33,7 @@ class SubscriptionPlan implements CartInsertableInterface
     private int $id;
 
     #[Column(name: 'plan_name', type: Types::STRING, length: 255)]
-    private string $name;
+    private string $planName;
 
     #[Column(name: 'description', type: Types::TEXT, nullable: false)]
     #[Assert\NotBlank(message: 'Description cannot be empty')]
@@ -73,9 +73,9 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $deletedAt = null;
 
-    public function setName(string $name): self
+    public function setPlanName(string $planName): self
     {
-        $this->name = $name;
+        $this->planName = $planName;
 
         return $this;
     }
@@ -131,19 +131,6 @@ class SubscriptionPlan implements CartInsertableInterface
 
         return bcdiv($taxedPrice, '100', 2);
     }
-
-    public function getTier(): int
-    {
-        return $this->tier;
-    }
-
-    public function setTier(int $tier): SubscriptionPlan
-    {
-        $this->tier = $tier;
-        return $this;
-    }
-
-
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
@@ -216,7 +203,7 @@ class SubscriptionPlan implements CartInsertableInterface
 
     public function getName(): string
     {
-        return $this->name;
+        return $this->planName;
     }
 
     public function getId(): int

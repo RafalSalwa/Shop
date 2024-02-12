@@ -21,6 +21,9 @@ class LoginController extends AbstractController
         if ($this->getUser() instanceof UserInterface) {
             return $this->redirectToRoute('app_index');
         }
+        if('post' == $request->getMethod()){
+            dd($request->request);
+        }
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 

@@ -20,7 +20,7 @@
                                 </div>
 
                                 <div class="form-outline mb-4">
-                                    {{ form_row(registrationForm.password, {
+                                    {{ form_row(registrationForm.plainPassword, {
                                         label: 'Password'
                                     }) }}
                                 </div>
@@ -48,17 +48,4 @@
         </div>
     </div>
 
-{% endblock %}
-{% block scripts %}
-    <script>
-        $( document ).ready(function() {
-            min = 100;
-            max = 999999;
-            result = Math.floor(Math.random() * (max - min) + min);
-
-            $("#registration_form_email").val('interview' + result + '@interview.com');
-            $("#registration_form_password_first").val('VeryG00dPass!');
-            $("#registration_form_password_second").val('VeryG00dPass!');
-        });
-    </script>
 {% endblock %}

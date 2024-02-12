@@ -25,26 +25,3 @@ framework:
           Accept: 'application/json'
           Content-Type: 'application/json'
           'User-Agent': 'Shopping app'
-      users-api:
-        base_uri: 'https://auth-api.salwa.com.pl'
-        headers:
-          Accept: 'application/json'
-          Content-Type: 'application/json'
-          'User-Agent': 'Shopping app'
-when@dev:
-  framework:
-    http_client:
-      scoped_clients:
-        auth-api:
-          base_uri: 'http://0.0.0.0:8011'
-          auth_basic: 'interview:interview'
-          headers:
-            Accept: 'application/json'
-            Content-Type: 'application/json'
-            'User-Agent': 'Shopping app'
-        users-api:
-          base_uri: 'http://0.0.0.0:8011'
-          headers:
-            Accept: 'application/json'
-            Content-Type: 'application/json'
-            'User-Agent': 'Shopping app'

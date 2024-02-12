@@ -7,6 +7,7 @@ up:
 	docker compose up -d
 	symfony server:start -d --no-tls
 	symfony run -d --watch=config,src,templates,vendor symfony
+	symfony run -d yarn encore dev-server --port 9001
 	symfony server:log
 
 compose-down:
