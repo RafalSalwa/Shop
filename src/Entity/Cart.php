@@ -16,8 +16,6 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
@@ -92,13 +90,16 @@ class Cart implements JsonSerializable
         if (!$this->itemExists($item)) {
             $item->setCart($this);
             $this->getItems()
-                ->add($item);
+                ->add($item)
+            ;
 
             return $this;
         }
+
         /** @var CartItem $existingItem */
         $existingItem = $this->getFilteredItems($item)
-            ->first();
+            ->first()
+        ;
         $existingItem->increaseQuantity();
 
         return $this;
@@ -108,16 +109,17 @@ class Cart implements JsonSerializable
     {
         return $this->getItems()
             ->exists(
-            /** @var CartItemInterface $element */
-                fn($key, CartItemInterface $element) => $element->getReferenceEntity()
-                        ->getId() === $cartItem->getReferenceEntity()
-                        ->getId()
+                /** @var CartItemInterface $element */
+                static fn ($key, CartItemInterface $element) => $element->getReferenceEntity()
+                    ->getId() === $cartItem->getReferenceEntity()
+                    ->getId()
                     && $element::class === $cartItem::class
-            );
+            )
+        ;
     }
 
     /**
-     * @return Collection<int,CartItem>|null
+     * @return null|Collection<int,CartItem>
      */
     public function getItems(): ?Collection
     {
@@ -136,11 +138,12 @@ class Cart implements JsonSerializable
     {
         return $this->getItems()
             ->filter(
-                fn(CartItemInterface $cartItem) => $cartItem->getReferenceEntity()
-                        ->getId() === $newItem->getReferenceEntity()
-                        ->getId()
+                static fn (CartItemInterface $cartItem) => $cartItem->getReferenceEntity()
+                    ->getId() === $newItem->getReferenceEntity()
+                    ->getId()
                     && $cartItem::class === $newItem::class
-            );
+            )
+        ;
     }
 
     public function removeItem(CartItem $item): void
@@ -155,7 +158,8 @@ class Cart implements JsonSerializable
     public function itemTypeExists(CartItemInterface $cartItem): bool
     {
         return $this->getItems()
-            ->exists(fn($key, $element) => $element::class === $cartItem::class);
+            ->exists(static fn ($key, $element) => $element::class === $cartItem::class)
+        ;
     }
 
     public function getUserId(): int

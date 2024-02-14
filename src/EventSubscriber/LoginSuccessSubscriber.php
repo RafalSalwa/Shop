@@ -22,12 +22,12 @@ class LoginSuccessSubscriber implements EventSubscriberInterface
 
     public function onSuccessfulLogin(LoginSuccessEvent $event): void
     {
-        /** @var User $user */
-//        $user = $event->getUser();
+        // @var User $user
+        //        $user = $event->getUser();
 
-//        $message = new AMQPMessage();
-//        $message->setId($user->getId());
-//        $message->setName(self::EVENT_NAME);
+        //        $message = new AMQPMessage();
+        //        $message->setId($user->getId());
+        //        $message->setName(self::EVENT_NAME);
 
         //        $this->messageBus->dispatch(
         //            $message

@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model;
 
-class ApiTokenPair {
-
+class ApiTokenPair
+{
     protected string $token = '';
-    protected string $refreshToken='';
+    protected string $refreshToken = '';
 
     public function __construct(string $token, string $refreshToken)
     {
@@ -22,5 +24,4 @@ class ApiTokenPair {
     {
         return $this->refreshToken;
     }
-
 }

@@ -1,12 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Event;
 
 use App\Model\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class UserRegisteredEvent extends Event {
-
+class UserRegisteredEvent extends Event
+{
     protected User $user;
 
     public function __construct(User $user)
@@ -18,5 +20,4 @@ class UserRegisteredEvent extends Event {
     {
         return $this->user;
     }
-
 }

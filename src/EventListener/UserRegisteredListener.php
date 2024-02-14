@@ -9,8 +9,6 @@ use App\Event\UserRegisteredEvent;
 use App\Exception\SubscriptionPlanNotFoundException;
 use App\Repository\SubscriptionPlanRepository;
 use App\Repository\SubscriptionRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use RuntimeException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 class UserRegisteredListener implements EventSubscriberInterface
@@ -18,9 +16,7 @@ class UserRegisteredListener implements EventSubscriberInterface
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository,
         protected SubscriptionPlanRepository $subscriptionPlanRepository
-    )
-    {
-    }
+    ) {}
 
     public static function getSubscribedEvents()
     {
@@ -34,15 +30,14 @@ class UserRegisteredListener implements EventSubscriberInterface
     {
         $user = $event->getUser();
 
-        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name'=> 'freemium']);
-        if(null === $subscriptionPlan){
-            throw new SubscriptionPlanNotFoundException("Subscription plan not found");
+        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
+        if (null === $subscriptionPlan) {
+            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
         }
 
         $subscription = new Subscription();
         $subscription->setUserId($user->getId());
         $subscription->setPlan($subscriptionPlan);
         $this->subscriptionRepository->save($subscription);
-
     }
 }

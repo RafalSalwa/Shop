@@ -13,9 +13,7 @@ use function print_r;
 
 class OrderConfirmedListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail)
-    {
-    }
+    public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail) {}
 
     public static function getSubscribedEvents()
     {
@@ -30,7 +28,9 @@ class OrderConfirmedListener implements EventSubscriberInterface
             ->from($this->fromEmail)
             ->to($this->fromEmail)
             ->subject('Order Confirmation')
-            ->html('Thank you for your order. Here are the details: <pre>' . print_r($orderData, true) . '</pre>');
+            ->html('Thank you for your order. Here are the details: <pre>' . print_r($orderData, true) . '</pre>')
+        ;
+
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface) {

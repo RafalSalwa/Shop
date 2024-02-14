@@ -25,7 +25,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 /** @see \App\Tests\Integration\CartControllerTest */
-#[Route('/cart', name:'cart_')]
+#[Route('/cart', name: 'cart_')]
 class CartController extends AbstractController
 {
     #[Route('/add/{type}/{id}/{quantity}', name: 'add')]
@@ -41,9 +41,8 @@ class CartController extends AbstractController
             $item = $cartItemFactory->create($type, $id);
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
-            $cartService->add($item,$quantity);
+            $cartService->add($item, $quantity);
             $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
-
         } catch (ItemNotFoundException $pnf) {
             $this->addFlash('error', $pnf->getMessage());
 
@@ -69,7 +68,8 @@ class CartController extends AbstractController
 
     #[Route('/add', name: 'add_post', methods: ['POST'])]
     public function post(
-        #[MapRequestPayload] CartAddJsonRequest $cartAddRequest,
+        #[MapRequestPayload]
+        CartAddJsonRequest $cartAddRequest,
         CartService $cartService,
         CartItemFactory $cartItemFactory,
     ): RedirectResponse {
@@ -77,7 +77,7 @@ class CartController extends AbstractController
             $item = $cartItemFactory->create($cartAddRequest->getType(), $cartAddRequest->getId());
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
-            $cartService->add($item,$cartAddRequest->getQuantity());
+            $cartService->add($item, $cartAddRequest->getQuantity());
             $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
             dd($cartService->getCurrentCart()->getItems());
         } catch (AccessDeniedException $ade) {
@@ -86,7 +86,7 @@ class CartController extends AbstractController
                 'error',
                 'You cannot add this product to cart with current subscription. Consider upgrade:)',
             );
-        } catch(Exception $e){
+        } catch (Exception $e) {
             dd($e->getMessage(), $e->getTraceAsString(), $e->getMessage(), $e->getMessage());
         }
 
@@ -95,6 +95,7 @@ class CartController extends AbstractController
             ['id' => $cartAddRequest->getId()],
         );
     }
+
     #[Route('/remove/{id}', name: 'remove')]
     public function removeFromCart(
         CartItem $item,
@@ -123,7 +124,7 @@ class CartController extends AbstractController
     public function setDeliveryAddress(Request $request, CartService $cartService): Response
     {
         $deliveryAddressId = $request->request->get('addrId');
-        $cartService->setDefaultDeliveryAddress($deliveryAddressId);
+        $cartService->useDefaultDeliveryAddress($deliveryAddressId);
 
         return new Response('ok');
     }
@@ -142,5 +143,4 @@ class CartController extends AbstractController
             ],
         );
     }
-
 }

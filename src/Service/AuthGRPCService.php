@@ -26,8 +26,7 @@ class AuthGRPCService
         private readonly RequestStack $requestStack,
         private readonly string $authServiceDsn,
         private readonly string $userServiceDsn,
-    ) {
-    }
+    ) {}
 
     public function signInUser(string $email, string $password): array
     {
@@ -37,7 +36,8 @@ class AuthGRPCService
 
         return $this->getAuthClient()
             ->SignInUser($signInReq)
-            ->wait();
+            ->wait()
+        ;
     }
 
     public function getAuthClient(): AuthServiceClient
@@ -62,7 +62,8 @@ class AuthGRPCService
         $signUpReq->setPasswordConfirm($password);
         $response = $this->getAuthClient()
             ->SignUpUser($signUpReq)
-            ->wait();
+            ->wait()
+        ;
         $user = $response[0];
         if ($user instanceof SignUpUserResponse && $user->getVerificationToken()) {
             $arrUser = [
@@ -80,13 +81,15 @@ class AuthGRPCService
     public function setUserCredentialsFromLastSignUp(array $arrUser): void
     {
         $this->getSession()
-            ->set(self::GRPC_USER_KEY, $arrUser);
+            ->set(self::GRPC_USER_KEY, $arrUser)
+        ;
     }
 
     public function getVcodeFromLastSignUp(): ?string
     {
         $arrUser = $this->getSession()
-            ->get(self::GRPC_USER_KEY);
+            ->get(self::GRPC_USER_KEY)
+        ;
 
         return $arrUser['vCode'];
     }
@@ -98,7 +101,8 @@ class AuthGRPCService
 
         $response = $this->getUserClient()
             ->VerifyUser($verifyCodeRequest)
-            ->wait();
+            ->wait()
+        ;
         $returnObject = $response[0];
         if ($returnObject->getSuccess()) {
             $arrUser = $this->getUserCredentialsFromLastSignUp();
@@ -126,7 +130,8 @@ class AuthGRPCService
     public function getUserCredentialsFromLastSignUp(): ?array
     {
         return $this->getSession()
-            ->get(self::GRPC_USER_KEY);
+            ->get(self::GRPC_USER_KEY)
+        ;
     }
 
     private function getSession(): SessionInterface

@@ -30,7 +30,8 @@ class SignUpType extends AbstractType
                     'second_options' => ['label' => 'Repeat Password'],
                 ],
             )
-            ->add('send', SubmitType::class);
+            ->add('send', SubmitType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

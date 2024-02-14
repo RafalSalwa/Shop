@@ -19,15 +19,14 @@ class ProductStockService
         private readonly LockFactory $productLockFactory,
         private readonly ProductRepository $repository,
         private readonly EventDispatcherInterface $eventDispatcher,
-    ) {
-    }
+    ) {}
 
     /** @throws ProductStockDepletedException */
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
         $product = $entity->getReferenceEntity();
         if ($product instanceof StockManageableInterface && 0 === $product->getUnitsInStock()) {
-            throw new \App\Exception\ProductStockDepletedException('For this product stock is depleted.');
+            throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
@@ -37,12 +36,12 @@ class ProductStockService
     }
 
     /**
- * @psalm-param Product::STOCK_* $operation 
-*/
+     * @psalm-param Product::STOCK_* $operation
+     */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty): void
     {
         $product = $entity->getReferencedEntity();
-        if (! ($product instanceof StockManageableInterface)) {
+        if (! $product instanceof StockManageableInterface) {
             return;
         }
 
@@ -59,7 +58,7 @@ class ProductStockService
         $lock->acquire(true);
 
         if (0 === $product->getUnitsInStock()) {
-            throw new \App\Exception\ProductStockDepletedException();
+            throw new ProductStockDepletedException();
         }
 
         if (1 === $product->getUnitsInStock()) {

@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Traversable;
 use function ceil;
+use function count;
 use function max;
 use function min;
 
@@ -29,7 +30,7 @@ final class Paginator
      *
      * See https://symfony.com/doc/current/best_practices.html#use-constants-to-define-options-that-rarely-change
      */
-    final public const PAGE_SIZE = 20;
+    public const PAGE_SIZE = 20;
 
     private int $currentPage;
 
@@ -48,7 +49,7 @@ final class Paginator
     public function paginate(int $page = 1): self
     {
         $this->currentPage = max(1, $page);
-        $firstResult = (($this->currentPage - 1) * $this->pageSize);
+        $firstResult = ($this->currentPage - 1) * $this->pageSize;
 
         $query = $this->queryBuilder
             ->setFirstResult($firstResult)
@@ -72,7 +73,7 @@ final class Paginator
          */
         $havingDqlParts = $this->queryBuilder->getDQLPart('having');
 
-        $useOutputWalkers = [] !== ($havingDqlParts ?: []);
+        $useOutputWalkers = count($havingDqlParts ?: []) > 0;
         $paginator->setUseOutputWalkers($useOutputWalkers);
 
         $this->results = $paginator->getIterator();

@@ -28,7 +28,8 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         FirewallMapInterface $firewallMap,
     ) {
         $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())
-            ->getName();
+            ->getName()
+        ;
     }
 
     public static function getSubscribedEvents(): array
@@ -46,7 +47,8 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
             if (null !== $request->getSession()->get('consent_granted')) {
                 $event->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()
-                    ->remove('consent_granted');
+                    ->remove('consent_granted')
+                ;
 
                 return;
             }

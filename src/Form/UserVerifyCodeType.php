@@ -21,7 +21,8 @@ class UserVerifyCodeType extends AbstractType
                 TextType::class,
                 ['label' => 'code'],
             )
-            ->add('send', SubmitType::class);
+            ->add('send', SubmitType::class)
+        ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void

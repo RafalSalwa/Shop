@@ -20,16 +20,19 @@ class PaymentRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->where('p.id = :id')
             ->orderBy('p.createdAt', 'DESC')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+        ;
 
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     public function save(Payment $payment): void
     {
         $this->getEntityManager()
-            ->persist($payment);
+            ->persist($payment)
+        ;
         $this->getEntityManager()
             ->flush();
     }

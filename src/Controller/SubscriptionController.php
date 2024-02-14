@@ -5,18 +5,19 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\SubscriptionPlan;
-use App\Repository\PlanRepository;
+use App\Repository\SubscriptionPlanRepository;
 use App\Service\SubscriptionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-#[Route('/subscriptions',name: 'subscriptions_',defaults: ['_format' => 'html'],methods: ['GET'],)]
+
+#[Route('/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'], )]
 #[IsGranted('IS_AUTHENTICATED')]
 class SubscriptionController extends AbstractController
 {
     #[Route('/', name: 'index')]
-    public function index(PlanRepository $planRepository): Response
+    public function index(SubscriptionPlanRepository $planRepository): Response
     {
         $plans = $planRepository->fetchAvailablePlans();
 
@@ -40,7 +41,8 @@ class SubscriptionController extends AbstractController
             ],
         );
     }
-    #[Route('/clear',name: 'clear',)]
+
+    #[Route('/clear', name: 'clear', )]
     public function clear(SubscriptionService $service): Response
     {
         $service->cancelSubscription();

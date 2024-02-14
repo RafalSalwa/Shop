@@ -14,11 +14,11 @@ class RpcSignin
 {
     public static bool $is_initialized = false;
 
-    public static function initOnce()
+    public static function initOnce(): void
     {
         $pool = DescriptorPool::getGeneratedPool();
 
-        if (static::$is_initialized === true) {
+        if (true === static::$is_initialized) {
             return;
         }
         Timestamp::initOnce();

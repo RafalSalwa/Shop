@@ -17,13 +17,14 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
-    public function getPaginated(int $page, string $sort)
+    public function getPaginated(int $page, string $sort = 'name')
     {
         $qb = $this->createQueryBuilder('p')
             ->select('p', 's')
             ->innerJoin('p.requiredSubscription', 's')
             ->where('p.unitsInStock > 0')
-            ->orderBy('p.id', 'DESC');
+            ->orderBy('s.tier', 'ASC')
+        ;
 
         return (new Paginator($qb))->paginate($page);
     }
@@ -37,7 +38,8 @@ class ProductRepository extends ServiceEntityRepository
             ->where('p.id = :id')
             ->setParameter('id', $product->getId())
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
     }
 
     public function increaseQty(StockManageableInterface $product, int $qty)
@@ -49,6 +51,7 @@ class ProductRepository extends ServiceEntityRepository
             ->where('p.id = :id')
             ->setParameter('id', $product->getId())
             ->getQuery()
-            ->execute();
+            ->execute()
+        ;
     }
 }

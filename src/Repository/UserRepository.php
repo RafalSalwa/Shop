@@ -23,13 +23,11 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         parent::__construct($registry, User::class);
     }
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
-    {
-    }
+    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void {}
 
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
-        if (filter_var($identifier, \FILTER_VALIDATE_EMAIL)) {
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
             return $this->findOneBy(
                 ['email' => $identifier],
             );
@@ -45,26 +43,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return null;
     }
 
-    public function findOneByEmail(): void
-    {
-    }
+    public function findOneByEmail(): void {}
 
     public function findOneByUsername(string $username)
     {
         $qb = $this->createQueryBuilder('u')
             ->where('u.username = :username')
-            ->setParameter('username', $username);
+            ->setParameter('username', $username)
+        ;
 
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     public function save(User $user): void
     {
         $this->getEntityManager()
-            ->persist($user);
+            ->persist($user)
+        ;
         $this->getEntityManager()
-            ->flush();
+            ->flush()
+        ;
     }
 
     public function getEntityManager(): EntityManagerInterface

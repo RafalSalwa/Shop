@@ -15,7 +15,7 @@ class SubscriptionPlanVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ADD_TO_CART && $subject instanceof SubscriptionPlanCartItem;
+        return self::ADD_TO_CART === $attribute && $subject instanceof SubscriptionPlanCartItem;
     }
 
     /**
@@ -29,9 +29,11 @@ class SubscriptionPlanVoter extends Voter
             return false;
         }
         $requiredSubscription = $subject->getReferencedEntity()
-            ->getId();
+            ->getId()
+        ;
         $userSubscription = $user->getSubscription()
-            ->getSubscriptionPlan();
+            ->getSubscriptionPlan()
+        ;
 
         if (! $requiredSubscription || ! $userSubscription) {
             return false;

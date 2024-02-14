@@ -27,12 +27,14 @@ trait SessionHelper
     public function getSession(KernelBrowser $client): Session
     {
         $cookie = $client->getCookieJar()
-            ->get('MOCKSESSID');
+            ->get('MOCKSESSID')
+        ;
 
         // create a new session object
         $container = static::getContainer();
         $session = $container->get('session.factory')
-            ->createSession();
+            ->createSession()
+        ;
         if ($cookie instanceof Cookie) {
             // get the session id from the session cookie if it exists
             $session->setId($cookie->getValue());
@@ -44,7 +46,8 @@ trait SessionHelper
 
             $sessionCookie = new Cookie($session->getName(), $session->getId(), null, null, 'localhost');
             $client->getCookieJar()
-                ->set($sessionCookie);
+                ->set($sessionCookie)
+            ;
         }
 
         return $session;
@@ -62,7 +65,8 @@ trait SessionHelper
 
         $sessionCookie = new Cookie($session->getName(), $session->getId(), null, null, 'localhost');
         $client->getCookieJar()
-            ->set($sessionCookie);
+            ->set($sessionCookie)
+        ;
 
         return $session;
     }

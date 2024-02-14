@@ -40,7 +40,7 @@ class ChangePasswordRequest extends Message
      * @var string
      *                 }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -48,10 +48,8 @@ class ChangePasswordRequest extends Message
 
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
-     *
-     * @return int|string
      */
-    public function getId()
+    public function getId(): int|string
     {
         return $this->Id;
     }
@@ -59,11 +57,9 @@ class ChangePasswordRequest extends Message
     /**
      * Generated from protobuf field <code>int64 Id = 1;</code>.
      *
-     * @param int|string $var
-     *
      * @return $this
      */
-    public function setId($var)
+    public function setId(int|string $var)
     {
         GPBUtil::checkInt64($var);
         $this->Id = $var;
@@ -73,10 +69,8 @@ class ChangePasswordRequest extends Message
 
     /**
      * Generated from protobuf field <code>string Password = 2;</code>.
-     *
-     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->Password;
     }
@@ -84,11 +78,9 @@ class ChangePasswordRequest extends Message
     /**
      * Generated from protobuf field <code>string Password = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setPassword($var)
+    public function setPassword(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->Password = $var;

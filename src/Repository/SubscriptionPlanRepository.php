@@ -21,10 +21,12 @@ class SubscriptionPlanRepository extends ServiceEntityRepository
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.id = :id')
-            ->setParameter('id', $id);
+            ->setParameter('id', $id)
+        ;
 
         return $qb->getQuery()
-            ->getOneOrNullResult();
+            ->getOneOrNullResult()
+        ;
     }
 
     public function fetchAvailablePlans()
@@ -34,15 +36,14 @@ class SubscriptionPlanRepository extends ServiceEntityRepository
             ->orderBy('p.createdAt', 'DESC')
             ->setCacheMode(Cache::MODE_GET)
             ->setCacheable(true)
-            ->getQuery();
+            ->getQuery()
+        ;
         $query->enableResultCache(86400, 'subscription_plans');
 
         return $query->getResult();
     }
 
-    public function createSubscription(string $string): void
-    {
-    }
+    public function createSubscription(string $string): void {}
 
     public function getByName(string $type)
     {

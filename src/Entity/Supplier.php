@@ -30,12 +30,12 @@ class Supplier
     #[Column(name: 'company_name', type: Types::STRING, length: 40, nullable: false)]
     private ?string $name = null;
 
-    public function getId(): int|null
+    public function getId(): null|int
     {
         return $this->id;
     }
 
-    public function getName(): string|null
+    public function getName(): null|string
     {
         return $this->name;
     }

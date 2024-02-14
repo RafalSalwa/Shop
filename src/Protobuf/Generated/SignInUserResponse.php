@@ -48,7 +48,7 @@ class SignInUserResponse extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         RpcSignin::initOnce();
         parent::__construct($data);
@@ -56,10 +56,8 @@ class SignInUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
-     *
-     * @return string
      */
-    public function getStatus()
+    public function getStatus(): string
     {
         return $this->status;
     }
@@ -67,11 +65,9 @@ class SignInUserResponse extends Message
     /**
      * Generated from protobuf field <code>string status = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setStatus($var)
+    public function setStatus(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->status = $var;
@@ -81,10 +77,8 @@ class SignInUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string access_token = 2;</code>.
-     *
-     * @return string
      */
-    public function getAccessToken()
+    public function getAccessToken(): string
     {
         return $this->access_token;
     }
@@ -92,11 +86,9 @@ class SignInUserResponse extends Message
     /**
      * Generated from protobuf field <code>string access_token = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setAccessToken($var)
+    public function setAccessToken(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->access_token = $var;
@@ -106,10 +98,8 @@ class SignInUserResponse extends Message
 
     /**
      * Generated from protobuf field <code>string refresh_token = 3;</code>.
-     *
-     * @return string
      */
-    public function getRefreshToken()
+    public function getRefreshToken(): string
     {
         return $this->refresh_token;
     }
@@ -117,11 +107,9 @@ class SignInUserResponse extends Message
     /**
      * Generated from protobuf field <code>string refresh_token = 3;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setRefreshToken($var)
+    public function setRefreshToken(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->refresh_token = $var;

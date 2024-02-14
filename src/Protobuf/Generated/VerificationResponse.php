@@ -32,7 +32,7 @@ class VerificationResponse extends Message
      * @var bool
      *           }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         User::initOnce();
         parent::__construct($data);
@@ -40,10 +40,8 @@ class VerificationResponse extends Message
 
     /**
      * Generated from protobuf field <code>bool success = 1;</code>.
-     *
-     * @return bool
      */
-    public function getSuccess()
+    public function getSuccess(): bool
     {
         return $this->success;
     }
@@ -51,11 +49,9 @@ class VerificationResponse extends Message
     /**
      * Generated from protobuf field <code>bool success = 1;</code>.
      *
-     * @param bool $var
-     *
      * @return $this
      */
-    public function setSuccess($var)
+    public function setSuccess(bool $var)
     {
         GPBUtil::checkBool($var);
         $this->success = $var;

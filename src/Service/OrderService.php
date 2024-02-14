@@ -19,7 +19,6 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-
 use const JSON_THROW_ON_ERROR;
 
 class OrderService
@@ -33,8 +32,7 @@ class OrderService
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly CartService $cartService,
         private readonly SubscriptionService $subscriptionService
-    ) {
-    }
+    ) {}
 
     public function createPending(Cart $cart): Order
     {
@@ -43,8 +41,10 @@ class OrderService
         $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
         $user = $this->security->getUser();
+
         /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
+
         /** @var CartItemInterface $item */
         foreach ($cart->getItems() as $item) {
             $entity = $item->getReferencedEntity();
@@ -103,7 +103,7 @@ class OrderService
     {
         /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {
-            if ($item->getItemType() === 'plan') {
+            if ('plan' === $item->getItemType()) {
                 $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
                 $this->subscriptionService->assignSubscription($deserialized['plan_name']);
             }

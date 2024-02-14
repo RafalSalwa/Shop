@@ -11,9 +11,14 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @internal
+ *
+ * @coversNothing
+ */
 #[CoversClass(UserRepository::class)]
 #[UsesClass(User::class)]
-class UserRepositoryTest extends TestCase
+final class UserRepositoryTest extends TestCase
 {
     /**
      * @throws Exception
@@ -26,13 +31,14 @@ class UserRepositoryTest extends TestCase
         $userRepository = $this->createMock(UserRepository::class);
         $userRepository
             ->method('findOneByUsername')
-            ->willReturn($user);
+            ->willReturn($user)
+        ;
 
         $actualUser = $userRepository->findOneByUsername('interview');
 
-        $this->assertNotEmpty($actualUser);
-        $this->assertSame(1, $actualUser->getId());
+        self::assertNotEmpty($actualUser);
+        self::assertSame(1, $actualUser->getId());
 
-        $this->assertNull($userRepository->find('asd'));
+        self::assertNull($userRepository->find('asd'));
     }
 }

@@ -40,7 +40,7 @@ class SignInUserInput extends Message
      * @var string
      *             }
      */
-    public function __construct($data = null)
+    public function __construct(array $data = null)
     {
         RpcSignin::initOnce();
         parent::__construct($data);
@@ -48,10 +48,8 @@ class SignInUserInput extends Message
 
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
-     *
-     * @return string
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -59,11 +57,9 @@ class SignInUserInput extends Message
     /**
      * Generated from protobuf field <code>string username = 1;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setUsername($var)
+    public function setUsername(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->username = $var;
@@ -73,10 +69,8 @@ class SignInUserInput extends Message
 
     /**
      * Generated from protobuf field <code>string password = 2;</code>.
-     *
-     * @return string
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -84,11 +78,9 @@ class SignInUserInput extends Message
     /**
      * Generated from protobuf field <code>string password = 2;</code>.
      *
-     * @param string $var
-     *
      * @return $this
      */
-    public function setPassword($var)
+    public function setPassword(string $var)
     {
         GPBUtil::checkString($var, true);
         $this->password = $var;

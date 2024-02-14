@@ -18,7 +18,7 @@ class CartAddVoter extends Voter
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $attribute === self::ADD_TO_CART && $subject instanceof Product;
+        return self::ADD_TO_CART === $attribute && $subject instanceof Product;
     }
 
     /**

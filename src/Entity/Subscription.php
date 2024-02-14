@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\SubscriptionTier;
 use App\Repository\SubscriptionRepository;
+use DateInterval;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -23,7 +25,7 @@ use Doctrine\ORM\Mapping\Table;
 class Subscription
 {
     #[Id]
-    #[GeneratedValue]
+    #[GeneratedValue(strategy: 'IDENTITY')]
     #[Column(name: 'subscription_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
@@ -31,24 +33,37 @@ class Subscription
     #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
     private ?SubscriptionPlan $plan = null;
 
-    #[Column(name: 'tier', type: Types::SMALLINT, nullable: true)]
-    private int $tier;
+    #[Column(name: 'user_id', type: Types::INTEGER, nullable: true)]
+    private ?int $userId = null;
+
+    #[Column(name: 'tier', type: Types::SMALLINT, enumType: SubscriptionTier::class, nullable: false)]
+    private SubscriptionTier $tier;
 
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
-        'default' => false,
+        'default' => true,
     ])]
-    private bool $isActive = false;
+    private bool $isActive = true;
 
     #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
         'default' => 'CURRENT_TIMESTAMP',
     ])]
     private DateTime $createdAt;
 
-    #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true, options: [
+        'default' => 'CURRENT_TIMESTAMP',
+    ])]
     private ?DateTime $startsAt = null;
 
     #[Column(name: 'ends_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $endsAt = null;
+
+    public function __construct()
+    {
+        $this->tier = SubscriptionTier::Freemium;
+        $date = new DateTime();
+        $date->add(new DateInterval('P30D'));
+        $this->endsAt = $date;
+    }
 
     public function getPlan(): ?SubscriptionPlan
     {
@@ -62,16 +77,16 @@ class Subscription
         return $this;
     }
 
-    public function isTier(): int
-    {
-        return $this->tier;
-    }
-
-    public function setTier(bool $tier): self
+    public function setTier(int $tier): self
     {
         $this->tier = $tier;
 
         return $this;
+    }
+
+    public function getTier(): SubscriptionTier
+    {
+        return $this->tier;
     }
 
     public function isActive(): bool
@@ -124,7 +139,7 @@ class Subscription
 
     public function getRequiredLevel(): int
     {
-        return $this->getId();
+        return $this->getTier()->value;
     }
 
     public function getId(): int
@@ -143,5 +158,17 @@ class Subscription
     public function prePersist(): void
     {
         $this->setCreatedAt(new DateTime('now'));
+    }
+
+    public function getUserId(): ?int
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int $userId): self
+    {
+        $this->userId = $userId;
+
+        return $this;
     }
 }
