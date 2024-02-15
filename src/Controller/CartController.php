@@ -53,11 +53,14 @@ class CartController extends AbstractController
                     'page' => 1,
                 ],
             );
-        } catch (AccessDeniedException) {
+        } catch (AccessDeniedException $e) {
+            dd($e->getMessage());
             $this->addFlash(
                 'error',
                 'You cannot add this product to cart with current subscription. Consider upgrade:)',
             );
+        } catch (Exception $e){
+            dd($e->getMessage());
         }
 
         return $this->redirectToRoute(

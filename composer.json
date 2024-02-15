@@ -133,7 +133,7 @@
     "php-cs-fixer": "php-cs-fixer fix",
     "rector": "rector process --dry-run",
     "stan": "phpstan",
-    "test": "phpunit --coverage-html reports/coverage"
+    "test": "phpunit --coverage-html reports/phpunit"
   },
   "conflict": {
     "symfony/symfony": "*"

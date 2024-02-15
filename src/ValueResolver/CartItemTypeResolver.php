@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\ValueResolver;
 
+use App\Entity\CartItem;
 use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
+use App\Enum\CartItemTypeEnum;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -25,6 +27,8 @@ class CartItemTypeResolver implements ValueResolverInterface
         if (!is_string($value)) {
             return [];
         }
+        $entityType = CartItemTypeEnum::from($value);
+        dd($entityType);
         $entityTypeMap = [
             'product' => Product::class,
             'plan' => SubscriptionPlan::class,

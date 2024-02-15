@@ -22,6 +22,7 @@ class CartItemFactory
 
     public function create(string $entityType, int $id): CartItemInterface
     {
+        dd(func_get_args());
         try {
             if (is_string($entityType)) {
                 $entityTypeMap = [
