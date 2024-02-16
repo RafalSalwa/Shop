@@ -48,9 +48,6 @@ pipeline {
                         sh 'vendor/bin/phpstan analyse --error-format=checkstyle --no-progress -n . > reports/phpstan/phpstan.checkstyle.xml'
                     }
                 }
-//                 stage("Publish Clover") {
-//                     step([$class: 'CloverPublisher', cloverReportDir: 'build/logs', cloverReportFileName: 'clover.xml'])
-//                 }
 
                 stage('Mess Detection Report') {
                     sh 'vendor/bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
@@ -66,5 +63,6 @@ pipeline {
                 }
             }
 
+        }
     }
 }
