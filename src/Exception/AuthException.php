@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception;
 
-class AuthException extends \Exception
-{
+use Exception;
 
+class AuthException extends Exception implements AuthenticationExceptionInterface
+{
 }

@@ -12,7 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'], )]
+#[Route('/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
 #[IsGranted('IS_AUTHENTICATED')]
 class SubscriptionController extends AbstractController
 {
@@ -42,7 +42,7 @@ class SubscriptionController extends AbstractController
         );
     }
 
-    #[Route('/clear', name: 'clear', )]
+    #[Route('/clear', name: 'clear')]
     public function clear(SubscriptionService $service): Response
     {
         $service->cancelSubscription();

@@ -12,9 +12,8 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    public function __construct(
-        private readonly BaseAccessTokenRepository $baseAccessTokenRepository,
-    ) {}
+    public function __construct(private readonly BaseAccessTokenRepository $baseAccessTokenRepository)
+    {}
 
     public function getNewToken(
         ClientEntityInterface $clientEntity,

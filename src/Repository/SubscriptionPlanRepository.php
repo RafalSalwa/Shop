@@ -43,7 +43,8 @@ class SubscriptionPlanRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function createSubscription(string $string): void {}
+    public function createSubscription(string $string): void
+    {}
 
     public function getByName(string $type)
     {

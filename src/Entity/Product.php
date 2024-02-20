@@ -15,6 +15,9 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
+
+use function bcdiv;
+use function bcmul;
 use function sprintf;
 
 #[Entity(repositoryClass: ProductRepository::class)]
@@ -143,15 +146,20 @@ class Product implements CartInsertableInterface, StockManageableInterface
             ->setQuantity(1)
             ->setReferencedEntity($this)
             ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'))
-        ;
+            ->setUpdatedAt(new DateTime('now'));
 
         return $cartItem;
     }
 
-    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
+    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+    }
 
-    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
+    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+    }
 
-    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface {}
+    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    {
+    }
 }

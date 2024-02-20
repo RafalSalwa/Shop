@@ -31,41 +31,35 @@ class Subscription
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
     #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
-    private ?SubscriptionPlan $plan = null;
+    private SubscriptionPlan|null $plan = null;
 
     #[Column(name: 'user_id', type: Types::INTEGER, nullable: true)]
-    private ?int $userId = null;
+    private int|null $userId = null;
 
     #[Column(name: 'tier', type: Types::SMALLINT, enumType: SubscriptionTier::class, nullable: false)]
     private SubscriptionTier $tier;
 
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: [
-        'default' => true,
-    ])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => true])]
     private bool $isActive = true;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
+    #[Column(name: 'created_at', type: Types::DATETIME_MUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTime $createdAt;
 
-    #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
-    private ?DateTime $startsAt = null;
+    #[Column(name: 'starts_at', type: Types::DATETIME_MUTABLE, nullable: true, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTime|null $startsAt = null;
 
     #[Column(name: 'ends_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $endsAt = null;
+    private DateTime|null $endsAt = null;
 
     public function __construct()
     {
         $this->tier = SubscriptionTier::Freemium;
-        $date = new DateTime();
+        $date       = new DateTime();
         $date->add(new DateInterval('P30D'));
         $this->endsAt = $date;
     }
 
-    public function getPlan(): ?SubscriptionPlan
+    public function getPlan(): SubscriptionPlan|null
     {
         return $this->plan;
     }
@@ -113,24 +107,24 @@ class Subscription
         return $this;
     }
 
-    public function getStartsAt(): ?DateTime
+    public function getStartsAt(): DateTime|null
     {
         return $this->startsAt;
     }
 
-    public function setStartsAt(?DateTime $startsAt): self
+    public function setStartsAt(DateTime|null $startsAt): self
     {
         $this->startsAt = $startsAt;
 
         return $this;
     }
 
-    public function getEndsAt(): ?DateTime
+    public function getEndsAt(): DateTime|null
     {
         return $this->endsAt;
     }
 
-    public function setEndsAt(?DateTime $endsAt): self
+    public function setEndsAt(DateTime|null $endsAt): self
     {
         $this->endsAt = $endsAt;
 
@@ -160,7 +154,7 @@ class Subscription
         $this->setCreatedAt(new DateTime('now'));
     }
 
-    public function getUserId(): ?int
+    public function getUserId(): int|null
     {
         return $this->userId;
     }

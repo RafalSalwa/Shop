@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\Voter;
 
 use App\Entity\ProductCartItem;
 use App\Entity\Subscription;
@@ -10,6 +10,8 @@ use App\Entity\SubscriptionPlan;
 use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use function assert;
+use function dd;
 
 class CartItemVoter extends Voter
 {
@@ -20,9 +22,7 @@ class CartItemVoter extends Voter
         return self::ADD_TO_CART === $attribute && $subject instanceof ProductCartItem;
     }
 
-    /**
-     * @param ProductCartItem $subject
-     */
+    /** @param \App\Entity\ProductCartItem $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
@@ -30,13 +30,13 @@ class CartItemVoter extends Voter
             return false;
         }
 
-        /** @var SubscriptionPlan $requiredSubscription */
         $requiredSubscription = $subject->getReferencedEntity()
             ->getRequiredSubscription()
         ;
+        assert($requiredSubscription instanceof SubscriptionPlan);
         dd($requiredSubscription);
-        /** @var Subscription $userSubscription */
         $userSubscription = $user->getSubscription();
+        assert($userSubscription instanceof Subscription);
         if (! $requiredSubscription || ! $userSubscription) {
             return false;
         }

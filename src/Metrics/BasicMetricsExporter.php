@@ -18,7 +18,8 @@ use function memory_get_usage;
 
 class BasicMetricsExporter
 {
-    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock) {}
+    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock)
+    {}
 
     public function generate(): void
     {

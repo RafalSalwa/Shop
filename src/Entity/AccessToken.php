@@ -34,7 +34,6 @@ class AccessToken implements AccessTokenEntityInterface
                 'custom',
                 ['foo' => 'bar'],
             )
-            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey())
-        ;
+            ->getToken($this->jwtConfiguration->signer(), $this->jwtConfiguration->signingKey());
     }
 }

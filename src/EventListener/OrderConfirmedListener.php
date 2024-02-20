@@ -13,7 +13,8 @@ use function print_r;
 
 class OrderConfirmedListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail) {}
+    public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail)
+    {}
 
     public static function getSubscribedEvents()
     {

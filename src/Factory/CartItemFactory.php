@@ -6,42 +6,32 @@ namespace App\Factory;
 
 use App\Entity\CartInsertableInterface;
 use App\Entity\CartItemInterface;
-use App\Entity\Product;
-use App\Entity\SubscriptionPlan;
 use App\Exception\ItemNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use function is_string;
+use Throwable;
+use function assert;
 
 class CartItemFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityRepository,
-        private readonly LoggerInterface $logger
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function create(string $entityType, int $id): CartItemInterface
     {
-        dd(func_get_args());
         try {
-            if (is_string($entityType)) {
-                $entityTypeMap = [
-                    'product' => Product::class,
-                    'plan' => SubscriptionPlan::class,
-                ];
-                $entityType = $entityTypeMap[$entityType];
-            }
-
-            /** @var CartInsertableInterface $entity */
             $entity = $this->entityRepository->getRepository($entityType)
                 ->find($id)
             ;
+            assert($entity instanceof CartInsertableInterface);
             if (null === $entity) {
                 throw new ItemNotFoundException();
             }
 
             return $entity->toCartItem();
-        } catch (\Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
         }
     }

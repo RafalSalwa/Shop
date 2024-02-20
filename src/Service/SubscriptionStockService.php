@@ -23,19 +23,21 @@ readonly class SubscriptionStockService
     ) {}
 
     /**
-     * @throws ProductStockDepletedException
+     * @throws \App\Exception\ProductStockDepletedException
      * @throws ItemNotFoundException
      */
     public function checkStockIsAvailable(CartItemInterface $entity): void
     {
-        if ($entity instanceof Product) {
-            $product = $this->repository->find($entity->getId());
-            if (!$product) {
-                throw new ItemNotFoundException(sprintf('Product #%d not found.', $entity->getId()));
-            }
-            if ($product->getUnitsInStock() ===0) {
-                throw new ProductStockDepletedException('For this product stock is depleted.');
-            }
+        if (! ($entity instanceof Product)) {
+            return;
+        }
+
+        $product = $this->repository->find($entity->getId());
+        if (! $product) {
+            throw new ItemNotFoundException(sprintf('Product #%d not found.', $entity->getId()));
+        }
+        if (0 === $product->getUnitsInStock()) {
+            throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
@@ -44,10 +46,10 @@ readonly class SubscriptionStockService
         $this->changeStock($item, Product::STOCK_INCREASE, $item->getQuantity());
     }
 
-    /** @phpstan-param Product::STOCK_* $operation */
+    /** @phpstan-param \App\Entity\Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $entity, string $operation, int $qty = -1): void
     {
-        if (!$entity instanceof Product) {
+        if (! $entity instanceof Product) {
             return;
         }
 
@@ -61,7 +63,7 @@ readonly class SubscriptionStockService
     {
         $lock = $this->productLockFactory->createLock('product-stock_decrease');
         $lock->acquire(true);
-        if ($product->getUnitsInStock() === 1) {
+        if (1 === $product->getUnitsInStock()) {
             $event = new StockDepletedEvent($product);
             $this->eventDispatcher->dispatch($event);
         }

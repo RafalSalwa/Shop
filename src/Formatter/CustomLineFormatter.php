@@ -13,15 +13,16 @@ class CustomLineFormatter extends LineFormatter
         ?string $dateFormat = null,
         bool $allowInlineLineBreaks = false,
         bool $ignoreEmptyContextAndExtra = false,
-        bool $includeStacktraces = false
+        bool $includeStacktraces = false,
     ) {
         $dateFormat = 'Y-m-d H:i:s';
+
         parent::__construct(
             $format,
             $dateFormat,
             $allowInlineLineBreaks,
             $ignoreEmptyContextAndExtra,
-            $includeStacktraces
+            $includeStacktraces,
         );
     }
 }

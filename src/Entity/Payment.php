@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
+
 use function number_format;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
@@ -38,7 +39,7 @@ class Payment
     private int $id;
 
     #[Column(name: 'operation_number', type: Types::STRING, length: 40)]
-    private ?string $operationNumber;
+    private string|null $operationNumber;
 
     #[Column(name: 'operation_type', type: Types::STRING, length: 40)]
     private string $operationType = 'payment';
@@ -61,16 +62,16 @@ class Payment
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
-    private ?UserInterface $user = null;
+    private UserInterface|null $user = null;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: true)]
-    private ?Order $order = null;
+    private Order|null $order = null;
 
     public function __construct()
     {
         $this->operationNumber = Uuid::v4()->toBinary();
-        $this->createdAt = new DateTime('now');
+        $this->createdAt       = new DateTime('now');
     }
 
     public function getAmount($formatted = true): int|string
@@ -97,24 +98,24 @@ class Payment
         return $this;
     }
 
-    public function getOperationNumber(): ?string
+    public function getOperationNumber(): string|null
     {
         return $this->operationNumber;
     }
 
-    public function setOperationNumber(?string $operationNumber): self
+    public function setOperationNumber(string|null $operationNumber): self
     {
         $this->operationNumber = $operationNumber;
 
         return $this;
     }
 
-    public function getOperationType(): ?string
+    public function getOperationType(): string|null
     {
         return $this->operationType;
     }
 
-    public function setOperationType(?string $operationType): self
+    public function setOperationType(string|null $operationType): self
     {
         $this->operationType = $operationType;
 
@@ -157,7 +158,7 @@ class Payment
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User|null
     {
         return $this->user;
     }
@@ -169,7 +170,7 @@ class Payment
         return $this;
     }
 
-    public function getOrder(): ?Order
+    public function getOrder(): Order|null
     {
         return $this->order;
     }

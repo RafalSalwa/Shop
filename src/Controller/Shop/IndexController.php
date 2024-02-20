@@ -19,7 +19,7 @@ class IndexController extends AbstractController
             'shop/index/index.html.twig',
             [
                 'products' => $service->all(),
-            ]
+            ],
         );
     }
 }

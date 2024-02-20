@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\Voter;
 
 use App\Entity\Order;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;

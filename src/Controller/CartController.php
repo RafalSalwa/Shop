@@ -10,11 +10,11 @@ use App\Exception\ProductStockDepletedException;
 use App\Factory\CartItemFactory;
 use App\Manager\CartManager;
 use App\Requests\CartAddJsonRequest;
-use App\Security\CartItemVoter;
+use App\Security\Voter\CartAddVoter;
+use App\Security\Voter\CartItemVoter;
 use App\Service\CartCalculator;
 use App\Service\CartService;
 use App\Service\ProductStockService;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Throwable;
+use function dd;
 
 /** @see \App\Tests\Integration\CartControllerTest */
 #[Route('/cart', name: 'cart_')]
@@ -39,28 +41,11 @@ class CartController extends AbstractController
     ): RedirectResponse {
         try {
             $item = $cartItemFactory->create($type, $id);
-            $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
+            $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $item);
 
             $cartService->add($item, $quantity);
-            $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
-        } catch (ItemNotFoundException $pnf) {
-            $this->addFlash('error', $pnf->getMessage());
-
-            return $this->redirectToRoute(
-                $type . '_index',
-                [
-                    'id' => $id,
-                    'page' => 1,
-                ],
-            );
-        } catch (AccessDeniedException $e) {
-            dd($e->getMessage());
-            $this->addFlash(
-                'error',
-                'You cannot add this product to cart with current subscription. Consider upgrade:)',
-            );
-        } catch (Exception $e){
-            dd($e->getMessage());
+        } catch (Throwable $exception) {
+            dd($exception::class, $exception->getMessage());
         }
 
         return $this->redirectToRoute(
@@ -89,7 +74,7 @@ class CartController extends AbstractController
                 'error',
                 'You cannot add this product to cart with current subscription. Consider upgrade:)',
             );
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             dd($e->getMessage(), $e->getTraceAsString(), $e->getMessage(), $e->getMessage());
         }
 

@@ -18,7 +18,7 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int|null $id = null;
 
     public function __construct(
         #[ORM\ManyToOne]
@@ -31,7 +31,7 @@ class ResetPasswordRequest implements ResetPasswordRequestInterface
         $this->initialize($expiresAt, $selector, $hashedToken);
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }

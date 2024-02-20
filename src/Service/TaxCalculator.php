@@ -6,6 +6,9 @@ namespace App\Service;
 
 use App\Entity\Order;
 use DivisionByZeroError;
+use function bcdiv;
+use function bcsub;
+use function number_format;
 
 class TaxCalculator
 {

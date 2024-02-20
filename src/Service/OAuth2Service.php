@@ -22,14 +22,14 @@ class OAuth2Service
         private readonly RequestStack $requestStack,
     ) {}
 
-    public function getProfile($appClient): null|OAuth2ClientProfile
+    public function getProfile($appClient): OAuth2ClientProfile|null
     {
         return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy(
             ['client' => $appClient],
         );
     }
 
-    public function createConsent(null|Client $appClient)
+    public function createConsent(Client|null $appClient)
     {
         $user = $this->security->getUser();
         $request = $this->requestStack->getCurrentRequest();
@@ -52,7 +52,7 @@ class OAuth2Service
         return $consents;
     }
 
-    public function getClient(): null|Client
+    public function getClient(): Client|null
     {
         $clientId = 'testclient';
 
