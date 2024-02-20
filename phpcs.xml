@@ -10,7 +10,7 @@
     <arg name="extensions" value="php"/>
     <arg name="tab-width" value="4"/>
     <arg value="s"/>
-    <arg value="q"/>
+    <arg value="p"/>
     <arg name="basepath" value="."/>
     <arg name="cache" value="var/cache/.phpcs-cache"/>
     <arg name="colors"/>
@@ -93,12 +93,12 @@
 
     <rule ref="SlevomatCodingStandard.Files.FunctionLength.FunctionLength">
         <properties>
-            <property name="maxLinesLength" value="35"/>
+            <property name="maxLinesLength" value="35" />
         </properties>
     </rule>
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
         <properties>
-            <property name="maxLinesLength" value="35"/>
+            <property name="maxLinesLength" value="35" />
         </properties>
     </rule>
     <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
