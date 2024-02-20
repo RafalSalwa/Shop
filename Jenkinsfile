@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Unit Tests') {
             steps {
-                sh 'bin/phpunit'
+                sh 'make test_unit'
                 xunit([
                     thresholds: [
                         failed ( failureThreshold: "0" ),
@@ -33,7 +33,7 @@ pipeline {
                     reportTitles: ''
                 ])
                 discoverGitReferenceBuild()
-                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'build/logs/cobertura.xml']])
+                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'reports/phpunit/cobertura.xml']])
             }
         }
         stage('Static Analysis')
