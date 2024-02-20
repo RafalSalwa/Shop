@@ -7,7 +7,7 @@
 /var/
 /vendor/
 reports
-!reports/.gitkeep
+!reports/.gitignore
 !reports/config/
 !reports/config/.gitkeep
 bin/

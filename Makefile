@@ -15,18 +15,18 @@ compose-down:
 
 .PHONY: lint
 lint:
-	vendor/bin/parallel-lint src
+	bin/parallel-lint src
 
 .PHONY: ecs
 ecs:
-	vendor/bin/ecs check src --config reports/config/ecs.php
+	bin/ecs check src --config reports/config/ecs.php
 .PHONY: rector
 rector: vendor ## Automatic code fixes with Rector
 	composer rector
 
 .PHONY: phpcs
 phpcs:
-	vendor/bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 -spv src tests
+	bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 -spv src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer: vendor ## Fix code style
@@ -34,7 +34,7 @@ php-cs-fixer: vendor ## Fix code style
 
 .PHONY: phpstan-sonar
 phpstan-sonar:
-	./vendor/bin/phpstan analyse --error-format=json --no-progress -n > reports/phpstan/report.json src tests
+	./bin/phpstan analyse --error-format=json --no-progress -n > reports/phpstan/report.json src tests
 
 .PHONY: psalm-sonar
 psalm-sonar:
@@ -49,40 +49,40 @@ phpda:
 	docker run --rm -v $PWD:/app mamuz/phpda
 
 .PHONY: deptrack
-	./vendor/bin/deptrac --formatter=json > reports/deptrack/report.json
+	./bin/deptrac --formatter=json > reports/deptrack/report.json
 
 .PHONY: phpinsights
 phpinsights:
-	./vendor/bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
+	./bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
 
 .PHONY: test_unit phpmetrics
 phpmetrics:
 	$(MAKE) test_unit
-	${ROOT_DIR}/vendor/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
+	${ROOT_DIR}/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
 
 .PHONY: phpunit
 phpunit: ### run test
-	${ROOT_DIR}/vendor/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml
+	${ROOT_DIR}/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml
 
 .PHONY: test_unit
 test_unit: ### run test
-	./vendor/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit
+	./bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit
 
 .PHONY: test_integration
 test_integration: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=integration
+	./bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=integration
 
 .PHONY: test_api
 test_api: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=api
+	./bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=api
 
 .PHONY: test_functional
 test_functional: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=functional
+	./bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=functional
 
 .PHONY: test_e2e
 test_e2e: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
+	./bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
 
 
 .PHONY: proto
