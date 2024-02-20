@@ -6,10 +6,12 @@
 /public/bundles/
 /var/
 /vendor/
-reports
+
+reports/
 !reports/.gitignore
+
 !reports/config/
-!reports/config/.gitkeep
+!reports/config/**
 bin/
 !bin/console
 ###< symfony/framework-bundle ###
