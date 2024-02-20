@@ -4,7 +4,7 @@
          colors="true"
          testdox="false"
          bootstrap="../../tests/bootstrap.php"
-         cacheDirectory="../phpunit/phpunit.cache"
+         cacheDirectory="../results/phpunit.cache"
          executionOrder="depends,defects"
          requireCoverageMetadata="true"
          beStrictAboutCoverageMetadata="true"
@@ -62,14 +62,14 @@
               ignoreDeprecatedCodeUnits="true"
               disableCodeCoverageIgnore="true">
         <report>
-            <clover outputFile="../../reports/phpunit/clover.xml"/>
-            <html outputDirectory="../../reports/phpunit/coverage/" lowUpperBound="50" highLowerBound="90"/>
-            <cobertura outputFile="../../reports/phpunit/cobertura.xml"/>
+            <clover outputFile="../results/phpunit.clover.xml"/>
+            <html outputDirectory="../results/phpunit/" lowUpperBound="50" highLowerBound="90"/>
+            <cobertura outputFile="../results/phpunit.cobertura.xml"/>
         </report>
     </coverage>
 
     <logging>
-        <junit outputFile="../../reports/phpunit/phpunit.xml"/>
+        <junit outputFile="../results/phpunit.junit.xml"/>
     </logging>
 
     <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
