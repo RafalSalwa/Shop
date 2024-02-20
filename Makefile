@@ -15,9 +15,9 @@ down:
 
 .PHONY: run-always
 run-always:
-	bin/swiss-knife check-commented-code src
-	bin/swiss-knife check-conflicts src
-	bin/swiss-knife find-multi-classes src
+	bin/easy-ci check-commented-code src
+	bin/easy-ci check-conflicts src
+	bin/easy-ci find-multi-classes src
 .PHONY: lint
 lint:
 	bin/parallel-lint src
