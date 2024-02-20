@@ -34,7 +34,6 @@ bin/phpunit
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
-/phpcs.xml
 ###< squizlabs/php_codesniffer ###
 
 ###> qossmic/deptrac-shim ###
