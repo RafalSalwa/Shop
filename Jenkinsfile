@@ -36,8 +36,9 @@ pipeline {
                 recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'build/logs/cobertura.xml']])
             }
         }
-        stage('Static Analysis') {
-            parallel {
+        stage('Static Analysis')
+        {
+            parallel{
                 stages{
                     stage('CodeSniffer') {
                         steps {
@@ -51,20 +52,25 @@ pipeline {
                     }
 
                     stage('Mess Detection Report') {
-                        sh 'vendor/bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
-                        pmd canRunOnFailed: true, pattern: 'build/logs/pmd.xml'
+                        steps{
+                            sh 'vendor/bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
+                            pmd canRunOnFailed: true, pattern: 'build/logs/pmd.xml'
+                        }
                     }
 
                     stage('Software metrics') {
-                        sh 'vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg --ignore=vendor app'
+                        steps{
+                            sh 'vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg --ignore=vendor app'
+                        }
                     }
 
                     stage('Generate documentation') {
-                        sh 'vendor/bin/phpdox -f phpdox.xml'
+                        steps{
+                            sh 'vendor/bin/phpdox -f phpdox.xml'
+                        }
                     }
                 }
             }
-
         }
     }
 }
