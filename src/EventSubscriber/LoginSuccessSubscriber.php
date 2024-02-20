@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
-use App\Entity\User;
-use App\Message\AMQPMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Security\Http\Event\LoginSuccessEvent;
 
@@ -15,9 +13,7 @@ class LoginSuccessSubscriber implements EventSubscriberInterface
 
     public static function getSubscribedEvents()
     {
-        return [
-            LoginSuccessEvent::class => 'onSuccessfulLogin',
-        ];
+        return [LoginSuccessEvent::class => 'onSuccessfulLogin'];
     }
 
     public function onSuccessfulLogin(LoginSuccessEvent $event): void

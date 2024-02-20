@@ -15,5 +15,6 @@ class CartItemRepository extends ServiceEntityRepository
         parent::__construct($registry, CartItem::class);
     }
 
-    public function exists(): void {}
+    public function exists(): void
+    {}
 }

@@ -21,7 +21,7 @@ readonly class PaymentService
     public function createPendingPayment(Order $order): Payment
     {
         $payment = $order->getLastPayment();
-        if (!$payment) {
+        if (! $payment) {
             $payment = new Payment();
         }
         $this->paymentProcessing->getMarking($payment);

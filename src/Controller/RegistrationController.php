@@ -19,13 +19,12 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 #[Route('/register', name: 'register_')]
 class RegistrationController extends AbstractController
 {
-    public function __construct(private readonly EmailVerifier $emailVerifier) {}
+    public function __construct(private readonly EmailVerifier $emailVerifier)
+    {}
 
     #[Route('/', name: 'index')]
-    public function register(
-        Request $request,
-        AuthApiRegisterer $authApiRegisterer,
-    ): Response {
+    public function register(Request $request, AuthApiRegisterer $authApiRegisterer): Response
+    {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -46,10 +45,8 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/confirm/', name: 'confirm_email')]
-    public function confirmUserEmail(
-        Request $request,
-        AuthApiRegisterer $authApiRegisterer
-    ): Response {
+    public function confirmUserEmail(Request $request, AuthApiRegisterer $authApiRegisterer): Response
+    {
         $form = $this->createForm(RegistrationConfirmationFormType::class);
         $form->handleRequest($request);
 
@@ -58,7 +55,7 @@ class RegistrationController extends AbstractController
 
             return $this->redirectToRoute(
                 'register_thank_you',
-                ['verificationCode' => $form->get('confirmationCode')->getData()]
+                ['verificationCode' => $form->get('confirmationCode')->getData()],
             );
         }
 
@@ -77,7 +74,7 @@ class RegistrationController extends AbstractController
 
         return $this->redirectToRoute(
             'register_thank_you',
-            ['verificationCode' => $verificationCode]
+            ['verificationCode' => $verificationCode],
         );
     }
 
@@ -87,15 +84,11 @@ class RegistrationController extends AbstractController
         string $verificationCode,
         UserAuthenticatorInterface $userAuthenticator,
         AuthApiAuthenticator $authApiAuthenticator,
-        AuthApiRegisterer $authApiRegisterer
+        AuthApiRegisterer $authApiRegisterer,
     ): Response {
         $user = $authApiRegisterer->getUserByCode($verificationCode);
 
-        $userAuthenticator->authenticateUser(
-            $user,
-            $authApiAuthenticator,
-            $request
-        );
+        $userAuthenticator->authenticateUser($user, $authApiAuthenticator, $request);
 
         return $this->render('registration/thank_you.html.twig');
     }

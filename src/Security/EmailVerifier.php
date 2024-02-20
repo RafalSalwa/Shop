@@ -11,6 +11,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+use function dd;
 
 class EmailVerifier
 {
@@ -32,15 +33,13 @@ class EmailVerifier
         $context = $templatedEmail->getContext();
         $context['signedUrl'] = $this->router->generate(
             'register_verify_email',
-            [
-                'verificationCode' => $verificationCode,
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            ['verificationCode' => $verificationCode],
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
         $context['confirmationUrl'] = $this->router->generate(
             'register_confirm_email',
             [],
-            UrlGeneratorInterface::ABSOLUTE_URL
+            UrlGeneratorInterface::ABSOLUTE_URL,
         );
         $context['verificationCode'] = $verificationCode;
         $templatedEmail->context($context);

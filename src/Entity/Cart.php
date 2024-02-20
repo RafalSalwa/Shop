@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Model\User;
 use App\Repository\CartRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -23,6 +24,8 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use function assert;
+
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
@@ -39,15 +42,13 @@ class Cart implements JsonSerializable
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /**
-     * @var Collection<int, CartItem>
-     */
+    /** @var Collection<int, CartItem> */
     #[OneToMany(
         mappedBy: 'cart',
         targetEntity: CartItem::class,
         cascade: ['persist', 'remove'],
         fetch: 'EAGER',
-        orphanRemoval: true
+        orphanRemoval: true,
     )
     ]
     #[Groups('cart')]
@@ -60,20 +61,18 @@ class Cart implements JsonSerializable
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: [
-        'default' => 'CURRENT_TIMESTAMP',
-    ])]
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private DateTime|null $updatedAt = null;
 
     public function __construct()
     {
         $this->items = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
@@ -87,19 +86,17 @@ class Cart implements JsonSerializable
 
     public function addItem(CartItemInterface $item): self
     {
-        if (!$this->itemExists($item)) {
+        if (! $this->itemExists($item)) {
             $item->setCart($this);
             $this->getItems()
-                ->add($item)
-            ;
+                ->add($item);
 
             return $this;
         }
 
-        /** @var CartItem $existingItem */
         $existingItem = $this->getFilteredItems($item)
-            ->first()
-        ;
+            ->first();
+        assert($existingItem instanceof CartItem);
         $existingItem->increaseQuantity();
 
         return $this;
@@ -114,26 +111,21 @@ class Cart implements JsonSerializable
                     ->getId() === $cartItem->getReferenceEntity()
                     ->getId()
                     && $element::class === $cartItem::class
-            )
-        ;
+            );
     }
 
-    /**
-     * @return null|Collection<int,CartItem>
-     */
-    public function getItems(): ?Collection
+    /** @return Collection<int, CartItem>|null */
+    public function getItems(): Collection|null
     {
         return $this->items;
     }
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    /**
-     * @return ReadableCollection<int,CartItem>
-     */
+    /** @return ReadableCollection<int,CartItem> */
     public function getFilteredItems(CartItemInterface $newItem): ReadableCollection
     {
         return $this->getItems()
@@ -142,24 +134,24 @@ class Cart implements JsonSerializable
                     ->getId() === $newItem->getReferenceEntity()
                     ->getId()
                     && $cartItem::class === $newItem::class
-            )
-        ;
+            );
     }
 
     public function removeItem(CartItem $item): void
     {
-        if ($this->items->contains($item)) {
-            $this->items->removeElement($item);
-
-            $item->setCart(null);
+        if (! $this->items->contains($item)) {
+            return;
         }
+
+        $this->items->removeElement($item);
+
+        $item->setCart(null);
     }
 
     public function itemTypeExists(CartItemInterface $cartItem): bool
     {
         return $this->getItems()
-            ->exists(static fn ($key, $element) => $element::class === $cartItem::class)
-        ;
+            ->exists(static fn ($key, $element) => $element::class === $cartItem::class);
     }
 
     public function getUserId(): int
@@ -174,7 +166,7 @@ class Cart implements JsonSerializable
         return $this;
     }
 
-    public function setUser(\App\Model\User $user): self
+    public function setUser(User $user): self
     {
         $this->setUserId($user->getId());
 

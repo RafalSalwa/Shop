@@ -8,6 +8,9 @@
 /vendor/
 /reports
 !/reports/.gitkeep
+!/reports/config
+bin/
+!bin/console
 ###< symfony/framework-bundle ###
 .idea
 ###> league/oauth2-server-bundle ###
@@ -43,10 +46,7 @@ bin/phpunit
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
-<<<<<<< ours
-=======
 
-###> phpstan/phpstan ###
-phpstan.neon
-###< phpstan/phpstan ###
->>>>>>> theirs
+###> sonarqube ###
+/.scannerwork
+###< sonarqube ###

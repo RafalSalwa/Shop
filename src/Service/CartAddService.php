@@ -8,7 +8,7 @@ use App\Entity\Product;
 use App\Exception\ProductNotFound;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
-use App\Security\CartAddVoter;
+use App\Security\Voter\CartAddVoter;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;

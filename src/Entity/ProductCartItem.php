@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use JsonSerializable;
+
 use function sprintf;
 
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
@@ -78,9 +79,13 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         return $this->referenceEntity;
     }
 
-    public function getPrice(): float {}
+    public function getPrice(): float
+    {
+    }
 
-    public function getTotalPrice(): float {}
+    public function getTotalPrice(): float
+    {
+    }
 
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
@@ -89,7 +94,9 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         return $this;
     }
 
-    public function toCartItem(): CartItem {}
+    public function toCartItem(): CartItem
+    {
+    }
 
     public function setQuantity(int $quantity): CartItemInterface
     {

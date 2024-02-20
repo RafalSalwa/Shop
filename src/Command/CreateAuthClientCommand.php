@@ -6,19 +6,20 @@ namespace App\Command;
 
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Throwable;
+use function explode;
+use function implode;
 
 #[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
 class CreateAuthClientCommand extends Command
 {
-    public function __construct(
-        private readonly EntityManagerInterface $em
-    ) {
+    public function __construct(private readonly EntityManagerInterface $em)
+    {
         parent::__construct();
     }
 
@@ -34,9 +35,9 @@ class CreateAuthClientCommand extends Command
         $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
         $redirectUris = explode(',', 'https://interview.local/callback');
 
-        $user = $this->em->getRepository(User::class)->findOneBy([
-            'user_id' => 1,
-        ]);
+        $user = $this->em->getRepository(User::class)->findOneBy(
+            ['user_id' => 1],
+        );
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
         //        $this->em->persist($user);
@@ -47,24 +48,30 @@ class CreateAuthClientCommand extends Command
         $conn->beginTransaction();
 
         try {
-            $conn->insert('oauth2_client', [
-                'identifier' => $clientId,
-                'secret' => $clientSecret,
-                'name' => $clientName,
-                'redirect_uris' => implode(' ', $redirectUris),
-                'grants' => implode(' ', $grantTypes),
-                'scopes' => implode(' ', $scopes),
-                'active' => 1,
-                'allow_plain_text_pkce' => 0,
-            ]);
+            $conn->insert(
+                'oauth2_client',
+                [
+                    'identifier' => $clientId,
+                    'secret' => $clientSecret,
+                    'name' => $clientName,
+                    'redirect_uris' => implode(' ', $redirectUris),
+                    'grants' => implode(' ', $grantTypes),
+                    'scopes' => implode(' ', $scopes),
+                    'active' => 1,
+                    'allow_plain_text_pkce' => 0,
+                ],
+            );
 
-            $conn->insert('oauth2_client_profile', [
-                'id' => 1,
-                'client_id' => $clientId,
-                'name' => $clientDescription,
-            ]);
+            $conn->insert(
+                'oauth2_client_profile',
+                [
+                    'id' => 1,
+                    'client_id' => $clientId,
+                    'name' => $clientDescription,
+                ],
+            );
             $conn->commit();
-        } catch (Exception) {
+        } catch (Throwable) {
             $conn->rollBack();
         }
         $io->success('Bootstrap complete.');

@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 use function number_format;
 
 #[Entity(repositoryClass: OrderRepository::class)]
@@ -58,7 +59,7 @@ class Order
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private DateTime|null $updatedAt = null;
 
     #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
@@ -66,13 +67,13 @@ class Order
 
     #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
     #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
-    private ?Address $address = null;
+    private Address|null $address = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
-    private ?Collection $payments = null;
+    private Collection|null $payments = null;
 
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private ?Collection $items = null;
+    private Collection|null $items = null;
 
     private int $netAmount = 0;
 
@@ -81,15 +82,15 @@ class Order
     public function __construct()
     {
         $this->payments = new ArrayCollection();
-        $this->items = new ArrayCollection();
+        $this->items    = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): ?DateTime
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
 
-    public function getAddress(): ?Address
+    public function getAddress(): Address|null
     {
         return $this->address;
     }
@@ -160,7 +161,7 @@ class Order
         $this->vatAmount = $amount;
     }
 
-    public function getItems(): null|Collection
+    public function getItems(): Collection|null
     {
         return $this->items;
     }
@@ -213,12 +214,12 @@ class Order
         $this->payments[] = $payment;
     }
 
-    public function getPayments(): null|Collection
+    public function getPayments(): Collection|null
     {
         return $this->payments;
     }
 
-    public function getLastPayment(): ?Payment
+    public function getLastPayment(): Payment|null
     {
         return $this->payments?->last();
     }

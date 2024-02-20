@@ -25,17 +25,17 @@ class Supplier
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'supplier_id', type: Types::SMALLINT, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'suppliers_supplier_id_seq', allocationSize: 1, initialValue: 10)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     #[Column(name: 'company_name', type: Types::STRING, length: 40, nullable: false)]
-    private ?string $name = null;
+    private string|null $name = null;
 
-    public function getId(): null|int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getName(): null|string
+    public function getName(): string|null
     {
         return $this->name;
     }

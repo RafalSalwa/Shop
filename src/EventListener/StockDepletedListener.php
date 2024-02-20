@@ -11,7 +11,8 @@ use Symfony\Component\Mime\Email;
 
 class StockDepletedListener implements EventSubscriberInterface
 {
-    public function __construct(private readonly MailerInterface $mailer) {}
+    public function __construct(private readonly MailerInterface $mailer)
+    {}
 
     public static function getSubscribedEvents()
     {

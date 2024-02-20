@@ -196,7 +196,8 @@ class User implements JsonSerializable, UserInterface
 
     public function getRoles(): array
     {
-        if (null !== $this->roles) {
+        $roles = $this->roles;
+        if (null !== $roles) {
             $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
             $roles[] = 'ROLE_USER';
@@ -204,7 +205,9 @@ class User implements JsonSerializable, UserInterface
             return array_unique($roles);
         }
 
-        return [];
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
     }
 
     public function setRoles($roles): self

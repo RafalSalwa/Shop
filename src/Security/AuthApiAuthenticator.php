@@ -4,32 +4,30 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Model\User;
-use Symfony\Component\HttpClient\Exception\ClientException;
+use App\Client\AuthApiClient;
+use App\Client\UsersApiClient;
+use App\Exception\AuthenticationExceptionInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
+use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
+use function dd;
 
 class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
 {
     public function __construct(
-        private readonly HttpClientInterface $authApi,
-        private readonly HttpClientInterface $usersApi,
-        private readonly UrlGeneratorInterface $urlGenerator
+        private AuthApiClient $authApiClient,
+        private UsersApiClient $usersApiClient,
+        private UrlGeneratorInterface $urlGenerator,
     ) {}
 
     protected function getLoginUrl(Request $request): string
@@ -39,51 +37,42 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        if (false === $request->request->has('email') || false === $request->request->has('password')) {
+            throw new InvalidArgumentException('Missing authentication parameters in request.');
+        }
         try {
-            $response = $this->authApi->request('POST', '/auth/signin', [
-                'body' => json_encode(
-                    [
-                        'email' => $request->get('email'),
-                        'password' => $request->get('password'),
-                    ]
-                ),
-            ]);
-            $arrResponse = json_decode($response->getContent(), true);
-            $userToken = $arrResponse['user']['token'];
-            $userRefreshToken = $arrResponse['user']['refresh_token'];
+            $tokenPair = $this->authApiClient->signIn(
+                $request->request->get('email'),
+                $request->request->get('password'),
+            );
+        } catch (AuthenticationExceptionInterface $exception) {
+            dd($exception->getMessage(), $exception->getTraceAsString());
+        }
 
-            return new SelfValidatingPassport(
-                new UserBadge($userToken, function () use ($userToken, $userRefreshToken, $request) {
-                    $response = $this->usersApi->request('GET', '/user', [
-                        'auth_bearer' => $userToken,
-                    ]);
-                    $user = new User();
-                    $user->setFromAuthApi($response);
-                    $user->setToken($userToken)->setRefreshToken($userRefreshToken);
+        return new SelfValidatingPassport(
+            new UserBadge(
+                $tokenPair->getToken(),
+                function () use ($tokenPair, $request) {
+                    $user = $this->usersApiClient->getUser($tokenPair);
                     $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->get('email'));
 
                     return $user;
-                }, ['asd' => 'raf']),
-                [new RememberMeBadge()]
-            );
-        } catch (ClientException $ce) {
-            dd($ce->getMessage(), $ce->getTraceAsString());
-        } catch (ClientExceptionInterface $e) {
-        } catch (RedirectionExceptionInterface $e) {
-        } catch (ServerExceptionInterface $e) {
-        } catch (TransportExceptionInterface $e) {
-        }
+                },
+                ['asd' => 'raf'],
+            ),
+            [new RememberMeBadge()],
+        );
     }
-
+///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        //        dd(__CLASS__, __FUNCTION__, func_get_args());
         return null;
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        if ($request->hasSession()) {
+        dd('fail');
+        if (true === $request->hasSession()) {
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
         }
 

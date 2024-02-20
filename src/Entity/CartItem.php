@@ -61,12 +61,12 @@ class CartItem implements SerializerInterface, CartItemInterface
     protected DateTimeInterface $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    protected ?DateTime $updatedAt = null;
+    protected DateTime|null $updatedAt = null;
 
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     #[Groups('cart_item')]
-    protected ?Cart $cart = null;
+    protected Cart|null $cart = null;
 
     protected CartInsertableInterface $referenceEntity;
 
@@ -80,12 +80,12 @@ class CartItem implements SerializerInterface, CartItemInterface
         return $this->id;
     }
 
-    public function getCart(): ?Cart
+    public function getCart(): Cart|null
     {
         return $this->cart;
     }
 
-    public function setCart(?Cart $cart): self
+    public function setCart(Cart|null $cart): self
     {
         $this->cart = $cart;
 
@@ -121,18 +121,19 @@ class CartItem implements SerializerInterface, CartItemInterface
         $this->setCreatedAt(new DateTime('now'));
     }
 
-    public function setUser(UserInterface $getUser): void {}
+    public function setUser(UserInterface $getUser): void
+    {
+    }
 
     /**
      * @return string<int|mixed>
-     *
      * @psalm-return array{id: int, username: mixed, verified: mixed, active: mixed}
      */
     public function serialize(
         mixed $data,
         string $format,
-        ?SerializationContext $context = null,
-        ?string $type = null,
+        SerializationContext|null $context = null,
+        string|null $type = null,
     ): string {
         return [
             'id' => $this->id,
@@ -146,8 +147,9 @@ class CartItem implements SerializerInterface, CartItemInterface
         string $data,
         string $type,
         string $format,
-        ?DeserializationContext $context = null,
-    ): void {}
+        DeserializationContext|null $context = null,
+    ): void {
+    }
 
     public function getDisplayName(): string
     {
@@ -171,13 +173,21 @@ class CartItem implements SerializerInterface, CartItemInterface
         return $this;
     }
 
-    public function getType(): string {}
+    public function getType(): string
+    {
+    }
 
-    public function getPrice(): float {}
+    public function getPrice(): float
+    {
+    }
 
-    public function getTotalPrice(): float {}
+    public function getTotalPrice(): float
+    {
+    }
 
-    public function getReferencedEntity(): CartInsertableInterface {}
+    public function getReferencedEntity(): CartInsertableInterface
+    {
+    }
 
     public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
     {
@@ -186,11 +196,19 @@ class CartItem implements SerializerInterface, CartItemInterface
         return $this;
     }
 
-    public function toCartItem(): self {}
+    public function toCartItem(): self
+    {
+    }
 
-    public function getQuantity(): int {}
+    public function getQuantity(): int
+    {
+    }
 
-    public function setQuantity(int $quantity): CartItemInterface {}
+    public function setQuantity(int $quantity): CartItemInterface
+    {
+    }
 
-    public function getReferenceEntity(): CartInsertableInterface {}
+    public function getReferenceEntity(): CartInsertableInterface
+    {
+    }
 }

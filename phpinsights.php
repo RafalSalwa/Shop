@@ -13,7 +13,6 @@ use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
 use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Preset
@@ -47,7 +46,7 @@ return [
     |
     */
 
-    'ide' => "phpstorm",
+    'ide' => 'phpstorm',
 
     /*
     |--------------------------------------------------------------------------
@@ -62,7 +61,7 @@ return [
 
     'exclude' => [
         'src/Protobuf',
-        'src/Kernel.php'
+        'src/Kernel.php',
     ],
 
     'add' => [
@@ -108,7 +107,7 @@ return [
         DocCommentSpacingSniff::class => [
             'linesCountBetweenAnnotationsGroups' => 0,
             'annotationsGroups' => [
-                ['@package', '@author', '@copyright']
+                ['@package', '@author', '@copyright'],
             ],
         ],
         LineLengthSniff::class => [
@@ -129,11 +128,11 @@ return [
     */
 
     'requirements' => [
-//        'min-quality' => 0,
-//        'min-complexity' => 0,
-//        'min-architecture' => 0,
-//        'min-style' => 0,
-//        'disable-security-check' => false,
+        //        'min-quality' => 0,
+        //        'min-complexity' => 0,
+        //        'min-architecture' => 0,
+        //        'min-style' => 0,
+        //        'disable-security-check' => false,
     ],
 
     /*
@@ -148,5 +147,4 @@ return [
     */
 
     'threads' => null,
-
 ];

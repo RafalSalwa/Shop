@@ -9,11 +9,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 class UserRegisteredEvent extends Event
 {
-    protected User $user;
-
-    public function __construct(User $user)
+    public function __construct(protected User $user)
     {
-        $this->user = $user;
     }
 
     public function getUser(): User

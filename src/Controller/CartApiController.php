@@ -52,10 +52,10 @@ class CartApiController extends AbstractController
             new OA\Response(
                 response: 404,
                 description: 'Product not found',
-                content: new OA\JsonContent(ref: '#/components/schemas/error')
+                content: new OA\JsonContent(ref: '#/components/schemas/error'),
             ),
             new OA\Response(ref: '#/components/responses/JwtTokenInvalid', response: 401),
-        ]
+        ],
     )]
     #[Security(name: 'Bearer')]
     #[Route(
@@ -64,11 +64,11 @@ class CartApiController extends AbstractController
         requirements: [
             'id' => Requirement::POSITIVE_INT,
         ],
-        methods: ['POST']
+        methods: ['POST'],
     )]
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
+        $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
         if (true === (null === $params['id'])) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
@@ -96,11 +96,11 @@ class CartApiController extends AbstractController
                 ],
                 Response::HTTP_NOT_FOUND,
             );
-        } catch (Exception|ItemNotFoundException|TooManySubscriptionsException) {
+        } catch (Exception | ItemNotFoundException | TooManySubscriptionsException) {
         }
 
-        return $this->json([
-            'status' => 'success',
-        ]);
+        return $this->json(
+            ['status' => 'success'],
+        );
     }
 }

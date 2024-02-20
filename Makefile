@@ -32,9 +32,13 @@ phpcs:
 php-cs-fixer: vendor ## Fix code style
 	composer php-cs-fixer
 
-.PHONY: stan
-stan: ## Runs static analysis with phpstan
-	composer stan
+.PHONY: phpstan-sonar
+phpstan-sonar:
+	./vendor/bin/phpstan analyse --error-format=json --no-progress -n > reports/phpstan/report.json src tests
+
+.PHONY: psalm-sonar
+psalm-sonar:
+	bin/psalm --report=reports/psalm/sonarqube.json --config=psalm.xml
 
 .PHONY: bench
 bench: ## Runs benchmarks with phpbench
@@ -43,6 +47,9 @@ bench: ## Runs benchmarks with phpbench
 .PHONY: phpda
 phpda:
 	docker run --rm -v $PWD:/app mamuz/phpda
+
+.PHONY: deptrack
+	./vendor/bin/deptrac --formatter=json > reports/deptrack/report.json
 
 .PHONY: phpinsights
 phpinsights:

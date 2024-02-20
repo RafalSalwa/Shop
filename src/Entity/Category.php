@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -18,19 +17,17 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'categories', schema: 'interview')]
 class Category
 {
-
-
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'category_id', type: Types::SMALLINT, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'categories_categoryID_seq', allocationSize: 1, initialValue: 10)]
-    private ?int $id = null;
+    private int|null $id = null;
 
     #[Column(name: 'category_name', type: Types::STRING, length: 32, nullable: false)]
     private string $name;
 
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
-    private ?string $description = null;
+    private string|null $description = null;
 
     #[Column(name: 'slug', type: Types::STRING, length: 64, nullable: true)]
     private string $slug;
@@ -39,12 +36,12 @@ class Category
     {
     }
 
-    public function getId(): null|int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getName(): null|string
+    public function getName(): string|null
     {
         return $this->name;
     }
@@ -56,12 +53,12 @@ class Category
         return $this;
     }
 
-    public function getDescription(): null|string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    public function setDescription(string|null $description): self
     {
         $this->description = $description;
 

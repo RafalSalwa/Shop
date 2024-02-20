@@ -16,33 +16,33 @@ class OAuth2UserConsent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $id = null;
+    private int|null $id = null;
 
     #[ORM\Column]
-    private ?DateTimeImmutable $created = null;
+    private DateTimeImmutable|null $created = null;
 
     #[ORM\Column(nullable: true)]
-    private ?DateTimeImmutable $expires = null;
+    private DateTimeImmutable|null $expires = null;
 
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private array $scopes = [];
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $ipAddress = null;
+    private string|null $ipAddress = null;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
-    private ?Client $client = null;
+    private Client|null $client = null;
 
     #[ORM\Column]
     private int $userId;
 
-    public function getId(): ?int
+    public function getId(): int|null
     {
         return $this->id;
     }
 
-    public function getUser(): ?User
+    public function getUser(): User|null
     {
         return $this->user;
     }
@@ -54,7 +54,7 @@ class OAuth2UserConsent
         return $this;
     }
 
-    public function getCreated(): ?DateTimeImmutable
+    public function getCreated(): DateTimeImmutable|null
     {
         return $this->created;
     }
@@ -66,12 +66,12 @@ class OAuth2UserConsent
         return $this;
     }
 
-    public function getExpires(): ?DateTimeImmutable
+    public function getExpires(): DateTimeImmutable|null
     {
         return $this->expires;
     }
 
-    public function setExpires(?DateTimeImmutable $expires): self
+    public function setExpires(DateTimeImmutable|null $expires): self
     {
         $this->expires = $expires;
 
@@ -83,26 +83,26 @@ class OAuth2UserConsent
         return $this->scopes;
     }
 
-    public function setScopes(?array $scopes): self
+    public function setScopes(array|null $scopes): self
     {
         $this->scopes = $scopes;
 
         return $this;
     }
 
-    public function getIpAddress(): ?string
+    public function getIpAddress(): string|null
     {
         return $this->ipAddress;
     }
 
-    public function setIpAddress(?string $ipAddress): self
+    public function setIpAddress(string|null $ipAddress): self
     {
         $this->ipAddress = $ipAddress;
 
         return $this;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client|null
     {
         return $this->client;
     }

@@ -13,5 +13,6 @@ enum SubscriptionTier: int
     case FIVE_HUNDRED = 5;
     case EIGHT_HUNDRED = 6;
 
-    public function getLabel(): void {}
+    public function getLabel(): void
+    {}
 }

@@ -8,6 +8,7 @@ use App\Entity\User;
 use App\Repository\SubscriptionPlanRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use function assert;
 
 class SubscriptionService
 {
@@ -29,10 +30,8 @@ class SubscriptionService
             return;
         }
 
-        /**
-         * @var User $user
-         */
         $user = $this->security->getUser();
+        assert($user instanceof User);
         $subscription = $user->getSubscription();
         if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {
             return;

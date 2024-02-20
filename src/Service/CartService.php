@@ -10,14 +10,17 @@ use App\Entity\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 use App\Entity\SubscriptionPlanCartItem;
+use App\Exception\ItemNotFoundException;
 use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartFactory;
 use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Lock\LockFactory;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Throwable;
+use function dd;
 
 class CartService
 {
@@ -28,8 +31,9 @@ class CartService
         private readonly CartItemFactory $cartItemFactory,
         private readonly ProductStockService $productStockService,
         private readonly LockFactory $cartLockFactory,
-        private readonly LoggerInterface $logger
-    ) {}
+        private readonly LoggerInterface $logger,
+    ) {
+    }
 
     public function clearCart(): void
     {
@@ -40,8 +44,7 @@ class CartService
             $this->save($cart);
         }
         $cart->getItems()
-            ->clear()
-        ;
+            ->clear();
         $this->cartSessionStorage->removeCart();
     }
 
@@ -120,8 +123,12 @@ class CartService
             $this->productStockService->changeStock($item, Product::STOCK_DECREASE, $quantity);
 
             $lock->release();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
+        } catch (ItemNotFoundException) {
+        } catch (AccessDeniedException) {
+        } catch (Throwable $e) {
+            dd($e::class, $e->getMessage());
         }
     }
 
@@ -143,7 +150,6 @@ class CartService
         }
 
         $cart->getItems()
-            ->removeElement($item)
-        ;
+            ->removeElement($item);
     }
 }

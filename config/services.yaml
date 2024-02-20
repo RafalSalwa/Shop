@@ -49,9 +49,9 @@ services:
       $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
       $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
 
-  App\Security\CartAddVoter:
+  App\Security\Voter\CartAddVoter:
     tags: [ 'security.voter' ]
-  App\Security\SubscriptionPlanVoter:
+  App\Security\Voter\SubscriptionPlanVoter:
     tags: [ 'security.voter' ]
-  App\Security\OrderStatusVoter:
+  App\Security\Voter\OrderStatusVoter:
     tags: [ 'security.voter' ]

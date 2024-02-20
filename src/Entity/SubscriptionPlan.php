@@ -18,6 +18,9 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
+
+use function bcdiv;
+use function bcmul;
 use function sprintf;
 
 #[Entity(repositoryClass: SubscriptionPlanRepository::class)]
@@ -68,10 +71,10 @@ class SubscriptionPlan implements CartInsertableInterface
     private DateTime $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $updatedAt = null;
+    private DateTime|null $updatedAt = null;
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $deletedAt = null;
+    private DateTime|null $deletedAt = null;
 
     public function setName(string $name): self
     {
@@ -80,7 +83,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getDescription(): string|null
     {
         return $this->description;
     }
@@ -127,7 +130,7 @@ class SubscriptionPlan implements CartInsertableInterface
 
     public function getTaxedPrice()
     {
-        $taxedPrice = bcmul((string)$this->getUnitPrice(), '1.23');
+        $taxedPrice = bcmul((string) $this->getUnitPrice(), '1.23');
 
         return bcdiv($taxedPrice, '100', 2);
     }
@@ -156,7 +159,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getUpdatedAt(): null|DateTime
+    public function getUpdatedAt(): DateTime|null
     {
         return $this->updatedAt;
     }
@@ -168,7 +171,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getDeletedAt(): null|DateTime
+    public function getDeletedAt(): DateTime|null
     {
         return $this->deletedAt;
     }
@@ -186,8 +189,7 @@ class SubscriptionPlan implements CartInsertableInterface
         $cartItem
             ->setReferencedEntity($this)
             ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'))
-        ;
+            ->setCreatedAt(new DateTime('now'));
 
         return $cartItem;
     }

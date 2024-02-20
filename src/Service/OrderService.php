@@ -19,6 +19,8 @@ use JMS\Serializer\SerializerInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function assert;
+use function json_decode;
 use const JSON_THROW_ON_ERROR;
 
 class OrderService
@@ -31,7 +33,7 @@ class OrderService
         private readonly CartCalculator $cartCalculator,
         private readonly EventDispatcherInterface $eventDispatcher,
         private readonly CartService $cartService,
-        private readonly SubscriptionService $subscriptionService
+        private readonly SubscriptionService $subscriptionService,
     ) {}
 
     public function createPending(Cart $cart): Order
@@ -42,11 +44,11 @@ class OrderService
 
         $user = $this->security->getUser();
 
-        /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
+        assert($repository instanceof OrderRepository);
 
-        /** @var CartItemInterface $item */
         foreach ($cart->getItems() as $item) {
+            assert($item instanceof CartItemInterface);
             $entity = $item->getReferencedEntity();
             $serialized = $this->serializer->serialize($entity, 'json');
 
@@ -66,9 +68,9 @@ class OrderService
     {
         $repository = $this->entityManager->getRepository(Address::class);
         $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $repository->findOneBy([
-            'id' => $addressId,
-        ]);
+        $address = $repository->findOneBy(
+            ['id' => $addressId],
+        );
         $order->setAddress($address);
     }
 
@@ -76,8 +78,8 @@ class OrderService
     {
         $this->orderProcessing->apply($order, 'to_completed');
 
-        /** @var OrderRepository $repository */
         $repository = $this->entityManager->getRepository(Order::class);
+        assert($repository instanceof OrderRepository);
         $repository->save($order);
 
         $event = new OrderConfirmedEvent($order->getId());
@@ -101,12 +103,14 @@ class OrderService
 
     public function proceedSubscriptionsIfAny(Order $order): void
     {
-        /** @var OrderItem $item */
         foreach ($order->getItems() as $item) {
-            if ('plan' === $item->getItemType()) {
-                $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
-                $this->subscriptionService->assignSubscription($deserialized['plan_name']);
+            assert($item instanceof OrderItem);
+            if ('plan' !== $item->getItemType()) {
+                continue;
             }
+
+            $deserialized = json_decode($item->getCartItem(), true, 512, \JSON_THROW_ON_ERROR);
+            $this->subscriptionService->assignSubscription($deserialized['plan_name']);
         }
     }
 }

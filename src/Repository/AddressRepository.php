@@ -16,9 +16,8 @@ class AddressRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param null|mixed $address
-     *
-     * @psalm-param T|null $address
+     * @param       mixed|null $address
+     * @psalm-param \App\Repository\T|null $address
      */
     public function save(mixed $address): void
     {

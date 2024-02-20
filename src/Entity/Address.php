@@ -40,7 +40,7 @@ class Address
     private string $addressLine1;
 
     #[Column(name: 'address_line_2', type: Types::STRING, length: 40, nullable: true)]
-    private ?string $addressLine2 = null;
+    private string|null $addressLine2 = null;
 
     #[Assert\NotBlank]
     #[Column(name: 'city', type: Types::STRING, length: 40)]
@@ -106,7 +106,7 @@ class Address
         return $this;
     }
 
-    public function getAddressLine2(): ?string
+    public function getAddressLine2(): string|null
     {
         return $this->addressLine2;
     }

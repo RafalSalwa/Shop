@@ -1,0 +1,13 @@
+parameters:
+    level: 6
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    errorFormat: json
+    excludePaths:
+        - src/Protobuf/*
+        - src/Migrations/*
+
