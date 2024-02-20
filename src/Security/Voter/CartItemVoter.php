@@ -34,7 +34,7 @@ class CartItemVoter extends Voter
         $requiredSubscription = $subject->getReferencedEntity()
             ->getRequiredSubscription()
         ;
-
+        dd($requiredSubscription);
         /** @var Subscription $userSubscription */
         $userSubscription = $user->getSubscription();
         if (! $requiredSubscription || ! $userSubscription) {
