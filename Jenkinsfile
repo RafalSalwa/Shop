@@ -41,7 +41,7 @@ pipeline {
             parallel{
                 stage('CodeSniffer') {
                     steps {
-                        sh 'bin/phpcs --standard=phpcs.xml --report=checkstyle --report-file=reports/phpcs/phpcs.checkstyle.xml --extensions=php --tab-width=4 -spv src tests'
+                        sh 'bin/phpcs --standard=phpcs.xml --report=checkstyle --report-file=reports/phpcs/phpcs.checkstyle.xml -spv src tests'
                     }
                 }
                 stage('PHPStan') {
