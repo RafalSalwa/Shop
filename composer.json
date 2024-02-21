@@ -10,14 +10,15 @@
     "ext-amqp": "*",
     "ext-bcmath": "*",
     "ext-ctype": "*",
+    "ext-dom": "*",
     "ext-iconv": "*",
+    "ext-mbstring": "*",
     "ext-openssl": "*",
     "ext-pdo": "*",
     "ext-xml": "*",
-    "ext-dom": "*",
-    "ext-mbstring": "*",
     "ext-xmlwriter": "*",
-    "doctrine/doctrine-bundle": "^2.9",
+    "ext-yaml": "*",
+    "doctrine/doctrine-bundle": "^2.11",
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.15",
     "fakerphp/faker": "^1.23",
@@ -34,6 +35,7 @@
     "open-telemetry/sdk": "^0.0.17",
     "php-amqplib/php-amqplib": "^3.6",
     "php-http/httplug": "^2.4",
+    "phpstan/phpstan-strict-rules": "^1.5",
     "rybakit/twig-deferred-extension": "^3.0",
     "stripe/stripe-php": "^13.10",
     "symfony/amqp-messenger": "6.3.*",
@@ -113,14 +115,14 @@
       "assets:install %PUBLIC_DIR%": "symfony-cmd"
     },
     "post-install-cmd": [
-      "@auto-scripts",
-      "@install-codestandards"
+      "@auto-scripts"
     ],
     "post-update-cmd": [
       "@auto-scripts"
     ],
     "install-codestandards": [
-      "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run"
+      "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
+      "vendor/bin/phpcs -q --config-set installed_paths vendor/phpcompatibility/php-compatibility/vendor/doctrine/coding-standard/lib/,vendor/slevomat/coding-standard/,vendor/escapestudios/symfony2-coding-standard/"
     ],
     "baseline": "phpstan --generate-baseline",
     "bench": "phpbench run",
@@ -137,7 +139,10 @@
     "php-cs-fixer": "php-cs-fixer fix",
     "rector": "rector process --dry-run",
     "stan": "phpstan",
-    "test": "phpunit --coverage-html reports/phpunit"
+    "test": "phpunit --coverage-html reports/phpunit",
+    "check-cs": "vendor/bin/ecs check --ansi",
+    "fix-cs": "vendor/bin/ecs check --fix --ansi",
+    "phpcs": "phpcs --standard=phpcs.xml"
   },
   "conflict": {
     "symfony/symfony": "*"
@@ -157,13 +162,17 @@
   "require-dev": {
     "behat/behat": "^3.13",
     "codeception/codeception": "^5.0",
+    "codeception/module-asserts": "*",
+    "codeception/module-phpbrowser": "*",
     "codeception/module-symfony": "^3.1",
     "dama/doctrine-test-bundle": "^7.2",
     "dbrekelmans/bdi": "^1.0",
+    "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "doctrine/coding-standard": "^12.0",
     "doctrine/doctrine-fixtures-bundle": "^3.4",
     "dq5studios/psalm-junit": "^3.0",
     "enlightn/security-checker": "^1.10",
+    "ergebnis/phpstan-rules": "^2.2",
     "escapestudios/symfony2-coding-standard": "^3.13",
     "friendsofphp/php-cs-fixer": "^3.4",
     "infection/infection": "^0.27.6",
@@ -175,7 +184,9 @@
     "php-parallel-lint/php-parallel-lint": "^1.3",
     "php-standard-library/psalm-plugin": "^2.2",
     "phparkitect/phparkitect": "^0.3.25",
+    "phpat/phpat": "^0.10.14",
     "phpbench/phpbench": "^1.2",
+    "phpcompatibility/php-compatibility": "^9.3",
     "phpmd/phpmd": "@stable",
     "phpmetrics/phpmetrics": "^2.8",
     "phpro/grumphp": "^1.16",
@@ -183,6 +194,7 @@
     "phpstan/extension-installer": "^1.3",
     "phpstan/phpstan": "^1.10",
     "phpstan/phpstan-doctrine": "^1.3",
+    "phpstan/phpstan-phpunit": "^1.3",
     "phpstan/phpstan-symfony": "^1.3",
     "phpunit/phpunit": "^10.0",
     "povils/phpmnd": "^3.2",
@@ -190,9 +202,11 @@
     "psalm/plugin-phpunit": "^0.18.4",
     "psalm/plugin-symfony": "^5.0",
     "qossmic/deptrac-shim": "^1.0",
-    "rector/rector": "^0.18.0",
+    "rector/rector": "^1.0",
+    "rector/swiss-knife": "^0.1.12",
     "roave/security-advisories": "dev-latest",
     "slevomat/coding-standard": "~8.0",
+    "spaze/phpstan-disallowed-calls": "^3.1",
     "squizlabs/php_codesniffer": "3.*",
     "symfony/browser-kit": "6.0.*",
     "symfony/css-selector": "6.0.*",
@@ -202,8 +216,15 @@
     "symfony/phpunit-bridge": "^6.3",
     "symfony/stopwatch": "6.3.*",
     "symfony/web-profiler-bundle": "6.3.*",
-    "symplify/coding-standard": "^12.0",
-    "symplify/easy-coding-standard": "^12.0",
+    "symplify/coding-standard": "^12.1",
+    "symplify/easy-ci": "^12.1",
+    "symplify/easy-coding-standard": "^12.1",
+    "symplify/phpstan-extensions": "^11.4",
+    "symplify/phpstan-rules": "^12.4",
+    "tomasvotruba/class-leak": "^0.2.8",
+    "tomasvotruba/cognitive-complexity": "^0.2.3",
+    "tomasvotruba/type-coverage": "^0.2.1",
+    "tomasvotruba/unused-public": "^0.3.5",
     "vimeo/psalm": "^5.15",
     "weirdan/doctrine-psalm-plugin": "^2.9"
   }

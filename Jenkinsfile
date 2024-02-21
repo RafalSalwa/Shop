@@ -13,7 +13,7 @@ pipeline {
         }
         stage('Unit Tests') {
             steps {
-                sh 'vendor/bin/phpunit'
+                sh 'make test_unit'
                 xunit([
                     thresholds: [
                         failed ( failureThreshold: "0" ),
@@ -33,38 +33,56 @@ pipeline {
                     reportTitles: ''
                 ])
                 discoverGitReferenceBuild()
-                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'build/logs/cobertura.xml']])
+                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'reports/phpunit/cobertura.xml']])
             }
         }
-        stage('Static Analysis') {
-            parallel {
-                stages{
-                    stage('CodeSniffer') {
-                        steps {
-                            sh 'vendor/bin/phpcs --standard=phpcs.xml --report=checkstyle --report-file=reports/phpcs/phpcs.checkstyle.xml --extensions=php --tab-width=4 -spv src tests'
-                        }
+        stage('Static Analysis')
+        {
+            parallel{
+                stage('CodeSniffer') {
+                    steps {
+                        sh 'bin/phpcs --standard=phpcs.xml --report=checkstyle --report-file=reports/phpcs/phpcs.checkstyle.xml -spv src tests'
                     }
-                    stage('PHPStan') {
-                        steps {
-                            sh 'vendor/bin/phpstan analyse --error-format=checkstyle --no-progress -n . > reports/phpstan/phpstan.checkstyle.xml'
-                        }
+                }
+                stage('PHPStan') {
+                    steps {
+                        sh 'bin/phpstan analyse --error-format=checkstyle --no-progress -n . > reports/phpstan/phpstan.checkstyle.xml'
                     }
+                }
 
-                    stage('Mess Detection Report') {
-                        sh 'vendor/bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
+                stage('Mess Detection Report') {
+                    steps{
+                        sh 'bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
                         pmd canRunOnFailed: true, pattern: 'build/logs/pmd.xml'
                     }
+                }
 
-                    stage('Software metrics') {
-                        sh 'vendor/bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg --ignore=vendor app'
+                stage('Software metrics') {
+                    steps{
+                        sh 'bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg --ignore=vendor app'
                     }
+                }
 
-                    stage('Generate documentation') {
-                        sh 'vendor/bin/phpdox -f phpdox.xml'
+                stage('Generate documentation') {
+                    steps{
+                        sh 'bin/phpdox -f phpdox.xml'
                     }
                 }
             }
-
+        }
+        post {
+            always {
+                recordIssues([
+                    sourceCodeEncoding: 'UTF-8',
+                    enabledForFailure: true,
+                    aggregatingResults: true,
+                    blameDisabled: true,
+                    tools: [
+                        phpCodeSniffer(id: 'phpcs', name: 'CodeSniffer', pattern: 'reports/phpcs/phpcs.checkstyle.xml', reportEncoding: 'UTF-8'),
+                        phpStan(id: 'phpstan', name: 'PHPStan', pattern: 'reports/phpstan/phpstan.checkstyle.xml', reportEncoding: 'UTF-8'),
+                    ]
+                ])
+            }
         }
     }
 }

@@ -77,7 +77,7 @@ trait CartAssertionsTrait
 
     private static function normalizeWhitespace(string $value): string
     {
-        return trim(preg_replace('/(?:\s{2,}+|[^\S ])/', ' ', $value));
+        return trim((string) preg_replace('/(?:\s{2,}+|[^\S ])/', ' ', $value));
     }
 
     private static function getItemByProductName(Crawler $crawler, string $productName): Crawler

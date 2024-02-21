@@ -6,9 +6,9 @@
 /public/bundles/
 /var/
 /vendor/
-/reports
-!/reports/.gitkeep
-!/reports/config
+
+reports/results/*
+!reports/results/.gitkeep
 bin/
 !bin/console
 ###< symfony/framework-bundle ###
@@ -33,7 +33,6 @@ bin/phpunit
 
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
-/phpcs.xml
 ###< squizlabs/php_codesniffer ###
 
 ###> qossmic/deptrac-shim ###

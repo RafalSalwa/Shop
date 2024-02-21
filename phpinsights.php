@@ -61,7 +61,6 @@ return [
 
     'exclude' => [
         'src/Protobuf',
-        'src/Kernel.php',
     ],
 
     'add' => [

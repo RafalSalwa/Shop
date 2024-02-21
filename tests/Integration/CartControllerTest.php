@@ -15,9 +15,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 final class CartControllerTest extends WebTestCase
 {
     use CartAssertionsTrait;
@@ -49,7 +48,7 @@ final class CartControllerTest extends WebTestCase
 
         $cartService = self::getContainer()->get(CartService::class);
         $cartService->clearCart();
-        self::assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
+        $this->assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
 
         $client->request('GET', '/cart/add/product/75');
         $client->followRedirect();
