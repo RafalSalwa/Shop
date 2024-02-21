@@ -13,70 +13,78 @@ up:
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
-.PHONY: run-always
-run-always:
+.PHONY: run-always-ci
+run-always-ci:
 	bin/easy-ci check-commented-code src
 	bin/easy-ci check-conflicts src
 	bin/easy-ci find-multi-classes src
+
+
+run-always:
+	bin/swiss-knife check-commented-code src
+	bin/swiss-knife check-conflicts src
+	bin/swiss-knife find-multi-classes src
+	bin/swiss-knife namespace-to-psr-4 src --namespace-root "App\\"
+	echo 'RUN'
+
 .PHONY: lint
-lint:
+lint: run-always
 	bin/parallel-lint src
 
 .PHONY: ecs
 ecs:
 	bin/ecs check src --config reports/config/ecs.php
+
 .PHONY: rector
 rector: vendor ## Automatic code fixes with Rector
 	composer rector
 
 .PHONY: phpcs
 phpcs:
-	bin/phpcs --standard=phpcs.xml src tests
+	bin/phpcs --standard=reports/config/phpcs.xml src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
 	bin/php-cs-fixer --config=.php-cs-fixer.dist.php --format=checkstyle fix --dry-run > php-cs-fixer.checkstyle.xml
 
-
 .PHONY: bench
 bench: ## Runs benchmarks with phpbench
 	composer bench
-
-.PHONY: phpda
-phpda:
-	docker run --rm -v $PWD:/app mamuz/phpda
 
 .PHONY: deptrack
 deptrack:
 	./bin/deptrac --formatter=json > reports/deptrack/report.json
 
+.PHONY: phpstan-checkstyle
+phpstan-checkstyle:
+	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle src > reports/results/phpstan.checkstyle.xml
+
 .PHONY: phpinsights
 phpinsights:
-	bin/phpinsights analyse --composer=/home/rsalwa/projects/php/interview-client-php/composer.json
+	bin/phpinsights analyse --composer=composer.json --config-path=phpinsights.php
 
-.PHONY: phpstan-sonar
-phpstan-sonar:
-	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=json src > reports/results/phpstan.report.json
-
-.PHONY: psalm-sonar
-psalm-sonar:
-	-bin/psalm --report=reports/results/psalm.sonarqube.json --config=psalm.xml
+.PHONY: jenkins_static_analysis
+jenkins_static_analysis:
+	$(MAKE) test_unit
+	-bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml -sp src tests || true
+	-bin/phpstan analyse --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+	-bin/psalm --report=reports/results/psalm.sonarqube.json --config=reports/config/psalm.xml || true
+	-bin/php-cs-fixer --config=.php-cs-fixer.dist.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-bin/phpmd src/ html phpmd.xml > reports/results/phpmd.html || true
+	-bin/phpmd src/ xml phpmd.xml > reports/results/phpmd.xml || true
+	-bin/phpinsights analyse src --composer=composer.json --format=checkstyle > reports/results/phpinsights.xml
 
 .PHONY: sonar_static_analysis
 sonar_static_analysis:
 	$(MAKE) test_unit
-	$(MAKE) psalm-sonar
-	$(MAKE) phpstan-sonar || true
+	-bin/psalm --report=reports/results/psalm.sonarqube.json --config=psalm.xml
+	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=json src > reports/results/phpstan.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}
 
 .PHONY: test_unit phpmetrics
 phpmetrics:
 	$(MAKE) test_unit
 	${ROOT_DIR}/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
-
-.PHONY: phpunit
-phpunit: ### run test
-	${ROOT_DIR}/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml
 
 .PHONY: test_unit
 test_unit: ### run test

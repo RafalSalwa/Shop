@@ -2,26 +2,23 @@
 
 <ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Custom standard"
          namespace="App"
-         xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+         xsi:noNamespaceSchemaLocation="../../vendor/squizlabs/php_codesniffer/phpcs.xsd">
 
     <description>Check the code of the sniffs.</description>
 
     <arg name="extensions" value="php"/>
     <arg name="tab-width" value="4"/>
-    <arg name="basepath" value="."/>
     <arg value="s"/>
     <arg value="p"/>
-    <arg name="cache" value="var/cache/.phpcs-cache"/>
+    <arg name="cache" value="../../var/cache/.phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
 
-    <autoload>vendor/autoload.php</autoload>
+    <autoload>../../vendor/autoload.php</autoload>
 
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/Protobuf/*</exclude-pattern>
 
-    <rule ref="PSR2"/>
-    <rule ref="PSR12"/>
     <rule ref="PEAR">
         <exclude name="PEAR.Commenting"/>
         <exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket"/>
@@ -52,9 +49,7 @@
         <exclude name="Generic.Commenting.DocComment.ContentAfterOpen"/>
         <exclude name="Generic.Commenting.DocComment.ContentBeforeClose"/>
     </rule>
-    <rule ref="Symfony"/>
     <rule ref="Doctrine"/>
-    <rule ref="PHPCompatibility"/>
 
     <rule ref="SlevomatCodingStandard">
         <exclude name="SlevomatCodingStandard.Attributes.AttributesOrder"/>

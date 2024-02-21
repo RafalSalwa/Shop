@@ -8,10 +8,10 @@ extensions: # default: ["php", "inc"]
   - php
   - php8
 report: # list of reports to generate
-  html: "../phpmetrics/html"
-  csv: "../phpmetrics/report.csv"
-  json: "../phpmetrics/report.json"
-  violations: "../phpmetrics/violations.xml"
+  html: "../results/phpmetrics/html"
+  csv: "../results/phpmetrics/report.csv"
+  json: "../results/phpmetrics/report.json"
+  violations: "../results/phpmetrics/violations.xml"
 
 # "layers" of code. You can group your classes and packages by regex,
 # to visualise specific HTML report for each of them
@@ -24,7 +24,7 @@ plugins:
   git:
     binary: git # if defined, runs git analyze
   junit:
-    file: "./reports/phpunit/junit.xml" # if defined, analyze junit report
+    file: "./reports/results/phpunit.junit.xml" # if defined, analyze junit report
 
 # You can define patterns of code to search
 # That's useful for Continuous Integration

@@ -9,6 +9,7 @@
         PHPMD custom rule set for checking code quality
     </description>
 
+    <exclude-pattern>*/Protobuf/*</exclude-pattern>
     <rule ref="rulesets/cleancode.xml">
         <exclude name="BooleanArgumentFlag"/>
         <exclude name="StaticAccess"/>
@@ -66,12 +67,12 @@
             <property name="maximum" value="100"/>
         </properties>
     </rule>
-    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
-    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
-    <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
-    <rule ref="rulesets/codesize.xml/TooManyFields"/>
-    <rule ref="rulesets/codesize.xml/TooManyMethods"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveClassLength" />
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" />
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList" />
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount" />
+    <rule ref="rulesets/codesize.xml/TooManyFields" />
+    <rule ref="rulesets/codesize.xml/TooManyMethods" />
 
     <rule ref="rulesets/controversial.xml/Superglobals"/>
     <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>

@@ -1,0 +1,34 @@
+parameters:
+    level: 9
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    errorFormat: json
+    excludePaths:
+        - src/Protobuf/*
+        - migrations/*
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        consoleApplicationLoader: tests/console-application.php
+    doctrine:
+        objectManagerLoader: tests/object-manager.php
+    phpat:
+        ignore_built_in_classes: true
+    unused_public:
+        methods: true
+        properties: true
+        constants: true
+        local_methods: true
+        template_paths:
+            - templates
+includes:
+    - vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
+    - vendor/symplify/phpstan-rules/config/collector-rules.neon
+    - vendor/symplify/phpstan-rules/config/naming-rules.neon
+    - vendor/symplify/phpstan-rules/config/regex-rules.neon
+    - vendor/symplify/phpstan-rules/config/static-rules.neon
+    - vendor/symplify/phpstan-rules/config/rector-rules.neon
+    - vendor/symplify/phpstan-extensions/config/config.neon

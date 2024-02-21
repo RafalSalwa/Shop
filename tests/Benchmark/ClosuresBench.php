@@ -50,21 +50,18 @@ class ClosuresBench
 
     public function benchStaticArrowFunction(): void
     {
-        $list = array_fill(0, 2000, 17);
         $lo = new ClosureObject();
         $processors[] = $lo->getItemProcessorArrowFunction();
     }
 
     public function benchClosures(): void
     {
-        $list = array_fill(0, 2000, 17);
         $lo = new ClosureObject();
         $processors[] = $lo->getItemProcessor();
     }
 
     public function benchStaticClosures(): void
     {
-        $list = array_fill(0, 2000, 17);
         $lo = new ClosureObject();
         $processors[] = $lo->getItemProcessorStatic();
     }

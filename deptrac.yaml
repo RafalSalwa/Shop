@@ -25,13 +25,16 @@ parameters:
       collectors:
         - type: className
           regex: .*Service.*
-    - name: Entities
+    - name: Entity
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
   ruleset:
     Controller:
       - Service
+      - Repository
+      - Entity
     Service:
       - Repository
     Repository:
+      - Entity
