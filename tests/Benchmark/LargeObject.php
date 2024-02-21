@@ -8,7 +8,7 @@ use Closure;
 
 class LargeObject
 {
-    protected $array;
+    protected array $array;
 
     public function __construct()
     {
@@ -27,11 +27,11 @@ class LargeObject
 
     public function getItemProcessorArrowStatic(): Closure
     {
-        return static fn () => '';
+        return static fn (): string => '';
     }
 
     public function getItemProcessorArrow(): Closure
     {
-        return static fn () => '';
+        return static fn (): string => '';
     }
 }

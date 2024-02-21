@@ -17,12 +17,11 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(User::class)]
 #[UsesClass(Payment::class)]
 #[UsesClass(Address::class)]
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserTest extends TestCase
 {
     public function testSetters(): void
@@ -37,8 +36,8 @@ final class UserTest extends TestCase
         $user->setDeliveryAddresses($addressess);
 
         try {
-            self::assertNotNull($user->getSubscription());
-            self::assertNotNull($user->getDeliveryAddresses());
+            $this->assertNotNull($user->getSubscription());
+            $this->assertNotNull($user->getDeliveryAddresses());
         } catch (AssertionFailedError|ExpectationFailedException) {
         }
     }
@@ -52,6 +51,6 @@ final class UserTest extends TestCase
 
         $user->addPayment($payment);
         $user->setPayments($payments);
-        self::assertNotNull($user->getPayments());
+        $this->assertNotNull($user->getPayments());
     }
 }

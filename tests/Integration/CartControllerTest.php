@@ -37,45 +37,45 @@ final class CartControllerTest extends WebTestCase
 
             $this->assertResponseIsSuccessful();
             $this->assertCartIsEmpty($crawler);
-        } catch (Exception $e) {
-            dd($e->getMessage(), $e->getPrevious()->getMessage(), $e->getTraceAsString());
+        } catch (Exception $exception) {
+            dd($exception->getMessage(), $exception->getPrevious()->getMessage(), $exception->getTraceAsString());
         }
     }
 
     public function testAddProductToCart(): void
     {
-        $client = $this->getClient();
+        $kernelBrowser = $this->getClient();
 
         $cartService = self::getContainer()->get(CartService::class);
         $cartService->clearCart();
         $this->assertSame(0, $cartService->getCurrentCart()->getItems()->count(), 'Cart should be empty right now');
 
-        $client->request('GET', '/cart/add/product/75');
-        $client->followRedirect();
+        $kernelBrowser->request('GET', '/cart/add/product/75');
+        $kernelBrowser->followRedirect();
         $this->assertResponseIsSuccessful();
 
-        $product = $this->getTestProduct()
+        $cartItem = $this->getTestProduct()
             ->toCartItem()
         ;
 
-        $crawler = $client->request('POST', '/cart');
+        $crawler = $kernelBrowser->request('POST', '/cart');
         $this->assertResponseIsSuccessful();
         $this->assertCartItemsCountEquals($crawler, 1);
-        $this->assertCartContainsProductWithQuantity($crawler, $product->getDisplayName(), 1);
-        $this->assertCartTotalEquals($crawler, $product->getReferenceEntity()->getPrice());
+        $this->assertCartContainsProductWithQuantity($crawler, $cartItem->getDisplayName(), 1);
+        $this->assertCartTotalEquals($crawler, $cartItem->getReferenceEntity()->getPrice());
     }
 
     private function getClient(bool $withLoggedUser = true): KernelBrowser
     {
-        $client = self::createClient([], [
+        $kernelBrowser = self::createClient([], [
             'HTTPS' => true,
         ]);
         if ($withLoggedUser) {
             $testUser = self::getContainer()->get(UserRepository::class)->findOneByUsername('interview');
-            $client->loginUser($testUser);
+            $kernelBrowser->loginUser($testUser);
         }
 
-        return $client;
+        return $kernelBrowser;
     }
 
     private function getTestProduct(): Product
