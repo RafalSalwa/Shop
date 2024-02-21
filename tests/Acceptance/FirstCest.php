@@ -7,19 +7,20 @@ use Tests\Support\AcceptanceTester;
 
 class FirstCest
 {
-    public function _before(AcceptanceTester $I)
+    public function _before(AcceptanceTester $acceptanceTester)
     {
 
     }
 
     // tests
-    public function tryToTest(AcceptanceTester $I)
+    public function tryToTest(AcceptanceTester $acceptanceTester)
     {
     }
-    public function frontpageWorks(AcceptanceTester $I)
+
+    public function frontpageWorks(AcceptanceTester $acceptanceTester): void
     {
-        $I->amOnPage('/login');
-        $I->see('Login');
+        $acceptanceTester->amOnPage('/login');
+        $acceptanceTester->see('Login');
     }
 
 }

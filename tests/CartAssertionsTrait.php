@@ -84,9 +84,9 @@ trait CartAssertionsTrait
     {
         $items = $crawler->filter('.cart-item')
             ->reduce(
-                static function (Crawler $node) use ($productName) {
-                    if ($node->filter('.cart-item-name')->getNode(0)->textContent === $productName) {
-                        return $node;
+                static function (Crawler $crawler) use ($productName): \Symfony\Component\DomCrawler\Crawler|false {
+                    if ($crawler->filter('.cart-item-name')->getNode(0)->textContent === $productName) {
+                        return $crawler;
                     }
 
                     return false;

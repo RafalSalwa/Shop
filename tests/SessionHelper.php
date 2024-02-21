@@ -12,21 +12,21 @@ use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
 trait SessionHelper
 {
-    public function generateCsrfToken(KernelBrowser $client, string $tokenId): string
+    public function generateCsrfToken(KernelBrowser $kernelBrowser, string $tokenId): string
     {
-        $session = $this->getSession($client);
+        $session = $this->getSession($kernelBrowser);
         $container = static::getContainer();
         $tokenGenerator = $container->get('security.csrf.token_generator');
         $csrfToken = $tokenGenerator->generateToken();
-        $session->set(SessionTokenStorage::SESSION_NAMESPACE . "/{$tokenId}", $csrfToken);
+        $session->set(SessionTokenStorage::SESSION_NAMESPACE . ('/' . $tokenId), $csrfToken);
         $session->save();
 
         return $csrfToken;
     }
 
-    public function getSession(KernelBrowser $client): Session
+    public function getSession(KernelBrowser $kernelBrowser): Session
     {
-        $cookie = $client->getCookieJar()
+        $cookie = $kernelBrowser->getCookieJar()
             ->get('MOCKSESSID')
         ;
 
@@ -45,7 +45,7 @@ trait SessionHelper
             $session->save();
 
             $sessionCookie = new Cookie($session->getName(), $session->getId(), null, null, 'localhost');
-            $client->getCookieJar()
+            $kernelBrowser->getCookieJar()
                 ->set($sessionCookie)
             ;
         }
@@ -53,18 +53,18 @@ trait SessionHelper
         return $session;
     }
 
-    public function createSession(KernelBrowser $client): Session
+    public function createSession(KernelBrowser $kernelBrowser): Session
     {
-        $container = $client->getContainer();
+        $container = $kernelBrowser->getContainer();
         $sessionSavePath = $container->getParameter('session.save_path');
-        $sessionStorage = new MockFileSessionStorage($sessionSavePath);
+        $mockFileSessionStorage = new MockFileSessionStorage($sessionSavePath);
 
-        $session = new Session($sessionStorage);
+        $session = new Session($mockFileSessionStorage);
         $session->start();
         $session->save();
 
         $sessionCookie = new Cookie($session->getName(), $session->getId(), null, null, 'localhost');
-        $client->getCookieJar()
+        $kernelBrowser->getCookieJar()
             ->set($sessionCookie)
         ;
 

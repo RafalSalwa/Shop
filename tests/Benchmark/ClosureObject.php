@@ -9,20 +9,20 @@ use function count;
 
 class ClosureObject
 {
-    public function getItemProcessorStaticArrowFunction()
+    public function getItemProcessorStaticArrowFunction(): array
     {
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(static fn ($item) => $item * $multipier, $list);
+        return array_map(static fn ($item): int => $item * $multipier, $list);
     }
 
-    public function getItemProcessorArrowFunction()
+    public function getItemProcessorArrowFunction(): array
     {
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(static fn ($item) => $item * $multipier, $list);
+        return array_map(static fn ($item): int => $item * $multipier, $list);
     }
 
     public function getItemProcessorStatic(): Closure
@@ -35,11 +35,11 @@ class ClosureObject
         };
     }
 
-    public function getItemProcessor()
+    public function getItemProcessor(): array
     {
         $list = array_fill(0, 2000, 17);
         $multipier = 10;
 
-        return array_map(static fn ($item) => $item * $multipier, $list);
+        return array_map(static fn ($item): int => $item * $multipier, $list);
     }
 }

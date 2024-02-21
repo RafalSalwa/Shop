@@ -14,13 +14,14 @@ trait PrepareSessionValuesTrait
     {
         static::getContainer()->get('event_dispatcher')->addListener(
             KernelEvents::REQUEST,
-            static function (RequestEvent $event) use ($values): void {
+            static function (RequestEvent $requestEvent) use ($values): void {
                 /** @var Session $session */
                 $session = static::getContainer()->get('session.factory')->createSession();
                 foreach ($values as $k => $v) {
                     $session->set($k, $v);
                 }
-                $event->getRequest()
+
+                $requestEvent->getRequest()
                     ->setSession($session)
                 ;
             }

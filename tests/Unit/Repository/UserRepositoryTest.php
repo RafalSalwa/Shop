@@ -13,11 +13,10 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
- *
- * @coversNothing
  */
 #[CoversClass(UserRepository::class)]
 #[UsesClass(User::class)]
+#[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserRepositoryTest extends TestCase
 {
     /**
@@ -36,9 +35,9 @@ final class UserRepositoryTest extends TestCase
 
         $actualUser = $userRepository->findOneByUsername('interview');
 
-        self::assertNotEmpty($actualUser);
-        self::assertSame(1, $actualUser->getId());
+        $this->assertNotEmpty($actualUser);
+        $this->assertSame(1, $actualUser->getId());
 
-        self::assertNull($userRepository->find('asd'));
+        $this->assertNull($userRepository->find('asd'));
     }
 }
