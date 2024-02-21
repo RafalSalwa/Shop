@@ -10,20 +10,20 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class PaymentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Payment::class);
+        parent::__construct($managerRegistry, Payment::class);
     }
 
     public function findById(int $id)
     {
-        $qb = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
             ->orderBy('p.createdAt', 'DESC')
             ->setParameter('id', $id)
         ;
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getOneOrNullResult()
         ;
     }

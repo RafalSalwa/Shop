@@ -24,6 +24,10 @@ use function array_unique;
 
 class User implements JsonSerializable, UserInterface
 {
+    public $verified;
+
+    public $active;
+
     private ?int $id = null;
 
     private string $username;
@@ -35,8 +39,6 @@ class User implements JsonSerializable, UserInterface
     private ?string $lastname = null;
 
     private string $email;
-
-    private ?string $phoneNo = null;
 
     private ?array $roles = null;
 
@@ -61,6 +63,7 @@ class User implements JsonSerializable, UserInterface
     private ?Subscription $subscription = null;
 
     protected ?string $token = null;
+
     protected ?string $refreshToken = null;
 
     public function __construct()
@@ -104,9 +107,9 @@ class User implements JsonSerializable, UserInterface
         return $this->payments;
     }
 
-    public function setPayments(?Collection $payments): self
+    public function setPayments(?Collection $collection): self
     {
-        $this->payments = $payments;
+        $this->payments = $collection;
 
         return $this;
     }
@@ -210,7 +213,7 @@ class User implements JsonSerializable, UserInterface
         return array_unique($roles);
     }
 
-    public function setRoles($roles): self
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
 
@@ -306,23 +309,23 @@ class User implements JsonSerializable, UserInterface
         return $this;
     }
 
-    public function setOAuth2UserConsents(?Collection $oAuth2UserConsents): self
+    public function setOAuth2UserConsents(?Collection $collection): self
     {
-        $this->oAuth2UserConsents = $oAuth2UserConsents;
+        $this->oAuth2UserConsents = $collection;
 
         return $this;
     }
 
-    public function setCarts(?Collection $carts): self
+    public function setCarts(?Collection $collection): self
     {
-        $this->carts = $carts;
+        $this->carts = $collection;
 
         return $this;
     }
 
-    public function setOrders(?Collection $orders): self
+    public function setOrders(?Collection $collection): self
     {
-        $this->orders = $orders;
+        $this->orders = $collection;
 
         return $this;
     }

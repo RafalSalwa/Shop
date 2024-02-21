@@ -23,12 +23,12 @@ class CategoriesController extends AbstractController
         );
     }
 
-    public function list(CategoriesService $service): Response
+    public function list(CategoriesService $categoriesService): Response
     {
         return $this->render(
             'partials/categories_list.html.twig',
             [
-                'categories' => $service->list(),
+                'categories' => $categoriesService->list(),
             ],
         );
     }

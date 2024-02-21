@@ -44,8 +44,8 @@ class CartController extends AbstractController
             $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $item);
 
             $cartService->add($item, $quantity);
-        } catch (Throwable $exception) {
-            dd($exception::class, $exception->getMessage());
+        } catch (Throwable $throwable) {
+            dd($throwable::class, $throwable->getMessage());
         }
 
         return $this->redirectToRoute(
@@ -57,15 +57,15 @@ class CartController extends AbstractController
     #[Route('/add', name: 'add_post', methods: ['POST'])]
     public function post(
         #[MapRequestPayload]
-        CartAddJsonRequest $cartAddRequest,
+        CartAddJsonRequest $cartAddJsonRequest,
         CartService $cartService,
         CartItemFactory $cartItemFactory,
     ): RedirectResponse {
         try {
-            $item = $cartItemFactory->create($cartAddRequest->getType(), $cartAddRequest->getId());
+            $item = $cartItemFactory->create($cartAddJsonRequest->getType(), $cartAddJsonRequest->getId());
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
-            $cartService->add($item, $cartAddRequest->getQuantity());
+            $cartService->add($item, $cartAddJsonRequest->getQuantity());
             $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
             dd($cartService->getCurrentCart()->getItems());
         } catch (AccessDeniedException $ade) {
@@ -80,25 +80,25 @@ class CartController extends AbstractController
 
         return $this->redirectToRoute(
             $item->getTypeName() . 's_details',
-            ['id' => $cartAddRequest->getId()],
+            ['id' => $cartAddJsonRequest->getId()],
         );
     }
 
     #[Route('/remove/{id}', name: 'remove')]
     public function removeFromCart(
-        CartItem $item,
+        CartItem $cartItem,
         CartService $cartService,
         ProductStockService $productStockService,
     ): RedirectResponse {
         $cart = $cartService->getCurrentCart();
 
         try {
-            $cartService->removeItemIfExists($item);
-            $productStockService->restoreStock($item);
+            $cartService->removeItemIfExists($cartItem);
+            $productStockService->restoreStock($cartItem);
 
             $cartService->save($cart);
 
-            $this->addFlash('info', 'successfully removed ' . $item->getItemName() . ' from cart');
+            $this->addFlash('info', 'successfully removed ' . $cartItem->getItemName() . ' from cart');
         } catch (ItemNotFoundException $pnf) {
             $this->addFlash('error', $pnf->getMessage());
         } catch (ProductStockDepletedException $psd) {

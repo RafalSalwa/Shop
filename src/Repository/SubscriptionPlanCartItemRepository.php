@@ -10,8 +10,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class SubscriptionPlanCartItemRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, SubscriptionPlanCartItem::class);
+        parent::__construct($managerRegistry, SubscriptionPlanCartItem::class);
     }
 }

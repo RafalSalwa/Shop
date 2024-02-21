@@ -12,9 +12,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class OrderRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Order::class);
+        parent::__construct($managerRegistry, Order::class);
     }
 
     public function save(Order $order): void
@@ -29,7 +29,7 @@ class OrderRepository extends ServiceEntityRepository
 
     public function fetchOrderDetails(int $id): ?Order
     {
-        $qb = $this->createQueryBuilder('o')
+        $queryBuilder = $this->createQueryBuilder('o')
             ->addSelect('o', 'i', 'p', 'a')
             ->leftJoin('o.items', 'i')
             ->leftJoin('o.payments', 'p')
@@ -39,14 +39,14 @@ class OrderRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
         ;
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getOneOrNullResult()
         ;
     }
 
-    public function fetchOrders(User $user, int $page)
+    public function fetchOrders(User $user, int $page): \App\Pagination\Paginator
     {
-        $qb = $this->createQueryBuilder('o')
+        $queryBuilder = $this->createQueryBuilder('o')
             ->addSelect('o', 'i', 'p', 'a')
             ->leftJoin('o.items', 'i')
             ->leftJoin('o.payments', 'p')
@@ -57,6 +57,6 @@ class OrderRepository extends ServiceEntityRepository
             ->setParameter('user', $user)
         ;
 
-        return (new Paginator($qb))->paginate($page);
+        return (new Paginator($queryBuilder))->paginate($page);
     }
 }

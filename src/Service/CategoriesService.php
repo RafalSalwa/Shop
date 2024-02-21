@@ -8,11 +8,11 @@ use App\Repository\CategoryRepository;
 
 class CategoriesService
 {
-    public function __construct(private readonly CategoryRepository $categoriesRepository)
+    public function __construct(private readonly CategoryRepository $categoryRepository)
     {}
 
     public function list()
     {
-        return $this->categoriesRepository->findAll();
+        return $this->categoryRepository->findAll();
     }
 }

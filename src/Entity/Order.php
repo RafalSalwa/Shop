@@ -69,9 +69,15 @@ class Order
     #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
     private Address|null $address = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Payment>
+     */
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private Collection|null $payments = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\OrderItem>
+     */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection|null $items = null;
 
@@ -173,15 +179,15 @@ class Order
         return $this;
     }
 
-    public function addItem(OrderItem $item): void
+    public function addItem(OrderItem $orderItem): void
     {
-        $item->setOrder($this);
-        $this->items[] = $item;
+        $orderItem->setOrder($this);
+        $this->items[] = $orderItem;
     }
 
-    public function removeItems(OrderItem $item): void
+    public function removeItems(OrderItem $orderItem): void
     {
-        $this->items->removeElement($item);
+        $this->items->removeElement($orderItem);
     }
 
     public function getStatus(): string
@@ -203,7 +209,7 @@ class Order
     }
 
     #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $eventArgs): void
+    public function preUpdate(PreUpdateEventArgs $preUpdateEventArgs): void
     {
         $this->updatedAt = new DateTime('now');
     }

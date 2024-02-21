@@ -17,13 +17,13 @@ class LoginController extends AbstractController
 {
     #[Route('/login', name: 'app_login')]
     public function login(
-        Request $request,
         AuthenticationUtils $authenticationUtils,
         AuthApiUserProvider $loginAuthenticator,
     ): Response {
         if ($this->getUser() instanceof UserInterface) {
             return $this->redirectToRoute('app_index');
         }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 

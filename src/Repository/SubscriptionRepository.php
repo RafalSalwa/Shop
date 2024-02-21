@@ -11,9 +11,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class SubscriptionRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Subscription::class);
+        parent::__construct($managerRegistry, Subscription::class);
     }
 
     public function save(Subscription $subscription): void
@@ -36,10 +36,10 @@ class SubscriptionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function createSubscription(SubscriptionPlan $plan)
+    public function createSubscription(SubscriptionPlan $subscriptionPlan): \App\Entity\Subscription
     {
         $subscription = new Subscription();
-        $subscription->setSubscriptionPlan($plan);
+        $subscription->setSubscriptionPlan($subscriptionPlan);
 
         return $subscription;
     }

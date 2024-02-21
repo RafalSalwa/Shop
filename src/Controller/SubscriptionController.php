@@ -31,21 +31,21 @@ class SubscriptionController extends AbstractController
     }
 
     #[Route('/{id<\d+>}', name: 'details', methods: ['GET'])]
-    public function details(SubscriptionPlan $plan): Response
+    public function details(SubscriptionPlan $subscriptionPlan): Response
     {
         return $this->render(
             'subscriptions/details.html.twig',
             [
                 'controller_name' => 'IndexController',
-                'plan'            => $plan,
+                'plan'            => $subscriptionPlan,
             ],
         );
     }
 
     #[Route('/clear', name: 'clear')]
-    public function clear(SubscriptionService $service): Response
+    public function clear(SubscriptionService $subscriptionService): Response
     {
-        $service->cancelSubscription();
+        $subscriptionService->cancelSubscription();
         $this->addFlash('info', 'Subscription removed');
 
         return $this->redirectToRoute('app_index');

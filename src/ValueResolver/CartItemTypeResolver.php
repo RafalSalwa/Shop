@@ -13,16 +13,17 @@ use function is_string;
 class CartItemTypeResolver implements ValueResolverInterface
 {
     /** @return array<int, class-string> */
-    public function resolve(Request $request, ArgumentMetadata $argument): iterable
+    public function resolve(Request $request, ArgumentMetadata $argumentMetadata): iterable
     {
-        if ('type' !== $argument->getName()) {
+        if ('type' !== $argumentMetadata->getName()) {
             return [];
         }
 
-        $value = $request->attributes->get($argument->getName());
+        $value = $request->attributes->get($argumentMetadata->getName());
         if (! is_string($value)) {
             return [];
         }
+
         $entityType = CartItemTypeEnum::fromName($value);
 
         return [$entityType];

@@ -8,8 +8,8 @@ use App\Message\AMQPMessage;
 
 class AMQPMessageHandler
 {
-    public function __invoke(AMQPMessage $message): void
+    public function __invoke(AMQPMessage $amqpMessage): void
     {
-        $message->getContent();
+        $amqpMessage->getContent();
     }
 }

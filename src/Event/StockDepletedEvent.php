@@ -11,9 +11,9 @@ class StockDepletedEvent extends Event
 {
     private array $arrProd = [];
 
-    public function __construct(StockManageableInterface $product)
+    public function __construct(StockManageableInterface $stockManageable)
     {
-        $prod = $product->getReferenceEntity();
+        $prod = $stockManageable->getReferenceEntity();
         $this->arrProd = [
             'id' => $prod->getId(),
             'name' => $prod->getName(),

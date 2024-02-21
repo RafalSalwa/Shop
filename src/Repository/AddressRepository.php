@@ -10,9 +10,9 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class AddressRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Address::class);
+        parent::__construct($managerRegistry, Address::class);
     }
 
     /**

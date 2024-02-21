@@ -41,9 +41,9 @@ class SubscriptionPlanCartItem extends CartItem implements CartItemInterface
         return $this->referenceEntity;
     }
 
-    public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
+    public function setReferencedEntity(CartInsertableInterface $cartInsertable): CartItemInterface
     {
-        $this->referenceEntity = $entity;
+        $this->referenceEntity = $cartInsertable;
 
         return $this;
     }

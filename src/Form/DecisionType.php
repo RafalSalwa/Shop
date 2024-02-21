@@ -10,9 +10,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class DecisionType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->add('yes', SubmitType::class)
             ->add('no', SubmitType::class)
         ;

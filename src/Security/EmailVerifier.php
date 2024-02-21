@@ -18,7 +18,7 @@ class EmailVerifier
     public function __construct(
         private readonly VerifyEmailHelperInterface $verifyEmailHelper,
         private readonly MailerInterface $mailer,
-        private UrlGeneratorInterface $router,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
     public function sendEmailConfirmation(string $email, string $verificationCode): void
@@ -31,12 +31,12 @@ class EmailVerifier
         ;
 
         $context = $templatedEmail->getContext();
-        $context['signedUrl'] = $this->router->generate(
+        $context['signedUrl'] = $this->urlGenerator->generate(
             'register_verify_email',
             ['verificationCode' => $verificationCode],
             UrlGeneratorInterface::ABSOLUTE_URL,
         );
-        $context['confirmationUrl'] = $this->router->generate(
+        $context['confirmationUrl'] = $this->urlGenerator->generate(
             'register_confirm_email',
             [],
             UrlGeneratorInterface::ABSOLUTE_URL,
@@ -46,8 +46,8 @@ class EmailVerifier
 
         try {
             $this->mailer->send($templatedEmail);
-        } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage());
+        } catch (TransportExceptionInterface $transportException) {
+            dd($transportException->getMessage());
         }
     }
 

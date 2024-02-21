@@ -24,6 +24,7 @@ class OAuthTokenController extends AbstractController
         if (true === $request->query->has('code')) {
             $session->set('oauth2_code', $request->get('code'));
         }
+
         $params = [
             'grant_type'    => 'authorization_code',
             'client_id'     => 'testclient',
@@ -48,12 +49,12 @@ class OAuthTokenController extends AbstractController
     }
 
     #[Route('/consent', name: 'app_consent', methods: ['GET', 'POST'])]
-    public function consent(Request $request, OAuth2Service $service): Response
+    public function consent(Request $request, OAuth2Service $oAuth2Service): Response
     {
-        $appClient    = $service->getClient();
+        $appClient    = $oAuth2Service->getClient();
         $user         = $this->getUser();
         $userConsents = $user->getOAuth2UserConsents()
-            ->filter(static fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient)
+            ->filter(static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient)
             ->first()
         ;
         $userScopes      = $userConsents->getScopes();
@@ -66,10 +67,10 @@ class OAuthTokenController extends AbstractController
             return $this->redirectToRoute('oauth2_authorize', $request->query->all());
         }
 
-        if (true === $request->isMethod('POST')) {
-            $consents = $service->createConsent($appClient);
+        if ($request->isMethod('POST')) {
+            $consents = $oAuth2Service->createConsent($appClient);
             $user->addOAuth2UserConsent($consents);
-            $service->save($consents);
+            $oAuth2Service->save($consents);
 
             return $this->redirectToRoute('oauth2_authorize', $request->query->all(), 307);
         }

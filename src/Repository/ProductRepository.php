@@ -12,44 +12,44 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class ProductRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Product::class);
+        parent::__construct($managerRegistry, Product::class);
     }
 
-    public function getPaginated(int $page, string $sort = 'name')
+    public function getPaginated(int $page, string $sort = 'name'): \App\Pagination\Paginator
     {
-        $qb = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->select('p', 's')
             ->innerJoin('p.requiredSubscription', 's')
             ->where('p.unitsInStock > 0')
             ->orderBy('s.tier', 'ASC')
         ;
 
-        return (new Paginator($qb))->paginate($page);
+        return (new Paginator($queryBuilder))->paginate($page);
     }
 
-    public function decreaseQty(StockManageableInterface $product, int $qty)
+    public function decreaseQty(StockManageableInterface $stockManageable, int $qty)
     {
         return $this
             ->createQueryBuilder('p')
             ->update($this->getEntityName(), 'p')
-            ->set('p.unitsInStock', $product->getUnitsInStock() - $qty)
+            ->set('p.unitsInStock', $stockManageable->getUnitsInStock() - $qty)
             ->where('p.id = :id')
-            ->setParameter('id', $product->getId())
+            ->setParameter('id', $stockManageable->getId())
             ->getQuery()
             ->execute()
         ;
     }
 
-    public function increaseQty(StockManageableInterface $product, int $qty)
+    public function increaseQty(StockManageableInterface $stockManageable, int $qty)
     {
         return $this
             ->createQueryBuilder('p')
             ->update($this->getEntityName(), 'p')
-            ->set('p.unitsInStock', $product->getUnitsInStock() + $qty)
+            ->set('p.unitsInStock', $stockManageable->getUnitsInStock() + $qty)
             ->where('p.id = :id')
-            ->setParameter('id', $product->getId())
+            ->setParameter('id', $stockManageable->getId())
             ->getQuery()
             ->execute()
         ;

@@ -21,7 +21,7 @@ class CartManager
     {
         $cart = $this->cartSessionStorage->getCart();
         if (! $cart instanceof Cart) {
-            $cart = $this->cartFactory->create();
+            return $this->cartFactory->create();
         }
 
         return $cart;

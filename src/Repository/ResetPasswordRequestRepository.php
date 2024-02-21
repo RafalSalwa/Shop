@@ -24,9 +24,9 @@ class ResetPasswordRequestRepository extends ServiceEntityRepository implements 
 {
     use ResetPasswordRequestRepositoryTrait;
 
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, ResetPasswordRequest::class);
+        parent::__construct($managerRegistry, ResetPasswordRequest::class);
     }
 
     public function createResetPasswordRequest(

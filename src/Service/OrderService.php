@@ -26,7 +26,7 @@ use const JSON_THROW_ON_ERROR;
 class OrderService
 {
     public function __construct(
-        private readonly WorkflowInterface $orderProcessing,
+        private readonly WorkflowInterface $workflow,
         private readonly EntityManagerInterface $entityManager,
         private readonly Security $security,
         private readonly SerializerInterface $serializer,
@@ -39,7 +39,7 @@ class OrderService
     public function createPending(Cart $cart): Order
     {
         $order = new Order();
-        $this->orderProcessing->getMarking($order);
+        $this->workflow->getMarking($order);
         $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
         $user = $this->security->getUser();
@@ -58,6 +58,7 @@ class OrderService
             $order->addItem($orderItem);
             $order->setUser($user);
         }
+
         $repository->save($order);
         $this->assignDeliveryAddress($order);
 
@@ -66,9 +67,9 @@ class OrderService
 
     public function assignDeliveryAddress(Order $order): void
     {
-        $repository = $this->entityManager->getRepository(Address::class);
+        $entityRepository = $this->entityManager->getRepository(Address::class);
         $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $repository->findOneBy(
+        $address = $entityRepository->findOneBy(
             ['id' => $addressId],
         );
         $order->setAddress($address);
@@ -76,14 +77,14 @@ class OrderService
 
     public function confirmOrder(Order $order): void
     {
-        $this->orderProcessing->apply($order, 'to_completed');
+        $this->workflow->apply($order, 'to_completed');
 
-        $repository = $this->entityManager->getRepository(Order::class);
-        assert($repository instanceof OrderRepository);
-        $repository->save($order);
+        $entityRepository = $this->entityManager->getRepository(Order::class);
+        assert($entityRepository instanceof OrderRepository);
+        $entityRepository->save($order);
 
-        $event = new OrderConfirmedEvent($order->getId());
-        $this->eventDispatcher->dispatch($event);
+        $orderConfirmedEvent = new OrderConfirmedEvent($order->getId());
+        $this->eventDispatcher->dispatch($orderConfirmedEvent);
     }
 
     public function deserializeOrderItems(Order $order): void
@@ -98,6 +99,7 @@ class OrderService
             $deserialized = $this->serializer->deserialize($item->getCartItem(), $entityType, 'json');
             $orderItems->add($deserialized);
         }
+
         $order->setItems($orderItems);
     }
 
