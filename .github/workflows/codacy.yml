@@ -20,7 +20,7 @@ on:
     # The branches below must be a subset of the branches above
     branches: [ "main" ]
   schedule:
-    - cron: '45 8 * * 5'
+    - cron: '0 9 * * *'
 
 permissions:
   contents: read
@@ -37,7 +37,14 @@ jobs:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
         uses: actions/checkout@v3
-
+        
+      - name: Setup PHP with fail-fast
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          
+      - uses: "ramsey/composer-install@v2"
+      
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@d840f886c4bd4edc059706d09c6a1586111c540b
