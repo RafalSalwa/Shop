@@ -32,7 +32,7 @@ jobs:
 
       - name: Cache Composer packages
         id: composer-cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: vendor
           key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
@@ -55,7 +55,7 @@ jobs:
           flags: unittests
           fail_ci_if_error: true
       - name: Rector Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: ./var/cache/rector
           key: ${{ runner.os }}-rector-${{ hashFiles('**/composer.lock') }}
