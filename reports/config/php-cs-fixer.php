@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 $finder = (new PhpCsFixer\Finder())
-    ->in(__DIR__)
+    ->in(__DIR__ . '/../..')
     ->exclude('config')
     ->exclude('var')
     ->exclude('public/bundles')
@@ -72,4 +72,4 @@ return (new PhpCsFixer\Config())
         'visibility_required' => true,
     ])
     ->setFinder($finder)
-    ->setCacheFile(__DIR__ . '/var/.php-cs-fixer.cache');
+    ->setCacheFile(__DIR__ . '/../../var/cache/dev/.php-cs-fixer.cache');
