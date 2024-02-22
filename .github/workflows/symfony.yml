@@ -22,7 +22,7 @@ jobs:
         with:
           php-version: 8.2
           ini-values: error_reporting=-1, display_errors=On, zend.assertions=1
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Validate composer.json and composer.lock
         run: composer validate --strict
@@ -68,7 +68,7 @@ jobs:
     runs-on: ubuntu-20.04
     name: PHP Insights checks
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: 8.2
@@ -81,7 +81,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: "actions/checkout@v3"
+        uses: "actions/checkout@v4"
 
       - name: "Search for misspellings"
         uses: "crate-ci/typos@v1.16.17"
