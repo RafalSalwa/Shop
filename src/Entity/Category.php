@@ -32,10 +32,6 @@ class Category
     #[Column(name: 'slug', type: Types::STRING, length: 64, nullable: true)]
     private string $slug;
 
-    public function __construct()
-    {
-    }
-
     public function getId(): int|null
     {
         return $this->id;

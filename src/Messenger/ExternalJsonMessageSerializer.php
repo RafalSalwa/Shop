@@ -19,6 +19,7 @@ class ExternalJsonMessageSerializer implements SerializerInterface
         if (! $message instanceof AMQPMessage) {
             throw new Exception('Unsupported message class');
         }
+
         $allStamps = [];
         foreach ($envelope->all() as $stamps) {
             $allStamps = array_merge($allStamps, $stamps);

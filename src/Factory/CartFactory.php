@@ -16,14 +16,14 @@ class CartFactory
 
     public function create(): Cart
     {
-        $order = new Cart();
-        $order
+        $cart = new Cart();
+        $cart
             ->setStatus(Cart::STATUS_CREATED)
             ->setUser($this->security->getUser())
             ->setCreatedAt(new DateTimeImmutable())
             ->setUpdatedAt(new DateTime())
         ;
 
-        return $order;
+        return $cart;
     }
 }

@@ -27,17 +27,17 @@ class OrderController extends AbstractController
         PaymentService $paymentService,
     ): Response {
         $cart    = $cartService->getCurrentCart();
-        $pending = $orderService->createPending($cart);
-        $paymentService->createPendingPayment($pending);
+        $order = $orderService->createPending($cart);
+        $paymentService->createPendingPayment($order);
 
-        if (0 !== $pending->getId()) {
+        if (0 !== $order->getId()) {
             $cartService->clearCart();
         }
 
         return $this->redirectToRoute(
             'order_show',
             [
-                'id' => $pending->getId(),
+                'id' => $order->getId(),
             ],
         );
     }
@@ -56,7 +56,7 @@ class OrderController extends AbstractController
         $form    = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             if (true === $form->get('yes')->isClicked()) {
                 $paymentService->confirmPayment($payment);
                 $orderService->confirmOrder($order);
@@ -72,6 +72,7 @@ class OrderController extends AbstractController
                     ],
                 );
             }
+
             if (true === $form->get('no')->isClicked()) {
                 return $this->redirectToRoute(
                     'order_index',

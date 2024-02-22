@@ -25,14 +25,14 @@ use const JSON_THROW_ON_ERROR;
 class AuthApiClient
 {
     public function __construct(
-        private readonly HttpClientInterface $authApi,
+        private readonly HttpClientInterface $httpClient,
         private readonly LoggerInterface     $logger,
     ) {}
 
-    public function signUp(string $email, string $password)
+    public function signUp(string $email, string $password): bool
     {
         try {
-            $response = $this->authApi->request(
+            $response = $this->httpClient->request(
                 'POST',
                 '/auth/signup',
                 [
@@ -46,15 +46,11 @@ class AuthApiClient
                     ),
                 ],
             );
-            $arrResponse = json_decode($response->getContent(), true);
-            if (true === array_key_exists('status', $arrResponse)) {
+            $arrResponse = json_decode((string) $response->getContent(), true);
+            if (array_key_exists('status', $arrResponse)) {
                 return 'created' === $arrResponse['status'];
             }
-        } catch (ClientExceptionInterface) {
-        } catch (RedirectionExceptionInterface) {
-        } catch (ServerExceptionInterface) {
-        } catch (TransportExceptionInterface) {
-        } catch (JsonException) {
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface|JsonException) {
         } catch (Throwable $e) {
             dd($e->getMessage(), $e->getCode(), $e->getTraceAsString(), $response);
         }
@@ -66,7 +62,7 @@ class AuthApiClient
     public function signIn(string $email, string $password): ApiTokenPair
     {
         try {
-            $response = $this->authApi->request(
+            $response = $this->httpClient->request(
                 'POST',
                 '/auth/signin',
                 [
@@ -85,9 +81,7 @@ class AuthApiClient
             $apiException = AuthApiErrorFactory::create($exception);
 
             throw $apiException;
-        } catch ( TransportExceptionInterface $exception) {
-            $this->logger->error($exception->getMessage());
-        } catch (JsonException $exception) {
+        } catch ( TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
         }
     }
@@ -95,7 +89,7 @@ class AuthApiClient
     public function getVerificationCode(string $email, string $password): ?string
     {
         try {
-            $response = $this->authApi->request(
+            $response = $this->httpClient->request(
                 'POST',
                 '/auth/code',
                 [
@@ -108,12 +102,12 @@ class AuthApiClient
                     ),
                 ],
             );
-            $arrResponse = json_decode($response->getContent(), true);
-            if (true === array_key_exists('user', $arrResponse)) {
+            $arrResponse = json_decode((string) $response->getContent(), true);
+            if (array_key_exists('user', $arrResponse)) {
                 return $arrResponse['user']['verification_token'];
             }
-        } catch (Throwable $e) {
-            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString(), $response);
+        } catch (Throwable $throwable) {
+            dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response);
         }
 
         return null;
@@ -122,14 +116,14 @@ class AuthApiClient
     public function activateAccount(string $verificationCode): void
     {
         try {
-            $this->authApi->request('GET', '/auth/verify/' . $verificationCode)->getStatusCode();
+            $this->httpClient->request('GET', '/auth/verify/' . $verificationCode)->getStatusCode();
         } catch (TransportExceptionInterface) {
         }
     }
 
     public function getByVerificationCode(string $verificationCode): User
     {
-        $response = $this->authApi->request('GET', '/auth/code/' . $verificationCode);
+        $response = $this->httpClient->request('GET', '/auth/code/' . $verificationCode);
         $user = new User();
         $user->setFromAuthApi($response);
 

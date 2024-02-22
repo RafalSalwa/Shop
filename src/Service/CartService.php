@@ -43,6 +43,7 @@ class CartService
             $this->productStockService->restoreStock($item);
             $this->save($cart);
         }
+
         $cart->getItems()
             ->clear();
         $this->cartSessionStorage->removeCart();
@@ -52,7 +53,7 @@ class CartService
     {
         $cart = $this->cartSessionStorage->getCart();
         if (! $cart instanceof Cart) {
-            $cart = $this->cartFactory->create();
+            return $this->cartFactory->create();
         }
 
         return $cart;
@@ -66,6 +67,7 @@ class CartService
         if (! $cart instanceof Cart) {
             $cart = $this->getCurrentCart();
         }
+
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
@@ -76,6 +78,7 @@ class CartService
     {
         $cart = $this->getCurrentCart();
         $cart->setStatus(Cart::STATUS_CONFIRMED);
+
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
@@ -93,10 +96,10 @@ class CartService
     public function addProduct(Product $product): void
     {
         $cart = $this->getCurrentCart();
-        $item = $this->makeCartItem($product);
+        $cartItem = $this->makeCartItem($product);
         $this->productStockService->changeStock($product, Product::STOCK_DECREASE, 1);
 
-        $cart->addItem($item);
+        $cart->addItem($cartItem);
 
         $this->save($cart);
     }
@@ -106,50 +109,49 @@ class CartService
         return $this->cartItemFactory->create($entity);
     }
 
-    public function add(CartItemInterface $item, int $quantity): void
+    public function add(CartItemInterface $cartItem, int $quantity): void
     {
         try {
             $lock = $this->cartLockFactory->createLock('cart_item_add');
             $lock->acquire(true);
 
-            $this->productStockService->checkStockIsAvailable($item);
+            $this->productStockService->checkStockIsAvailable($cartItem);
 
-            $this->checkSubscriptionsCount($item);
+            $this->checkSubscriptionsCount($cartItem);
 
             $cart = $this->getCurrentCart();
-            $cart->addItem($item);
+            $cart->addItem($cartItem);
             $this->save($cart);
 
-            $this->productStockService->changeStock($item, Product::STOCK_DECREASE, $quantity);
+            $this->productStockService->changeStock($cartItem, Product::STOCK_DECREASE, $quantity);
 
             $lock->release();
         } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-        } catch (ItemNotFoundException) {
-        } catch (AccessDeniedException) {
+        } catch (ItemNotFoundException|AccessDeniedException) {
         } catch (Throwable $e) {
             dd($e::class, $e->getMessage());
         }
     }
 
-    public function checkSubscriptionsCount(CartItemInterface $item): void
+    public function checkSubscriptionsCount(CartItemInterface $cartItem): void
     {
         $cart = $this->getCurrentCart();
 
-        if ($item instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($item)) {
+        if ($cartItem instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($cartItem)) {
             throw new TooManySubscriptionsException('You can have only one subscription in cart');
         }
     }
 
-    public function removeItemIfExists(CartItem $item): void
+    public function removeItemIfExists(CartItem $cartItem): void
     {
         $cart = $this->getCurrentCart();
 
-        if (! $cart->getItems()->contains($item)) {
+        if (! $cart->getItems()->contains($cartItem)) {
             return;
         }
 
         $cart->getItems()
-            ->removeElement($item);
+            ->removeElement($cartItem);
     }
 }

@@ -39,6 +39,8 @@ use function str_shuffle;
 #[UniqueEntity(fields: ['email'], message: 'address is already in use')]
 class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
+    public $isVerified;
+
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'user_id', type: Types::INTEGER, unique: true)]
@@ -74,14 +76,14 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         type: Types::BOOLEAN,
         options: ['default' => false],
     )]
-    private bool $verified;
+    private bool $verified = false;
 
     #[Column(
         name: 'is_active',
         type: Types::BOOLEAN,
         options: ['default' => false],
     )]
-    private bool $active;
+    private bool $active = false;
 
     #[Column(
         name: 'created_at',
@@ -99,19 +101,34 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime|null $lastLogin = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\OAuth2UserConsent>
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
     private Collection|null $oAuth2UserConsents = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Cart>
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     #[Groups('user_carts')]
     private Collection|null $carts = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Address>
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection|null $deliveryAddresses;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Payment>
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private Collection|null $payments = null;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Order>
+     */
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection|null $orders = null;
 
@@ -120,16 +137,17 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     private Subscription|null $subscription = null;
 
     protected ApiTokenPair $tokenPair;
+
     protected string $refreshToken;
 
     public function __construct()
     {
+        $this->oAuth2UserConsents = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
         $this->carts             = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
         $this->payments          = new ArrayCollection();
         $this->verificationCode  = mb_substr(str_shuffle(str_repeat('abcdefghijklmnopqrstuvwxyz', 5)), 0, 5);
-        $this->verified          = false;
-        $this->active            = false;
     }
 
     public function getSubscription(): Subscription|null
@@ -293,7 +311,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return [];
     }
 
-    public function setRoles($roles): self
+    public function setRoles(?array $roles): self
     {
         $this->roles = $roles;
 

@@ -23,7 +23,7 @@ use function func_get_args;
 class AuthApiUserProvider implements UserProviderInterface, PasswordUpgraderInterface
 {
     public function __construct(
-        private readonly HttpClientInterface $usersApi,
+        private readonly HttpClientInterface $httpClient,
         private readonly SubscriptionRepository $subscriptionRepository,
         private readonly Security $security,
     ) {}
@@ -46,7 +46,7 @@ class AuthApiUserProvider implements UserProviderInterface, PasswordUpgraderInte
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
         try {
-            $response = $this->usersApi->request('GET', '/user', [
+            $response = $this->httpClient->request('GET', '/user', [
                 'auth_bearer' => $identifier,
             ]);
             dd(func_get_args(), $this->security->getUser());
@@ -57,17 +57,15 @@ class AuthApiUserProvider implements UserProviderInterface, PasswordUpgraderInte
             return $user;
         } catch (TransportExceptionInterface $e) {
             dd($e->getMessage(), $e->getTraceAsString());
-        } catch (ClientExceptionInterface $e) {
-        } catch (RedirectionExceptionInterface $e) {
-        } catch (ServerExceptionInterface $e) {
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
         } catch (Exception $ex) {
             dd($ex->getMessage(), $ex->getTraceAsString(), $response);
         }
     }
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
+    public function upgradePassword(PasswordAuthenticatedUserInterface $passwordAuthenticatedUser, string $newHashedPassword): void
     {
-        dd(__FUNCTION__, __CLASS__);
+        dd(__FUNCTION__, self::class);
         // TODO: Implement upgradePassword() method.
     }
 }

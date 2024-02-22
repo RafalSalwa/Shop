@@ -26,9 +26,9 @@ class UserRegisteredListener implements EventSubscriberInterface
     /**
      * @throws SubscriptionPlanNotFoundException
      */
-    public function onRegistrationCompleted(UserRegisteredEvent $event): void
+    public function onRegistrationCompleted(UserRegisteredEvent $userRegisteredEvent): void
     {
-        $user = $event->getUser();
+        $user = $userRegisteredEvent->getUser();
 
         $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
         if (null === $subscriptionPlan) {
@@ -38,6 +38,7 @@ class UserRegisteredListener implements EventSubscriberInterface
         $subscription = new Subscription();
         $subscription->setUserId($user->getId());
         $subscription->setPlan($subscriptionPlan);
+
         $this->subscriptionRepository->save($subscription);
     }
 }

@@ -59,9 +59,7 @@ return [
     |
     */
 
-    'exclude' => [
-        'src/Protobuf',
-    ],
+    'exclude' => ['src/Protobuf'],
 
     'add' => [
         //  ExampleMetric::class => [
@@ -76,13 +74,10 @@ return [
     'config' => [
         PropertyTypeHintSniff::class => [
             'enableNativeTypeHint' => false,
-            'exclude' => [
-                'src/Search/Engine/Query/AggregationQuery.php',
-            ],
+            'exclude' => ['src/Search/Engine/Query/AggregationQuery.php'],
         ],
         ForbiddenNormalClasses::class => [
-            'exclude' => [
-            ],
+            'exclude' => [],
         ],
         ForbiddenSetterSniff::class => [
             'exclude' => [
@@ -91,18 +86,13 @@ return [
             ],
         ],
         ForbiddenPublicPropertySniff::class => [
-            'exclude' => [
-            ],
+            'exclude' => [],
         ],
         DisallowLateStaticBindingForConstantsSniff::class => [
-            'exclude' => [
-            ],
+            'exclude' => [],
         ],
-        DeclareStrictTypesSniff::class => [
-            'newlinesCountBetweenOpenTagAndDeclare' => 0,
-        ],
-        BinaryOperatorSpacesFixer::class => [
-        ],
+        DeclareStrictTypesSniff::class => ['newlinesCountBetweenOpenTagAndDeclare' => 0],
+        BinaryOperatorSpacesFixer::class => [],
         DocCommentSpacingSniff::class => [
             'linesCountBetweenAnnotationsGroups' => 0,
             'annotationsGroups' => [

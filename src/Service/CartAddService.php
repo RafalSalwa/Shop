@@ -8,7 +8,6 @@ use App\Entity\Product;
 use App\Exception\ProductNotFound;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
-use App\Security\Voter\CartAddVoter;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
@@ -25,8 +24,8 @@ class CartAddService
 
     public function addToCart(string $type, int $id)
     {
-        $repository = $this->entityManager->getRepository($type);
-        $entity = $repository->find($id);
+        $entityRepository = $this->entityManager->getRepository($type);
+        $entity = $entityRepository->find($id);
         if (! $entity) {
             throw $this->createNotFoundException('Item not found');
         }
@@ -34,7 +33,6 @@ class CartAddService
         try {
             $lock = $this->cartLockFactory->createLock('cart_item_add');
             $lock->acquire(true);
-            $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $entity);
             $this->entityManager->getConnection()
                 ->beginTransaction()
             ;

@@ -69,7 +69,7 @@ class CartApiController extends AbstractController
     public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
     {
         $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
-        if (true === (null === $params['id'])) {
+        if (null === $params['id']) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
 

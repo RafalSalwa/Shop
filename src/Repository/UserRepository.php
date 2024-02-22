@@ -18,12 +18,12 @@ use const FILTER_VALIDATE_EMAIL;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($managerRegistry, User::class);
     }
 
-    public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void {}
+    public function upgradePassword(PasswordAuthenticatedUserInterface $passwordAuthenticatedUser, string $newHashedPassword): void {}
 
     public function loadUserByIdentifier(string $identifier): ?UserInterface
     {
@@ -32,6 +32,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
                 ['email' => $identifier],
             );
         }
+
         if (Uuid::isValid($identifier)) {
             return $this->findOneBy(
                 [
@@ -47,12 +48,12 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
 
     public function findOneByUsername(string $username)
     {
-        $qb = $this->createQueryBuilder('u')
+        $queryBuilder = $this->createQueryBuilder('u')
             ->where('u.username = :username')
             ->setParameter('username', $username)
         ;
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getOneOrNullResult()
         ;
     }
@@ -67,7 +68,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         ;
     }
 
-    public function getEntityManager(): EntityManagerInterface
+    protected function getEntityManager(): EntityManagerInterface
     {
         return parent::getEntityManager();
     }

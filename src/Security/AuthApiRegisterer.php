@@ -14,7 +14,6 @@ class AuthApiRegisterer
 {
     public function __construct(
         private readonly AuthApiClient $authApiClient,
-        private readonly HttpClientInterface $usersApi,
         private readonly EventDispatcherInterface $eventDispatcher,
     ) {}
 
@@ -32,11 +31,11 @@ class AuthApiRegisterer
     {
         $this->authApiClient->activateAccount($verificationCode);
         $user = $this->authApiClient->getByVerificationCode($verificationCode);
-        $event = new UserRegisteredEvent($user);
-        $this->eventDispatcher->dispatch($event);
+        $userRegisteredEvent = new UserRegisteredEvent($user);
+        $this->eventDispatcher->dispatch($userRegisteredEvent);
     }
 
-    public function getUserByCode(string $verificationCode)
+    public function getUserByCode(string $verificationCode): \App\Model\User
     {
         return $this->authApiClient->getByVerificationCode($verificationCode);
     }

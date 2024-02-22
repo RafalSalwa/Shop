@@ -13,6 +13,8 @@ use League\Bundle\OAuth2ServerBundle\Model\Client;
 #[ORM\Entity(repositoryClass: OAuth2UserConsentRepository::class)]
 class OAuth2UserConsent
 {
+    public $user;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]

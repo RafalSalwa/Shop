@@ -8,8 +8,6 @@
 
     <arg name="extensions" value="php"/>
     <arg name="tab-width" value="4"/>
-    <arg value="s"/>
-    <arg value="p"/>
     <arg name="cache" value="../../var/cache/.phpcs-cache"/>
     <arg name="colors"/>
     <arg name="extensions" value="php"/>
@@ -31,6 +29,7 @@
         <exclude name="Squiz.WhiteSpace.SemicolonSpacing.Incorrect"/>
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
         <exclude name="Squiz.Objects.ObjectInstantiation.NotAssigned" />
+        <exclude name="Squiz.ControlStructures.InlineIfDeclaration.NotSingleLine"/>
     </rule>
     <rule ref="Generic">
         <exclude name="Generic.Files.EndFileNoNewline"/>

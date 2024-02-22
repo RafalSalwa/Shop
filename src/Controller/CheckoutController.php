@@ -30,7 +30,7 @@ class CheckoutController extends AbstractController
         Request $request,
         CartService $cartService,
         CartCalculator $cartCalculator,
-        AddressRepository $repository,
+        AddressRepository $addressRepository,
     ): Response {
         $user = $this->getUser();
 
@@ -42,7 +42,7 @@ class CheckoutController extends AbstractController
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
-            $repository->save($address);
+            $addressRepository->save($address);
         }
 
         return $this->render(

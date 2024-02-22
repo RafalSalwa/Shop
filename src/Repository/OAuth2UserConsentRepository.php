@@ -18,15 +18,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OAuth2UserConsentRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, OAuth2UserConsent::class);
+        parent::__construct($managerRegistry, OAuth2UserConsent::class);
     }
 
-    public function add(OAuth2UserConsent $entity, bool $flush = false): void
+    public function add(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->persist($entity)
+            ->persist($oAuth2UserConsent)
         ;
 
         if ($flush) {
@@ -36,10 +36,10 @@ class OAuth2UserConsentRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(OAuth2UserConsent $entity, bool $flush = false): void
+    public function remove(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->remove($entity)
+            ->remove($oAuth2UserConsent)
         ;
 
         if ($flush) {

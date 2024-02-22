@@ -16,29 +16,25 @@ use function dd;
 
 class UsersApiClient
 {
-    public function __construct(private readonly HttpClientInterface $usersApi)
+    public function __construct(private readonly HttpClientInterface $httpClient)
     {}
 
-    public function getUser(ApiTokenPair $tokenPair): User
+    public function getUser(ApiTokenPair $apiTokenPair): User
     {
         try {
-            $response = $this->usersApi->request(
+            $response = $this->httpClient->request(
                 'GET',
                 '/user',
-                ['auth_bearer' => $tokenPair->getToken()],
+                ['auth_bearer' => $apiTokenPair->getToken()],
             );
-        } catch (ClientExceptionInterface) {
-        } catch (RedirectionExceptionInterface) {
-        } catch (ServerExceptionInterface) {
-        } catch (TransportExceptionInterface) {
-        } catch (JsonException) {
+        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface|JsonException) {
         } catch (Throwable $e) {
             dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
         }
 
         $user = new User();
         $user->setFromAuthApi($response);
-        $user->setToken($tokenPair->getToken())->setRefreshToken($tokenPair->getRefreshToken());
+        $user->setToken($apiTokenPair->getToken())->setRefreshToken($apiTokenPair->getRefreshToken());
 
         return $user;
     }

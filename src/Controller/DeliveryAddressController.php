@@ -23,7 +23,7 @@ class DeliveryAddressController extends AbstractController
         $form    = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);

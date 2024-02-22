@@ -10,16 +10,16 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class RegistrationConfirmationFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options): void
+    public function buildForm(FormBuilderInterface $formBuilder, array $options): void
     {
-        $builder
+        $formBuilder
             ->add('confirmationCode')
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver): void
+    public function configureOptions(OptionsResolver $optionsResolver): void
     {
-        $resolver->setDefaults(
+        $optionsResolver->setDefaults(
             [
                 'attr' => [
                     'class' => 'bg-white  rounded-5 shadow-5-strong p-5',

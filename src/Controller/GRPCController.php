@@ -31,14 +31,14 @@ class GRPCController extends AbstractController
         $status       = null;
         $grpcResponse = null;
 
-        $signInInput = new SignUpUserInput();
-        $form        = $this->createForm(SignUpType::class, $signInInput);
+        $signUpUserInput = new SignUpUserInput();
+        $form        = $this->createForm(SignUpType::class, $signUpUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signUpUser(
-                $signInInput->getEmail(),
-                $signInInput->getPassword(),
+                $signUpUserInput->getEmail(),
+                $signUpUserInput->getPassword(),
             );
         }
 
@@ -57,16 +57,16 @@ class GRPCController extends AbstractController
     {
         $status       = null;
         $grpcResponse = null;
-        $verifyCode   = new EntityVerifyCode();
+        $entityVerifyCode   = new EntityVerifyCode();
 
         if (true === $authGRPCService->getVcodeFromLastSignUp()) {
-            $verifyCode->setCode($authGRPCService->getVcodeFromLastSignUp());
+            $entityVerifyCode->setCode($authGRPCService->getVcodeFromLastSignUp());
         }
 
-        $form = $this->createForm(UserVerifyCodeType::class, $verifyCode);
+        $form = $this->createForm(UserVerifyCodeType::class, $entityVerifyCode);
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
-            [$grpcResponse, $status] = $authGRPCService->verifyCode($verifyCode->getCode());
+        if ($form->isSubmitted() && $form->isValid()) {
+            [$grpcResponse, $status] = $authGRPCService->verifyCode($entityVerifyCode->getCode());
         }
 
         return $this->render(
@@ -86,14 +86,14 @@ class GRPCController extends AbstractController
         $grpcResponse = null;
         $lastSignUp   = $authGRPCService->getUserCredentialsFromLastSignUp();
 
-        $signInInput = new SignInUserInput();
-        $form        = $this->createForm(SignInType::class, $signInInput);
+        $signInUserInput = new SignInUserInput();
+        $form        = $this->createForm(SignInType::class, $signInUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signInUser(
-                $signInInput->getUsername(),
-                $signInInput->getPassword(),
+                $signInUserInput->getUsername(),
+                $signInUserInput->getPassword(),
             );
 
             if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
@@ -124,14 +124,14 @@ class GRPCController extends AbstractController
         $grpcResponse = null;
         $lastSignUp   = $authGRPCService->getUserCredentialsFromLastSignUp();
 
-        $signInInput = new SignInUserInput();
-        $form        = $this->createForm(SignInType::class, $signInInput);
+        $signInUserInput = new SignInUserInput();
+        $form        = $this->createForm(SignInType::class, $signInUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signInUser(
-                $signInInput->getUsername(),
-                $signInInput->getPassword(),
+                $signInUserInput->getUsername(),
+                $signInUserInput->getPassword(),
             );
 
             if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {

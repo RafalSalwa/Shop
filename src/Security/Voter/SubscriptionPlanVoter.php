@@ -28,6 +28,7 @@ class SubscriptionPlanVoter extends Voter
         if (! $user instanceof User) {
             return false;
         }
+
         $requiredSubscription = $subject->getReferencedEntity()
             ->getId()
         ;

@@ -21,9 +21,9 @@ class OrderConfirmedListener implements EventSubscriberInterface
         return [OrderConfirmedEvent::class => 'onOrderConfirmed'];
     }
 
-    public function onOrderConfirmed(OrderConfirmedEvent $event): void
+    public function onOrderConfirmed(OrderConfirmedEvent $orderConfirmedEvent): void
     {
-        $orderData = $event->getOrderData();
+        $orderData = $orderConfirmedEvent->getOrderData();
 
         $email = (new Email())
             ->from($this->fromEmail)

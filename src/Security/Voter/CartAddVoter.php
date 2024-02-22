@@ -32,9 +32,9 @@ class CartAddVoter extends Voter
             return false;
         }
 
-        $productRequiredSubscription = $subject->getRequiredSubscription();
+        $subscriptionPlan = $subject->getRequiredSubscription();
         $userSubscription = $user->getSubscription();
 
-        return $userSubscription->getRequiredLevel() >= $productRequiredSubscription->getId();
+        return $userSubscription->getRequiredLevel() >= $subscriptionPlan->getId();
     }
 }
