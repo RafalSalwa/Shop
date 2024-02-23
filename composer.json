@@ -63,7 +63,7 @@
     "symfony/uid": "~6.3.0",
     "symfony/ux-autocomplete": "^2.14",
     "symfony/ux-live-component": "^2.6",
-    "symfony/validator": "~6.3.0",
+    "symfony/validator": "~6.4.3",
     "symfony/webpack-encore-bundle": "^2.1",
     "symfony/workflow": "~6.3.0",
     "symfony/yaml": "~6.3.0",
