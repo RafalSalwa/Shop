@@ -65,16 +65,16 @@ phpinsights:
 
 .PHONY: jenkins_static_analysis
 jenkins_static_analysis:
-	#$(MAKE) test_unit
-	#$(MAKE) deptrac
-#	-bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
-#	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
-#	-bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
-#	-bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
-#	-bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
-#	-bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
-	-bin/phpinsights analyse src --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
-#	-bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+	$(MAKE) test_unit
+	$(MAKE) deptrac
+	-bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+	-bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
+	-bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
+	-bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
+	-bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
+	-bin/phpmetrics --config=reports/config/phpmetrics.yml src/
 
 .PHONY: github_actions_static_analysis
 github_actions_static_analysis:
@@ -86,7 +86,7 @@ github_actions_static_analysis:
 #	-bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 	-bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
 #	-bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
-#	-bin/phpinsights analyse src --composer=composer.json --format=checkstyle > reports/results/phpinsights.xml
+	-bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --format=github-action
 #	-bin/phpmetrics --config=reports/config/phpmetrics.yml src/
 
 
