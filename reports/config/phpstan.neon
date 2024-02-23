@@ -1,26 +1,43 @@
 parameters:
-    level: 5
+    # (0 is the loosest and 9 is the strictest) https://phpstan.org/user-guide/rule-levels
+    level: 4
     paths:
         - ../../bin/
         - ../../config/
         - ../../public/
         - ../../src/
         - ../../tests/
-    errorFormat: json
+    errorFormat: table
+    editorUrl: 'phpstorm://open?file=%%file%%&line=%%line%%'
+    editorUrlTitle: '%%relFile%%:%%line%%'
+    checkUninitializedProperties: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkBenevolentUnionTypes: true
+    reportAlwaysTrueInLastCondition: true
     excludePaths:
         - ../../src/Protobuf/*
         - ../../migrations/*
+
+    # https://github.com/phpstan/phpstan-strict-rules
+    strictRules:
+        allRules: true
+    # https://github.com/phpstan/phpstan-symfony
     symfony:
         containerXmlPath: ../../var/cache/dev/App_KernelDevDebugContainer.xml
         consoleApplicationLoader: ../../tests/console-application.php
+        # https://github.com/phpstan/phpstan-doctrine
     doctrine:
-        objectManagerLoader: ../../tests/object-manager.php
+        objectManagerLoader: ../../tests/doctrine-object-manager.php
+        reportDynamicQueryBuilders: true
+    # https://github.com/carlosas/phpat
     phpat:
         ignore_built_in_classes: true
+    # https://github.com/TomasVotruba/type-coverage
     type_coverage:
         return_type: 50
         param_type: 30
         property_type: 70
+    # https://github.com/TomasVotruba/unused-public
     unused_public:
         methods: true
         properties: true
@@ -28,7 +45,16 @@ parameters:
         local_methods: true
         template_paths:
             - templates
+    shipmonkRules:
+        allowNamedArgumentOnlyInAttributes:
+            enabled: false
+    ergebnis:
+        noExtends:
+            classesAllowedToBeExtended:
+                - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+
 includes:
+    # https://github.com/symplify/phpstan-rules
     - ../../vendor/symplify/phpstan-rules/config/code-complexity-rules.neon
     - ../../vendor/symplify/phpstan-rules/config/collector-rules.neon
     - ../../vendor/symplify/phpstan-rules/config/naming-rules.neon
@@ -36,4 +62,15 @@ includes:
     - ../../vendor/symplify/phpstan-rules/config/static-rules.neon
     - ../../vendor/symplify/phpstan-rules/config/rector-rules.neon
     - ../../vendor/symplify/phpstan-rules/config/configurable-rules.neon
+    # https://phpstan.org/blog/what-is-bleeding-edge
     - ../../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    # https://github.com/spaze/phpstan-disallowed-calls
+    - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+
+#Additional extensions:
+# https://github.com/phpstan/phpstan-phpunit
+# https://github.com/phpstan/phpstan-beberlei-assert
+# https://github.com/symplify/phpstan-extensions
+# https://github.com/ergebnis/phpstan-rules
+# https://github.com/shipmonk-rnd/phpstan-rules

@@ -15,30 +15,33 @@ use App\Service\AuthGRPCService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GRPCController extends AbstractController
+#[asController]
+#[Route(path: '/grpc', name: 'grpc_')]
+final class GRPCController extends AbstractController
 {
-    #[Route('/grpc', name: 'grpc_index')]
+    #[Route(path: '/', name: 'index')]
     public function index(): Response
     {
         return $this->render('grpc/index.html.twig', []);
     }
 
-    #[Route('/grpc/user/create', name: 'grpc_user_create')]
+    #[Route(path: '/user/create', name: 'user_create')]
     public function createUser(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
         $grpcResponse = null;
 
-        $signInInput = new SignUpUserInput();
-        $form        = $this->createForm(SignUpType::class, $signInInput);
+        $signUpUserInput = new SignUpUserInput();
+        $form        = $this->createForm(SignUpType::class, $signUpUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signUpUser(
-                $signInInput->getEmail(),
-                $signInInput->getPassword(),
+                $signUpUserInput->getEmail(),
+                $signUpUserInput->getPassword(),
             );
         }
 
@@ -52,21 +55,21 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/verify', name: 'grpc_user_verify')]
+    #[Route(path: '/user/verify', name: 'user_verify')]
     public function verifyUser(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
         $grpcResponse = null;
-        $verifyCode   = new EntityVerifyCode();
+        $entityVerifyCode   = new EntityVerifyCode();
 
         if (true === $authGRPCService->getVcodeFromLastSignUp()) {
-            $verifyCode->setCode($authGRPCService->getVcodeFromLastSignUp());
+            $entityVerifyCode->setCode($authGRPCService->getVcodeFromLastSignUp());
         }
 
-        $form = $this->createForm(UserVerifyCodeType::class, $verifyCode);
+        $form = $this->createForm(UserVerifyCodeType::class, $entityVerifyCode);
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
-            [$grpcResponse, $status] = $authGRPCService->verifyCode($verifyCode->getCode());
+        if ($form->isSubmitted() && $form->isValid()) {
+            [$grpcResponse, $status] = $authGRPCService->verifyCode($entityVerifyCode->getCode());
         }
 
         return $this->render(
@@ -79,21 +82,21 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/token', name: 'grpc_user_token')]
+    #[Route(path: '/user/token', name: 'user_token')]
     public function getTokens(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
         $grpcResponse = null;
         $lastSignUp   = $authGRPCService->getUserCredentialsFromLastSignUp();
 
-        $signInInput = new SignInUserInput();
-        $form        = $this->createForm(SignInType::class, $signInInput);
+        $signInUserInput = new SignInUserInput();
+        $form        = $this->createForm(SignInType::class, $signInUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signInUser(
-                $signInInput->getUsername(),
-                $signInInput->getPassword(),
+                $signInUserInput->getUsername(),
+                $signInUserInput->getPassword(),
             );
 
             if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {
@@ -117,21 +120,21 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/details', name: 'grpc_user_get')]
+    #[Route(path: '/user/details', name: 'user_get')]
     public function getUserDetails(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
         $grpcResponse = null;
         $lastSignUp   = $authGRPCService->getUserCredentialsFromLastSignUp();
 
-        $signInInput = new SignInUserInput();
-        $form        = $this->createForm(SignInType::class, $signInInput);
+        $signInUserInput = new SignInUserInput();
+        $form        = $this->createForm(SignInType::class, $signInUserInput);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) {
             [$grpcResponse, $status] = $authGRPCService->signInUser(
-                $signInInput->getUsername(),
-                $signInInput->getPassword(),
+                $signInUserInput->getUsername(),
+                $signInUserInput->getPassword(),
             );
 
             if (0 === $status->code && $grpcResponse instanceof SignInUserResponse) {

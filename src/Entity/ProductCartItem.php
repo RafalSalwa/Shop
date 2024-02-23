@@ -47,9 +47,9 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         return $this->referenceEntity;
     }
 
-    public function setReferenceEntity(CartInsertableInterface $product): void
+    public function setReferenceEntity(CartInsertableInterface $cartInsertable): void
     {
-        $this->referenceEntity = $product;
+        $this->referenceEntity = $cartInsertable;
     }
 
     public function getTypeName(): string
@@ -87,9 +87,9 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
     {
     }
 
-    public function setReferencedEntity(CartInsertableInterface $entity): CartItemInterface
+    public function setReferencedEntity(CartInsertableInterface $cartInsertable): CartItemInterface
     {
-        $this->referenceEntity = $entity;
+        $this->referenceEntity = $cartInsertable;
 
         return $this;
     }

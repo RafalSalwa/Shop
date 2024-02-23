@@ -84,17 +84,17 @@ class Cart implements JsonSerializable
         return $this;
     }
 
-    public function addItem(CartItemInterface $item): self
+    public function addItem(CartItemInterface $cartItem): self
     {
-        if (! $this->itemExists($item)) {
-            $item->setCart($this);
+        if (! $this->itemExists($cartItem)) {
+            $cartItem->setCart($this);
             $this->getItems()
-                ->add($item);
+                ->add($cartItem);
 
             return $this;
         }
 
-        $existingItem = $this->getFilteredItems($item)
+        $existingItem = $this->getFilteredItems($cartItem)
             ->first();
         assert($existingItem instanceof CartItem);
         $existingItem->increaseQuantity();
@@ -107,7 +107,7 @@ class Cart implements JsonSerializable
         return $this->getItems()
             ->exists(
                 /** @var CartItemInterface $element */
-                static fn ($key, CartItemInterface $element) => $element->getReferenceEntity()
+                static fn ($key, CartItemInterface $element): bool => $element->getReferenceEntity()
                     ->getId() === $cartItem->getReferenceEntity()
                     ->getId()
                     && $element::class === $cartItem::class
@@ -130,28 +130,28 @@ class Cart implements JsonSerializable
     {
         return $this->getItems()
             ->filter(
-                static fn (CartItemInterface $cartItem) => $cartItem->getReferenceEntity()
+                static fn (CartItemInterface $cartItem): bool => $cartItem->getReferenceEntity()
                     ->getId() === $newItem->getReferenceEntity()
                     ->getId()
                     && $cartItem::class === $newItem::class
             );
     }
 
-    public function removeItem(CartItem $item): void
+    public function removeItem(CartItem $cartItem): void
     {
-        if (! $this->items->contains($item)) {
+        if (! $this->items->contains($cartItem)) {
             return;
         }
 
-        $this->items->removeElement($item);
+        $this->items->removeElement($cartItem);
 
-        $item->setCart(null);
+        $cartItem->setCart(null);
     }
 
     public function itemTypeExists(CartItemInterface $cartItem): bool
     {
         return $this->getItems()
-            ->exists(static fn ($key, $element) => $element::class === $cartItem::class);
+            ->exists(static fn ($key, $element): bool => $element::class === $cartItem::class);
     }
 
     public function getUserId(): int

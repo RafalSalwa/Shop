@@ -12,11 +12,14 @@ use App\Service\CartService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CheckoutController extends AbstractController
+#[asController]
+#[Route(path: '/cart/checkout', name: 'checkout_')]
+final class CartCheckoutController extends AbstractController
 {
-    #[Route('/cart/checkout/', name: 'checkout_index')]
+    #[Route('/', name: 'index')]
     public function index(): Response
     {
         return $this->render(
@@ -25,12 +28,12 @@ class CheckoutController extends AbstractController
         );
     }
 
-    #[Route('/cart/checkout/shipment', name: 'checkout_shipment')]
+    #[Route('/shipment', name: 'shipment')]
     public function shipment(
         Request $request,
         CartService $cartService,
         CartCalculator $cartCalculator,
-        AddressRepository $repository,
+        AddressRepository $addressRepository,
     ): Response {
         $user = $this->getUser();
 
@@ -42,7 +45,7 @@ class CheckoutController extends AbstractController
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
-            $repository->save($address);
+            $addressRepository->save($address);
         }
 
         return $this->render(

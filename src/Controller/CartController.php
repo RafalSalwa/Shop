@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,10 +28,11 @@ use Throwable;
 use function dd;
 
 /** @see \App\Tests\Integration\CartControllerTest */
-#[Route('/cart', name: 'cart_')]
-class CartController extends AbstractController
+#[asController]
+#[Route(path: '/cart', name: 'cart_')]
+final class CartController extends AbstractController
 {
-    #[Route('/add/{type}/{id}/{quantity}', name: 'add')]
+    #[Route(path: '/add/{type}/{id}/{quantity}', name: 'add')]
     public function addToCart(
         #[ValueResolver('cart_item_type')]
         string $type,
@@ -44,8 +46,8 @@ class CartController extends AbstractController
             $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $item);
 
             $cartService->add($item, $quantity);
-        } catch (Throwable $exception) {
-            dd($exception::class, $exception->getMessage());
+        } catch (Throwable $throwable) {
+            dd($throwable::class, $throwable->getMessage());
         }
 
         return $this->redirectToRoute(
@@ -54,18 +56,18 @@ class CartController extends AbstractController
         );
     }
 
-    #[Route('/add', name: 'add_post', methods: ['POST'])]
+    #[Route(path: '/add', name: 'add_post', methods: ['POST'])]
     public function post(
         #[MapRequestPayload]
-        CartAddJsonRequest $cartAddRequest,
+        CartAddJsonRequest $cartAddJsonRequest,
         CartService $cartService,
         CartItemFactory $cartItemFactory,
     ): RedirectResponse {
         try {
-            $item = $cartItemFactory->create($cartAddRequest->getType(), $cartAddRequest->getId());
+            $item = $cartItemFactory->create($cartAddJsonRequest->getType(), $cartAddJsonRequest->getId());
             $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
 
-            $cartService->add($item, $cartAddRequest->getQuantity());
+            $cartService->add($item, $cartAddJsonRequest->getQuantity());
             $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
             dd($cartService->getCurrentCart()->getItems());
         } catch (AccessDeniedException $ade) {
@@ -80,25 +82,25 @@ class CartController extends AbstractController
 
         return $this->redirectToRoute(
             $item->getTypeName() . 's_details',
-            ['id' => $cartAddRequest->getId()],
+            ['id' => $cartAddJsonRequest->getId()],
         );
     }
 
-    #[Route('/remove/{id}', name: 'remove')]
+    #[Route(path: '/remove/{id}', name: 'remove')]
     public function removeFromCart(
-        CartItem $item,
+        CartItem $cartItem,
         CartService $cartService,
         ProductStockService $productStockService,
     ): RedirectResponse {
         $cart = $cartService->getCurrentCart();
 
         try {
-            $cartService->removeItemIfExists($item);
-            $productStockService->restoreStock($item);
+            $cartService->removeItemIfExists($cartItem);
+            $productStockService->restoreStock($cartItem);
 
             $cartService->save($cart);
 
-            $this->addFlash('info', 'successfully removed ' . $item->getItemName() . ' from cart');
+            $this->addFlash('info', 'successfully removed ' . $cartItem->getItemName() . ' from cart');
         } catch (ItemNotFoundException $pnf) {
             $this->addFlash('error', $pnf->getMessage());
         } catch (ProductStockDepletedException $psd) {
@@ -108,7 +110,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('cart_index');
     }
 
-    #[Route('/set_delivery_address', name: 'delivery_address_set')]
+    #[Route(path: '/set_delivery_address', name: 'delivery_address_set')]
     public function setDeliveryAddress(Request $request, CartService $cartService): Response
     {
         $deliveryAddressId = $request->request->get('addrId');
@@ -117,7 +119,7 @@ class CartController extends AbstractController
         return new Response('ok');
     }
 
-    #[Route('/', name: 'index')]
+    #[Route(path: '/', name: 'index')]
     public function show(CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();

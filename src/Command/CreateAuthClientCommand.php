@@ -18,14 +18,14 @@ use function implode;
 #[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
 class CreateAuthClientCommand extends Command
 {
-    public function __construct(private readonly EntityManagerInterface $em)
+    public function __construct(private readonly EntityManagerInterface $entityManager)
     {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $symfonyStyle = new SymfonyStyle($input, $output);
 
         $clientName = 'Test Client';
         $clientId = 'testclient';
@@ -35,7 +35,7 @@ class CreateAuthClientCommand extends Command
         $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
         $redirectUris = explode(',', 'https://interview.local/callback');
 
-        $user = $this->em->getRepository(User::class)->findOneBy(
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(
             ['user_id' => 1],
         );
         $user->setRoles(['ROLE_SUPER_ADMIN']);
@@ -44,7 +44,7 @@ class CreateAuthClientCommand extends Command
         //        $this->em->flush();
 
         // Create the client
-        $conn = $this->em->getConnection();
+        $conn = $this->entityManager->getConnection();
         $conn->beginTransaction();
 
         try {
@@ -74,7 +74,8 @@ class CreateAuthClientCommand extends Command
         } catch (Throwable) {
             $conn->rollBack();
         }
-        $io->success('Bootstrap complete.');
+
+        $symfonyStyle->success('Bootstrap complete.');
 
         return Command::SUCCESS;
     }

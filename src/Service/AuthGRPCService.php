@@ -18,9 +18,9 @@ class AuthGRPCService
 {
     private const GRPC_USER_KEY = 'grpc_user';
 
-    private ?AuthServiceClient $authClient = null;
+    private ?AuthServiceClient $authServiceClient = null;
 
-    private ?UserServiceClient $userClient = null;
+    private ?UserServiceClient $userServiceClient = null;
 
     public function __construct(
         private readonly RequestStack $requestStack,
@@ -30,20 +30,20 @@ class AuthGRPCService
 
     public function signInUser(string $email, string $password): array
     {
-        $signInReq = new SignInUserInput();
-        $signInReq->setUsername($email);
-        $signInReq->setPassword($password);
+        $signInUserInput = new SignInUserInput();
+        $signInUserInput->setUsername($email);
+        $signInUserInput->setPassword($password);
 
         return $this->getAuthClient()
-            ->SignInUser($signInReq)
+            ->SignInUser($signInUserInput)
             ->wait()
         ;
     }
 
     public function getAuthClient(): AuthServiceClient
     {
-        if (! $this->authClient instanceof AuthServiceClient) {
-            $this->authClient = new AuthServiceClient(
+        if (! $this->authServiceClient instanceof AuthServiceClient) {
+            $this->authServiceClient = new AuthServiceClient(
                 $this->authServiceDsn,
                 [
                     'credentials' => ChannelCredentials::createInsecure(),
@@ -51,17 +51,18 @@ class AuthGRPCService
             );
         }
 
-        return $this->authClient;
+        return $this->authServiceClient;
     }
 
     public function signUpUser(string $email, string $password): array
     {
-        $signUpReq = new SignUpUserInput();
-        $signUpReq->setEmail($email);
-        $signUpReq->setPassword($password);
-        $signUpReq->setPasswordConfirm($password);
+        $signUpUserInput = new SignUpUserInput();
+        $signUpUserInput->setEmail($email);
+        $signUpUserInput->setPassword($password);
+        $signUpUserInput->setPasswordConfirm($password);
+
         $response = $this->getAuthClient()
-            ->SignUpUser($signUpReq)
+            ->SignUpUser($signUpUserInput)
             ->wait()
         ;
         $user = $response[0];
@@ -96,11 +97,11 @@ class AuthGRPCService
 
     public function verifyCode(string $code): array
     {
-        $verifyCodeRequest = new VerifyUserRequest();
-        $verifyCodeRequest->setCode($code);
+        $verifyUserRequest = new VerifyUserRequest();
+        $verifyUserRequest->setCode($code);
 
         $response = $this->getUserClient()
-            ->VerifyUser($verifyCodeRequest)
+            ->VerifyUser($verifyUserRequest)
             ->wait()
         ;
         $returnObject = $response[0];
@@ -115,8 +116,8 @@ class AuthGRPCService
 
     public function getUserClient(): UserServiceClient
     {
-        if (! $this->userClient instanceof UserServiceClient) {
-            $this->userClient = new UserServiceClient(
+        if (! $this->userServiceClient instanceof UserServiceClient) {
+            $this->userServiceClient = new UserServiceClient(
                 $this->userServiceDsn,
                 [
                     'credentials' => ChannelCredentials::createInsecure(),
@@ -124,7 +125,7 @@ class AuthGRPCService
             );
         }
 
-        return $this->userClient;
+        return $this->userServiceClient;
     }
 
     public function getUserCredentialsFromLastSignUp(): ?array

@@ -61,11 +61,11 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(referencedColumnName: 'plan_id', nullable: false)]
-    private SubscriptionPlan $requiredSubscription;
+    private SubscriptionPlan $subscriptionPlan;
 
     public function getRequiredSubscription(): SubscriptionPlan
     {
-        return $this->requiredSubscription;
+        return $this->subscriptionPlan;
     }
 
     public function getCategoryId()
@@ -141,25 +141,25 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     public function toCartItem(): CartItem
     {
-        $cartItem = new ProductCartItem();
-        $cartItem
+        $productCartItem = new ProductCartItem();
+        $productCartItem
             ->setQuantity(1)
             ->setReferencedEntity($this)
             ->setCreatedAt(new DateTime('now'))
             ->setUpdatedAt(new DateTime('now'));
 
-        return $cartItem;
+        return $productCartItem;
     }
 
-    public function decreaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    public function decreaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
     {
     }
 
-    public function increaseStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    public function increaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
     {
     }
 
-    public function changeStock(StockManageableInterface $product, int $quantity): StockManageableInterface
+    public function changeStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
     {
     }
 }

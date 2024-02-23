@@ -31,13 +31,13 @@ class Subscription
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
     #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
-    private SubscriptionPlan|null $plan = null;
+    private SubscriptionPlan|null $subscriptionPlan = null;
 
     #[Column(name: 'user_id', type: Types::INTEGER, nullable: true)]
     private int|null $userId = null;
 
     #[Column(name: 'tier', type: Types::SMALLINT, enumType: SubscriptionTier::class, nullable: false)]
-    private SubscriptionTier $tier;
+    private SubscriptionTier $subscriptionTier = SubscriptionTier::Freemium;
 
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => true])]
     private bool $isActive = true;
@@ -53,34 +53,34 @@ class Subscription
 
     public function __construct()
     {
-        $this->tier = SubscriptionTier::Freemium;
-        $date       = new DateTime();
-        $date->add(new DateInterval('P30D'));
-        $this->endsAt = $date;
+        $dateTime       = new DateTime();
+        $dateTime->add(new DateInterval('P30D'));
+
+        $this->endsAt = $dateTime;
     }
 
     public function getPlan(): SubscriptionPlan|null
     {
-        return $this->plan;
+        return $this->subscriptionPlan;
     }
 
-    public function setPlan(SubscriptionPlan $plan): self
+    public function setPlan(SubscriptionPlan $subscriptionPlan): self
     {
-        $this->plan = $plan;
+        $this->subscriptionPlan = $subscriptionPlan;
 
         return $this;
     }
 
     public function setTier(int $tier): self
     {
-        $this->tier = $tier;
+        $this->subscriptionTier = $tier;
 
         return $this;
     }
 
     public function getTier(): SubscriptionTier
     {
-        return $this->tier;
+        return $this->subscriptionTier;
     }
 
     public function isActive(): bool

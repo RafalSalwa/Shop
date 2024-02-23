@@ -51,7 +51,7 @@ interface CartItemInterface
     /**
      * Get identifier of the base entity that is added.
      */
-    public function setReferencedEntity(CartInsertableInterface $entity): self;
+    public function setReferencedEntity(CartInsertableInterface $cartInsertable): self;
 
     /**
      * Set the quantity of the cart item.

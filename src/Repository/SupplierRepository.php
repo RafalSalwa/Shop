@@ -10,8 +10,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 class SupplierRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, Supplier::class);
+        parent::__construct($managerRegistry, Supplier::class);
     }
 }

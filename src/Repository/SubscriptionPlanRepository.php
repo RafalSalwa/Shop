@@ -12,19 +12,19 @@ use function mb_strtolower;
 
 class SubscriptionPlanRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, SubscriptionPlan::class);
+        parent::__construct($managerRegistry, SubscriptionPlan::class);
     }
 
     public function findById(int $id)
     {
-        $qb = $this->createQueryBuilder('p')
+        $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
             ->setParameter('id', $id)
         ;
 
-        return $qb->getQuery()
+        return $queryBuilder->getQuery()
             ->getOneOrNullResult()
         ;
     }

@@ -8,8 +8,8 @@ use Exception;
 
 class UserNotFoundException extends Exception implements AuthenticationExceptionInterface
 {
-    public function __construct(string $message = '', int $code = 404, ?Throwable $previous = null)
+    public function __construct(string $message = '', int $code = 404, ?Throwable $throwable = null)
     {
-        parent::__construct($message, $code, $previous);
+        parent::__construct($message, $code, $throwable);
     }
 }

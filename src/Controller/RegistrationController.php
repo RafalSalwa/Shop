@@ -13,16 +13,18 @@ use App\Security\EmailVerifier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
-#[Route('/register', name: 'register_')]
+#[asController]
+#[Route(path: '/register', name: 'register_', methods: ['GET', 'POST'])]
 class RegistrationController extends AbstractController
 {
     public function __construct(private readonly EmailVerifier $emailVerifier)
     {}
 
-    #[Route('/', name: 'index')]
+    #[Route(path: '/', name: 'index')]
     public function register(Request $request, AuthApiRegisterer $authApiRegisterer): Response
     {
         $user = new User();
@@ -44,7 +46,7 @@ class RegistrationController extends AbstractController
         );
     }
 
-    #[Route('/confirm/', name: 'confirm_email')]
+    #[Route(path: '/confirm/', name: 'confirm_email')]
     public function confirmUserEmail(Request $request, AuthApiRegisterer $authApiRegisterer): Response
     {
         $form = $this->createForm(RegistrationConfirmationFormType::class);
@@ -67,7 +69,7 @@ class RegistrationController extends AbstractController
         );
     }
 
-    #[Route('/verify/{verificationCode}', name: 'verify_email')]
+    #[Route(path: '/verify/{verificationCode}', name: 'verify_email')]
     public function verifyUserEmail(string $verificationCode, AuthApiRegisterer $authApiRegisterer): Response
     {
         $authApiRegisterer->confirmAccount($verificationCode);
@@ -78,7 +80,7 @@ class RegistrationController extends AbstractController
         );
     }
 
-    #[Route('/thank_you/{verificationCode}', name: 'thank_you')]
+    #[Route(path: '/thank_you/{verificationCode}', name: 'thank_you')]
     public function thankYouPage(
         Request $request,
         string $verificationCode,

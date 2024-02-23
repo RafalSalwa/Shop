@@ -13,7 +13,7 @@ use function assert;
 class SubscriptionService
 {
     public function __construct(
-        private readonly SubscriptionPlanRepository $planRepository,
+        private readonly SubscriptionPlanRepository $subscriptionPlanRepository,
         private readonly UserRepository $userRepository,
         private readonly Security $security,
     ) {}
@@ -25,7 +25,7 @@ class SubscriptionService
 
     public function assignSubscription(string $type): void
     {
-        $plan = $this->planRepository->getByName($type);
+        $plan = $this->subscriptionPlanRepository->getByName($type);
         if (! $plan) {
             return;
         }
@@ -36,6 +36,7 @@ class SubscriptionService
         if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {
             return;
         }
+
         $subscription->setSubscriptionPlan($plan);
         $user->setSubscription($subscription);
         $this->userRepository->save($user);

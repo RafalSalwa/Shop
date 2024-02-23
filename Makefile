@@ -24,12 +24,11 @@ run-always:
 	bin/swiss-knife check-commented-code src
 	bin/swiss-knife check-conflicts src
 	bin/swiss-knife find-multi-classes src
-	bin/swiss-knife namespace-to-psr-4 src --namespace-root "App\\"
-	echo 'RUN'
+	# bin/swiss-knife namespace-to-psr-4 src --namespace-root "App\\"
 
 .PHONY: lint
 lint: run-always
-	bin/parallel-lint src
+	bin/parallel-lint src --blame --no-progress
 
 .PHONY: ecs
 ecs:
@@ -51,13 +50,14 @@ php-cs-fixer:
 bench: ## Runs benchmarks with phpbench
 	composer bench
 
-.PHONY: deptrack
-deptrack:
-	./bin/deptrac --formatter=json > reports/deptrack/report.json
+.PHONY: deptrac
+deptrac:
+	-./bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
+	-./bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 
-.PHONY: phpstan-checkstyle
-phpstan-checkstyle:
-	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle src > reports/results/phpstan.checkstyle.xml
+.PHONY: phpstan
+phpstan: lint
+	-bin/phpstan analyse --configuration=reports/config/phpstan.neon src
 
 .PHONY: phpinsights
 phpinsights:
@@ -66,13 +66,29 @@ phpinsights:
 .PHONY: jenkins_static_analysis
 jenkins_static_analysis:
 	$(MAKE) test_unit
-	-bin/phpcs --standard=phpcs.xml --extensions=php --tab-width=4 --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml -sp src tests || true
-	-bin/phpstan analyse --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
-	-bin/psalm --report=reports/results/psalm.sonarqube.json --config=reports/config/psalm.xml || true
-	-bin/php-cs-fixer --config=.php-cs-fixer.dist.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
-	-bin/phpmd src/ html phpmd.xml > reports/results/phpmd.html || true
-	-bin/phpmd src/ xml phpmd.xml > reports/results/phpmd.xml || true
-	-bin/phpinsights analyse src --composer=composer.json --format=checkstyle > reports/results/phpinsights.xml
+	-bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+	-bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+	-bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
+	-bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
+	-bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
+	-bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
+	-bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+
+.PHONY: github_actions_static_analysis
+github_actions_static_analysis:
+	#$(MAKE) test_unit
+	#$(MAKE) deptrac
+#	-bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+#	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+#	-bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
+#	-bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
+#	-bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
+	-bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --format=github-action
+#	-bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+
 
 .PHONY: sonar_static_analysis
 sonar_static_analysis:
@@ -85,10 +101,10 @@ sonar_static_analysis:
 phpmetrics:
 	$(MAKE) test_unit
 	${ROOT_DIR}/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
-
+	xdg-open ${ROOT_DIR}/reports/results/phpmetrics/html/index.html >/dev/null
 .PHONY: test_unit
 test_unit: ### run test
-	./bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit
+	./bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit --no-output
 
 .PHONY: test_integration
 test_integration: ### run test
@@ -114,4 +130,5 @@ proto:
 		exit 1; \
 	fi
 		protoc --proto_path=proto --php_out=src/ --grpc_out=src/ --plugin=protoc-gen-grpc=bin/grpc_php_plugin proto/*.proto;
+
 

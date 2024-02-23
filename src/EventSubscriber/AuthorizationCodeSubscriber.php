@@ -37,7 +37,7 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         return ['league.oauth2_server.event.authorization_request_resolve' => 'onLeagueOauth2ServerEventAuthorizationRequestResolve'];
     }
 
-    public function onLeagueOauth2ServerEventAuthorizationRequestResolve(AuthorizationRequestResolveEvent $event): void
+    public function onLeagueOauth2ServerEventAuthorizationRequestResolve(AuthorizationRequestResolveEvent $authorizationRequestResolveEvent): void
     {
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
@@ -45,13 +45,14 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         $response = new RedirectResponse($this->urlGenerator->generate('app_login'), Response::HTTP_TEMPORARY_REDIRECT);
         if ($user instanceof UserInterface) {
             if (null !== $request->getSession()->get('consent_granted')) {
-                $event->resolveAuthorization($request->getSession()->get('consent_granted'));
+                $authorizationRequestResolveEvent->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()
                     ->remove('consent_granted')
                 ;
 
                 return;
             }
+
             $response = new RedirectResponse(
                 $this->urlGenerator->generate(
                     'app_consent',
@@ -60,6 +61,7 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
                 Response::HTTP_TEMPORARY_REDIRECT,
             );
         }
-        $event->setResponse($response);
+
+        $authorizationRequestResolveEvent->setResponse($response);
     }
 }

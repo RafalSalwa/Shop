@@ -9,14 +9,16 @@ use App\Repository\SubscriptionPlanRepository;
 use App\Service\SubscriptionService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
+#[asController]
+#[Route(path: '/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
 #[IsGranted('IS_AUTHENTICATED')]
-class SubscriptionController extends AbstractController
+final class SubscriptionController extends AbstractController
 {
-    #[Route('/', name: 'index')]
+    #[Route(path: '/', name: 'index')]
     public function index(SubscriptionPlanRepository $planRepository): Response
     {
         $plans = $planRepository->fetchAvailablePlans();
@@ -30,22 +32,22 @@ class SubscriptionController extends AbstractController
         );
     }
 
-    #[Route('/{id<\d+>}', name: 'details', methods: ['GET'])]
-    public function details(SubscriptionPlan $plan): Response
+    #[Route(path: '/{id<\d+>}', name: 'details', methods: ['GET'])]
+    public function details(SubscriptionPlan $subscriptionPlan): Response
     {
         return $this->render(
             'subscriptions/details.html.twig',
             [
                 'controller_name' => 'IndexController',
-                'plan'            => $plan,
+                'plan'            => $subscriptionPlan,
             ],
         );
     }
 
-    #[Route('/clear', name: 'clear')]
-    public function clear(SubscriptionService $service): Response
+    #[Route(path: '/clear', name: 'clear')]
+    public function clear(SubscriptionService $subscriptionService): Response
     {
-        $service->cancelSubscription();
+        $subscriptionService->cancelSubscription();
         $this->addFlash('info', 'Subscription removed');
 
         return $this->redirectToRoute('app_index');

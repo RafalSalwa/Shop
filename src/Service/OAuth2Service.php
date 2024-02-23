@@ -35,7 +35,7 @@ class OAuth2Service
         $request = $this->requestStack->getCurrentRequest();
 
         $userConsents = $user->getOAuth2UserConsents()
-            ->filter(static fn (OAuth2UserConsent $consent) => $consent->getClient() === $appClient)
+            ->filter(static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient)
             ->first() ?: null;
         $userScopes = ($userConsents?->getScopes() ?? []);
 
@@ -61,9 +61,9 @@ class OAuth2Service
         );
     }
 
-    public function save(OAuth2UserConsent $consents): void
+    public function save(OAuth2UserConsent $oAuth2UserConsent): void
     {
-        $this->entityManager->persist($consents);
+        $this->entityManager->persist($oAuth2UserConsent);
         $this->entityManager->flush();
     }
 }

@@ -18,15 +18,15 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class OAuth2ClientProfileRepository extends ServiceEntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($registry, OAuth2ClientProfile::class);
+        parent::__construct($managerRegistry, OAuth2ClientProfile::class);
     }
 
-    public function add(OAuth2ClientProfile $entity, bool $flush = false): void
+    public function add(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->persist($entity)
+            ->persist($oAuth2ClientProfile)
         ;
 
         if ($flush) {
@@ -36,10 +36,10 @@ class OAuth2ClientProfileRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(OAuth2ClientProfile $entity, bool $flush = false): void
+    public function remove(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
     {
         $this->getEntityManager()
-            ->remove($entity)
+            ->remove($oAuth2ClientProfile)
         ;
 
         if ($flush) {

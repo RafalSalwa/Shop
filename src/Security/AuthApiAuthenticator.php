@@ -25,9 +25,9 @@ use function dd;
 class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
 {
     public function __construct(
-        private AuthApiClient $authApiClient,
-        private UsersApiClient $usersApiClient,
-        private UrlGeneratorInterface $urlGenerator,
+        private readonly AuthApiClient $authApiClient,
+        private readonly UsersApiClient $usersApiClient,
+        private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
     protected function getLoginUrl(Request $request): string
@@ -40,13 +40,14 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
         if (false === $request->request->has('email') || false === $request->request->has('password')) {
             throw new InvalidArgumentException('Missing authentication parameters in request.');
         }
+
         try {
             $tokenPair = $this->authApiClient->signIn(
                 $request->request->get('email'),
                 $request->request->get('password'),
             );
-        } catch (AuthenticationExceptionInterface $exception) {
-            dd($exception->getMessage(), $exception->getTraceAsString());
+        } catch (AuthenticationExceptionInterface $authenticationException) {
+            dd($authenticationException->getMessage(), $authenticationException->getTraceAsString());
         }
 
         return new SelfValidatingPassport(
@@ -63,17 +64,18 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
             [new RememberMeBadge()],
         );
     }
+
 ///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return null;
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $authenticationException): Response
     {
         dd('fail');
-        if (true === $request->hasSession()) {
-            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
+        if ($request->hasSession()) {
+            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $authenticationException);
         }
 
         $url = $this->getLoginUrl($request);

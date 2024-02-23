@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\Config\RectorConfig;
 use Rector\Doctrine\Set\DoctrineSetList;
 use Rector\PHPUnit\Set\PHPUnitSetList;
-use Rector\Set\ValueObject\SetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
 
@@ -24,7 +24,7 @@ return RectorConfig::configure()
             __DIR__ . '/src/Protobuf',
         ],
     )
-    ->withPhpSets( php83: true)
+    ->withPhpSets(php83: true)
     ->withSets(
         [
             PHPUnitSetList::PHPUNIT_100,
@@ -34,7 +34,7 @@ return RectorConfig::configure()
             SymfonySetList::SYMFONY_CODE_QUALITY,
             SymfonySetList::SYMFONY_CONSTRUCTOR_INJECTION,
             DoctrineSetList::DOCTRINE_CODE_QUALITY,
-            DoctrineSetList::DOCTRINE_ORM_214
+            DoctrineSetList::DOCTRINE_ORM_214,
         ],
     )
     ->withPreparedSets(
@@ -46,7 +46,7 @@ return RectorConfig::configure()
         naming: true,
         instanceOf: true,
         earlyReturn: true,
-        strictBooleans: true
+        strictBooleans: true,
     )
     // if typeDeclaration is too high use this
 //    ->withTypeCoverageLevel(1)
@@ -57,4 +57,5 @@ return RectorConfig::configure()
         [
             AddVoidReturnTypeWhereNoReturnRector::class,
         ],
-    );
+    )
+    ->withCache(cacheClass: FileCacheStorage::class, cacheDirectory: '/tmp/rector');

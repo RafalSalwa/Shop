@@ -7,23 +7,25 @@ namespace App\Controller;
 use App\Security\AuthApiUserProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-class LoginController extends AbstractController
+#[asController]
+#[Route(path: '/login', name: 'login_')]
+final class LoginController extends AbstractController
 {
-    #[Route('/login', name: 'app_login')]
+    #[Route(path: '/', name: 'index')]
     public function login(
-        Request $request,
         AuthenticationUtils $authenticationUtils,
         AuthApiUserProvider $loginAuthenticator,
     ): Response {
         if ($this->getUser() instanceof UserInterface) {
             return $this->redirectToRoute('app_index');
         }
+
         $error = $authenticationUtils->getLastAuthenticationError();
         $lastUsername = $authenticationUtils->getLastUsername();
 
@@ -36,7 +38,7 @@ class LoginController extends AbstractController
         );
     }
 
-    #[Route('/logout', name: 'app_logout')]
+    #[Route(path: '/logout', name: 'logout')]
     public function logout(Security $security): Response
     {
         $security->logout();

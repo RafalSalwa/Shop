@@ -39,10 +39,10 @@ final class Paginator
     /**
      * @var Traversable<int, object>
      */
-    private Traversable $results;
+    private Traversable $traversable;
 
     public function __construct(
-        private readonly DoctrineQueryBuilder $queryBuilder,
+        private readonly DoctrineQueryBuilder $doctrineQueryBuilder,
         private readonly int $pageSize = self::PAGE_SIZE,
     ) {}
 
@@ -51,7 +51,7 @@ final class Paginator
         $this->currentPage = max(1, $page);
         $firstResult = ($this->currentPage - 1) * $this->pageSize;
 
-        $query = $this->queryBuilder
+        $query = $this->doctrineQueryBuilder
             ->setFirstResult($firstResult)
             ->setMaxResults($this->pageSize)
             ->getQuery()
@@ -60,7 +60,7 @@ final class Paginator
         /**
          * @var array<string, mixed> $joinDqlParts
          */
-        $joinDqlParts = $this->queryBuilder->getDQLPart('join');
+        $joinDqlParts = $this->doctrineQueryBuilder->getDQLPart('join');
 
         if ([] === $joinDqlParts) {
             $query->setHint(CountWalker::HINT_DISTINCT, false);
@@ -71,12 +71,12 @@ final class Paginator
         /**
          * @var array<string, mixed> $havingDqlParts
          */
-        $havingDqlParts = $this->queryBuilder->getDQLPart('having');
+        $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
         $useOutputWalkers = count($havingDqlParts ?: []) > 0;
         $paginator->setUseOutputWalkers($useOutputWalkers);
 
-        $this->results = $paginator->getIterator();
+        $this->traversable = $paginator->getIterator();
         $this->numResults = $paginator->count();
 
         return $this;
@@ -132,6 +132,6 @@ final class Paginator
      */
     public function getResults(): Traversable
     {
-        return $this->results;
+        return $this->traversable;
     }
 }

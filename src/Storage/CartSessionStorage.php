@@ -90,8 +90,8 @@ class CartSessionStorage
         if ('test' === $this->parameterBag->get('kernel.environment')) {
             $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
 
-            $sessionStorage = new MockFileSessionStorage($sessionSavePath);
-            $session = new Session($sessionStorage);
+            $mockFileSessionStorage = new MockFileSessionStorage($sessionSavePath);
+            $session = new Session($mockFileSessionStorage);
 
             $session->start();
             $session->save();

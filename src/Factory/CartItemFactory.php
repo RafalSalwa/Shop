@@ -15,24 +15,21 @@ use function assert;
 class CartItemFactory
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityRepository,
+        private readonly EntityManagerInterface $entityManager,
         private readonly LoggerInterface $logger,
     ) {}
 
     public function create(string $entityType, int $id): CartItemInterface
     {
         try {
-            $entity = $this->entityRepository->getRepository($entityType)
+            $entity = $this->entityManager->getRepository($entityType)
                 ->find($id)
             ;
             assert($entity instanceof CartInsertableInterface);
-            if (null === $entity) {
-                throw new ItemNotFoundException();
-            }
 
             return $entity->toCartItem();
-        } catch (Throwable $e) {
-            $this->logger->error($e->getMessage(), $e->getTrace());
+        } catch (Throwable $throwable) {
+            $this->logger->error($throwable->getMessage(), $throwable->getTrace());
         }
     }
 }

@@ -18,7 +18,7 @@ use function memory_get_usage;
 
 class BasicMetricsExporter
 {
-    public function __construct(private readonly ExportingReader $reader, private readonly ClockInterface $clock)
+    public function __construct(private readonly ExportingReader $exportingReader, private readonly ClockInterface $clock)
     {}
 
     public function generate(): void
@@ -29,7 +29,7 @@ class BasicMetricsExporter
             $this->clock,
             Attributes::factory(),
             new InstrumentationScopeFactory(Attributes::factory()),
-            [$this->reader],
+            [$this->exportingReader],
             new CriteriaViewRegistry(),
             new WithSampledTraceExemplarFilter(),
             new ImmediateStalenessHandlerFactory(),
@@ -71,10 +71,10 @@ class BasicMetricsExporter
                 'http.status_code' => 500,
             ],
         );
-        $this->reader->collect();
+        $this->exportingReader->collect();
 
         // During the time range (T1, T2]:
-        $this->reader->collect();
+        $this->exportingReader->collect();
 
         // During the time range (T2, T3]:
         $serverDuration->record(
@@ -91,7 +91,7 @@ class BasicMetricsExporter
                 'http.status_code' => 500,
             ],
         );
-        $this->reader->collect();
+        $this->exportingReader->collect();
 
         // During the time range (T3, T4]:
         $serverDuration->record(
@@ -101,7 +101,7 @@ class BasicMetricsExporter
                 'http.status_code' => 200,
             ],
         );
-        $this->reader->collect();
+        $this->exportingReader->collect();
 
         // During the time range (T4, T5]:
         $serverDuration->record(
@@ -125,7 +125,7 @@ class BasicMetricsExporter
                 'http.status_code' => 200,
             ],
         );
-        $this->reader->collect();
+        $this->exportingReader->collect();
 
         $meterProvider->shutdown();
     }

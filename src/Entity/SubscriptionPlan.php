@@ -128,7 +128,7 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getTaxedPrice()
+    public function getTaxedPrice(): string
     {
         $taxedPrice = bcmul((string) $this->getUnitPrice(), '1.23');
 
@@ -185,13 +185,13 @@ class SubscriptionPlan implements CartInsertableInterface
 
     public function toCartItem(): CartItemInterface
     {
-        $cartItem = new SubscriptionPlanCartItem();
-        $cartItem
+        $subscriptionPlanCartItem = new SubscriptionPlanCartItem();
+        $subscriptionPlanCartItem
             ->setReferencedEntity($this)
             ->setQuantity(1)
             ->setCreatedAt(new DateTime('now'));
 
-        return $cartItem;
+        return $subscriptionPlanCartItem;
     }
 
     #[PrePersist]
