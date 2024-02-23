@@ -1,4 +1,4 @@
-composer: true  # Analyse the composer.* files
+composer: false  # Analyse the composer.* files
 includes: #  directory and files to analyze, relative to config file directory
   - "../../src"
 excludes: # regex of files (or directory) to exclude from analyze

@@ -17,16 +17,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
 use function json_decode;
 use function sprintf;
-use const JSON_THROW_ON_ERROR;
 
-class CartApiController extends AbstractController
+#[asController]
+#[Route(path: '/api/cart', name: 'api_cart', methods: ['GET', 'POST'])]
+final class CartApiController extends AbstractController
 {
-    #[Route('/api/cart', name: 'api_cart_index', methods: ['GET'])]
+    #[Route(path: '/', name: 'index', methods: ['GET'])]
     #[OA\Tag(name: 'Cart')]
     #[Security(name: 'Bearer')]
     public function index(CartManager $cartManager, SerializerInterface $serializer): JsonResponse
@@ -59,8 +61,8 @@ class CartApiController extends AbstractController
     )]
     #[Security(name: 'Bearer')]
     #[Route(
-        '/api/cart/add/product',
-        name: 'api_cart_add',
+        path: '/add/product',
+        name: 'add',
         requirements: [
             'id' => Requirement::POSITIVE_INT,
         ],

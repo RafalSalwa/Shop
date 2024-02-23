@@ -15,17 +15,20 @@ use App\Service\AuthGRPCService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class GRPCController extends AbstractController
+#[asController]
+#[Route(path: '/grpc', name: 'grpc_')]
+final class GRPCController extends AbstractController
 {
-    #[Route('/grpc', name: 'grpc_index')]
+    #[Route(path: '/', name: 'index')]
     public function index(): Response
     {
         return $this->render('grpc/index.html.twig', []);
     }
 
-    #[Route('/grpc/user/create', name: 'grpc_user_create')]
+    #[Route(path: '/user/create', name: 'user_create')]
     public function createUser(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
@@ -52,7 +55,7 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/verify', name: 'grpc_user_verify')]
+    #[Route(path: '/user/verify', name: 'user_verify')]
     public function verifyUser(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
@@ -79,7 +82,7 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/token', name: 'grpc_user_token')]
+    #[Route(path: '/user/token', name: 'user_token')]
     public function getTokens(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;
@@ -117,7 +120,7 @@ class GRPCController extends AbstractController
         );
     }
 
-    #[Route('/grpc/user/details', name: 'grpc_user_get')]
+    #[Route(path: '/user/details', name: 'user_get')]
     public function getUserDetails(Request $request, AuthGRPCService $authGRPCService): Response
     {
         $status       = null;

@@ -13,14 +13,16 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ * @covers \App\Repository\UserRepository
+ * @uses \App\Entity\User
  */
 #[CoversClass(UserRepository::class)]
 #[UsesClass(User::class)]
-#[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserRepositoryTest extends TestCase
 {
     /**
      * @throws Exception
+     * @covers \App\Repository\UserRepository
      */
     public function testMethodReturnsUserObject(): void
     {

@@ -1,13 +1,12 @@
 {
-  "type": "project",
-  "license": "proprietary",
-  "minimum-stability": "stable",
-  "prefer-stable": true,
   "name": "interview/client",
   "description": "Feature rich app with doctrine,postgress, grpc, amqp",
+  "license": "proprietary",
+  "type": "project",
   "require": {
     "php": ">=8.2",
     "ext-amqp": "*",
+    "ext-ast": "*",
     "ext-bcmath": "*",
     "ext-ctype": "*",
     "ext-dom": "*",
@@ -18,6 +17,7 @@
     "ext-xml": "*",
     "ext-xmlwriter": "*",
     "ext-yaml": "*",
+    "beberlei/doctrineextensions": "dev-master",
     "doctrine/doctrine-bundle": "^2.11",
     "doctrine/doctrine-migrations-bundle": "^3.2",
     "doctrine/orm": "^2.15",
@@ -37,125 +37,40 @@
     "php-http/httplug": "^2.4",
     "rybakit/twig-deferred-extension": "^3.0",
     "stripe/stripe-php": "^13.10",
-    "symfony/amqp-messenger": "6.3.*",
-    "symfony/asset": "6.3.*",
-    "symfony/console": "6.3.*",
-    "symfony/dotenv": "6.3.*",
-    "symfony/event-dispatcher": "6.3.*",
+    "symfony/amqp-messenger": "~6.3.0",
+    "symfony/asset": "~6.3.0",
+    "symfony/console": "~6.3.0",
+    "symfony/dotenv": "~6.3.0",
+    "symfony/event-dispatcher": "~6.3.0",
     "symfony/flex": "^2",
-    "symfony/form": "6.3.*",
-    "symfony/framework-bundle": "6.3.*",
-    "symfony/html-sanitizer": "6.3.*",
-    "symfony/http-client": "6.3.*",
-    "symfony/lock": "6.3.*",
-    "symfony/mailer": "6.3.*",
-    "symfony/messenger": "6.3.*",
+    "symfony/form": "~6.3.0",
+    "symfony/framework-bundle": "~6.3.0",
+    "symfony/html-sanitizer": "~6.3.0",
+    "symfony/http-client": "~6.3.0",
+    "symfony/lock": "~6.3.0",
+    "symfony/mailer": "~6.3.0",
+    "symfony/messenger": "~6.3.0",
     "symfony/monolog-bundle": "^3.8",
-    "symfony/rate-limiter": "6.3.*",
-    "symfony/runtime": "6.3.*",
-    "symfony/security-bundle": "6.3.*",
-    "symfony/security-csrf": "6.3.*",
-    "symfony/serializer": "6.3.*",
+    "symfony/rate-limiter": "~6.3.0",
+    "symfony/runtime": "~6.3.0",
+    "symfony/security-bundle": "~6.3.0",
+    "symfony/security-csrf": "~6.3.0",
+    "symfony/serializer": "~6.3.0",
     "symfony/stimulus-bundle": "^2.14",
-    "symfony/templating": "6.3.*",
-    "symfony/translation": "6.3.*",
-    "symfony/twig-bundle": "6.3.*",
-    "symfony/uid": "6.3.*",
+    "symfony/templating": "~6.3.0",
+    "symfony/translation": "~6.3.0",
+    "symfony/twig-bundle": "~6.3.0",
+    "symfony/uid": "~6.3.0",
     "symfony/ux-autocomplete": "^2.14",
     "symfony/ux-live-component": "^2.6",
-    "symfony/validator": "6.3.*",
+    "symfony/validator": "~6.3.0",
     "symfony/webpack-encore-bundle": "^2.1",
-    "symfony/workflow": "6.3.*",
-    "symfony/yaml": "6.3.*",
+    "symfony/workflow": "~6.3.0",
+    "symfony/yaml": "~6.3.0",
     "symfonycasts/reset-password-bundle": "^1.18",
     "symfonycasts/verify-email-bundle": "^1.14",
     "twig/extra-bundle": "^3.7",
     "twig/intl-extra": "^3.7"
-  },
-  "config": {
-    "allow-plugins": {
-      "php-http/discovery": true,
-      "symfony/flex": true,
-      "symfony/runtime": true,
-      "phpstan/extension-installer": true,
-      "infection/extension-installer": true,
-      "phpro/grumphp": true,
-      "dealerdirect/phpcodesniffer-composer-installer": true
-    },
-    "optimize-autoloader": true,
-    "preferred-install": {
-      "*": "dist"
-    },
-    "sort-packages": true
-  },
-  "autoload": {
-    "psr-4": {
-      "App\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "App\\Tests\\": "tests/"
-    }
-  },
-  "replace": {
-    "symfony/polyfill-ctype": "*",
-    "symfony/polyfill-iconv": "*",
-    "symfony/polyfill-php72": "*",
-    "symfony/polyfill-php73": "*",
-    "symfony/polyfill-php74": "*",
-    "symfony/polyfill-php80": "*",
-    "symfony/polyfill-php81": "*"
-  },
-  "scripts": {
-    "auto-scripts": {
-      "cache:clear": "symfony-cmd",
-      "assets:install %PUBLIC_DIR%": "symfony-cmd"
-    },
-    "post-install-cmd": [
-      "@auto-scripts"
-    ],
-    "post-update-cmd": [
-      "@auto-scripts"
-    ],
-    "install-codestandards": [
-      "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
-      "vendor/bin/phpcs -q --config-set installed_paths vendor/phpcompatibility/php-compatibility/vendor/doctrine/coding-standard/lib/,vendor/slevomat/coding-standard/,vendor/escapestudios/symfony2-coding-standard/"
-    ],
-    "baseline": "phpstan --generate-baseline",
-    "bench": "phpbench run",
-    "check": [
-      "@fix",
-      "@stan",
-      "@test"
-    ],
-    "docs": "php generate-class-reference.php",
-    "fix": [
-      "@rector",
-      "@php-cs-fixer"
-    ],
-    "php-cs-fixer": "php-cs-fixer fix",
-    "rector": "rector process --dry-run",
-    "stan": "phpstan",
-    "test": "phpunit --coverage-html reports/phpunit",
-    "check-cs": "vendor/bin/ecs check --ansi",
-    "fix-cs": "vendor/bin/ecs check --fix --ansi",
-    "phpcs": "phpcs --standard=phpcs.xml"
-  },
-  "conflict": {
-    "symfony/symfony": "*"
-  },
-  "extra": {
-    "symfony": {
-      "allow-contrib": false,
-      "require": "6.3.*"
-    },
-    "grumphp": {
-      "config-default-path": "./grumphp.yml",
-      "project-path": "src/",
-      "disable-plugin": false
-    },
-    "phpcodesniffer-search-depth": 5
   },
   "require-dev": {
     "behat/behat": "^3.13",
@@ -170,14 +85,16 @@
     "doctrine/doctrine-fixtures-bundle": "^3.4",
     "dq5studios/psalm-junit": "^3.0",
     "enlightn/security-checker": "^1.10",
+    "ergebnis/composer-normalize": "^2.42",
     "ergebnis/phpstan-rules": "^2.2",
     "escapestudios/symfony2-coding-standard": "^3.13",
     "friendsofphp/php-cs-fixer": "^3.4",
-    "infection/infection": "^0.27.6",
+    "infection/infection": "^0.27",
     "nunomaduro/phpinsights": "^2.8",
     "orklah/psalm-insane-comparison": "^2.2",
     "pdepend/pdepend": "2.15.1",
-    "phing/phing": "2.*",
+    "phan/phan": "^5.4",
+    "phing/phing": "^2.0",
     "php-parallel-lint/php-console-highlighter": "^1.0",
     "php-parallel-lint/php-parallel-lint": "^1.3",
     "php-standard-library/psalm-plugin": "^2.2",
@@ -187,7 +104,7 @@
     "phpcompatibility/php-compatibility": "^9.3",
     "phpmd/phpmd": "@stable",
     "phpmetrics/phpmetrics": "^2.8",
-    "phpro/grumphp": "^1.16",
+    "phpro/grumphp-shim": "2.5.0",
     "phpspec/phpspec": "^7.5.0",
     "phpstan/extension-installer": "^1.3",
     "phpstan/phpstan": "^1.10",
@@ -197,7 +114,7 @@
     "phpstan/phpstan-strict-rules": "^1.5",
     "phpstan/phpstan-symfony": "^1.3",
     "phpunit/phpunit": "^10.0",
-    "povils/phpmnd": "^3.2",
+    "povils/phpmnd": "^3.4",
     "psalm/plugin-mockery": "^1.1",
     "psalm/plugin-phpunit": "^0.18.4",
     "psalm/plugin-symfony": "^5.0",
@@ -206,18 +123,18 @@
     "rector/swiss-knife": "^0.1.12",
     "roave/security-advisories": "dev-latest",
     "shipmonk/phpstan-rules": "^2.11",
-    "slevomat/coding-standard": "~8.0",
+    "slevomat/coding-standard": "^8.0",
     "spaze/phpstan-disallowed-calls": "^3.1",
-    "squizlabs/php_codesniffer": "3.*",
+    "squizlabs/php_codesniffer": "^3.0",
     "staabm/phpstan-dba": "^0.2.79",
-    "symfony/browser-kit": "6.0.*",
-    "symfony/css-selector": "6.0.*",
-    "symfony/debug-bundle": "6.3.*",
+    "symfony/browser-kit": "~6.0.0",
+    "symfony/css-selector": "~6.0.0",
+    "symfony/debug-bundle": "~6.3.0",
     "symfony/maker-bundle": "^1.0",
     "symfony/panther": "^2.1",
     "symfony/phpunit-bridge": "^6.3",
-    "symfony/stopwatch": "6.3.*",
-    "symfony/web-profiler-bundle": "6.3.*",
+    "symfony/stopwatch": "~6.3.0",
+    "symfony/web-profiler-bundle": "~6.3.0",
     "symplify/coding-standard": "^12.1",
     "symplify/easy-ci": "^12.1",
     "symplify/easy-coding-standard": "^12.1",
@@ -229,5 +146,94 @@
     "tomasvotruba/unused-public": "^0.3.5",
     "vimeo/psalm": "^5.15",
     "weirdan/doctrine-psalm-plugin": "^2.9"
+  },
+  "replace": {
+    "symfony/polyfill-ctype": "*",
+    "symfony/polyfill-iconv": "*",
+    "symfony/polyfill-php72": "*",
+    "symfony/polyfill-php73": "*",
+    "symfony/polyfill-php74": "*",
+    "symfony/polyfill-php80": "*",
+    "symfony/polyfill-php81": "*"
+  },
+  "conflict": {
+    "symfony/symfony": "*"
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true,
+  "autoload": {
+    "psr-4": {
+      "App\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "App\\Tests\\": "tests/"
+    }
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true,
+      "ergebnis/composer-normalize": true,
+      "infection/extension-installer": true,
+      "php-http/discovery": true,
+      "phpro/grumphp": true,
+      "phpro/grumphp-shim": true,
+      "phpstan/extension-installer": true,
+      "symfony/flex": true,
+      "symfony/runtime": true
+    },
+    "optimize-autoloader": true,
+    "preferred-install": {
+      "*": "dist"
+    },
+    "sort-packages": true
+  },
+  "extra": {
+    "grumphp": {
+      "config-default-path": "./reports/config/grumphp.yml",
+      "disable-plugin": false,
+      "project-path": "src/"
+    },
+    "phpcodesniffer-search-depth": 5,
+    "symfony": {
+      "allow-contrib": false,
+      "require": "6.3.*"
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@auto-scripts"
+    ],
+    "post-update-cmd": [
+      "@auto-scripts"
+    ],
+    "auto-scripts": {
+      "cache:clear": "symfony-cmd",
+      "assets:install %PUBLIC_DIR%": "symfony-cmd"
+    },
+    "baseline": "phpstan --generate-baseline",
+    "bench": "phpbench run",
+    "check": [
+      "@fix",
+      "@stan",
+      "@test"
+    ],
+    "check-cs": "vendor/bin/ecs check --ansi",
+    "docs": "php generate-class-reference.php",
+    "fix": [
+      "@rector",
+      "@php-cs-fixer"
+    ],
+    "fix-cs": "vendor/bin/ecs check --fix --ansi",
+    "install-codestandards": [
+      "PHPCSStandards\\Composer\\Plugin\\Installers\\PHPCodeSniffer\\Plugin::run",
+      "vendor/bin/phpcs -q --config-set installed_paths vendor/phpcompatibility/php-compatibility/vendor/doctrine/coding-standard/lib/,vendor/slevomat/coding-standard/,vendor/escapestudios/symfony2-coding-standard/"
+    ],
+    "php-cs-fixer": "php-cs-fixer fix",
+    "phpcs": "phpcs --standard=phpcs.xml",
+    "rector": "rector process --dry-run",
+    "stan": "phpstan",
+    "test": "phpunit --coverage-html reports/phpunit"
   }
 }

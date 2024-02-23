@@ -16,6 +16,7 @@ use Symfony\Component\Uid\Uuid;
 use function filter_var;
 use const FILTER_VALIDATE_EMAIL;
 
+/** @extends ServiceEntityRepository<User> */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface, UserLoaderInterface
 {
     public function __construct(ManagerRegistry $managerRegistry)

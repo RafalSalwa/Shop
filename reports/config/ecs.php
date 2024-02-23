@@ -13,7 +13,6 @@ use PhpCsFixer\Fixer\Casing\LowercaseStaticReferenceFixer;
 use PhpCsFixer\Fixer\Casing\MagicConstantCasingFixer;
 use PhpCsFixer\Fixer\Casing\MagicMethodCasingFixer;
 use PhpCsFixer\Fixer\Casing\NativeFunctionCasingFixer;
-use PhpCsFixer\Fixer\Casing\NativeFunctionTypeDeclarationCasingFixer;
 use PhpCsFixer\Fixer\Casing\NativeTypeDeclarationCasingFixer;
 use PhpCsFixer\Fixer\CastNotation\NoShortBoolCastFixer;
 use PhpCsFixer\Fixer\CastNotation\NoUnsetCastFixer;
@@ -46,11 +45,11 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 return ECSConfig::configure()
     ->withPaths(
         [
-            __DIR__ . '/config',
-            __DIR__ . '/public',
-            __DIR__ . '/reports',
-            __DIR__ . '/src',
-            __DIR__ . '/tests',
+            __DIR__ . '/../../config',
+            __DIR__ . '/../../public',
+            __DIR__ . '/../../reports',
+            __DIR__ . '/../../src',
+            __DIR__ . '/../../tests',
         ],
     )
 
@@ -137,5 +136,4 @@ return ECSConfig::configure()
         cleanCode: true,
     )
     ->withPhpCsFixerSets()
-
      ;

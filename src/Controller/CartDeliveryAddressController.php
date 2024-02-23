@@ -10,11 +10,14 @@ use App\Repository\AddressRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DeliveryAddressController extends AbstractController
+#[asController]
+#[Route(path: '/delivery', name: 'delivery_', methods: ['POST'])]
+final class CartDeliveryAddressController extends AbstractController
 {
-    #[Route('/cart/step/address/new', name: 'cart_shipment_address_new')]
+    #[Route(path: '/address/new', name: 'address_new')]
     public function add(Request $request, AddressRepository $repository): Response
     {
         $user = $this->getUser();
@@ -23,7 +26,7 @@ class DeliveryAddressController extends AbstractController
         $form    = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);

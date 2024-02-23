@@ -8,11 +8,14 @@ use App\Service\CategoriesService;
 use App\Service\ProductsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class CategoriesController extends AbstractController
+#[asController]
+#[Route(path: '/categories', name: 'categories_', methods: ['GET'])]
+final class CategoriesController extends AbstractController
 {
-    #[Route('/categories/{slug}', name: 'categories_index', defaults: ['_format' => 'html'], methods: ['GET'])]
+    #[Route(path: '/{slug}', name: 'index', defaults: ['_format' => 'html'], methods: ['GET'])]
     public function index(ProductsService $service): Response
     {
         return $this->render(
