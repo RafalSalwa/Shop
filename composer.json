@@ -29,7 +29,7 @@
     "knpuniversity/oauth2-client-bundle": "^2.15",
     "league/climate": "^3.8",
     "league/oauth2-server": "^8.5",
-    "league/oauth2-server-bundle": "^0.5.0",
+    "league/oauth2-server-bundle": "^0.6.0",
     "nelmio/api-doc-bundle": "^4.11",
     "nelmio/cors-bundle": "^2.3",
     "open-telemetry/sdk": "^0.0.17",
