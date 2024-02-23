@@ -119,7 +119,7 @@ grumphp:
       triggered_by: [ php ]
     phparkitect:
       config: reports/config/phparkitect.php
-      target_php_version: 8.2
+      target_php_version: "8.2"
       stop_on_failure: false
     phpcs:
       standard: [ 'PSR2', 'PSR12', 'Squiz', 'Doctrine', 'Symfony', 'SlevomatCodingStandard' ]
