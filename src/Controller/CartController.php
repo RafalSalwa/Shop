@@ -19,6 +19,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,10 +28,11 @@ use Throwable;
 use function dd;
 
 /** @see \App\Tests\Integration\CartControllerTest */
-#[Route('/cart', name: 'cart_')]
-class CartController extends AbstractController
+#[asController]
+#[Route(path: '/cart', name: 'cart_')]
+final class CartController extends AbstractController
 {
-    #[Route('/add/{type}/{id}/{quantity}', name: 'add')]
+    #[Route(path: '/add/{type}/{id}/{quantity}', name: 'add')]
     public function addToCart(
         #[ValueResolver('cart_item_type')]
         string $type,
@@ -54,7 +56,7 @@ class CartController extends AbstractController
         );
     }
 
-    #[Route('/add', name: 'add_post', methods: ['POST'])]
+    #[Route(path: '/add', name: 'add_post', methods: ['POST'])]
     public function post(
         #[MapRequestPayload]
         CartAddJsonRequest $cartAddJsonRequest,
@@ -84,7 +86,7 @@ class CartController extends AbstractController
         );
     }
 
-    #[Route('/remove/{id}', name: 'remove')]
+    #[Route(path: '/remove/{id}', name: 'remove')]
     public function removeFromCart(
         CartItem $cartItem,
         CartService $cartService,
@@ -108,7 +110,7 @@ class CartController extends AbstractController
         return $this->redirectToRoute('cart_index');
     }
 
-    #[Route('/set_delivery_address', name: 'delivery_address_set')]
+    #[Route(path: '/set_delivery_address', name: 'delivery_address_set')]
     public function setDeliveryAddress(Request $request, CartService $cartService): Response
     {
         $deliveryAddressId = $request->request->get('addrId');
@@ -117,7 +119,7 @@ class CartController extends AbstractController
         return new Response('ok');
     }
 
-    #[Route('/', name: 'index')]
+    #[Route(path: '/', name: 'index')]
     public function show(CartManager $cartManager, CartCalculator $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();

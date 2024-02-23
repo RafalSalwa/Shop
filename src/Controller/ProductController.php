@@ -8,14 +8,17 @@ use App\Repository\ProductRepository;
 use App\Security\Voter\CartAddVoter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use function dd;
 
 /** @see CartAddVoter */
-class ProductController extends AbstractController
+#[asController]
+#[Route(path: '/product', name: 'product_', methods: ['GET', 'POST'])]
+final class ProductController extends AbstractController
 {
     #[Route(
-        '/products/{page}',
+        path: '/products/{page}',
         name: 'products_index',
         defaults: ['page' => '1', 'sort' => 'default'],
         methods: ['GET'],
@@ -28,7 +31,7 @@ class ProductController extends AbstractController
         );
     }
 
-    #[Route('/product/{id}', name: 'products_details')]
+    #[Route(path: '/product/{id}', name: 'products_details')]
     public function details(int $id, ProductRepository $productRepository): Response
     {
         dd($this->getUser());

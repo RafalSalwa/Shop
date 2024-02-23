@@ -1,0 +1,28 @@
+{
+    "$schema": "vendor/infection/infection/resources/schema.json",
+    "source": {
+        "directories": [
+            "assets",
+            "config",
+            "public",
+            "src",
+            "templates",
+            "translations"
+        ]
+    },
+    "phpUnit": {
+        "configDir": "."
+    },
+    "logs": {
+        "text": "../results/infection.log",
+        "html": "../results/infection.html",
+        "summary": "../results/infection-summary.log",
+        "debug": "../results/infection-debug.log",
+        "perMutator": "../results/infection-permutator.log"
+    },
+    "tmpDir": "../../var/cache/dev",
+    "mutators": {
+        "@default": true
+    },
+    "testFrameworkOptions": "--testsuite=unit"
+}

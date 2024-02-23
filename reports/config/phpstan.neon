@@ -48,6 +48,10 @@ parameters:
     shipmonkRules:
         allowNamedArgumentOnlyInAttributes:
             enabled: false
+    ergebnis:
+        noExtends:
+            classesAllowedToBeExtended:
+                - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
 
 includes:
     # https://github.com/symplify/phpstan-rules

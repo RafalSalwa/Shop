@@ -66,7 +66,7 @@ phpinsights:
 .PHONY: jenkins_static_analysis
 jenkins_static_analysis:
 	$(MAKE) test_unit
-	$(MAKE) deptrac
+	-bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
 	-bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
 	-bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true

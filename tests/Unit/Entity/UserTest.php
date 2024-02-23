@@ -17,6 +17,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ * @covers User
+ * @uses \App\Entity\Payment
+ * @uses \App\Entity\Address
  */
 #[CoversClass(User::class)]
 #[UsesClass(Payment::class)]
@@ -24,6 +27,7 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserTest extends TestCase
 {
+
     public function testSetters(): void
     {
         $user = new User();
@@ -42,6 +46,9 @@ final class UserTest extends TestCase
         }
     }
 
+    /**
+     * @covers \App\Entity\Payment
+     */
     public function testOrderProcess(): void
     {
         $user = new User();

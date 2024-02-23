@@ -15,12 +15,15 @@ use App\Service\TaxCalculator;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
-class OrderController extends AbstractController
+#[asController]
+#[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
+final class OrderController extends AbstractController
 {
-    #[Route('/order/create/', name: 'order_create_pending')]
+    #[Route(path: '/create/', name: 'create_pending')]
     public function createPendingOrder(
         CartService $cartService,
         OrderService $orderService,
@@ -42,7 +45,7 @@ class OrderController extends AbstractController
         );
     }
 
-    #[Route('/order/pending/{id}', name: 'order_show')]
+    #[Route(path: '/pending/{id}', name: 'show')]
     public function pending(
         Request $request,
         Order $order,
@@ -91,7 +94,7 @@ class OrderController extends AbstractController
         );
     }
 
-    #[Route('/order/summary/{id}', name: 'order_summary')]
+    #[Route(path: '/summary/{id}', name: 'summary')]
     public function summaryOrder(
         int $id,
         OrderRepository $orderRepository,
@@ -111,7 +114,7 @@ class OrderController extends AbstractController
         );
     }
 
-    #[Route('/orders/{page<\d+>}', name: 'order_index')]
+    #[Route(path: '/orders/{page<\d+>}', name: 'index')]
     public function index(int $page, #[CurrentUser] User $user, OrderRepository $orderRepository): Response
     {
         $orders = $orderRepository->fetchOrders($user, $page);
@@ -122,7 +125,7 @@ class OrderController extends AbstractController
         );
     }
 
-    #[Route('/order/{id<\d+>}', name: 'order_details')]
+    #[Route(path: '/{id<\d+>}', name: 'details')]
     public function show(int $id, OrderRepository $orderRepository, OrderService $orderService): Response
     {
         $order = $orderRepository->fetchOrderDetails($id);
