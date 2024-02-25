@@ -34,14 +34,10 @@ bin/phpunit
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
 ###< squizlabs/php_codesniffer ###
-
-###> qossmic/deptrac-shim ###
-/.deptrac.cache
-###< qossmic/deptrac-shim ###
-
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
+
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
@@ -49,3 +45,7 @@ yarn-error.log
 ###> sonarqube ###
 /.scannerwork
 ###< sonarqube ###
+
+###> qossmic/deptrac-shim ###
+/.deptrac.cache
+###< qossmic/deptrac-shim ###
