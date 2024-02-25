@@ -2,8 +2,6 @@ grumphp:
   hooks_dir: ~
   hooks_preset: local
   git_hook_variables:
-    VAGRANT_HOST_DIR: .
-    VAGRANT_PROJECT_DIR: /var/www
     EXEC_GRUMPHP_COMMAND: exec
     ENV: { }
   stop_on_failure: false
@@ -117,12 +115,17 @@ grumphp:
       mutators: [ ]
       ignore_patterns: [ ]
       triggered_by: [ php ]
+    phan:
+      config_file: .phan/config.php
+      output_mode: text
+      output: null
+      triggered_by: [ php ]
     phparkitect:
       config: reports/config/phparkitect.php
       target_php_version: "8.2"
       stop_on_failure: false
     phpcs:
-      standard: [ 'PSR2', 'PSR12', 'Squiz', 'Doctrine', 'Symfony', 'SlevomatCodingStandard' ]
+      standard: [ 'reports/config/phpcs.xml' ]
       severity: ~
       error_severity: ~
       warning_severity: ~
@@ -137,11 +140,11 @@ grumphp:
       exclude: [ ]
       show_sniffs_error_path: true
     phpcsfixer:
-      allow_risky: ~
-      cache_file: ~
-      config: ~
+      allow_risky: true
+      cache_file: var/cache/dev/
+      config: reports/config/php-cs-fixer.php
       rules: [ ]
-      using_cache: ~
+      using_cache: true
       config_contains_finder: true
       verbose: true
       diff: false
@@ -157,7 +160,7 @@ grumphp:
         - /^src\/Protobuf\/(.*)/
       exclude: [ 'vendor' ]
       report_format: text
-      ruleset: [ 'cleancode', 'codesize', 'naming', 'unusedcode' ]
+      ruleset: [ reports/config/phpmd.xml ]
       triggered_by: [ 'php' ]
     phpmnd:
       directory: .
@@ -174,7 +177,7 @@ grumphp:
       triggered_by: [ 'php' ]
     phpstan:
       autoload_file: ~
-      configuration: ~
+      configuration: reports/config/phpstan.neon
       level: null
       force_patterns: [ ]
       ignore_patterns: [ ]
@@ -188,18 +191,17 @@ grumphp:
       exclude_group: [ ]
       always_execute: true
       order: null
-    phpversion: ~
-    #    psalm:
-    #      config: psalm.xml
-    #      ignore_patterns: [ ]
-    #      no_cache: false
-    #      report: ~
-    #      output_format: null
-    #      threads: 1
-    #      triggered_by: [ 'php' ]
-    #      show_info: false
+    psalm:
+      config: reports/config/psalm.xml
+      ignore_patterns: [ ]
+      no_cache: false
+      report: ~
+      output_format: null
+      threads: 1
+      triggered_by: [ 'php' ]
+      show_info: false
     rector:
-      config: null
+      config: reports/config/rector.php
       triggered_by: [ 'php' ]
       ignore_patterns: [ ]
       clear_cache: true
@@ -220,6 +222,13 @@ grumphp:
       lockfile: ./composer.lock
       format: ~
       run_always: false
+    twigcs:
+      path: '.'
+      severity: 'warning'
+      display: 'all'
+      ruleset: 'FriendsOfTwig\Twigcs\Ruleset\Official'
+      triggered_by: [ 'twig' ]
+      exclude: [ ]
   testsuites:
     # Specify the test-suite for the git:commit-msg command:
     git_commit_msg:
