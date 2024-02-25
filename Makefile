@@ -82,7 +82,7 @@ jenkins_static_analysis:
 .PHONY: github_actions_static_analysis
 github_actions_static_analysis:
 	#$(MAKE) test_unit
-	#$(MAKE) deptrac
+	vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=github-actions
 #	-vendor/bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
 #	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
 #	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true

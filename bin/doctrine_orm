@@ -27,7 +27,9 @@ function GetEntityManager()
 
 $entityManager = GetEntityManager();
 
-$commands = [];
+$commands = [
+    new Symfony\Component\Console\Command\Command('orm:validate-schema')
+];
 
 ConsoleRunner::run(
     new SingleManagerProvider($entityManager),

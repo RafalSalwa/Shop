@@ -15,7 +15,6 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-
 use function bcdiv;
 use function bcmul;
 use function sprintf;
@@ -42,10 +41,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     #[Column(name: 'category_id', type: Types::SMALLINT, nullable: true)]
     private $categoryId;
-
-    #[ManyToOne(targetEntity: 'Category', inversedBy: 'products')]
-    #[JoinColumn(referencedColumnName: 'category_id', nullable: false)]
-    private Category $category;
 
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
     private string $quantityPerUnit;
@@ -78,16 +73,16 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->category;
     }
 
-    public function getPrice(): float|int
-    {
-        return $this->price;
-    }
-
     public function grossPrice(): string
     {
         $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
 
         return bcdiv($taxedPrice, '100', 2);
+    }
+
+    public function getPrice(): float|int
+    {
+        return $this->price;
     }
 
     public function getId(): int

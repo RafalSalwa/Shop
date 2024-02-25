@@ -27,7 +27,6 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 use function array_key_exists;
 use function array_unique;
 use function mb_substr;
@@ -37,9 +36,14 @@ use function str_shuffle;
 #[Entity(repositoryClass: UserRepository::class)]
 #[HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['email'], message: 'address is already in use')]
-class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
+final class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUserInterface
 {
+
     public $isVerified;
+
+    protected ApiTokenPair $tokenPair;
+
+    protected string $refreshToken;
 
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
@@ -101,34 +105,25 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[Column(name: 'last_login', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime|null $lastLogin = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\OAuth2UserConsent>
-     */
-    #[OneToMany(mappedBy: 'user', targetEntity: OAuth2UserConsent::class, orphanRemoval: true)]
+    /** @var Collection<int, OAuth2UserConsent>|null */
+    #[OneToOne(targetEntity: OAuth2UserConsent::class)]
+    #[JoinColumn(name: 'consent_id', referencedColumnName: 'id')]
     private Collection|null $oAuth2UserConsents = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Cart>
-     */
+    /** @var Collection<int, Cart> */
     #[OneToMany(mappedBy: 'user', targetEntity: Cart::class)]
     #[Groups('user_carts')]
     private Collection|null $carts = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Address>
-     */
+    /** @var Collection<int, Address> */
     #[OneToMany(mappedBy: 'user', targetEntity: Address::class, cascade: ['persist'], orphanRemoval: true)]
     private Collection|null $deliveryAddresses;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Payment>
-     */
+    /** @var Collection<int, Payment> */
     #[OneToMany(mappedBy: 'user', targetEntity: Payment::class)]
     private Collection|null $payments = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Order>
-     */
+    /** @var \Doctrine\Common\Collections\Collection<int, Order> */
     #[OneToMany(mappedBy: 'user', targetEntity: Order::class)]
     private Collection|null $orders = null;
 
@@ -136,14 +131,10 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     #[JoinColumn(name: 'subscription_id', referencedColumnName: 'subscription_id', nullable: true)]
     private Subscription|null $subscription = null;
 
-    protected ApiTokenPair $tokenPair;
-
-    protected string $refreshToken;
-
     public function __construct()
     {
-        $this->oAuth2UserConsents = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->orders = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->oAuth2UserConsents = new ArrayCollection();
+        $this->orders = new ArrayCollection();
         $this->carts             = new ArrayCollection();
         $this->deliveryAddresses = new ArrayCollection();
         $this->payments          = new ArrayCollection();
@@ -179,6 +170,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
         return $this->carts;
     }
 
+    public function setCarts(Collection|null $carts): self
+    {
+        $this->carts = $carts;
+
+        return $this;
+    }
+
     public function getPayments(): Collection|null
     {
         return $this->payments;
@@ -201,6 +199,13 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     public function getOrders(): Collection|null
     {
         return $this->orders;
+    }
+
+    public function setOrders(Collection|null $orders): self
+    {
+        $this->orders = $orders;
+
+        return $this;
     }
 
     public function addDeliveryAddress(Address $address): void
@@ -300,7 +305,7 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getRoles(): array
     {
-        if ($this->roles !== null) {
+        if (null !== $this->roles) {
             $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
 
             $roles[] = 'ROLE_USER';
@@ -418,12 +423,19 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
 
     public function getUserIdentifier(): string
     {
-        return (string) $this->id;
+        return (string)$this->id;
     }
 
     public function getOAuth2UserConsents(): Collection|null
     {
         return $this->oAuth2UserConsents;
+    }
+
+    public function setOAuth2UserConsents(Collection|null $oAuth2UserConsents): self
+    {
+        $this->oAuth2UserConsents = $oAuth2UserConsents;
+
+        return $this;
     }
 
     public function addOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
@@ -460,27 +472,6 @@ class User implements JsonSerializable, UserInterface, PasswordAuthenticatedUser
     public function setIsVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
-
-        return $this;
-    }
-
-    public function setOAuth2UserConsents(Collection|null $oAuth2UserConsents): self
-    {
-        $this->oAuth2UserConsents = $oAuth2UserConsents;
-
-        return $this;
-    }
-
-    public function setCarts(Collection|null $carts): self
-    {
-        $this->carts = $carts;
-
-        return $this;
-    }
-
-    public function setOrders(Collection|null $orders): self
-    {
-        $this->orders = $orders;
 
         return $this;
     }

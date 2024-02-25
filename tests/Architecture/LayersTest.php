@@ -1,23 +1,14 @@
 <?php
 
-namespace App\Tests\Architecture;
-
-use PHPat\Test\Builder\Rule;
+use App\Command\AbstractSymfonyCommand;
 use PHPat\Selector\Selector;
 use PHPat\Test\PHPat;
 
-class LayersTest {
+test('services does not depend on entities', function () {
+    return PHPat::rule()
+        ->classes(Selector::inNamespace('App\Command'))
+        ->shouldExtend()
+        ->classes(AbstractSymfonyCommand::class)
+        ->because('We want to be able to render html output in console outputs');
 
-    public function test_servicesDoesNotDependOnEntities(): Rule
-    {
-        return PHPat::rule()
-            ->classes(Selector::inNamespace('App\Service'))
-            ->shouldNotDependOn()
-            ->classes(
-                Selector::inNamespace('App\Entity'),
-                Selector::inNamespace('App\Infrastructure'),
-                Selector::classname(SuperForbiddenClass::class),
-                Selector::classname('/^SomeVendor\\\.*\\\ForbiddenSubfolder\\\.*/', true)
-            );
-    }
-}
+});

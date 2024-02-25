@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Model\User;
 use App\Repository\CartRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -17,13 +16,14 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
-
 use function assert;
 
 #[Entity(repositoryClass: CartRepository::class)]
@@ -54,9 +54,10 @@ class Cart implements JsonSerializable
     #[Groups('cart')]
     private Collection $items;
 
-    #[Column(name: 'user_id', type: Types::INTEGER, nullable: false)]
+    #[ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
+    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
     #[Groups('carts')]
-    private int $userId;
+    private User $user;
 
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
@@ -154,21 +155,14 @@ class Cart implements JsonSerializable
             ->exists(static fn ($key, $element): bool => $element::class === $cartItem::class);
     }
 
-    public function getUserId(): int
+    public function getUser(): User
     {
-        return $this->userId;
-    }
-
-    public function setUserId(int $userId): self
-    {
-        $this->userId = $userId;
-
-        return $this;
+        return $this->user;
     }
 
     public function setUser(User $user): self
     {
-        $this->setUserId($user->getId());
+        $this->user = $user;
 
         return $this;
     }

@@ -11,6 +11,7 @@ reports/results/*
 !reports/results/.gitkeep
 bin/
 !bin/console
+!bin/doctrine_orm
 ###< symfony/framework-bundle ###
 .idea
 ###> league/oauth2-server-bundle ###

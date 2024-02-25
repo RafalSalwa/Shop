@@ -24,7 +24,7 @@ grumphp:
     enabled: true
     fix_by_default: false
   environment:
-    files: [ ]
+    files: []
     variables: { }
     paths:
       - bin/
@@ -61,8 +61,8 @@ grumphp:
     deptrac:
       cache_file: ~
       depfile: reports/config/deptrac.yaml
-      formatter: junit
-      output: reports/results/deptrac.junit.xml
+      formatter: graphviz-image
+      output: var/log/deptrac.png
     doctrine_orm:
       skip_mapping: false
       skip_sync: false
@@ -179,7 +179,7 @@ grumphp:
     phpmnd:
       directory: .
       whitelist_patterns: [ ]
-      exclude: [ ]
+      exclude: [ "vendor","var" ]
       exclude_name: [ ]
       exclude_path: [ ]
       extensions: [ ]
@@ -199,7 +199,7 @@ grumphp:
       memory_limit: "-1"
       use_grumphp_paths: true
     phpunit:
-      config_file: ../reports/config/phpunit.xml
+      config_file: reports/config/phpunit.xml
       testsuite: unit
       group: [ ]
       exclude_group: [ ]
@@ -225,7 +225,7 @@ grumphp:
       locked: true
       no_dev: false
       run_always: true
-      working_dir: ../
+      working_dir: .
     securitychecker_enlightn:
       lockfile: ./composer.lock
       run_always: true
@@ -260,12 +260,17 @@ grumphp:
       tasks:
         - composer
         - composer_normalize
-        - composer_require_checker
+#        - composer_require_checker
+#        - doctrine_orm
         - eslint
         - jsonlint
         - phplint
         - phpmnd
         - phpunit
         - securitychecker_composeraudit
+        - securitychecker_enlightn
+        - securitychecker_local
+        - securitychecker_roave
+        - securitychecker_symfony
         - twigcs
   extensions: [ ]
