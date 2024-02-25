@@ -46,7 +46,8 @@
     </rule>
     <rule ref="rulesets/naming.xml/ShortMethodName">
         <properties>
-            <property name="exceptions" value="eq,gt,is,lt,ne,to,tz"/>
+            <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
+            <property name="exceptions" value="eq,gt,is,id,lt,ne,to,tz"/>
         </properties>
     </rule>
     <rule ref="rulesets/unusedcode.xml"/>

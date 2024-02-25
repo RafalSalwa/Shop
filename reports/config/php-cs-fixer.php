@@ -38,6 +38,7 @@ return (new PhpCsFixer\Config())
         'concat_space' => ['spacing' => 'one'],
         'declare_equal_normalize' => true,
         'declare_strict_types' => true,
+        'final_class'=>true,
         'fully_qualified_strict_types' => ['leading_backslash_in_global_namespace' => false],
         'general_phpdoc_annotation_remove' => ['annotations' => ['expectedDeprecation']],
         'global_namespace_import' => ['import_classes' => true, 'import_constants' => true, 'import_functions' => true],

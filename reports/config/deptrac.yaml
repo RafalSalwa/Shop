@@ -1,44 +1,59 @@
-parameters:
+deptrac:
+  ignore_uncovered_internal_classes: false
+  analyser:
+    types:
+      - class
+      - class_superglobal
+      - file
+      - function
+      - function_superglobal
+      - function_call
   paths:
     - ../../src
   exclude_files:
     - '#.*test.*#'
-  formatters:
-    graphviz:
-      point_to_groups: true
-      groups:
-        Entrypoints:
-          - Controllers
-          - Commands
-        Persistence:
-          - Repositories
-          - Entities
-      hidden_layers:
-        - Utils
-
   layers:
-    - name: Controller
+    - name: Controllers
       collectors:
-        - type: className
-          regex: .*Controller.*
-    - name: Repository
+        - type: classLike
+          value: .*Controller.*
+    - name: Commands
       collectors:
-        - type: className
-          regex: .*Repository.*
-    - name: Service
+        - type: classLike
+          value: .*Command.*
+    - name: Repositories
       collectors:
-        - type: className
-          regex: .*Service.*
-    - name: Entity
+        - type: classLike
+          value: .*Repository.*
+    - name: Services
+      collectors:
+        - type: classLike
+          value: .*Service.*
+    - name: Entities
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
+    - name: Events
+      collectors:
+        - type: attribute
+          value: Doctrine\ORM\Mapping\Entity
+    - name: Symfony
+      collectors:
+        - type: directory
+          value: ../../vendor/symfony/.*
   ruleset:
-    Controller:
-      - Service
-      - Repository
-      - Entity
-    Service:
-      - Repository
-    Repository:
-      - Entity
+    Controllers:
+      - Services
+      - Entities
+      - Events
+    Services:
+      - Repositories
+    Repositories:
+      - Entities
+    Commands:
+      - Services
+      - Repositories
+  formatters:
+    graphviz:
+      point_to_groups: true
+
