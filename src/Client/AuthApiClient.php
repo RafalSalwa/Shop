@@ -24,7 +24,7 @@ use function json_decode;
 use function json_encode;
 use const JSON_THROW_ON_ERROR;
 
-final readonly class AuthApiClient
+final readonly class AuthApiClient implements AuthClientInterface
 {
     public function __construct(private HttpClientInterface $authApi, private LoggerInterface $logger)
     {}
