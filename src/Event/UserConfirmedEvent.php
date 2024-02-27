@@ -2,12 +2,18 @@
 
 namespace App\Event;
 
-class UserConfirmedEvent {
+use Symfony\Contracts\EventDispatcher\Event;
 
-    /**
-     * @param $email
-     */
-    public function __construct($email)
+class UserConfirmedEvent extends Event
+{
+
+    public function __construct(private readonly string $verificationCode)
     {
     }
+
+    public function getVerificationCode(): string
+    {
+        return $this->verificationCode;
+    }
+
 }

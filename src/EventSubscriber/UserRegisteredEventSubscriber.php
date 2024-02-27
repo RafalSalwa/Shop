@@ -2,23 +2,23 @@
 
 declare(strict_types=1);
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
-use App\Entity\Subscription;
 use App\Event\UserRegisteredEvent;
 use App\Exception\SubscriptionPlanNotFoundException;
 use App\Repository\SubscriptionPlanRepository;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class UserRegisteredListener implements EventSubscriberInterface
+final class UserRegisteredEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository,
         protected SubscriptionPlanRepository $subscriptionPlanRepository,
     ) {}
 
-    public static function getSubscribedEvents()
+    /** @return array<class-string,string> */
+    public static function getSubscribedEvents(): array
     {
         return [UserRegisteredEvent::class => 'onRegistrationCompleted'];
     }
@@ -26,17 +26,17 @@ final class UserRegisteredListener implements EventSubscriberInterface
     /** @throws SubscriptionPlanNotFoundException */
     public function onRegistrationCompleted(UserRegisteredEvent $userRegisteredEvent): void
     {
-        $user = $userRegisteredEvent->getUser();
-
-        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
-        if (null === $subscriptionPlan) {
-            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
-        }
-
-        $subscription = new Subscription();
-        $subscription->setUserId($user->getId());
-        $subscription->setPlan($subscriptionPlan);
-
-        $this->subscriptionRepository->save($subscription);
+//        $user = $userRegisteredEvent->getEmail();
+//
+//        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
+//        if (null === $subscriptionPlan) {
+//            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
+//        }
+//
+//        $subscription = new Subscription();
+//        $subscription->setUserId($user->getId());
+//        $subscription->setPlan($subscriptionPlan);
+//
+//        $this->subscriptionRepository->save($subscription);
     }
 }

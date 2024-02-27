@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Security\Event;
+namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
