@@ -6,16 +6,20 @@ namespace App\Repository;
 
 use App\Entity\OrderItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
-class OrderItemRepository extends ServiceEntityRepository
+final class OrderItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, OrderItem::class);
     }
 
-    public function findById(int $id)
+    /**
+     * @throws NonUniqueResultException
+     */
+    public function findById(int $id): mixed
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')

@@ -22,7 +22,9 @@
         <exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket"/>
         <exclude name="PEAR.WhiteSpace.ScopeClosingBrace.Line"/>
         <exclude name="PEAR.NamingConventions.ValidFunctionName.PrivateNoUnderscore"/>
+        <exclude name="PEAR.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
     </rule>
+
     <rule ref="Squiz">
         <exclude name="Squiz.Commenting"/>
         <exclude name="Squiz.Files.FileExtension"/>
@@ -30,7 +32,9 @@
         <exclude name="Squiz.WhiteSpace.ScopeClosingBrace.ContentBefore"/>
         <exclude name="Squiz.Objects.ObjectInstantiation.NotAssigned" />
         <exclude name="Squiz.ControlStructures.InlineIfDeclaration.NotSingleLine"/>
+        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
     </rule>
+
     <rule ref="Generic">
         <exclude name="Generic.Files.EndFileNoNewline"/>
         <exclude name="Generic.PHP.ClosingPHPTag"/>
@@ -47,7 +51,9 @@
         <exclude name="Generic.Functions.OpeningFunctionBraceBsdAllman.BraceOnSameLine"/>
         <exclude name="Generic.Commenting.DocComment.ContentAfterOpen"/>
         <exclude name="Generic.Commenting.DocComment.ContentBeforeClose"/>
+        <exclude name="Generic.Commenting.DocComment.MissingShort"/>
     </rule>
+
     <rule ref="Doctrine"/>
 
     <rule ref="SlevomatCodingStandard">
@@ -56,7 +62,6 @@
                 name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure"/>
         <exclude name="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison.DisallowedYodaComparison"/>
         <exclude name="SlevomatCodingStandard.Namespaces.UseOnlyWhitelistedNamespaces"/>
-        <exclude name="SlevomatCodingStandard.Classes.RequireAbstractOrFinal"/>
         <exclude name="SlevomatCodingStandard.Files.TypeNameMatchesFileName.NoMatchBetweenTypeNameAndFileName"/>
         <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalFunctions.NonFullyQualified"/>
         <exclude name="SlevomatCodingStandard.Files.TypeNameMatchesFileName"/>
@@ -64,7 +69,6 @@
         <exclude name="SlevomatCodingStandard.Classes.ClassStructure"/>
         <exclude name="SlevomatCodingStandard.Functions.DisallowNamedArguments"/>
         <exclude name="SlevomatCodingStandard.Arrays.AlphabeticallySortedByKeys.IncorrectKeyOrder"/>
-        <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
         <exclude name="SlevomatCodingStandard.Functions.DisallowNamedArguments.DisallowedNamedArgument"/>
         <exclude name="SlevomatCodingStandard.Functions.DisallowArrowFunction.DisallowedArrowFunction"/>
         <exclude
@@ -76,6 +80,7 @@
                 name="SlevomatCodingStandard.Attributes.AttributeAndTargetSpacing.IncorrectLinesCountBetweenAttributeAndTarget"/>
         <!--        Ignore () in new, we want new Foo() instead of new Foo -->
         <exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
+        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName"/>
         <exclude
                 name="SlevomatCodingStandard.Classes.DisallowConstructorPropertyPromotion.DisallowedConstructorPropertyPromotion"/>
         <exclude name="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat.DisallowedShortNullable"/>
@@ -86,6 +91,8 @@
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousExceptionNaming.SuperfluousSuffix"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousTraitNaming.SuperfluousSuffix"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix"/>
+        <exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint"/>
+        <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified"/>
     </rule>
 
     <rule ref="SlevomatCodingStandard.Files.FunctionLength.FunctionLength">
@@ -93,20 +100,24 @@
             <property name="maxLinesLength" value="35" />
         </properties>
     </rule>
+
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
         <properties>
             <property name="maxLinesLength" value="35" />
         </properties>
     </rule>
+
     <rule ref="Generic.Arrays.DisallowLongArraySyntax.Found">
         <type>warning</type>
     </rule>
+
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
             <property name="indent" value="4"/>
             <property name="tabIndent" value="false"/>
         </properties>
     </rule>
+
     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>
@@ -123,7 +134,6 @@
                 <element key="is_double" value="is_float"/>
                 <element key="is_integer" value="is_int"/>
                 <element key="is_long" value="is_int"/>
-                <!--<element key="is_null" value="null"/>-->
                 <element key="is_real" value="is_float"/>
                 <element key="is_writeable" value="is_writable"/>
                 <element key="join" value="implode"/>

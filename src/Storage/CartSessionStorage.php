@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-class CartSessionStorage
+final class CartSessionStorage
 {
     final public const CART_KEY_NAME = 'cart_id';
 
@@ -25,7 +25,7 @@ class CartSessionStorage
         private readonly RequestStack $requestStack,
         private readonly CartRepository $cartRepository,
         private readonly Security $security,
-        private readonly ParameterBagInterface $parameterBag
+        private readonly ParameterBagInterface $parameterBag,
     ) {}
 
     /**
@@ -33,28 +33,49 @@ class CartSessionStorage
      */
     public function getCart(): ?Cart
     {
-        return $this->cartRepository->findOneBy([
-            'userId' => $this->getUser()->getId(),
-            'status' => Cart::STATUS_CREATED,
-        ], [
-            'createdAt' => 'DESC',
-        ]);
+        return $this->cartRepository->findOneBy(
+            [
+                'userId' => $this->getUser()->getUserIdentifier(),
+                'status' => Cart::STATUS_CREATED,
+            ],
+            ['createdAt' => 'DESC'],
+        );
+    }
+
+    private function getUser(): ?UserInterface
+    {
+        return $this->security->getUser();
     }
 
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (
-            $request instanceof Request && $this->security->getFirewallConfig(
-                $request
-            )?->isStateless()
-        ) {
+        if ($request instanceof Request && $this->security->getFirewallConfig($request)?->isStateless()) {
             return;
         }
 
         $this->getSession()
             ->set(self::CART_KEY_NAME, $cart->getId())
         ;
+    }
+
+    private function getSession(): SessionInterface
+    {
+        // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
+        // that is the easiest solution for session storage between redis and filesystem
+        if ('test' === $this->parameterBag->get('kernel.environment')) {
+            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
+
+            $mockFileSessionStorage = new MockFileSessionStorage($sessionSavePath);
+            $session = new Session($mockFileSessionStorage);
+
+            $session->start();
+            $session->save();
+
+            return $session;
+        }
+
+        return $this->requestStack->getSession();
     }
 
     public function removeCart(): void
@@ -76,29 +97,5 @@ class CartSessionStorage
         return $this->getSession()
             ->get(self::ADDR_KEY_NAME)
         ;
-    }
-
-    private function getUser(): ?UserInterface
-    {
-        return $this->security->getUser();
-    }
-
-    private function getSession(): SessionInterface
-    {
-        // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
-        // that is the easiest solution for session storage between redis and filesystem
-        if ('test' === $this->parameterBag->get('kernel.environment')) {
-            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
-
-            $mockFileSessionStorage = new MockFileSessionStorage($sessionSavePath);
-            $session = new Session($mockFileSessionStorage);
-
-            $session->start();
-            $session->save();
-
-            return $session;
-        }
-
-        return $this->requestStack->getSession();
     }
 }

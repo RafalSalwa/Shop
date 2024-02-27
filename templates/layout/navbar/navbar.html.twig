@@ -48,7 +48,7 @@
                     </div>
                     <div class="navbar-nav ml-auto py-0">
                         {% if not app.user %}
-                            <a href="{{ path('app_login') }}" class="nav-item nav-link">Login</a>
+                            <a href="{{ path('login_index') }}" class="nav-item nav-link">Login</a>
                             <a href="{{ path('register_index') }}" class="nav-item nav-link">Register</a>
                         {% else %}
                             <a href="{{ path('user_profile') }}" class="btn">

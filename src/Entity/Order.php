@@ -23,7 +23,6 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Security\Core\User\UserInterface;
-
 use function number_format;
 
 #[Entity(repositoryClass: OrderRepository::class)]
@@ -65,8 +64,6 @@ class Order
     #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
     private UserInterface $user;
 
-    #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
     private Address|null $address = null;
 
     /**

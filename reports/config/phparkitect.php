@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
+use App\Command\AbstractSymfonyCommand;
 use Arkitect\ClassSet;
 use Arkitect\CLI\Config;
 use Arkitect\Expression\ForClasses\ContainDocBlockLike;
+use Arkitect\Expression\ForClasses\DependsOnlyOnTheseNamespaces;
 use Arkitect\Expression\ForClasses\Extend;
 use Arkitect\Expression\ForClasses\HaveAttribute;
 use Arkitect\Expression\ForClasses\HaveNameMatching;
@@ -19,6 +21,8 @@ use Arkitect\Expression\ForClasses\ResideInOneOfTheseNamespaces;
 use Arkitect\RuleBuilders\Architecture\Architecture;
 use Arkitect\Rules\Rule;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Annotation\Route;
 
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(__DIR__ . '/../../src');
@@ -44,13 +48,13 @@ return static function (Config $config): void {
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
-        ->should(new HaveAttribute('AsController'))
+        ->should(new HaveAttribute(AsController::class))
         ->because('it configures the service container')
     ;
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
-        ->should(new HaveAttribute('Route'))
+        ->should(new HaveAttribute(Route::class))
         ->because('it configures the service container')
     ;
 
@@ -58,6 +62,23 @@ return static function (Config $config): void {
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->should(new IsFinal())
         ->because('it configures the service container')
+    ;
+
+    $rules[] = Rule::allClasses()
+        ->that(new HaveNameMatching('*Controller'))
+        ->should(new ResideInOneOfTheseNamespaces('App\Controller'))
+        ->because('we want to be sure that all Controllers are in a specific namespace');
+
+    $rules[] = Rule::allClasses()
+        ->that(new ResideInOneOfTheseNamespaces('App\Command'))
+        ->should(new Extend(AbstractSymfonyCommand::class))
+        ->because('we want to use render functionality in console output')
+    ;
+
+    $rules[] = Rule::allClasses()
+        ->that(new ResideInOneOfTheseNamespaces('App\Command'))
+        ->should(new DependsOnlyOnTheseNamespaces('Symfony\Component', 'Doctrine\ORM', 'App', 'Termwind'))
+        ->because('we want uniform naming')
     ;
 
     $rules[] = Rule::allClasses()

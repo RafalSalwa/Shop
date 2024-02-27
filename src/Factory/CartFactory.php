@@ -9,20 +9,18 @@ use DateTime;
 use DateTimeImmutable;
 use Symfony\Bundle\SecurityBundle\Security;
 
-class CartFactory
+final readonly class CartFactory
 {
-    public function __construct(private readonly Security $security)
+    public function __construct(private Security $security)
     {}
 
     public function create(): Cart
     {
         $cart = new Cart();
-        $cart
-            ->setStatus(Cart::STATUS_CREATED)
-            ->setUser($this->security->getUser())
-            ->setCreatedAt(new DateTimeImmutable())
-            ->setUpdatedAt(new DateTime())
-        ;
+        $cart->setStatus(Cart::STATUS_CREATED);
+        $cart->setUserId($this->security->getUser()->getId());
+        $cart->setCreatedAt(new DateTimeImmutable());
+        $cart->setUpdatedAt(new DateTime());
 
         return $cart;
     }

@@ -23,7 +23,6 @@ use Doctrine\ORM\Mapping\Table;
 use JMS\Serializer\DeserializationContext;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
@@ -39,11 +38,6 @@ use Symfony\Component\Serializer\Annotation\Groups;
 )]
 class CartItem implements SerializerInterface, CartItemInterface
 {
-    public $username;
-
-    public $verified;
-
-    public $active;
 
     #[Column(
         name: 'quantity',
@@ -119,10 +113,6 @@ class CartItem implements SerializerInterface, CartItemInterface
     {
         $this->setCreatedAt(new DateTime('now'));
         $this->setCreatedAt(new DateTime('now'));
-    }
-
-    public function setUser(UserInterface $getUser): void
-    {
     }
 
     /**

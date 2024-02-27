@@ -30,11 +30,6 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
-    protected function getLoginUrl(Request $request): string
-    {
-        return $this->urlGenerator->generate('app_login');
-    }
-
     public function authenticate(Request $request): Passport
     {
         if (false === $request->request->has('email') || false === $request->request->has('password')) {
@@ -65,11 +60,12 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         return null;
     }
+
+///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $authenticationException): Response
     {
@@ -81,5 +77,10 @@ class AuthApiAuthenticator extends AbstractLoginFormAuthenticator
         $url = $this->getLoginUrl($request);
 
         return new RedirectResponse($url);
+    }
+
+    protected function getLoginUrl(Request $request): string
+    {
+        return $this->urlGenerator->generate('login_index');
     }
 }

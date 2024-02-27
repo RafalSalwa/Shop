@@ -22,16 +22,16 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Throwable;
 use function dd;
 
-class CartService
+final readonly class CartService
 {
     public function __construct(
-        private readonly CartSessionStorage $cartSessionStorage,
-        private readonly CartFactory $cartFactory,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly CartItemFactory $cartItemFactory,
-        private readonly ProductStockService $productStockService,
-        private readonly LockFactory $cartLockFactory,
-        private readonly LoggerInterface $logger,
+        private CartSessionStorage $cartSessionStorage,
+        private CartFactory $cartFactory,
+        private EntityManagerInterface $entityManager,
+        private CartItemFactory $cartItemFactory,
+        private ProductStockService $productStockService,
+        private LockFactory $cartLockFactory,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -44,8 +44,7 @@ class CartService
             $this->save($cart);
         }
 
-        $cart->getItems()
-            ->clear();
+        $cart->getItems()->clear();
         $this->cartSessionStorage->removeCart();
     }
 
@@ -53,9 +52,8 @@ class CartService
     {
         $cart = $this->cartSessionStorage->getCart();
         if (! $cart instanceof Cart) {
-            return $this->cartFactory->create();
+            $cart = $this->cartFactory->create();
         }
-
         return $cart;
     }
 

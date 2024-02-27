@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Client\AuthApi\AuthApiClient;
+use App\Client\AuthClientInterface;
+use App\Exception\Registration\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
-use App\Model\User;
 use App\Security\AuthApiAuthenticator;
-use App\Security\AuthApiRegisterer;
-use App\Security\EmailVerifier;
+use App\Security\Registration\UserRegistrarInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -19,23 +21,25 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[asController]
 #[Route(path: '/register', name: 'register_', methods: ['GET', 'POST'])]
-class RegistrationController extends AbstractController
+final class RegistrationController extends AbstractController
 {
-    public function __construct(private readonly EmailVerifier $emailVerifier)
-    {}
-
     #[Route(path: '/', name: 'index')]
-    public function register(Request $request, AuthApiRegisterer $authApiRegisterer): Response
+    public function register(Request $request, UserRegistrarInterface $authApiUserRegistrar): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            try {
+                $email = $form->get('email')->getData();
+                $password = $form->get('password')->getData();
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $verificationCode = $authApiRegisterer->register($user->getEmail(), $user->getPassword());
-            $this->emailVerifier->sendEmailConfirmation($user->getEmail(), $verificationCode);
+                $authApiUserRegistrar->register($email, $password);
+                $authApiUserRegistrar->sendVerificationCode($email);
 
-            return $this->redirectToRoute('register_confirm_email');
+                return $this->redirectToRoute('register_confirm_email');
+            } catch (RegistrationExceptionInterface $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+            }
         }
 
         return $this->render(
@@ -47,13 +51,13 @@ class RegistrationController extends AbstractController
     }
 
     #[Route(path: '/confirm/', name: 'confirm_email')]
-    public function confirmUserEmail(Request $request, AuthApiRegisterer $authApiRegisterer): Response
+    public function confirmUserEmail(Request $request, UserRegistrarInterface $userRegistrar): Response
     {
         $form = $this->createForm(RegistrationConfirmationFormType::class);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $authApiRegisterer->confirmAccount($form->get('confirmationCode')->getData());
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            $userRegistrar->confirm($form->get('confirmationCode')->getData());
 
             return $this->redirectToRoute(
                 'register_thank_you',
@@ -70,9 +74,9 @@ class RegistrationController extends AbstractController
     }
 
     #[Route(path: '/verify/{verificationCode}', name: 'verify_email')]
-    public function verifyUserEmail(string $verificationCode, AuthApiRegisterer $authApiRegisterer): Response
+    public function verifyUserEmail(string $verificationCode, UserRegistrarInterface $userRegistrar): Response
     {
-        $authApiRegisterer->confirmAccount($verificationCode);
+        $userRegistrar->confirm($verificationCode);
 
         return $this->redirectToRoute(
             'register_thank_you',
@@ -86,9 +90,9 @@ class RegistrationController extends AbstractController
         string $verificationCode,
         UserAuthenticatorInterface $userAuthenticator,
         AuthApiAuthenticator $authApiAuthenticator,
-        AuthApiRegisterer $authApiRegisterer,
+        AuthClientInterface $authClient,
     ): Response {
-        $user = $authApiRegisterer->getUserByCode($verificationCode);
+        $user = $authClient->getByVerificationCode($verificationCode);
 
         $userAuthenticator->authenticateUser($user, $authApiAuthenticator, $request);
 

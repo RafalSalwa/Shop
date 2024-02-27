@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 
 declare(strict_types=1);
@@ -26,10 +27,7 @@ function GetEntityManager()
 
 $entityManager = GetEntityManager();
 
-$commands = [
-    // If you want to add your own custom console commands,
-    // you can do so here.
-];
+$commands = [];
 
 ConsoleRunner::run(
     new SingleManagerProvider($entityManager),

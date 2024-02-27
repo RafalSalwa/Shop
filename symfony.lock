@@ -151,6 +151,9 @@
             "config/packages/nelmio_cors.yaml"
         ]
     },
+    "nunomaduro/collision-adapter-symfony": {
+        "version": "v1.3.0"
+    },
     "nyholm/psr7": {
         "version": "1.8",
         "recipe": {
