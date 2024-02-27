@@ -16,8 +16,6 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
@@ -29,7 +27,7 @@ use function assert;
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
-class Cart implements JsonSerializable
+final class Cart implements JsonSerializable
 {
     final public const STATUS_CREATED = 'created';
 
@@ -54,10 +52,9 @@ class Cart implements JsonSerializable
     #[Groups('cart')]
     private Collection $items;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'carts')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
-    #[Groups('carts')]
-    private User $user;
+    #[Column(name: 'user_id')]
+    #[Groups(groups: 'carts')]
+    private int $userId;
 
     #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
     private string $status = self::STATUS_CREATED;
@@ -155,16 +152,14 @@ class Cart implements JsonSerializable
             ->exists(static fn ($key, $element): bool => $element::class === $cartItem::class);
     }
 
-    public function getUser(): User
+    public function getUserId(): User
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(User $user): self
+    public function setUserId(int $userId): void
     {
-        $this->user = $user;
-
-        return $this;
+        $this->userId = $userId;
     }
 
     #[PrePersist]
