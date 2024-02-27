@@ -7,7 +7,9 @@ namespace App\Model;
 use App\Entity\Address;
 use App\Entity\OAuth2UserConsent;
 use App\Entity\Payment;
+use App\Entity\ShopUserInterface;
 use App\Entity\Subscription;
+use App\ValueObject\EmailAddress;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,16 +19,21 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 use function array_key_exists;
 use function array_unique;
+use function json_decode;
 
-class User implements JsonSerializable, UserInterface
+final class User implements JsonSerializable, UserInterface, ShopUserInterface
 {
-    public $verified;
 
-    public $active;
+    protected ?string $token = null;
+
+    protected ?string $refreshToken = null;
+
+    private $verified;
+
+    private $active;
 
     private ?int $id = null;
 
@@ -38,7 +45,7 @@ class User implements JsonSerializable, UserInterface
 
     private ?string $lastname = null;
 
-    private string $email;
+    private EmailAddress $email;
 
     private ?array $roles = null;
 
@@ -62,10 +69,6 @@ class User implements JsonSerializable, UserInterface
 
     private ?Subscription $subscription = null;
 
-    protected ?string $token = null;
-
-    protected ?string $refreshToken = null;
-
     public function __construct()
     {
         $this->carts = new ArrayCollection();
@@ -85,7 +88,7 @@ class User implements JsonSerializable, UserInterface
         return $this;
     }
 
-    public function getDeliveryAddresses(): null|Collection
+    public function getDeliveryAddresses(): Collection|null
     {
         return $this->deliveryAddresses;
     }
@@ -100,6 +103,13 @@ class User implements JsonSerializable, UserInterface
     public function getCarts(): ?Collection
     {
         return $this->carts;
+    }
+
+    public function setCarts(?Collection $collection): self
+    {
+        $this->carts = $collection;
+
+        return $this;
     }
 
     public function getPayments(): ?Collection
@@ -124,6 +134,13 @@ class User implements JsonSerializable, UserInterface
     public function getOrders(): ?Collection
     {
         return $this->orders;
+    }
+
+    public function setOrders(?Collection $collection): self
+    {
+        $this->orders = $collection;
+
+        return $this;
     }
 
     public function addDeliveryAddress(Address $address): void
@@ -192,7 +209,7 @@ class User implements JsonSerializable, UserInterface
 
     public function setEmail(string $email): self
     {
-        $this->email = $email;
+        $this->email = new EmailAddress($email);
 
         return $this;
     }
@@ -201,7 +218,9 @@ class User implements JsonSerializable, UserInterface
     {
         $roles = $this->roles;
         if (null !== $roles) {
-            $roles = array_key_exists('roles', $this->roles) ? $this->roles['roles'] : $this->roles;
+            $roles = array_key_exists('roles', $this->roles)
+                ? $this->roles['roles']
+                : $this->roles;
 
             $roles[] = 'ROLE_USER';
 
@@ -278,7 +297,8 @@ class User implements JsonSerializable, UserInterface
         ];
     }
 
-    public function eraseCredentials(): void {}
+    public function eraseCredentials(): void
+    {}
 
     public function getUserIdentifier(): string
     {
@@ -288,6 +308,13 @@ class User implements JsonSerializable, UserInterface
     public function getOAuth2UserConsents(): ?Collection
     {
         return $this->oAuth2UserConsents;
+    }
+
+    public function setOAuth2UserConsents(?Collection $collection): self
+    {
+        $this->oAuth2UserConsents = $collection;
+
+        return $this;
     }
 
     public function addOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
@@ -305,27 +332,6 @@ class User implements JsonSerializable, UserInterface
         if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent) && $oAuth2UserConsent->getUser() === $this) {
             $oAuth2UserConsent->setUser(null);
         }
-
-        return $this;
-    }
-
-    public function setOAuth2UserConsents(?Collection $collection): self
-    {
-        $this->oAuth2UserConsents = $collection;
-
-        return $this;
-    }
-
-    public function setCarts(?Collection $collection): self
-    {
-        $this->carts = $collection;
-
-        return $this;
-    }
-
-    public function setOrders(?Collection $collection): self
-    {
-        $this->orders = $collection;
 
         return $this;
     }
@@ -355,7 +361,7 @@ class User implements JsonSerializable, UserInterface
     }
 
     /**
-     * @throws TransportExceptionInterface
+     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
      * @throws ServerExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
