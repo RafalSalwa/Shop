@@ -52,6 +52,9 @@ parameters:
         noExtends:
             classesAllowedToBeExtended:
                 - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+                - App\Controller\AbstractShopController
+                - Symfony\Component\Form\AbstractType
+                - Symfony\Contracts\EventDispatcher\Event
 
 includes:
     # https://github.com/symplify/phpstan-rules
