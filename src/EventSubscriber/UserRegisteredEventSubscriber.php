@@ -11,11 +11,11 @@ use App\Repository\SubscriptionPlanRepository;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-class UserRegisteredListener implements EventSubscriberInterface
+final class UserRegisteredListener implements EventSubscriberInterface
 {
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository,
-        protected SubscriptionPlanRepository $subscriptionPlanRepository
+        protected SubscriptionPlanRepository $subscriptionPlanRepository,
     ) {}
 
     public static function getSubscribedEvents()
@@ -23,9 +23,7 @@ class UserRegisteredListener implements EventSubscriberInterface
         return [UserRegisteredEvent::class => 'onRegistrationCompleted'];
     }
 
-    /**
-     * @throws SubscriptionPlanNotFoundException
-     */
+    /** @throws SubscriptionPlanNotFoundException */
     public function onRegistrationCompleted(UserRegisteredEvent $userRegisteredEvent): void
     {
         $user = $userRegisteredEvent->getUser();

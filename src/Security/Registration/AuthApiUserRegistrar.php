@@ -6,25 +6,28 @@ namespace App\Security;
 
 use App\Client\AuthApiClient;
 use App\Event\UserRegisteredEvent;
+use App\Model\User;
 use JsonException;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-class AuthApiRegisterer
+final class AuthApiRegisterer
 {
     public function __construct(
         private readonly AuthApiClient $authApiClient,
         private readonly EventDispatcherInterface $eventDispatcher,
+        private readonly EmailVerifier $emailVerifier,
     ) {}
 
-    /**
-     * @throws JsonException
-     */
     public function register(string $email, string $password): string
     {
-        $this->authApiClient->signUp($email, $password);
+        try {
+            $this->authApiClient->signUp($email, $password);
 
-        return $this->authApiClient->getVerificationCode($email, $password);
+            $this->eventDispatcher->dispatch(new UserRegisteredEvent($email));
+            $verificationCode = $this->authApiClient->getVerificationCode($email, $password);
+            $this->emailVerifier->sendEmailConfirmation($user->getEmail(), $verificationCode);
+        } catch (JsonException) {
+        }
     }
 
     public function confirmAccount(string $verificationCode): void
@@ -35,7 +38,7 @@ class AuthApiRegisterer
         $this->eventDispatcher->dispatch($userRegisteredEvent);
     }
 
-    public function getUserByCode(string $verificationCode): \App\Model\User
+    public function getUserByCode(string $verificationCode): User
     {
         return $this->authApiClient->getByVerificationCode($verificationCode);
     }

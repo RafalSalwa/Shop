@@ -7,7 +7,7 @@ namespace App\Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 
-class AuthApiErrorFactory
+final class AuthApiErrorFactory
 {
     public static function create(HttpExceptionInterface $httpException): AuthenticationExceptionInterface
     {

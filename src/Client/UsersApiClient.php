@@ -14,20 +14,21 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 use function dd;
 
-class UsersApiClient
+final readonly class UsersApiClient
 {
-    public function __construct(private readonly HttpClientInterface $httpClient)
+    public function __construct(private HttpClientInterface $usersApi)
     {}
 
     public function getUser(ApiTokenPair $apiTokenPair): User
     {
         try {
-            $response = $this->httpClient->request(
+
+            $response = $this->usersApi->request(
                 'GET',
                 '/user',
                 ['auth_bearer' => $apiTokenPair->getToken()],
             );
-        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface|TransportExceptionInterface|JsonException) {
+        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface | JsonException) {
         } catch (Throwable $e) {
             dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
         }
@@ -37,5 +38,26 @@ class UsersApiClient
         $user->setToken($apiTokenPair->getToken())->setRefreshToken($apiTokenPair->getRefreshToken());
 
         return $user;
+    }
+
+    public function byIdentifier(string $identifier): User
+    {
+        try {
+            $response = $this->usersApi->request(
+                'GET',
+                '/user',
+                ['auth_bearer' => $identifier],
+            );
+            $user = new User();
+            $user->setFromAuthApi($response);
+            $user->getTokenPair();
+
+            return $user;
+        } catch (TransportExceptionInterface $e) {
+            dd($e->getMessage(), $e->getTraceAsString());
+        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface) {
+        } catch (Exception $ex) {
+            dd($ex->getMessage(), $ex->getTraceAsString(), $response);
+        }
     }
 }
