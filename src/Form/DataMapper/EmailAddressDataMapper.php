@@ -1,26 +1,37 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Form\DataMapper;
 
+use App\Entity\ShopUserInterface;
+use App\ValueObject\EmailAddress;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;
+use Symfony\Component\Form\FormInterface;
+use Traversable;
+use function iterator_to_array;
 
-class EmailAddressDataMapper extends AbstractType implements DataMapperInterface
+final class EmailAddressDataMapper extends AbstractType implements DataMapperInterface
 {
-
     /**
-     * @inheritDoc
+     * @param ShopUserInterface|null $viewData
+     * @param Traversable<int, FormInterface> $forms
      */
-    public function mapDataToForms(mixed $viewData, \Traversable $forms)
+    public function mapDataToForms(mixed $viewData, Traversable $forms): void
     {
-        // TODO: Implement mapDataToForms() method.
+        if (null === $viewData->getEmail()) {
+            return;
+        }
+        $forms = iterator_to_array($forms);
+        $forms['email']->setData($viewData->toString());
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function mapFormsToData(\Traversable $forms, mixed &$viewData)
+    /** @param Traversable<int, FormInterface> $forms */
+    public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
-        // TODO: Implement mapFormsToData() method.
+        $forms = iterator_to_array($forms);
+        $viewData = new EmailAddress($forms['email']->getData());
+        dd($viewData);
     }
 }
