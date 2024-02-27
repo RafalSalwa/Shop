@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\User;
 use App\Repository\SubscriptionPlanRepository;
+use App\Repository\SubscriptionRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
@@ -14,6 +15,7 @@ class SubscriptionService
 {
     public function __construct(
         private readonly SubscriptionPlanRepository $subscriptionPlanRepository,
+        private readonly SubscriptionRepository $subscriptionRepository,
         private readonly UserRepository $userRepository,
         private readonly Security $security,
     ) {}
@@ -40,5 +42,10 @@ class SubscriptionService
         $subscription->setSubscriptionPlan($plan);
         $user->setSubscription($subscription);
         $this->userRepository->save($user);
+    }
+
+    public function find(int $userId)
+    {
+        return $this->subscriptionRepository->findOneBy(['userId' => $userId]);
     }
 }
