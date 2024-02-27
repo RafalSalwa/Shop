@@ -2,44 +2,39 @@
 
 declare(strict_types=1);
 
-namespace App\Security;
+namespace App\Security\Registration;
 
 use App\Client\AuthApiClient;
+use App\Event\UserConfirmedEvent;
 use App\Event\UserRegisteredEvent;
-use App\Model\User;
-use JsonException;
+use App\Event\UserVerificationCodeRequestEvent;
+use App\Security\EmailVerifier;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-final class AuthApiRegisterer
+final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
 {
     public function __construct(
-        private readonly AuthApiClient $authApiClient,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly EmailVerifier $emailVerifier,
+        private AuthApiClient $authApiClient,
+        private EventDispatcherInterface $eventDispatcher,
+        private EmailVerifier $emailVerifier,
     ) {}
 
-    public function register(string $email, string $password): string
+    public function register(string $email, string $password): void
     {
-        try {
-            $this->authApiClient->signUp($email, $password);
-
-            $this->eventDispatcher->dispatch(new UserRegisteredEvent($email));
-            $verificationCode = $this->authApiClient->getVerificationCode($email, $password);
-            $this->emailVerifier->sendEmailConfirmation($user->getEmail(), $verificationCode);
-        } catch (JsonException) {
-        }
+        $this->authApiClient->signUp($email, $password);
+        $this->eventDispatcher->dispatch(new UserRegisteredEvent($email));
     }
 
-    public function confirmAccount(string $verificationCode): void
+    public function sendVerificationCode(string $email): void
     {
-        $this->authApiClient->activateAccount($verificationCode);
-        $user = $this->authApiClient->getByVerificationCode($verificationCode);
-        $userRegisteredEvent = new UserRegisteredEvent($user);
-        $this->eventDispatcher->dispatch($userRegisteredEvent);
+        $verificationCode = $this->authApiClient->getVerificationCode($email);
+        $this->eventDispatcher->dispatch(new UserVerificationCodeRequestEvent($email));
+        $this->emailVerifier->sendEmailConfirmation($email, $verificationCode);
     }
 
-    public function getUserByCode(string $verificationCode): User
+    public function confirm(string $verificationCode): void
     {
-        return $this->authApiClient->getByVerificationCode($verificationCode);
+        $this->authApiClient->confirmAccount($verificationCode);
+        $this->eventDispatcher->dispatch(new UserConfirmedEvent($verificationCode));
     }
 }
