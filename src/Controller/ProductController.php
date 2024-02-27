@@ -14,12 +14,12 @@ use function dd;
 
 /** @see CartAddVoter */
 #[asController]
-#[Route(path: '/product', name: 'product_', methods: ['GET', 'POST'])]
+#[Route(path: '/products', name: 'products_', methods: ['GET', 'POST'])]
 final class ProductController extends AbstractController
 {
     #[Route(
-        path: '/products/{page}',
-        name: 'products_index',
+        path: '/{page}',
+        name: 'index',
         defaults: ['page' => '1', 'sort' => 'default'],
         methods: ['GET'],
     )]
@@ -31,7 +31,7 @@ final class ProductController extends AbstractController
         );
     }
 
-    #[Route(path: '/product/{id}', name: 'products_details')]
+    #[Route(path: '/product/{id}', name: 'details')]
     public function details(int $id, ProductRepository $productRepository): Response
     {
         dd($this->getUser());

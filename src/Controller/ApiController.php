@@ -6,14 +6,13 @@ namespace App\Controller;
 
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[asController]
 #[Route(path: '/api', name: 'api_')]
-final class ApiController extends AbstractController
+final class ApiController extends AbstractShopController
 {
     #[Route(path: '/test', name: 'test', methods: ['GET'])]
     #[OA\Response(
@@ -33,7 +32,7 @@ final class ApiController extends AbstractController
     #[OA\Tag(name: 'api_test')]
     public function user(): Response
     {
-        $user = $this->getUser();
+        $user = $this->getShopUser();
 
         return $this->json(
             [
