@@ -4,20 +4,19 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Client\AuthApi\AuthApiClient;
-use App\Client\AuthClientInterface;
 use App\Exception\Registration\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
 use App\Security\AuthApiAuthenticator;
 use App\Security\Registration\UserRegistrarInterface;
+use App\Security\ShopUserAuthenticatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[asController]
 #[Route(path: '/register', name: 'register_', methods: ['GET', 'POST'])]
@@ -86,15 +85,14 @@ final class RegistrationController extends AbstractController
 
     #[Route(path: '/thank_you/{verificationCode}', name: 'thank_you')]
     public function thankYouPage(
-        Request $request,
         string $verificationCode,
-        UserAuthenticatorInterface $userAuthenticator,
+        ShopUserAuthenticatorInterface $authenticator,
         AuthApiAuthenticator $authApiAuthenticator,
-        AuthClientInterface $authClient,
+        Security $security,
     ): Response {
-        $user = $authClient->getByVerificationCode($verificationCode);
+        $user = $authenticator->authenticateWithAuthCode($verificationCode);
 
-        $userAuthenticator->authenticateUser($user, $authApiAuthenticator, $request);
+        $security->login(user: $user, authenticatorName: $authApiAuthenticator::class);
 
         return $this->render('registration/thank_you.html.twig');
     }

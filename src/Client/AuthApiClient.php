@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace App\Client;
 
+use App\Entity\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
 use App\Exception\AuthenticationExceptionInterface;
-use App\Model\ApiTokenPair;
+use App\Model\TokenPair;
 use App\Model\User;
+use App\ValueObject\Token;
 use JsonException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +32,7 @@ final readonly class AuthApiClient implements AuthClientInterface
     {}
 
     /** @throws AuthenticationExceptionInterface */
-    public function signIn(string $email, string $password): ApiTokenPair
+    public function signIn(string $email, string $password): TokenPair
     {
         try {
             $response = $this->authApi->request(
@@ -47,7 +49,7 @@ final readonly class AuthApiClient implements AuthClientInterface
                 ],
             );
 
-            return ApiTokenPair::fromJson($response->getContent());
+            return TokenPair::fromJson($response->getContent());
         } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
@@ -100,7 +102,8 @@ final readonly class AuthApiClient implements AuthClientInterface
             if (true === array_key_exists('user', $arrResponse)) {
                 return $arrResponse['user']['verification_token'];
             }
-            throw new AuthApiRuntimeException("User not found or Api got problems");
+
+            throw new AuthApiRuntimeException('User not found or Api got problems');
         } catch (Throwable $throwable) {
             dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response ?? null);
         }
@@ -116,12 +119,39 @@ final readonly class AuthApiClient implements AuthClientInterface
         }
     }
 
-    public function getByVerificationCode(string $verificationCode): User
+    public function getByVerificationCode(string $verificationCode): ShopUserInterface
     {
-        $response = $this->authApi->request('GET', '/auth/code/' . $verificationCode);
-        $user = new User();
-        $user->setFromAuthApi($response);
+        try {
+            $response = $this->authApi->request('GET', '/auth/code/' . $verificationCode);
+            $arrResponse = json_decode($response->getContent(throw: false), true, JSON_THROW_ON_ERROR);
+            $user = new User(id: $arrResponse['user']['id'], email: $arrResponse['user']['email']);
 
-        return $user;
+            return $user;
+        } catch (Throwable $throwable) {
+            dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response ?? null);
+        }
+    }
+
+    public function signInByCode(string $email, string $verificationCode): TokenPair
+    {
+        try {
+            $response = $this->authApi->request(
+                'POST',
+                '/auth/signin/' . $verificationCode,
+                [
+                    'body' => json_encode(
+                        ['email' => $email],
+                        JSON_THROW_ON_ERROR,
+                    ),
+                ],
+            );
+            $arrResponse = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
+            $token = new Token($arrResponse['user']['token']);
+            $refreshToken = new Token($arrResponse['user']['refresh_token']);
+
+            return new TokenPair($token, $refreshToken);
+        } catch (Throwable $throwable) {
+            dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response ?? null);
+        }
     }
 }

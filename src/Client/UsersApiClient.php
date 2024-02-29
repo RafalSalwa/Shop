@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Client;
 
-use App\Model\ApiTokenPair;
+use App\Entity\ShopUserInterface;
 use App\Model\User;
+use App\ValueObject\Token;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -13,51 +14,58 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
 use function dd;
+use function json_decode;
 
-final readonly class UsersApiClient
+final readonly class UsersApiClient implements ShopUserProviderInterface
 {
     public function __construct(private HttpClientInterface $usersApi)
     {}
 
-    public function getUser(ApiTokenPair $apiTokenPair): User
+    public function loadUserByIdentifier(string $identifier): ShopUserInterface
     {
-        try {
-
-            $response = $this->usersApi->request(
-                'GET',
-                '/user',
-                ['auth_bearer' => $apiTokenPair->getToken()],
-            );
-        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface | TransportExceptionInterface | JsonException) {
-        } catch (Throwable $e) {
-            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
-        }
-
-        $user = new User();
-        $user->setFromAuthApi($response);
-        $user->setToken($apiTokenPair->getToken())->setRefreshToken($apiTokenPair->getRefreshToken());
-
-        return $user;
+        return $this->getUser(new Token($identifier));
     }
 
-    public function byIdentifier(string $identifier): User
+    private function getUser(Token $token): ShopUserInterface
     {
         try {
             $response = $this->usersApi->request(
                 'GET',
                 '/user',
-                ['auth_bearer' => $identifier],
+                ['auth_bearer' => $token->value()],
             );
-            $user = new User();
-            $user->setFromAuthApi($response);
-            $user->getTokenPair();
+            $arrContent = json_decode($response->getContent(throw: true), true);
 
-            return $user;
-        } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
-        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface) {
-        } catch (Exception $ex) {
-            dd($ex->getMessage(), $ex->getTraceAsString(), $response);
+            return new User(
+                id: $arrContent['user']['id'],
+                email: $arrContent['user']['email'],
+                authCode: $arrContent['user']['verification_token'],
+                token: $arrContent['user']['token'],
+                refreshToken: $arrContent['user']['refresh_token'],
+            );
+        } catch (
+            ClientExceptionInterface | JsonException | RedirectionExceptionInterface | ServerExceptionInterface | Throwable | TransportExceptionInterface $e
+        ) {
+            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
         }
+    }
+
+    public function loadUserByToken(Token $token): ShopUserInterface
+    {
+        return $this->getUser($token);
+    }
+
+    public function refreshUser(ShopUserInterface $user): ShopUserInterface
+    {
+        if (false === $user->getToken()->isExpired()) {
+            return $this->getUser($user->getToken());
+        }
+
+        return $this->getUser($user->getRefreshToken());
+    }
+
+    public function supportsClass(string $class): void
+    {
+        // TODO: Implement supportsClass() method.
     }
 }

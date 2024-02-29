@@ -1,22 +1,19 @@
 <?php
 
 namespace App\Tests\Architecture;
+
 use PHPat\Selector\Selector;
+use PHPat\Test\Builder\BuildStep;
 use PHPat\Test\PHPat;
 
-final class MyFirstTest
+final class LayersTest
 {
-    public function test_domain_does_not_depend_on_other_layers(): Rule
+    public function testClassesDoNotDependOnSecurity(): BuildStep
     {
         return PHPat::rule()
-            ->classes(Selector::namespace('App\Domain'))
+            ->classes(Selector::inNamespace('App'))
             ->shouldNotDependOn()
-            ->classes(
-                Selector::namespace('App\Application'),
-                Selector::namespace('App\Infrastructure'),
-                Selector::classname(SuperForbiddenClass::class),
-                Selector::classname('/^SomeVendor\\\.*\\\ForbiddenSubfolder\\\.*/', true)
-            )
-            ->because('this will break our architecture, implement it another way! see /docs/howto.md');
+            ->classes(Selector::inNamespace('Symfony\Bundle\SecurityBundle\Security'))
+            ->because('We cannot rely on Security since we are using JWT Tokens. Use ShopSecurityProviderInterface');
     }
 }

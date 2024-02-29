@@ -4,216 +4,81 @@ declare(strict_types=1);
 
 namespace App\Model;
 
-use App\Entity\Address;
-use App\Entity\OAuth2UserConsent;
-use App\Entity\Payment;
 use App\Entity\ShopUserInterface;
 use App\Entity\Subscription;
 use App\ValueObject\EmailAddress;
-use DateTime;
-use DateTimeImmutable;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\ValueObject\Token;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\ResponseInterface;
 use function array_key_exists;
 use function array_unique;
-use function json_decode;
 
 final class User implements JsonSerializable, UserInterface, ShopUserInterface
 {
 
-    protected ?string $token = null;
-
-    protected ?string $refreshToken = null;
-
-    private $verified;
-
-    private $active;
-
-    private ?int $id = null;
-
-    private string $username;
-
-    private string $password = '';
-
-    private ?string $firstname = null;
-
-    private ?string $lastname = null;
-
     private EmailAddress $email;
+    private ?Token $token = null;
 
-    private ?array $roles = null;
+    private ?Token $refreshToken = null;
 
-    private DateTimeImmutable $createdAt;
+    private string $authCode;
 
-    private ?DateTime $updatedAt = null;
+    /** @var array<int,string> */
+    private array $roles;
 
-    private ?DateTimeImmutable $deletedAt = null;
-
-    private ?DateTime $lastLogin = null;
-
-    private ?Collection $oAuth2UserConsents = null;
-
-    private ?Collection $carts = null;
-
-    private ?Collection $deliveryAddresses;
-
-    private ?Collection $payments = null;
-
-    private ?Collection $orders = null;
-
-    private ?Subscription $subscription = null;
-
-    public function __construct()
+    public function __construct(
+        private readonly int $id,
+        string $email,
+        ?string $authCode = null,
+        ?string $token = null,
+        ?string $refreshToken = null)
     {
-        $this->carts = new ArrayCollection();
-        $this->deliveryAddresses = new ArrayCollection();
-        $this->payments = new ArrayCollection();
+        $this->email = new EmailAddress($email);
+
+        if (null !== $token) {
+            $this->setToken(new Token($token));
+        }
+        if (null !== $refreshToken) {
+            $this->setRefreshToken(new Token($refreshToken));
+        }
+        if (null !== $authCode) {
+            $this->setAuthCode($authCode);
+        }
+
+        $this->setRoles(['ROLE_USER']);
     }
 
-    public function getSubscription(): ?Subscription
+    public function setAuthCode(string $code): void
     {
-        return $this->subscription;
+        $this->authCode = $code;
     }
 
-    public function setSubscription(Subscription $subscription): self
+    public function getUserIdentifier(): string
     {
-        $this->subscription = $subscription;
-
-        return $this;
+        return $this->getToken()->value();
     }
 
-    public function getDeliveryAddresses(): Collection|null
+    public function getToken(): Token
     {
-        return $this->deliveryAddresses;
+        return $this->token;
     }
 
-    public function setDeliveryAddresses(ArrayCollection $deliveryAddresses): self
+    public function setToken(Token $token): void
     {
-        $this->deliveryAddresses = $deliveryAddresses;
-
-        return $this;
-    }
-
-    public function getCarts(): ?Collection
-    {
-        return $this->carts;
-    }
-
-    public function setCarts(?Collection $collection): self
-    {
-        $this->carts = $collection;
-
-        return $this;
-    }
-
-    public function getPayments(): ?Collection
-    {
-        return $this->payments;
-    }
-
-    public function setPayments(?Collection $collection): self
-    {
-        $this->payments = $collection;
-
-        return $this;
-    }
-
-    public function addPayment(Payment $payment): self
-    {
-        $this->payments->add($payment);
-
-        return $this;
-    }
-
-    public function getOrders(): ?Collection
-    {
-        return $this->orders;
-    }
-
-    public function setOrders(?Collection $collection): self
-    {
-        $this->orders = $collection;
-
-        return $this;
-    }
-
-    public function addDeliveryAddress(Address $address): void
-    {
-        $address->setUser($this);
-        $this->deliveryAddresses[] = $address;
-    }
-
-    public function removeDeliveryAddress(Address $address): void
-    {
-        $this->deliveryAddresses->removeElement($address);
-    }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    public function getUsername(): string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
-    }
-
-    public function getFirstname(): ?string
-    {
-        return $this->firstname;
-    }
-
-    public function setFirstname(?string $firstname): self
-    {
-        $this->firstname = $firstname;
-
-        return $this;
-    }
-
-    public function getLastname(): ?string
-    {
-        return $this->lastname;
-    }
-
-    public function setLastname(?string $lastname): self
-    {
-        $this->lastname = $lastname;
-
-        return $this;
+        $this->token = $token;
     }
 
     public function getEmail(): string
     {
-        return $this->email;
+        return $this->email->toString();
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(EmailAddress $email): void
     {
-        $this->email = new EmailAddress($email);
-
-        return $this;
+        $this->email = $email;
     }
 
+    /** @return array<int,string> */
     public function getRoles(): array
     {
         $roles = $this->roles;
@@ -222,166 +87,44 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface
                 ? $this->roles['roles']
                 : $this->roles;
 
-            $roles[] = 'ROLE_USER';
-
             return array_unique($roles);
         }
 
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);
+        return array_unique($this->roles);
     }
 
-    public function setRoles(?array $roles): self
+    public function setRoles(?array $roles): void
     {
         $this->roles = $roles;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): ?DateTimeImmutable
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(DateTimeImmutable $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function getLastLogin(): ?DateTime
-    {
-        return $this->lastLogin;
-    }
-
-    public function setLastLogin(DateTime $lastLogin): self
-    {
-        $this->lastLogin = $lastLogin;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): ?DateTime
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     public function jsonSerialize(): mixed
     {
         return [
             'id' => $this->id,
-            'username' => $this->username,
-            'verified' => $this->verified,
-            'active' => $this->active,
+            'email' => $this->email,
         ];
     }
 
-    public function eraseCredentials(): void
-    {}
+    public function eraseCredentials(): void {}
 
-    public function getUserIdentifier(): string
-    {
-        return (string)$this->id;
-    }
-
-    public function getOAuth2UserConsents(): ?Collection
-    {
-        return $this->oAuth2UserConsents;
-    }
-
-    public function setOAuth2UserConsents(?Collection $collection): self
-    {
-        $this->oAuth2UserConsents = $collection;
-
-        return $this;
-    }
-
-    public function addOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
-    {
-        if (! $this->oAuth2UserConsents->contains($oAuth2UserConsent)) {
-            $this->oAuth2UserConsents->add($oAuth2UserConsent);
-            $oAuth2UserConsent->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeOAuth2UserConsent(OAuth2UserConsent $oAuth2UserConsent): self
-    {
-        if ($this->oAuth2UserConsents->removeElement($oAuth2UserConsent) && $oAuth2UserConsent->getUser() === $this) {
-            $oAuth2UserConsent->setUser(null);
-        }
-
-        return $this;
-    }
-
-    public function getToken(): ?string
-    {
-        return $this->token;
-    }
-
-    public function setToken(string $token): self
-    {
-        $this->token = $token;
-
-        return $this;
-    }
-
-    public function getRefreshToken(): ?string
+    public function getRefreshToken(): Token
     {
         return $this->refreshToken;
     }
 
-    public function setRefreshToken(?string $refreshToken): self
+    public function setRefreshToken(Token $refreshToken): void
     {
         $this->refreshToken = $refreshToken;
-
-        return $this;
     }
 
-    /**
-     * @throws \Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface
-     * @throws ServerExceptionInterface
-     * @throws RedirectionExceptionInterface
-     * @throws ClientExceptionInterface
-     */
-    public function setFromAuthApi(ResponseInterface $response): void
+    public function getId(): int
     {
-        $arrResponse = json_decode($response->getContent(), true);
-        $this->setId($arrResponse['user']['id']);
-        $this->setEmail($arrResponse['user']['email']);
+        return $this->id;
     }
 
-    public function getPassword(): string
+    public function getSubscription(): ?Subscription
     {
-        return $this->password;
-    }
-
-    public function setPassword(string $password): self
-    {
-        $this->password = $password;
-
-        return $this;
+        return null;
     }
 }

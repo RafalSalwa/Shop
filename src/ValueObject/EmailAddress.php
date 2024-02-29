@@ -14,19 +14,16 @@ final class EmailAddress
 {
     private const INVALID_EMAIL = 'Invalid email address';
 
-    private string $email;
-
-    public function __construct(string $emailAddress)
+    public function __construct(private readonly string $email)
     {
         $validator = Validation::createValidator();
         $emailConstraint = new Assert\Email(mode: Email::VALIDATION_MODE_STRICT);
         $emailConstraint->message = self::INVALID_EMAIL;
 
-        $errors = $validator->validate($emailAddress, $emailConstraint);
+        $errors = $validator->validate($email, $emailConstraint);
         if (count($errors) > 0) {
             throw new InvalidArgumentException(message: self::INVALID_EMAIL);
         }
-        $this->email = $emailAddress;
     }
 
     public function toString(): string

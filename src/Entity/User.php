@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Model\ApiTokenPair;
+use App\Model\TokenPair;
 use App\Repository\UserRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -41,7 +41,7 @@ final class User implements JsonSerializable, UserInterface, PasswordAuthenticat
 
     public $isVerified;
 
-    protected ApiTokenPair $tokenPair;
+    protected TokenPair $tokenPair;
 
     protected string $refreshToken;
 

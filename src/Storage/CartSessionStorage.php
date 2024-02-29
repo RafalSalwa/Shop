@@ -35,7 +35,7 @@ final class CartSessionStorage
     {
         return $this->cartRepository->findOneBy(
             [
-                'userId' => $this->getUser()->getUserIdentifier(),
+                'userId' => $this->getUser()->getToken()->getSub(),
                 'status' => Cart::STATUS_CREATED,
             ],
             ['createdAt' => 'DESC'],
@@ -50,7 +50,10 @@ final class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if ($request instanceof Request && $this->security->getFirewallConfig($request)?->isStateless()) {
+        if (
+            true === $request instanceof Request &&
+            true === $this->security->getFirewallConfig($request)?->isStateless())
+        {
             return;
         }
 
