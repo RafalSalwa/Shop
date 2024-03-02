@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\Registration\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
@@ -56,12 +57,16 @@ final class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if (true === $form->isSubmitted() && true === $form->isValid()) {
-            $userRegistrar->confirm($form->get('confirmationCode')->getData());
+            try {
+                $userRegistrar->confirm($form->get('confirmationCode')->getData());
 
-            return $this->redirectToRoute(
-                'register_thank_you',
-                ['verificationCode' => $form->get('confirmationCode')->getData()],
-            );
+                return $this->redirectToRoute(
+                    'register_thank_you',
+                    ['verificationCode' => $form->get('confirmationCode')->getData()],
+                );
+            } catch (AuthenticationExceptionInterface $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+            }
         }
 
         return $this->render(

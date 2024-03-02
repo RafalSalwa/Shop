@@ -63,7 +63,6 @@ services:
   cache_php:
     container_name: cache_php
     image: redis:7-alpine
-    restart: always
     ports:
       - '26379:6379'
     command: redis-server --save 60 1 --loglevel warning

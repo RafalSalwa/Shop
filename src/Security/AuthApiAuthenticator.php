@@ -26,7 +26,6 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
 use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
-use function dd;
 
 final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implements ShopUserAuthenticatorInterface, UserAuthenticatorInterface
 {
@@ -48,15 +47,16 @@ final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implemen
                 $request->request->get('email'),
                 $request->request->get('password'),
             );
-        } catch (AuthenticationExceptionInterface $authenticationException) {
-            $this->logger->critical($authenticationException->getMessage());
-            dd($authenticationException->getMessage(), $authenticationException->getTraceAsString());
-        }
+            $user = $this->usersApiClient->loadUserByIdentifier($tokenPair->getToken()->value());
+        } catch (AuthenticationExceptionInterface $authException) {
+            $this->logger->critical($authException->getMessage());
+            $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->request->get('email'));
 
-        try {
-            $user = $this->usersApiClient->loadUserByIdentifier($tokenPair->getToken());
-        } catch (AuthenticationExceptionInterface) {
-            dd('a');
+            throw new AuthenticationException(
+                $authException->getMessage(),
+                $authException->getCode(),
+                $authException,
+            );
         }
 
         return new SelfValidatingPassport(
@@ -72,18 +72,13 @@ final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implemen
 
     ///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
 
-    public function onAuthenticationFailure(
-        Request $request,
-        AuthenticationException $authenticationException,
-    ): Response {
-        dd('fail');
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    {
         if ($request->hasSession()) {
-            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $authenticationException);
+            $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
         }
 
-        $url = $this->getLoginUrl($request);
-
-        return new RedirectResponse($url);
+        return new RedirectResponse($this->getLoginUrl($request));
     }
 
     protected function getLoginUrl(Request $request): string

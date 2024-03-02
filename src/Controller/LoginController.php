@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 #[asController]
-#[Route(path: '/login', name: 'login_')]
+#[Route(path: '/login', name: 'login_', methods: ['GET', 'POST'])]
 final class LoginController extends AbstractController
 {
     #[Route(path: '/', name: 'index')]
