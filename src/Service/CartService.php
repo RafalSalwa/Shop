@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Entity\Cart;
 use App\Entity\CartItem;
-use App\Entity\CartItemInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 use App\Entity\SubscriptionPlanCartItem;
@@ -54,6 +54,7 @@ final readonly class CartService
         if (! $cart instanceof Cart) {
             $cart = $this->cartFactory->create();
         }
+
         return $cart;
     }
 
@@ -126,7 +127,7 @@ final readonly class CartService
             $lock->release();
         } catch (Throwable $e) {
             $this->logger->error($e->getMessage(), $e->getTrace());
-        } catch (ItemNotFoundException|AccessDeniedException) {
+        } catch (ItemNotFoundException | AccessDeniedException) {
         } catch (Throwable $e) {
             dd($e::class, $e->getMessage());
         }

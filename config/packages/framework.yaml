@@ -13,7 +13,10 @@ framework:
     cookie_secure: auto
     cookie_samesite: lax
     storage_factory_id: session.storage.factory.native
-
+  assets:
+    packages:
+      cdn:
+        base_url: 'https://cdn.salwa.com.pl/cart/'
   php_errors:
     log: true
   http_client:

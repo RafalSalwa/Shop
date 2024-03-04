@@ -10,11 +10,8 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[Entity(repositoryClass: AddressRepository::class)]
@@ -54,21 +51,8 @@ class Address
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
     private string $postalCode;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'deliveryAddresses')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id')]
-    private UserInterface $user;
-
-    public function getId(): int
-    {
-        return $this->id;
-    }
-
-    public function setId(int $id): self
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+    #[Column(name: 'user_id', type: Types::INTEGER)]
+    private int $userId;
 
     public function getFirstName(): string
     {
@@ -154,14 +138,24 @@ class Address
         return $this;
     }
 
-    public function getUser(): UserInterface
+    public function getUserId(): int
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(UserInterface $user): self
+    public function setUserId(int $userId): void
     {
-        $this->user = $user;
+        $this->userId = $userId;
+    }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): self
+    {
+        $this->id = $id;
 
         return $this;
     }

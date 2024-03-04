@@ -4,15 +4,14 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\CartInsertableInterface;
-use App\Entity\CartItemInterface;
-use App\Exception\ItemNotFoundException;
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\CartItemInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Throwable;
 use function assert;
 
-class CartItemFactory
+final class CartItemFactory
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

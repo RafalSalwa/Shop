@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Message;
+namespace App\Messenger\Handler;
 
-use App\Message\AMQPMessage;
+use App\Messenger\Message\AMQPMessage;
 
-class AMQPMessageHandler
+final class AMQPMessageHandler
 {
     public function __invoke(AMQPMessage $amqpMessage): void
     {

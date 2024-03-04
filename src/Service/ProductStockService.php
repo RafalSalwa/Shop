@@ -4,16 +4,17 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\CartItemInterface;
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\CartItemInterface;
+use App\Entity\Contracts\StockManageableInterface;
 use App\Entity\Product;
-use App\Entity\StockManageableInterface;
 use App\Event\StockDepletedEvent;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class ProductStockService
+final class ProductStockService
 {
     public function __construct(
         private readonly LockFactory $productLockFactory,
@@ -35,9 +36,7 @@ class ProductStockService
         $this->changeStock($cartItem, Product::STOCK_INCREASE, $cartItem->getQuantity());
     }
 
-    /**
-     * @psalm-param Product::STOCK_* $operation
-     */
+    /** @psalm-param Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $cartItem, string $operation, int $qty): void
     {
         $cartInsertable = $cartItem->getReferencedEntity();
@@ -52,7 +51,7 @@ class ProductStockService
     }
 
     /** @throws ProductStockDepletedException */
-    private function decrease(\App\Entity\CartInsertableInterface $cartInsertable, int $qty): void
+    private function decrease(CartInsertableInterface $cartInsertable, int $qty): void
     {
         $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
         $sharedLock->acquire(true);
@@ -71,7 +70,7 @@ class ProductStockService
         $sharedLock->release();
     }
 
-    private function increase(\App\Entity\CartInsertableInterface $cartInsertable, int $qty): void
+    private function increase(CartInsertableInterface $cartInsertable, int $qty): void
     {
         $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
         $sharedLock->acquire(true);

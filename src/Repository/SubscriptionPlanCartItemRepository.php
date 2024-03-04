@@ -8,7 +8,7 @@ use App\Entity\SubscriptionPlanCartItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class SubscriptionPlanCartItemRepository extends ServiceEntityRepository
+final class SubscriptionPlanCartItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {

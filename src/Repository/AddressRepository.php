@@ -8,17 +8,14 @@ use App\Entity\Address;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class AddressRepository extends ServiceEntityRepository
+final class AddressRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, Address::class);
     }
 
-    /**
-     * @param       mixed|null $address
-     * @psalm-param \App\Repository\T|null $address
-     */
+    /** @psalm-param T|null $address */
     public function save(mixed $address): void
     {
         $this->getEntityManager()

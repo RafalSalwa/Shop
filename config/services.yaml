@@ -51,7 +51,7 @@ services:
       $entityManager: '@doctrine.orm.entity_manager'
 
 
-  App\Security\Voter\CartAddVoter:
+  App\Security\Voter\AddToCartVoter:
     tags: [ 'security.voter' ]
   App\Security\Voter\SubscriptionPlanVoter:
     tags: [ 'security.voter' ]

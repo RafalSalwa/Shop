@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Message;
+namespace App\Messenger\Handler;
 
-use App\Message\UserLoggedIn;
+use App\Messenger\Message\UserLoggedIn;
 
-class UserLoggedInHandler
+final class UserLoggedInHandler
 {
     public function __invoke(UserLoggedIn $userLoggedIn): void
     {

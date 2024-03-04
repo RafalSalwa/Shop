@@ -65,9 +65,7 @@ services:
     image: redis:7-alpine
     ports:
       - '26379:6379'
-    command: redis-server --save 60 1 --loglevel warning
-    volumes:
-      - cache:/data
+    command: /bin/sh -c "redis-server --save 60 1 --loglevel debug --appendonly yes --requirepass GCAHwF0kz59p9FpP"
     networks:
       interview-net:
         aliases:

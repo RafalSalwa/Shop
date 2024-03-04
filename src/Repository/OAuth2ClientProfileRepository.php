@@ -10,13 +10,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<OAuth2ClientProfile>
- *
- * @method null|OAuth2ClientProfile find($id, $lockMode = null, $lockVersion = null)
- * @method null|OAuth2ClientProfile findOneBy(array $criteria, array $orderBy = null)
- * @method OAuth2ClientProfile[]    findAll()
- * @method OAuth2ClientProfile[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method  OAuth2ClientProfile|null find($id, $lockMode = null, $lockVersion = null)
+ * @method  OAuth2ClientProfile|null findOneBy(array $criteria, array $orderBy = null)
+ * @method  array<OAuth2ClientProfile>    findAll()
+ * @method  array<OAuth2ClientProfile>    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OAuth2ClientProfileRepository extends ServiceEntityRepository
+final class OAuth2ClientProfileRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -29,11 +28,13 @@ class OAuth2ClientProfileRepository extends ServiceEntityRepository
             ->persist($oAuth2ClientProfile)
         ;
 
-        if ($flush) {
-            $this->getEntityManager()
-                ->flush()
-            ;
+        if (! $flush) {
+            return;
         }
+
+        $this->getEntityManager()
+            ->flush()
+        ;
     }
 
     public function remove(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
@@ -42,10 +43,12 @@ class OAuth2ClientProfileRepository extends ServiceEntityRepository
             ->remove($oAuth2ClientProfile)
         ;
 
-        if ($flush) {
-            $this->getEntityManager()
-                ->flush()
-            ;
+        if (! $flush) {
+            return;
         }
+
+        $this->getEntityManager()
+            ->flush()
+        ;
     }
 }

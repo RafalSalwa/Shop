@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Handler\Message;
+namespace App\Messenger\Handler;
 
-use App\Message\OrderMessage;
+use App\Messenger\Message\OrderMessage;
 
-class OrderMessageHandler
+final class OrderMessageHandler
 {
     public function __invoke(OrderMessage $orderMessage): void
     {

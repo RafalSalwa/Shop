@@ -15,9 +15,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Uuid;
-
 use function number_format;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
@@ -60,9 +58,8 @@ class Payment
     )]
     private DateTime $createdAt;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'payments')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
-    private UserInterface|null $user = null;
+    #[Column(name: 'user_id', type: Types::INTEGER)]
+    private int $userId;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: true)]
@@ -158,16 +155,14 @@ class Payment
         return $this;
     }
 
-    public function getUser(): User|null
+    public function getUserId(): int
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(UserInterface $user): self
+    public function setUserId(int $userId): void
     {
-        $this->user = $user;
-
-        return $this;
+        $this->userId = $userId;
     }
 
     public function getOrder(): Order|null

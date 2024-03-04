@@ -24,7 +24,7 @@ grumphp:
     enabled: true
     fix_by_default: false
   environment:
-    files: []
+    files: [ ]
     variables: { }
     paths:
       - bin/
@@ -260,10 +260,11 @@ grumphp:
       tasks:
         - composer
         - composer_normalize
-#        - composer_require_checker
-#        - doctrine_orm
+        #        - composer_require_checker
+        #        - doctrine_orm
         - eslint
         - jsonlint
+        - phparkitect
         - phplint
         - phpmnd
         - phpunit

@@ -10,7 +10,7 @@ use function bcdiv;
 use function bcsub;
 use function number_format;
 
-class TaxCalculator
+final class TaxCalculatorService
 {
     private int $taxRate = 23;
 

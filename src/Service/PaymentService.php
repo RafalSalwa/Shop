@@ -10,7 +10,7 @@ use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-readonly class PaymentService
+readonly final class PaymentService
 {
     public function __construct(
         private WorkflowInterface $workflow,
@@ -21,7 +21,7 @@ readonly class PaymentService
     public function createPendingPayment(Order $order): Payment
     {
         $payment = $order->getLastPayment();
-        if (!$payment instanceof \App\Entity\Payment) {
+        if (! $payment instanceof Payment) {
             $payment = new Payment();
         }
 

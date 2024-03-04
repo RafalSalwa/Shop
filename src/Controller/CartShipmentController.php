@@ -1,13 +1,14 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
-use App\Repository\AddressRepository;
-use App\Service\CartCalculator;
+use App\Service\AddressService;
+use App\Service\CartCalculatorService;
 use App\Service\CartService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -15,14 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[asController]
 #[Route(path: '/cart/shipment', name: 'shipment_', methods: ['GET', 'POST'])]
-final class CartShipmentController extends AbstractController
+final class CartShipmentController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]
     public function shipment(
         Request $request,
         CartService $cartService,
-        CartCalculator $cartCalculator,
-        AddressRepository $repository,
+        CartCalculatorService $cartCalculator,
+        AddressService $service,
     ): Response {
         $user = $this->getUser();
 
@@ -34,7 +35,7 @@ final class CartShipmentController extends AbstractController
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
-            $repository->save($address);
+            $service->save($address);
         }
 
         return $this->render(

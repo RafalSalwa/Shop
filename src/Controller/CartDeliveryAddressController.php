@@ -6,8 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
-use App\Repository\AddressRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\AddressService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -15,12 +14,12 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[asController]
 #[Route(path: '/delivery', name: 'delivery_', methods: ['POST'])]
-final class CartDeliveryAddressController extends AbstractController
+final class CartDeliveryAddressController extends AbstractShopController
 {
     #[Route(path: '/address/new', name: 'address_new')]
-    public function add(Request $request, AddressRepository $repository): Response
+    public function add(Request $request, AddressService $service): Response
     {
-        $user = $this->getUser();
+        $user = $this->getShopUser();
 
         $address = new Address();
         $form    = $this->createForm(AddressType::class, $address);
@@ -30,7 +29,7 @@ final class CartDeliveryAddressController extends AbstractController
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
-            $repository->save($address);
+            $service->save($address);
 
             return $this->redirectToRoute('checkout_shipment');
         }

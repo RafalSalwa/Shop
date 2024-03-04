@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ValueObject;
 
 use DateTime;
+use DateTimeImmutable;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
@@ -34,5 +35,10 @@ final readonly class Token
     public function getSub(): string
     {
         return $this->parsedToken->claims()->get("sub");
+    }
+
+    public function getExp(): DateTimeImmutable
+    {
+        return $this->parsedToken->claims()->get("exp");
     }
 }

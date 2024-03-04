@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartItemInterface;
 use App\Repository\CartRepository;
 use DateTime;
 use DateTimeImmutable;
@@ -27,7 +28,7 @@ use function assert;
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
-final class Cart implements JsonSerializable
+class Cart implements JsonSerializable
 {
     final public const STATUS_CREATED = 'created';
 
@@ -52,7 +53,7 @@ final class Cart implements JsonSerializable
     #[Groups('cart')]
     private Collection $items;
 
-    #[Column(name: 'user_id')]
+    #[Column(name: 'user_id', type: Types::INTEGER)]
     #[Groups(groups: 'carts')]
     private int $userId;
 
@@ -152,7 +153,7 @@ final class Cart implements JsonSerializable
             ->exists(static fn ($key, $element): bool => $element::class === $cartItem::class);
     }
 
-    public function getUserId(): User
+    public function getUserId(): int
     {
         return $this->userId;
     }

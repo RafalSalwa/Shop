@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Client;
 
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
 use App\Exception\AuthenticationExceptionInterface;
@@ -164,8 +164,14 @@ final readonly class AuthApiClient implements AuthClientInterface
             $refreshToken = new Token($arrResponse['user']['refresh_token']);
 
             return new TokenPair($token, $refreshToken);
-        } catch (Throwable $throwable) {
-            dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response ?? null);
+        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+            $this->logger->error($exception->getMessage());
+
+            throw AuthApiErrorFactory::create($exception);
+        } catch (TransportExceptionInterface | JsonException $exception) {
+            $this->logger->error($exception->getMessage());
+
+            throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 }

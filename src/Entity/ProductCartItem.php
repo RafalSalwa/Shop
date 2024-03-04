@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Repository\ProductCartItemRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use JsonSerializable;
-
 use function sprintf;
 
 #[Entity(repositoryClass: ProductCartItemRepository::class)]

@@ -6,6 +6,6 @@ namespace App\Exception;
 
 use RuntimeException;
 
-class AuthApiRuntimeException extends RuntimeException implements AuthenticationExceptionInterface
+final class AuthApiRuntimeException extends RuntimeException implements AuthenticationExceptionInterface
 {
 }

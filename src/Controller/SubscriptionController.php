@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\SubscriptionPlan;
-use App\Repository\SubscriptionPlanRepository;
+use App\Service\SubscriptionPlanService;
 use App\Service\SubscriptionService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,12 +15,12 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[asController]
 #[Route(path: '/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
 #[IsGranted('IS_AUTHENTICATED')]
-final class SubscriptionController extends AbstractController
+final class SubscriptionController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]
-    public function index(SubscriptionPlanRepository $planRepository): Response
+    public function index(SubscriptionPlanService $planService): Response
     {
-        $plans = $planRepository->fetchAvailablePlans();
+        $plans = $planService->fetchAvailablePlans();
 
         return $this->render(
             'subscriptions/index.html.twig',

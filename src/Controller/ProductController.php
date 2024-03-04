@@ -4,18 +4,16 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Repository\ProductRepository;
-use App\Security\Voter\CartAddVoter;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Security\Voter\AddToCartVoter;
+use App\Service\ProductsService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
-use function dd;
 
-/** @see CartAddVoter */
+/** @see AddToCartVoter */
 #[asController]
 #[Route(path: '/products', name: 'products_', methods: ['GET', 'POST'])]
-final class ProductController extends AbstractController
+final class ProductController extends AbstractShopController
 {
     #[Route(
         path: '/{page}',
@@ -23,23 +21,20 @@ final class ProductController extends AbstractController
         defaults: ['page' => '1', 'sort' => 'default'],
         methods: ['GET'],
     )]
-    public function index(int $page, string $sort, ProductRepository $productRepository): Response
+    public function index(int $page, ProductsService $productsService): Response
     {
         return $this->render(
             'product/index.html.twig',
-            ['paginator' => $productRepository->getPaginated($page, $sort)],
+            ['paginator' => $productsService->getPaginated($page)],
         );
     }
 
     #[Route(path: '/product/{id}', name: 'details')]
-    public function details(int $id, ProductRepository $productRepository): Response
+    public function details(int $id, ProductsService $productsService): Response
     {
-        dd($this->getUser());
-        $product = $productRepository->find($id);
-
         return $this->render(
             'product/details.html.twig',
-            ['product' => $product],
+            ['product' => $productsService->find($id)],
         );
     }
 }

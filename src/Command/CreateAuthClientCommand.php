@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use App\Entity\User;
+use App\Model\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -16,7 +16,7 @@ use function explode;
 use function implode;
 
 #[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
-class CreateAuthClientCommand extends Command
+final class CreateAuthClientCommand extends AbstractSymfonyCommand
 {
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
@@ -35,9 +35,7 @@ class CreateAuthClientCommand extends Command
         $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
         $redirectUris = explode(',', 'https://interview.local/callback');
 
-        $user = $this->entityManager->getRepository(User::class)->findOneBy(
-            ['user_id' => 1],
-        );
+        $user = new User(id: 1, email: 'test@test.com');
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
         //        $this->em->persist($user);

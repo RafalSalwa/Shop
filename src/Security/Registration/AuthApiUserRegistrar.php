@@ -35,6 +35,7 @@ final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
     public function confirm(string $verificationCode): void
     {
         $this->authApiClient->confirmAccount($verificationCode);
-        $this->eventDispatcher->dispatch(new UserConfirmedEvent($verificationCode));
+        $user = $this->authApiClient->getByVerificationCode($verificationCode);
+        $this->eventDispatcher->dispatch(new UserConfirmedEvent($user->getId()));
     }
 }

@@ -7,7 +7,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-class TooManySubscriptionsException extends Exception
+final class TooManySubscriptionsException extends Exception
 {
     protected $message = 'Too many subscriptions in the cart.';
 

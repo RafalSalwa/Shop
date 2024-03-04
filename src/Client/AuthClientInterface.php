@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Client;
 
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
 use App\Model\TokenPair;
 
 interface AuthClientInterface

@@ -57,6 +57,8 @@ parameters:
                 - Symfony\Component\Form\AbstractType
                 - Symfony\Contracts\EventDispatcher\Event
                 - Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator
+                - Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+                - Symfony\Component\Security\Core\Authorization\Voter\Voter
 
 includes:
     # https://github.com/symplify/phpstan-rules

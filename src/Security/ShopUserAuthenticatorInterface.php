@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
 
 interface ShopUserAuthenticatorInterface
 {

@@ -7,10 +7,10 @@ namespace App\Service;
 use App\Entity\Cart;
 use App\Entity\CartItem;
 
-class CartCalculator
+final readonly class CartCalculatorService
 {
     public function __construct(
-        private readonly TaxCalculator $taxCalculator
+        private TaxCalculatorService $taxCalculator
     ) {}
 
     public function calculatePayment(Cart $cart): array

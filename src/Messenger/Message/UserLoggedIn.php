@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Message;
+namespace App\Messenger\Message;
 
-readonly class UserLoggedIn
+readonly final class UserLoggedIn
 {
     public function __construct(private string $userId)
     {}

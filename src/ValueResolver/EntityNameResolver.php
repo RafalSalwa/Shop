@@ -8,7 +8,7 @@ use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
 use InvalidArgumentException;
 
-class EntityNameResolver
+final class EntityNameResolver
 {
     public function resolve(string $entityType): string
     {

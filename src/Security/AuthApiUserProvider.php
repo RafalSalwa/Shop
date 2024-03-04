@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace App\Security;
 
 use App\Client\UsersApiClient;
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use function dd;
 use function is_subclass_of;
 
 /** @template TUser of UserProviderInterface */
@@ -25,8 +24,8 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
 
     public function refreshUser(UserInterface $user): UserInterface
     {
-        dd($user, $user->getToken()->isExpired(), $user->getRefreshToken()->isExpired());
-        if (false === $user->getToken()->isExpired() && false === $user->getRefreshToken()->isExpired()) {
+        /** @var ShopUserInterface $user */
+        if (true === $user->getToken()->isExpired() && true === $user->getRefreshToken()->isExpired()) {
             throw new CredentialsExpiredException('Session Expired, please login again.');
         }
 
@@ -35,8 +34,6 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        dd($identifier);
-
         return $this->apiClient->loadUserByIdentifier($identifier);
     }
 }

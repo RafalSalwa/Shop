@@ -6,7 +6,6 @@ namespace App\Security;
 
 use App\Client\AuthApiClient;
 use App\Client\UsersApiClient;
-use App\Entity\ShopUserInterface;
 use App\Exception\AuthenticationExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -16,18 +15,14 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Exception\AuthenticationException;
 use Symfony\Component\Security\Core\Exception\InvalidArgumentException;
-use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator;
-use Symfony\Component\Security\Http\Authenticator\AuthenticatorInterface;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
-use Symfony\Component\Security\Http\Event\AuthenticationTokenCreatedEvent;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 
-final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implements ShopUserAuthenticatorInterface, UserAuthenticatorInterface
+final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
 {
     public function __construct(
         private readonly AuthApiClient $authApiClient,
@@ -48,21 +43,17 @@ final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implemen
                 $request->request->get('password'),
             );
             $user = $this->usersApiClient->loadUserByIdentifier($tokenPair->getToken()->value());
+
+            return new SelfValidatingPassport(
+                userBadge: new UserBadge($user->getUserIdentifier()),
+                badges: [new RememberMeBadge()],
+            );
         } catch (AuthenticationExceptionInterface $authException) {
             $this->logger->critical($authException->getMessage());
             $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->request->get('email'));
 
-            throw new AuthenticationException(
-                $authException->getMessage(),
-                $authException->getCode(),
-                $authException,
-            );
+            throw new AuthenticationException($authException->getMessage(), $authException->getCode(), $authException);
         }
-
-        return new SelfValidatingPassport(
-            userBadge: new UserBadge($user->getUserIdentifier()),
-            badges: [new RememberMeBadge()],
-        );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
@@ -70,11 +61,9 @@ final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implemen
         return null;
     }
 
-    ///Analyze "Shopping App": sqp_7b4b9ec745d6ec87b0279a8f062e0da9b590211a
-
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
-        if ($request->hasSession()) {
+        if (true === $request->hasSession()) {
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);
         }
 
@@ -84,44 +73,5 @@ final class AuthApiAuthenticator extends AbstractLoginFormAuthenticator implemen
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate('login_index');
-    }
-
-    public function authenticateUser(
-        UserInterface $user,
-        AuthenticatorInterface $authenticator,
-        Request $request,
-        array $badges = [],
-    ): ?Response {
-        // create an authentication token for the User
-        $passport = new SelfValidatingPassport(
-            new UserBadge($user->getUserIdentifier(), static fn () => $user),
-            $badges,
-        );
-        $token = $authenticator->createToken($passport, $this->firewallName);
-
-        // announce the authentication token
-        $token = $this->eventDispatcher->dispatch(
-            new AuthenticationTokenCreatedEvent($token, $passport),
-        )->getAuthenticatedToken();
-
-        // authenticate this in the system
-        return $this->handleAuthenticationSuccess(
-            $token,
-            $passport,
-            $request,
-            $authenticator,
-            $this->tokenStorage->getToken(),
-        );
-    }
-
-    public function authenticateWithAuthCode(string $authCode): ShopUserInterface
-    {
-        $user = $this->authApiClient->getByVerificationCode($authCode);
-        $tokenPair = $this->authApiClient->signInByCode($user->getEmail(), $authCode);
-
-        $user->setToken($tokenPair->getToken());
-        $user->setRefreshToken($tokenPair->getRefreshToken());
-
-        return $user;
     }
 }

@@ -10,7 +10,7 @@ use Doctrine\ORM\Cache;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
-class SubscriptionPlanRepository extends ServiceEntityRepository
+final class SubscriptionPlanRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -43,14 +43,16 @@ class SubscriptionPlanRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    public function createSubscription(string $string): void
-    {}
+    public function createFreemiumPlan(): SubscriptionPlan
+    {
+        return $this->getByName('freemium');
+    }
 
-    public function getByName(string $type)
+    public function getByName(string $type): ?SubscriptionPlan
     {
         return $this->findOneBy(
             [
-                'planName' => mb_strtolower($type),
+                'name' => mb_strtolower($type),
             ],
         );
     }

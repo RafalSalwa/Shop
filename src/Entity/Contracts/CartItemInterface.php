@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Entity;
+namespace App\Entity\Contracts;
 
+use App\Entity\Cart;
 use DateTimeInterface;
 
 interface CartItemInterface

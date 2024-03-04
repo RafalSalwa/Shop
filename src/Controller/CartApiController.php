@@ -8,12 +8,11 @@ use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
 use App\Manager\CartManager;
-use App\Repository\ProductRepository;
 use App\Service\CartService;
+use App\Service\ProductsService;
 use Doctrine\DBAL\Exception;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -23,10 +22,11 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
 use function json_decode;
 use function sprintf;
+use const JSON_THROW_ON_ERROR;
 
 #[asController]
 #[Route(path: '/api/cart', name: 'api_cart', methods: ['GET', 'POST'])]
-final class CartApiController extends AbstractController
+final class CartApiController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index', methods: ['GET'])]
     #[OA\Tag(name: 'Cart')]
@@ -68,9 +68,9 @@ final class CartApiController extends AbstractController
         ],
         methods: ['POST'],
     )]
-    public function add(Request $request, ProductRepository $productRepository, CartService $cartService): Response
+    public function add(Request $request, ProductsService $productsService, CartService $cartService): Response
     {
-        $params = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (null === $params['id']) {
             return new JsonResponse('prodID is missing in request', Response::HTTP_BAD_REQUEST);
         }
@@ -78,7 +78,7 @@ final class CartApiController extends AbstractController
         try {
             $prodId = (int)$params['id'];
 
-            $product = $productRepository->find($prodId);
+            $product = $productsService->byId($prodId);
             if (null === $product) {
                 return $this->json(
                     [

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Repository\SubscriptionPlanCartItemRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;

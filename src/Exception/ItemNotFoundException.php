@@ -7,7 +7,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-class ItemNotFoundException extends Exception
+final class ItemNotFoundException extends Exception
 {
     public function __construct(string $message = '', int $code = 404, ?Throwable $throwable = null)
     {

@@ -9,7 +9,7 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class SubscriptionPlanVoter extends Voter
+final class SubscriptionPlanVoter extends Voter
 {
     final public const ADD_TO_CART = 'ADD_TO_CART';
 
@@ -18,9 +18,7 @@ class SubscriptionPlanVoter extends Voter
         return self::ADD_TO_CART === $attribute && $subject instanceof SubscriptionPlanCartItem;
     }
 
-    /**
-     * @param SubscriptionPlanCartItem $subject
-     */
+    /** @param SubscriptionPlanCartItem $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

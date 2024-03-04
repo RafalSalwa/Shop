@@ -10,12 +10,11 @@ use App\Exception\ProductStockDepletedException;
 use App\Factory\CartItemFactory;
 use App\Manager\CartManager;
 use App\Requests\CartAddJsonRequest;
-use App\Security\Voter\CartAddVoter;
+use App\Security\Voter\AddToCartVoter;
 use App\Security\Voter\CartItemVoter;
-use App\Service\CartCalculator;
+use App\Service\CartCalculatorService;
 use App\Service\CartService;
 use App\Service\ProductStockService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +29,7 @@ use function dd;
 /** @see \App\Tests\Integration\CartControllerTest */
 #[asController]
 #[Route(path: '/cart', name: 'cart_')]
-final class CartController extends AbstractController
+final class CartController extends AbstractShopController
 {
     #[Route(path: '/add/{type}/{id}/{quantity}', name: 'add')]
     public function addToCart(
@@ -43,7 +42,7 @@ final class CartController extends AbstractController
     ): RedirectResponse {
         try {
             $item = $cartItemFactory->create($type, $id);
-            $this->denyAccessUnlessGranted(CartAddVoter::ADD_TO_CART, $item);
+            $this->denyAccessUnlessGranted(AddToCartVoter::ADD_TO_CART, $item);
 
             $cartService->add($item, $quantity);
         } catch (Throwable $throwable) {
@@ -120,7 +119,7 @@ final class CartController extends AbstractController
     }
 
     #[Route(path: '/', name: 'index')]
-    public function show(CartManager $cartManager, CartCalculator $cartCalculator): Response
+    public function show(CartManager $cartManager, CartCalculatorService $cartCalculator): Response
     {
         $cart = $cartManager->getCurrentCart();
         $payment = $cartCalculator->calculatePayment($cart);

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Repository\SubscriptionPlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -18,7 +20,6 @@ use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
-
 use function bcdiv;
 use function bcmul;
 use function sprintf;
@@ -76,13 +77,6 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime|null $deletedAt = null;
 
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
     public function getDescription(): string|null
     {
         return $this->description;
@@ -116,6 +110,13 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->unitPrice;
     }
 
+    public function getTaxedPrice(): string
+    {
+        $taxedPrice = bcmul((string) $this->getUnitPrice(), '1.23');
+
+        return bcdiv($taxedPrice, '100', 2);
+    }
+
     public function getUnitPrice(): int
     {
         return $this->unitPrice;
@@ -126,13 +127,6 @@ class SubscriptionPlan implements CartInsertableInterface
         $this->unitPrice = $unitPrice;
 
         return $this;
-    }
-
-    public function getTaxedPrice(): string
-    {
-        $taxedPrice = bcmul((string) $this->getUnitPrice(), '1.23');
-
-        return bcdiv($taxedPrice, '100', 2);
     }
 
     public function getTier(): int
@@ -219,6 +213,13 @@ class SubscriptionPlan implements CartInsertableInterface
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getId(): int

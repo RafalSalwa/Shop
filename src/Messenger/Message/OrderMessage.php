@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Message;
+namespace App\Messenger\Message;
 
-class OrderMessage
+final class OrderMessage
 {
     public function __construct(private readonly int $orderId)
     {}

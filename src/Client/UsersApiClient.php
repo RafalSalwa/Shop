@@ -4,22 +4,30 @@ declare(strict_types=1);
 
 namespace App\Client;
 
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
+use App\Exception\AuthApiErrorFactory;
+use App\Exception\AuthApiRuntimeException;
 use App\Model\User;
+use App\Service\SubscriptionService;
 use App\ValueObject\Token;
+use JsonException;
+use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
-use function dd;
 use function json_decode;
+use const JSON_THROW_ON_ERROR;
 
 final readonly class UsersApiClient implements ShopUserProviderInterface
 {
-    public function __construct(private HttpClientInterface $usersApi)
-    {}
+    public function __construct(
+        private HttpClientInterface $usersApi,
+        private LoggerInterface $logger,
+        private SubscriptionService $subscriptionService,
+    ) {
+    }
 
     public function loadUserByIdentifier(string $identifier): ShopUserInterface
     {
@@ -34,19 +42,27 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
                 '/user',
                 ['auth_bearer' => $token->value()],
             );
-            $arrContent = json_decode($response->getContent(throw: true), true);
+            $arrContent = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
 
-            return new User(
+            $user = new User(
                 id: $arrContent['user']['id'],
                 email: $arrContent['user']['email'],
                 authCode: $arrContent['user']['verification_token'],
                 token: $arrContent['user']['token'],
                 refreshToken: $arrContent['user']['refresh_token'],
             );
-        } catch (
-            ClientExceptionInterface | JsonException | RedirectionExceptionInterface | ServerExceptionInterface | Throwable | TransportExceptionInterface $e
-        ) {
-            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
+            $subscription = $this->subscriptionService->find($user->getId());
+            $user->setSubscription($subscription);
+
+            return $user;
+        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+            $this->logger->error($exception->getMessage());
+
+            throw AuthApiErrorFactory::create($exception);
+        } catch (TransportExceptionInterface | JsonException $exception) {
+            $this->logger->error($exception->getMessage());
+
+            throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);
         }
     }
 
@@ -57,11 +73,11 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
 
     public function refreshUser(ShopUserInterface $user): ShopUserInterface
     {
-        if (false === $user->getToken()->isExpired()) {
-            return $this->getUser($user->getToken());
+        if (true === $user->getToken()->isExpired()) {
+            $user = $this->getUser($user->getRefreshToken());
         }
 
-        return $this->getUser($user->getRefreshToken());
+        return $this->getUser($user->getToken());
     }
 
     public function supportsClass(string $class): void

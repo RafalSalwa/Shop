@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-class CartAddService
+final class CartAddService
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,

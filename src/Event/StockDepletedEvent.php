@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Entity\StockManageableInterface;
+use App\Entity\Contracts\StockManageableInterface;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class StockDepletedEvent extends Event
+final class StockDepletedEvent extends Event
 {
     private array $arrProd = [];
 

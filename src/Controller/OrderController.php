@@ -7,12 +7,10 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Form\PaymentType;
-use App\Repository\OrderRepository;
 use App\Service\CartService;
 use App\Service\OrderService;
 use App\Service\PaymentService;
-use App\Service\TaxCalculator;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Service\TaxCalculatorService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -21,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 
 #[asController]
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
-final class OrderController extends AbstractController
+final class OrderController extends AbstractShopController
 {
     #[Route(path: '/create/', name: 'create_pending')]
     public function createPendingOrder(
@@ -95,13 +93,9 @@ final class OrderController extends AbstractController
     }
 
     #[Route(path: '/summary/{id}', name: 'summary')]
-    public function summaryOrder(
-        int $id,
-        OrderRepository $orderRepository,
-        OrderService $orderService,
-        TaxCalculator $taxCalculator,
-    ): Response {
-        $order = $orderRepository->fetchOrderDetails($id);
+    public function summaryOrder(int $id, OrderService $orderService, TaxCalculatorService $taxCalculator): Response
+    {
+        $order = $orderService->fetchOrderDetails($id);
 
         $orderService->proceedSubscriptionsIfAny($order);
         $orderService->deserializeOrderItems($order);
@@ -115,9 +109,9 @@ final class OrderController extends AbstractController
     }
 
     #[Route(path: '/orders/{page<\d+>}', name: 'index')]
-    public function index(int $page, #[CurrentUser] User $user, OrderRepository $orderRepository): Response
+    public function index(int $page, #[CurrentUser] User $user, OrderService $service): Response
     {
-        $orders = $orderRepository->fetchOrders($user, $page);
+        $orders = $service->fetchOrders($user, $page);
 
         return $this->render(
             'order/index.html.twig',
@@ -126,9 +120,9 @@ final class OrderController extends AbstractController
     }
 
     #[Route(path: '/{id<\d+>}', name: 'details')]
-    public function show(int $id, OrderRepository $orderRepository, OrderService $orderService): Response
+    public function show(int $id, OrderService $orderService): Response
     {
-        $order = $orderRepository->fetchOrderDetails($id);
+        $order = $orderService->fetchOrderDetails($id);
         $orderService->deserializeOrderItems($order);
 
         return $this->render(

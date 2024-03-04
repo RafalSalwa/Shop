@@ -6,20 +6,19 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
-use App\Repository\AddressRepository;
-use App\Service\CartCalculator;
+use App\Service\AddressService;
+use App\Service\CartCalculatorService;
 use App\Service\CartService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[asController]
-#[Route(path: '/cart/checkout', name: 'checkout_')]
-final class CartCheckoutController extends AbstractController
+#[Route(path: '/cart/checkout', name: 'checkout_', methods: ['GET', 'POST'])]
+final class CartCheckoutController extends AbstractShopController
 {
-    #[Route('/', name: 'index')]
+    #[Route(path: '/', name: 'index', methods: ['GET'])]
     public function index(): Response
     {
         return $this->render(
@@ -28,12 +27,12 @@ final class CartCheckoutController extends AbstractController
         );
     }
 
-    #[Route('/shipment', name: 'shipment')]
+    #[Route(path: '/shipment', name: 'shipment', methods: ['GET', 'POST'])]
     public function shipment(
         Request $request,
         CartService $cartService,
-        CartCalculator $cartCalculator,
-        AddressRepository $addressRepository,
+        CartCalculatorService $cartCalculator,
+        AddressService $addressService,
     ): Response {
         $user = $this->getUser();
 
@@ -45,7 +44,7 @@ final class CartCheckoutController extends AbstractController
             $address = $form->getData();
             $user->addDeliveryAddress($address);
             $address->setUser($user);
-            $addressRepository->save($address);
+            $addressService->save($address);
         }
 
         return $this->render(
