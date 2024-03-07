@@ -101,12 +101,8 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this;
     }
 
-    public function getPrice(bool $userFriendly = false): float|int
+    public function getPrice(): int
     {
-        if ($userFriendly) {
-            return $this->unitPrice / 100;
-        }
-
         return $this->unitPrice;
     }
 

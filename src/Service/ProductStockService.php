@@ -4,78 +4,87 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\StockManageableInterface;
-use App\Entity\Product;
+use App\Enum\StockOperation;
 use App\Event\StockDepletedEvent;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function is_subclass_of;
 
-final class ProductStockService
+final readonly class ProductStockService
 {
     public function __construct(
-        private readonly LockFactory $productLockFactory,
-        private readonly ProductRepository $productRepository,
-        private readonly EventDispatcherInterface $eventDispatcher,
+        private LockFactory $productLockFactory,
+        private ProductRepository $productRepository,
+        private EventDispatcherInterface $eventDispatcher,
     ) {}
 
     /** @throws ProductStockDepletedException */
     public function checkStockIsAvailable(CartItemInterface $cartItem): void
     {
-        $cartInsertable = $cartItem->getReferenceEntity();
-        if ($cartInsertable instanceof StockManageableInterface && 0 === $cartInsertable->getUnitsInStock()) {
+        $referencedEntity = $cartItem->getReferencedEntity();
+        if (        true === is_subclass_of($referencedEntity, StockManageableInterface::class)
+            && 0 === $referencedEntity->getUnitsInStock()
+        ) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     */
     public function restoreStock(CartItemInterface $cartItem): void
     {
-        $this->changeStock($cartItem, Product::STOCK_INCREASE, $cartItem->getQuantity());
-    }
-
-    /** @psalm-param Product::STOCK_* $operation */
-    public function changeStock(CartItemInterface $cartItem, string $operation, int $qty): void
-    {
-        $cartInsertable = $cartItem->getReferencedEntity();
-        if (! $cartInsertable instanceof StockManageableInterface) {
+        $referencedEntity = $cartItem->getReferencedEntity();
+        if (false === is_subclass_of($referencedEntity, StockManageableInterface::class)) {
             return;
         }
 
+        $this->changeStock($referencedEntity, StockOperation::Increase, $cartItem->getQuantity());
+    }
+
+    /**
+     * @throws ProductStockDepletedException
+     */
+    public function changeStock(StockManageableInterface $entity, StockOperation $operation, int $quantity): void
+    {
         match ($operation) {
-            Product::STOCK_DECREASE => $this->decrease($cartInsertable, $qty),
-            Product::STOCK_INCREASE => $this->increase($cartInsertable, $qty)
+            StockOperation::Decrease => $this->decrease($entity, $quantity),
+            StockOperation::Increase => $this->increase($entity, $quantity),
         };
     }
 
     /** @throws ProductStockDepletedException */
-    private function decrease(CartInsertableInterface $cartInsertable, int $qty): void
+    private function decrease(StockManageableInterface $entity, int $qty): void
     {
         $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
         $sharedLock->acquire(true);
 
-        if (0 === $cartInsertable->getUnitsInStock()) {
+        if (0 === $entity->getUnitsInStock()) {
             throw new ProductStockDepletedException();
         }
 
-        if (1 === $cartInsertable->getUnitsInStock()) {
-            $stockDepletedEvent = new StockDepletedEvent($cartInsertable);
+        if (1 === $entity->getUnitsInStock()) {
+            $stockDepletedEvent = new StockDepletedEvent($entity);
             $this->eventDispatcher->dispatch($stockDepletedEvent);
         }
-
-        $this->productRepository->decreaseQty($cartInsertable, $qty);
+        $newQty = $entity->getUnitsInStock() - $qty;
+        $this->productRepository->updateStock($entity, $newQty);
 
         $sharedLock->release();
     }
 
-    private function increase(CartInsertableInterface $cartInsertable, int $qty): void
+    private function increase(StockManageableInterface $entity, int $qty): void
     {
-        $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
+        $sharedLock = $this->productLockFactory->createLock('product-stock_increase');
         $sharedLock->acquire(true);
 
-        $this->productRepository->increaseQty($cartInsertable, $qty);
+        $newQty = $entity->getUnitsInStock() - $qty;
+        $this->productRepository->updateStock($entity, $newQty);
+
         $sharedLock->release();
     }
 }

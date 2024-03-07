@@ -4,31 +4,42 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
-use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use Throwable;
-use function assert;
+use App\Entity\ProductCartItem;
+use App\Enum\CartOperationEnum;
+use App\Exception\InsufficientStockException;
+use App\Exception\ItemNotFoundException;
+use App\Service\ProductsService;
+use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use function sprintf;
 
-final class CartItemFactory
+final readonly class CartItemFactory
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly LoggerInterface $logger,
-    ) {}
+        private ProductsService $service,
+        private AuthorizationCheckerInterface $addToCartVoter,
+    ) {
+    }
 
-    public function create(string $entityType, int $id): CartItemInterface
+    /**
+     * @throws ItemNotFoundException
+     * @throws InsufficientStockException
+     * @throws AccessDeniedException
+     */
+    public function create(int $id, int $quantity): CartItemInterface
     {
-        try {
-            $entity = $this->entityManager->getRepository($entityType)
-                ->find($id)
-            ;
-            assert($entity instanceof CartInsertableInterface);
-
-            return $entity->toCartItem();
-        } catch (Throwable $throwable) {
-            $this->logger->error($throwable->getMessage(), $throwable->getTrace());
+        $product = $this->service->byId($id);
+        if (null === $product) {
+            throw new ItemNotFoundException(sprintf('Product #%s not found', $id));
         }
+        if ($product->getUnitsInStock() < $quantity) {
+            throw new InsufficientStockException(sprintf('Product #%s does not have sufficient stock', $id));
+        }
+        if (false === $this->addToCartVoter->isGranted(CartOperationEnum::ADD_TO_CART(), $product)) {
+            throw new AccessDeniedException('Higher subscription required');
+        }
+
+        return new ProductCartItem(referencedEntity: $product, quantity: $quantity);
     }
 }

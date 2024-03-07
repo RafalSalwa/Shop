@@ -1,0 +1,52 @@
+<table class="table table-bordered text-center mb-5">
+    <thead class="bg-secondary text-dark">
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        {% if data_manipulation|default(false) %}
+            <th>Remove</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody class="align-middle items-table-body">
+    {% for item in cart.items %}
+        <tr>
+            <td class="align-middle">
+                <img src="{{ asset('img/product-1.jpg') }}" alt="" style="width: 50px;">
+                {{ item.name|capitalize }}
+            </td>
+            <td class="align-middle">{{ (item.price / 100)|format_currency('USD') }}</td>
+            <td class="align-middle">
+                {% if data_manipulation|default(false) %}
+                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                        <div class="input-group-btn">
+                            <button class="btn btn-sm btn-primary btn-minus">
+                                <i class="fa fa-minus"></i>
+                            </button>
+                        </div>
+                        <input type="text" class="form-control form-control-sm bg-secondary text-center"
+                               value="{{ item.quantity }}">
+                        <div class="input-group-btn">
+                            <button class="btn btn-sm btn-primary btn-plus">
+                                <i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                {% else %}
+                    {{ item.quantity }}
+                {% endif %}
+            </td>
+            <td class="align-middle">{{ (item.totalPrice / 100)|format_currency('USD') }}</td>
+            {% if data_manipulation|default(false) %}
+                <td class="align-middle">
+                    <button class="btn btn-sm btn-primary remove-item" data-item-id="{{ item.id }}">
+                        <i class="fa fa-times"></i>
+                    </button>
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>

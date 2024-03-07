@@ -23,7 +23,7 @@ final class ProductsService
         return $this->productRepository->find($prodId);
     }
 
-    public function find(int $id)
+    public function find(int $id): ?Product
     {
         return $this->productRepository->find($id);
     }

@@ -13,6 +13,11 @@ use function assert;
 #[asController]
 abstract class AbstractShopController extends AbstractController
 {
+    protected function getUserId(): int
+    {
+        return $this->getShopUser()->getId();
+    }
+
     protected function getShopUser(): ShopUserInterface
     {
         $user = $this->getUser();

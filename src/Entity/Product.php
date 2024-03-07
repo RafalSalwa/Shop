@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\StockManageableInterface;
 use App\Repository\ProductRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -69,14 +68,14 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->category;
     }
 
-    public function grossPrice(): string
+    public function getGrossPrice(): string
     {
         $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
 
         return bcdiv($taxedPrice, '100', 2);
     }
 
-    public function getPrice(): float|int
+    public function getPrice(): int
     {
         return $this->price;
     }
@@ -130,16 +129,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this;
     }
 
-    public function toCartItem(): CartItem
+    public function toCartItem(): AbstractCartItem
     {
-        $productCartItem = new ProductCartItem();
-        $productCartItem
-            ->setQuantity(1)
-            ->setReferencedEntity($this)
-            ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
 
-        return $productCartItem;
     }
 
     public function decreaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface

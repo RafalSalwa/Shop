@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cart checkout{% endblock %}
+
+{% block body %}
+    <!-- Checkout Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <div id="order-details">
+                    {% include 'cart/partials/items-list.html.twig' %}
+
+                    <div class="col-12 px-2">
+                        <div class="row">
+                            {% include 'cart/partials/_delivery_address_list.html.twig' %}
+                        </div>
+                    </div>
+
+                    <div class="border-secondary bg-transparent col-lg-4 px-xl-0">
+                        <div id="address-add">
+                            <button class="btn btn-lg btn-block btn-primary font-weight-medium my-3 py-3">
+                                Add Delivery Address
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="address-form" style="display: none;">
+                    {% include 'cart/partials/_address_form.html.twig' with {'form': form} %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                {% include 'cart/partials/_order_total.html.twig' with {'summary': summary} %}
+                {% include'cart/partials/_payment.html.twig' %}
+                <div class="card-footer border-secondary bg-transparent">
+                    <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3">Place Order</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#address-add').click(function () {
+                const $row = $(this).closest('#order-details');
+
+                $row.fadeOut('fast', function (row) {
+                    $(row).slideUp();
+                    $('#address-form').slideDown();
+                });
+            });
+        });
+    </script>
+{% endblock %}

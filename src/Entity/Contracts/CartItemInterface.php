@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity\Contracts;
 
 use App\Entity\Cart;
-use DateTimeInterface;
 
 interface CartItemInterface
 {
@@ -17,7 +16,7 @@ interface CartItemInterface
     /**
      * Get identifier of the base entity that is added.
      */
-    public function getReferencedEntity(): CartInsertableInterface;
+    public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface;
 
     /**
      * Get the name or description of the cart item.
@@ -25,24 +24,14 @@ interface CartItemInterface
     public function getName(): string;
 
     /**
-     * Get the type of the cart item (e.g., "product" or "subscription").
-     */
-    public function getType(): string;
-
-    /**
-     * Get the type name of the cart item (e.g., "product" or "subscription").
-     */
-    public function getTypeName(): string;
-
-    /**
-     * Get the human-readable type name for frontend.
-     */
-    public function getDisplayName(): string;
-
-    /**
      * Get the price of one unit of the cart item.
      */
-    public function getPrice(): float;
+    public function getPrice(): string;
+
+    /**
+     * Calculate the total price for the cart item based on quantity.
+     */
+    public function getTotalPrice(): string;
 
     /**
      * Get the quantity of the cart item.
@@ -50,23 +39,18 @@ interface CartItemInterface
     public function getQuantity(): int;
 
     /**
-     * Get identifier of the base entity that is added.
+     * @return string
+     * Determines which Entity was used For this item (i.e. Product,subscription)
      */
-    public function setReferencedEntity(CartInsertableInterface $cartInsertable): self;
+    public function getItemType(): string;
 
     /**
-     * Set the quantity of the cart item.
+     * Assign cart for Item
      */
-    public function setQuantity(int $quantity): self;
+    public function setCart(Cart $cart): void;
 
     /**
-     * Calculate the total price for the cart item based on quantity.
+     * Instead of add/substract qty, we will update property with new value.
      */
-    public function getTotalPrice(): float;
-
-    public function setCart(Cart $cart): self;
-
-    public function getReferenceEntity(): CartInsertableInterface;
-
-    public function setCreatedAt(DateTimeInterface $createdAt): self;
+    public function updateQuantity(int $quantity): void;
 }

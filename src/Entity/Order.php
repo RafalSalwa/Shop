@@ -110,13 +110,9 @@ class Order
         $this->userId = $userId;
     }
 
-    public function getAmount(bool $userFriendly = false): float|int
+    public function getAmount(): string
     {
-        if ($userFriendly) {
-            return ($this->amount / 100);
-        }
-
-        return $this->amount;
+        return (string)$this->amount;
     }
 
     public function setAmount(int $amount): self

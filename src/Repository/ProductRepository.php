@@ -24,32 +24,20 @@ final class ProductRepository extends ServiceEntityRepository
             ->innerJoin('p.subscriptionPlan', 's')
             ->where('p.unitsInStock > 0')
             ->orderBy('s.tier', 'ASC')
+            ->addOrderBy('p.unitsInStock', 'DESC')
         ;
 
         return (new Paginator($queryBuilder))->paginate($page);
     }
 
-    public function decreaseQty(StockManageableInterface $stockManageable, int $qty): void
+    public function updateStock(StockManageableInterface $entity, int $qty): void
     {
         $this
             ->createQueryBuilder('p')
             ->update($this->getEntityName(), 'p')
-            ->set('p.unitsInStock', $stockManageable->getUnitsInStock() - $qty)
+            ->set('p.unitsInStock', $qty)
             ->where('p.id = :id')
-            ->setParameter('id', $stockManageable->getId())
-            ->getQuery()
-            ->execute()
-        ;
-    }
-
-    public function increaseQty(StockManageableInterface $stockManageable, int $qty): void
-    {
-        $this
-            ->createQueryBuilder('p')
-            ->update($this->getEntityName(), 'p')
-            ->set('p.unitsInStock', $stockManageable->getUnitsInStock() + $qty)
-            ->where('p.id = :id')
-            ->setParameter('id', $stockManageable->getId())
+            ->setParameter('id', $entity->getId())
             ->getQuery()
             ->execute()
         ;

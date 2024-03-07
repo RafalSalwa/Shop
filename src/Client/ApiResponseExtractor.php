@@ -13,6 +13,6 @@ final class ApiResponseExtractor
     {
         $content = json_decode($response->getContent(throw: false), true);
 
-        return $content['message'];
+        return $content['message'] ?? $content['reason'] ?? '';
     }
 }

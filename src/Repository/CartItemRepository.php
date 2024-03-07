@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\CartItem;
+use App\Entity\AbstractCartItem;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -12,7 +12,7 @@ final class CartItemRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
-        parent::__construct($managerRegistry, CartItem::class);
+        parent::__construct($managerRegistry, AbstractCartItem::class);
     }
 
     public function exists(): void

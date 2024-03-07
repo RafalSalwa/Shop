@@ -6,6 +6,8 @@ namespace App\Entity\Contracts;
 
 interface StockManageableInterface
 {
+    public function getId(): int;
+
     public function decreaseStock(self $product, int $quantity): self;
 
     public function increaseStock(self $product, int $quantity): self;

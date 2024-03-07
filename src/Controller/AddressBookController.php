@@ -6,18 +6,31 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
-use App\Service\AddressService;
+use App\Service\AddressBookService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[asController]
-#[Route(path: '/delivery', name: 'delivery_', methods: ['POST'])]
-final class CartDeliveryAddressController extends AbstractShopController
+#[Route(path: '/addressbook', name: 'addressbook_', methods: ['GET', 'POST'])]
+#[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
+final class AddressBookController extends AbstractShopController
 {
-    #[Route(path: '/address/new', name: 'address_new')]
-    public function add(Request $request, AddressService $service): Response
+    #[Route(path: '/', name: 'index')]
+    public function index(Request $request, AddressBookService $service): Response
+    {
+        return $this->render(
+            'addressbook/index.html.twig',
+            [
+                'deliveryAddresses' => $service->getDeliveryAddresses($this->getShopUser()->getId()),
+            ],
+        );
+    }
+
+    #[Route(path: '/address/new', name: 'new')]
+    public function add(Request $request, AddressBookService $service): Response
     {
         $user = $this->getShopUser();
 

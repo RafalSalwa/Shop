@@ -59,6 +59,8 @@ parameters:
                 - Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator
                 - Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
                 - Symfony\Component\Security\Core\Authorization\Voter\Voter
+                - Exception
+                - AbstractCartItem
 
 includes:
     # https://github.com/symplify/phpstan-rules

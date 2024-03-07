@@ -23,7 +23,7 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
 
     private ?Token $refreshToken = null;
 
-    private string $authCode;
+    private readonly string $authCode;
 
     private Subscription $subscription;
 
@@ -143,11 +143,6 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     public function getEmail(): string
     {
         return $this->email->toString();
-    }
-
-    public function setEmail(EmailAddress $email): void
-    {
-        $this->email = $email;
     }
 
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9c38beaa76b053bc66cfb7340f7c7c0e",
+    "content-hash": "8a044711489c588b21cf6d3af20d2538",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -18610,48 +18610,6 @@
             "time": "2024-03-03T12:32:31+00:00"
         },
         {
-            "name": "rector/swiss-knife",
-            "version": "0.1.12",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/rectorphp/swiss-knife.git",
-                "reference": "9d10d85beb41dcb41bf3e77febd85745b7dab62d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/swiss-knife/zipball/9d10d85beb41dcb41bf3e77febd85745b7dab62d",
-                "reference": "9d10d85beb41dcb41bf3e77febd85745b7dab62d",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "bin": [
-                "bin/swiss-knife"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Swiss knife in pocket of every upgrade architect",
-            "support": {
-                "issues": "https://github.com/rectorphp/swiss-knife/issues",
-                "source": "https://github.com/rectorphp/swiss-knife/tree/0.1.12"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/rectorphp",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-02-20T08:21:33+00:00"
-        },
-        {
             "name": "roave/security-advisories",
             "version": "dev-latest",
             "source": {
@@ -21767,48 +21725,6 @@
                 }
             ],
             "time": "2024-02-23T13:07:31+00:00"
-        },
-        {
-            "name": "symplify/easy-ci",
-            "version": "12.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symplify/easy-ci.git",
-                "reference": "bec2c4cc5fc6b5179b056691da8142a94bf0c2ab"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symplify/easy-ci/zipball/bec2c4cc5fc6b5179b056691da8142a94bf0c2ab",
-                "reference": "bec2c4cc5fc6b5179b056691da8142a94bf0c2ab",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2"
-            },
-            "bin": [
-                "bin/easy-ci"
-            ],
-            "type": "library",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Toolkit of commands that should not be missed in you CI",
-            "support": {
-                "issues": "https://github.com/symplify/easy-ci/issues",
-                "source": "https://github.com/symplify/easy-ci/tree/12.1.0"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/rectorphp",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-02-08T10:49:49+00:00"
         },
         {
             "name": "symplify/easy-coding-standard",

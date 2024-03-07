@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Entity\AccessToken as AccessTokenEntity;
+use App\Model\AccessToken as AccessTokenEntity;
 use League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository as BaseAccessTokenRepository;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
@@ -16,16 +16,11 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
     public function __construct(private BaseAccessTokenRepository $baseAccessTokenRepository)
     {}
 
-    /**
-     * @param ClientEntityInterface $clientEntity
-     * @param array|ScopeEntityInterface[] $scopes
-     * @param string|null $userIdentifier
-     * @return AccessTokenEntity
-     */
+    /** @param array<ScopeEntityInterface> $scopes */
     public function getNewToken(
         ClientEntityInterface $clientEntity,
         array $scopes,
-        $userIdentifier = null,
+        ?string $userIdentifier = null,
     ): AccessTokenEntity {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);

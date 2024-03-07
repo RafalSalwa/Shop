@@ -10,7 +10,7 @@ interface CartInsertableInterface
 
     public function toCartItem(): CartItemInterface;
 
-    public function getPrice(): float|int;
+    public function getPrice(): int;
 
     public function getName(): string;
 }

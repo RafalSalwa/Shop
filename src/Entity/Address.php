@@ -39,6 +39,9 @@ class Address
     #[Column(name: 'address_line_2', type: Types::STRING, length: 40, nullable: true)]
     private string|null $addressLine2 = null;
 
+    #[Column(name: 'phone_no', type: Types::STRING, length: 12, nullable: true)]
+    private string $phoneNo;
+
     #[Assert\NotBlank]
     #[Column(name: 'city', type: Types::STRING, length: 40)]
     private string $city;
@@ -51,6 +54,9 @@ class Address
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
     private string $postalCode;
 
+    #[Column(name: 'country', type: Types::STRING, length: 40)]
+    private string $country;
+
     #[Column(name: 'user_id', type: Types::INTEGER)]
     private int $userId;
 
@@ -59,11 +65,9 @@ class Address
         return $this->firstName;
     }
 
-    public function setFirstName(string $firstName): self
+    public function setFirstName(string $firstName): void
     {
         $this->firstName = $firstName;
-
-        return $this;
     }
 
     public function getLastName(): string
@@ -71,11 +75,10 @@ class Address
         return $this->lastName;
     }
 
-    public function setLastName(string $lastName): self
+    public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
 
-        return $this;
     }
 
     public function getAddressLine1(): string
@@ -83,11 +86,9 @@ class Address
         return $this->addressLine1;
     }
 
-    public function setAddressLine1(string $addressLine1): self
+    public function setAddressLine1(string $addressLine1): void
     {
         $this->addressLine1 = $addressLine1;
-
-        return $this;
     }
 
     public function getAddressLine2(): string|null
@@ -95,11 +96,19 @@ class Address
         return $this->addressLine2;
     }
 
-    public function setAddressLine2(string $addressLine2): self
+    public function setAddressLine2(string $addressLine2): void
     {
         $this->addressLine2 = $addressLine2;
+    }
 
-        return $this;
+    public function getPhoneNo(): string
+    {
+        return $this->phoneNo;
+    }
+
+    public function setPhoneNo(string $phoneNo): void
+    {
+        $this->phoneNo = $phoneNo;
     }
 
     public function getCity(): string
@@ -107,11 +116,9 @@ class Address
         return $this->city;
     }
 
-    public function setCity(string $city): self
+    public function setCity(string $city): void
     {
         $this->city = $city;
-
-        return $this;
     }
 
     public function getState(): string
@@ -119,11 +126,9 @@ class Address
         return $this->state;
     }
 
-    public function setState(string $state): self
+    public function setState(string $state): void
     {
         $this->state = $state;
-
-        return $this;
     }
 
     public function getPostalCode(): string
@@ -131,11 +136,19 @@ class Address
         return $this->postalCode;
     }
 
-    public function setPostalCode(string $postalCode): self
+    public function setPostalCode(string $postalCode): void
     {
         $this->postalCode = $postalCode;
+    }
 
-        return $this;
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function setCountry(string $country): void
+    {
+        $this->country = $country;
     }
 
     public function getUserId(): int
@@ -153,10 +166,8 @@ class Address
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 }

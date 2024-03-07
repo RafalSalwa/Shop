@@ -34,6 +34,7 @@
         <exclude name="Squiz.ControlStructures.InlineIfDeclaration.NotSingleLine"/>
         <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
         <exclude name="Squiz.PHP.DisallowBooleanStatement.Found"/>
+        <exclude name="Squiz.Formatting.OperatorBracket.MissingBrackets"/>
     </rule>
 
     <rule ref="Generic">

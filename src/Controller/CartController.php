@@ -4,131 +4,91 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\CartItem;
-use App\Exception\ItemNotFoundException;
-use App\Exception\ProductStockDepletedException;
-use App\Factory\CartItemFactory;
-use App\Manager\CartManager;
+use App\Entity\ProductCartItem;
+use App\Exception\Contracts\CartOperationExceptionInterface;
+use App\Exception\Contracts\StockOperationExceptionInterface;
+use App\Handler\ShoppingCartHandler;
 use App\Requests\CartAddJsonRequest;
-use App\Security\Voter\AddToCartVoter;
-use App\Security\Voter\CartItemVoter;
 use App\Service\CartCalculatorService;
 use App\Service\CartService;
-use App\Service\ProductStockService;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Attribute\ValueResolver;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Throwable;
-use function dd;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-/** @see \App\Tests\Integration\CartControllerTest */
 #[asController]
-#[Route(path: '/cart', name: 'cart_')]
+#[Route(path: '/cart', name: 'cart_', methods: ['GET', 'POST', 'DELETE'])]
+#[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class CartController extends AbstractShopController
 {
-    #[Route(path: '/add/{type}/{id}/{quantity}', name: 'add')]
+    #[Route(path: '/add/product/{id}/{quantity}', name: 'add')]
     public function addToCart(
-        #[ValueResolver('cart_item_type')]
-        string $type,
+        Request $request,
         int $id,
         int $quantity,
-        CartService $cartService,
-        CartItemFactory $cartItemFactory,
+        ShoppingCartHandler $cartHandler,
     ): RedirectResponse {
         try {
-            $item = $cartItemFactory->create($type, $id);
-            $this->denyAccessUnlessGranted(AddToCartVoter::ADD_TO_CART, $item);
-
-            $cartService->add($item, $quantity);
-        } catch (Throwable $throwable) {
-            dd($throwable::class, $throwable->getMessage());
+            $cartHandler->add($id, $quantity);
+        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+            $this->addFlash('danger', $exception->getMessage());
         }
 
-        return $this->redirectToRoute(
-            $item->getTypeName() . '_details',
-            ['id' => $id],
-        );
+        return $this->redirect($request->headers->get('referer'));
     }
 
     #[Route(path: '/add', name: 'add_post', methods: ['POST'])]
     public function post(
         #[MapRequestPayload]
         CartAddJsonRequest $cartAddJsonRequest,
-        CartService $cartService,
-        CartItemFactory $cartItemFactory,
-    ): RedirectResponse {
+        ShoppingCartHandler $cartHandler,
+    ): JsonResponse {
         try {
-            $item = $cartItemFactory->create($cartAddJsonRequest->getType(), $cartAddJsonRequest->getId());
-            $this->denyAccessUnlessGranted(CartItemVoter::ADD_TO_CART, $item);
-
-            $cartService->add($item, $cartAddJsonRequest->getQuantity());
-            $this->addFlash('info', 'successfully added ' . $item->getDisplayName() . ' to cart');
-            dd($cartService->getCurrentCart()->getItems());
-        } catch (AccessDeniedException $ade) {
-            dd($ade->getMessage());
-            $this->addFlash(
-                'error',
-                'You cannot add this product to cart with current subscription. Consider upgrade:)',
-            );
-        } catch (Throwable $e) {
-            dd($e->getMessage(), $e->getTraceAsString(), $e->getMessage(), $e->getMessage());
+            $cartHandler->add($cartAddJsonRequest->getId(), $cartAddJsonRequest->getQuantity());
+        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->redirectToRoute(
-            $item->getTypeName() . 's_details',
-            ['id' => $cartAddJsonRequest->getId()],
-        );
+        return $this->json('ok', Response::HTTP_OK);
     }
 
-    #[Route(path: '/remove/{id}', name: 'remove')]
-    public function removeFromCart(
-        CartItem $cartItem,
-        CartService $cartService,
-        ProductStockService $productStockService,
-    ): RedirectResponse {
-        $cart = $cartService->getCurrentCart();
-
+    #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
+    public function removeFromCart(ProductCartItem $cartItem, ShoppingCartHandler $cartHandler): JsonResponse
+    {
         try {
-            $cartService->removeItemIfExists($cartItem);
-            $productStockService->restoreStock($cartItem);
-
-            $cartService->save($cart);
-
-            $this->addFlash('info', 'successfully removed ' . $cartItem->getItemName() . ' from cart');
-        } catch (ItemNotFoundException $pnf) {
-            $this->addFlash('error', $pnf->getMessage());
-        } catch (ProductStockDepletedException $psd) {
-            $this->addFlash('error', $psd->getMessage());
+            $cartHandler->remove($cartItem);
+        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+            $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->redirectToRoute('cart_index');
+        return $this->json('ok');
     }
 
-    #[Route(path: '/set_delivery_address', name: 'delivery_address_set')]
-    public function setDeliveryAddress(Request $request, CartService $cartService): Response
+    #[Route(path: '/coupon/apply', name: 'coupon_apply', methods: ['POST'])]
+    public function addCoupon(Request $request, ShoppingCartHandler $cartHandler): Response
     {
-        $deliveryAddressId = $request->request->get('addrId');
-        $cartService->useDefaultDeliveryAddress($deliveryAddressId);
+        try {
+            $couponCode = $request->request->get('coupon');
+            $cartHandler->applyCouponCode($couponCode);
+        } catch (CartOperationExceptionInterface $exception) {
+            $this->addFlash('info', $exception->getMessage());
+        }
 
-        return new Response('ok');
+        return new RedirectResponse($this->generateUrl('cart_index'));
     }
 
-    #[Route(path: '/', name: 'index')]
-    public function show(CartManager $cartManager, CartCalculatorService $cartCalculator): Response
+    #[Route(path: '/', name: 'index', methods: ['GET'])]
+    public function show(CartService $cartService, CartCalculatorService $cartCalculator): Response
     {
-        $cart = $cartManager->getCurrentCart();
-        $payment = $cartCalculator->calculatePayment($cart);
-
         return $this->render(
             'cart/index.html.twig',
             [
-                'cart' => $cart,
-                'payment' => $payment,
+                'cart' => $cartService->getCurrentCart(),
+                'summary' => $cartCalculator->calculateSummary(),
             ],
         );
     }

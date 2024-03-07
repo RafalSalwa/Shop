@@ -7,7 +7,6 @@ when@dev:
   monolog:
     handlers:
       main:
-        formatter: App\Formatter\CustomLineFormatter
         type: stream
         path: php://stderr
         level: debug
