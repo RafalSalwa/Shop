@@ -8,7 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class DecisionType extends AbstractType
+final class DecisionType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {

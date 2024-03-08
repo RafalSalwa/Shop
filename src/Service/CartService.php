@@ -4,23 +4,20 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\AbstractCartItem;
 use App\Entity\Cart;
-use App\Entity\CartItem;
-use App\Entity\CartItemInterface;
-use App\Entity\Product;
-use App\Entity\ProductCartItem;
-use App\Entity\SubscriptionPlanCartItem;
+use App\Entity\Contracts\CartItemInterface;
+use App\Entity\Contracts\StockManageableInterface;
+use App\Enum\CartStatus;
+use App\Enum\StockOperation;
 use App\Exception\ItemNotFoundException;
-use App\Exception\TooManySubscriptionsException;
+use App\Exception\ProductStockDepletedException;
 use App\Factory\CartFactory;
-use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
+use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\Lock\LockFactory;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Throwable;
-use function dd;
+use function is_subclass_of;
 
 final readonly class CartService
 {
@@ -28,19 +25,21 @@ final readonly class CartService
         private CartSessionStorage $cartSessionStorage,
         private CartFactory $cartFactory,
         private EntityManagerInterface $entityManager,
-        private CartItemFactory $cartItemFactory,
-        private ProductStockService $productStockService,
+        private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
-        private LoggerInterface $logger,
     ) {
     }
 
+    /**
+     * @throws ItemNotFoundException
+     * @throws ProductStockDepletedException
+     */
     public function clearCart(): void
     {
         $cart = $this->getCurrentCart();
         foreach ($cart->getItems() as $item) {
             $cart->removeItem($item);
-            $this->productStockService->restoreStock($item);
+            $this->stockService->restoreStock($item);
             $this->save($cart);
         }
 
@@ -51,9 +50,11 @@ final readonly class CartService
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (! $cart instanceof Cart) {
+        if (null === $cart) {
             $cart = $this->cartFactory->create();
+            $this->save($cart);
         }
+
         return $cart;
     }
 
@@ -65,91 +66,52 @@ final readonly class CartService
         if (! $cart instanceof Cart) {
             $cart = $this->getCurrentCart();
         }
-
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
         $this->cartSessionStorage->setCart($cart);
     }
 
+    /** @throws ItemNotFoundException */
+    public function removeItem(AbstractCartItem $cartItem): void
+    {
+        $cart = $this->getCurrentCart();
+        if (false === $cart->itemExists($cartItem)) {
+            throw new ItemNotFoundException('Item already removed');
+        }
+
+        $cart->removeItem($cartItem);
+    }
+
     public function confirmCart(): void
     {
         $cart = $this->getCurrentCart();
-        $cart->setStatus(Cart::STATUS_CONFIRMED);
+        $cart->setStatus(CartStatus::CONFIRMED);
 
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
     }
 
-    public function useDefaultDeliveryAddress(int $deliveryAddressId): void
+    /** @throws ProductStockDepletedException|ItemNotFoundException */
+    public function add(CartItemInterface $cartItem): void
     {
-        $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
-    }
+        $lock = $this->cartLockFactory->createLock('cart_item_add');
+        $lock->acquire(true);
 
-    public function getDefaultDeliveryAddressId(): ?int
-    {
-        return $this->cartSessionStorage->getDeliveryAddressId();
-    }
-
-    public function addProduct(Product $product): void
-    {
         $cart = $this->getCurrentCart();
-        $cartItem = $this->makeCartItem($product);
-        $this->productStockService->changeStock($product, Product::STOCK_DECREASE, 1);
-
+        $this->stockService->checkStockIsAvailable($cartItem);
         $cart->addItem($cartItem);
 
+        if (true === is_subclass_of($cartItem, StockManageableInterface::class)) {
+            $this->stockService->changeStock($cartItem, StockOperation::Decrease, $cartItem->getQuantity());
+        }
         $this->save($cart);
+        $lock->release();
     }
 
-    public function makeCartItem(object $entity): CartItem|ProductCartItem|SubscriptionPlanCartItem
-    {
-        return $this->cartItemFactory->create($entity);
-    }
-
-    public function add(CartItemInterface $cartItem, int $quantity): void
-    {
-        try {
-            $lock = $this->cartLockFactory->createLock('cart_item_add');
-            $lock->acquire(true);
-
-            $this->productStockService->checkStockIsAvailable($cartItem);
-
-            $this->checkSubscriptionsCount($cartItem);
-
-            $cart = $this->getCurrentCart();
-            $cart->addItem($cartItem);
-            $this->save($cart);
-
-            $this->productStockService->changeStock($cartItem, Product::STOCK_DECREASE, $quantity);
-
-            $lock->release();
-        } catch (Throwable $e) {
-            $this->logger->error($e->getMessage(), $e->getTrace());
-        } catch (ItemNotFoundException|AccessDeniedException) {
-        } catch (Throwable $e) {
-            dd($e::class, $e->getMessage());
-        }
-    }
-
-    public function checkSubscriptionsCount(CartItemInterface $cartItem): void
+    public function applyCoupon(CouponCode $coupon): void
     {
         $cart = $this->getCurrentCart();
-
-        if ($cartItem instanceof SubscriptionPlanCartItem && $cart->itemTypeExists($cartItem)) {
-            throw new TooManySubscriptionsException('You can have only one subscription in cart');
-        }
-    }
-
-    public function removeItemIfExists(CartItem $cartItem): void
-    {
-        $cart = $this->getCurrentCart();
-
-        if (! $cart->getItems()->contains($cartItem)) {
-            return;
-        }
-
-        $cart->getItems()
-            ->removeElement($cartItem);
+        $cart->applyCoupon($coupon);
     }
 }

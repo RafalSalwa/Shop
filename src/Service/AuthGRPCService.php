@@ -14,7 +14,7 @@ use Grpc\ChannelCredentials;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-class AuthGRPCService
+final class AuthGRPCService
 {
     private const GRPC_USER_KEY = 'grpc_user';
 
@@ -86,6 +86,11 @@ class AuthGRPCService
         ;
     }
 
+    private function getSession(): SessionInterface
+    {
+        return $this->requestStack->getSession();
+    }
+
     public function getVcodeFromLastSignUp(): ?string
     {
         $arrUser = $this->getSession()
@@ -133,10 +138,5 @@ class AuthGRPCService
         return $this->getSession()
             ->get(self::GRPC_USER_KEY)
         ;
-    }
-
-    private function getSession(): SessionInterface
-    {
-        return $this->requestStack->getSession();
     }
 }

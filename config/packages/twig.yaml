@@ -2,7 +2,7 @@ twig:
   default_path: '%kernel.project_dir%/templates'
   form_themes: [ 'bootstrap_5_layout.html.twig' ]
   globals:
-    current_cart: '@App\Service\CartService'
+    cartService: '@App\Service\CartService'
     mailer_client_url: '%env(MAILER_CLIENT_URL)%'
 
 when@test:

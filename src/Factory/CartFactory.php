@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Factory;
 
 use App\Entity\Cart;
-use DateTime;
-use DateTimeImmutable;
+use App\Enum\CartStatus;
 use Symfony\Bundle\SecurityBundle\Security;
 
 final readonly class CartFactory
@@ -17,10 +16,8 @@ final readonly class CartFactory
     public function create(): Cart
     {
         $cart = new Cart();
-        $cart->setStatus(Cart::STATUS_CREATED);
+        $cart->setStatus(CartStatus::CREATED);
         $cart->setUserId($this->security->getUser()->getId());
-        $cart->setCreatedAt(new DateTimeImmutable());
-        $cart->setUpdatedAt(new DateTime());
 
         return $cart;
     }

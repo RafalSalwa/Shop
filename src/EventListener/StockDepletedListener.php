@@ -9,7 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-class StockDepletedListener implements EventSubscriberInterface
+final class StockDepletedListener implements EventSubscriberInterface
 {
     public function __construct(private readonly MailerInterface $mailer)
     {}

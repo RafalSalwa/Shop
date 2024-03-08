@@ -6,6 +6,6 @@ namespace App\Exception;
 
 use Exception;
 
-class AuthException extends Exception implements AuthenticationExceptionInterface
+final class AuthException extends Exception implements AuthenticationExceptionInterface
 {
 }

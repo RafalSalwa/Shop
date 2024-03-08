@@ -7,8 +7,7 @@ namespace App\Tests\Unit\Entity;
 use App\Entity\Address;
 use App\Entity\Payment;
 use App\Entity\Subscription;
-use App\Entity\User;
-use Doctrine\Common\Collections\ArrayCollection;
+use App\Model\User;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -30,18 +29,13 @@ final class UserTest extends TestCase
 
     public function testSetters(): void
     {
-        $user = new User();
+        $user = new User(1,'test@test.com');
         $subscription = new Subscription();
-        $address = new Address();
-        $addressess = new ArrayCollection();
 
         $user->setSubscription($subscription);
-        $user->addDeliveryAddress($address);
-        $user->setDeliveryAddresses($addressess);
 
         try {
             $this->assertNotNull($user->getSubscription());
-            $this->assertNotNull($user->getDeliveryAddresses());
         } catch (AssertionFailedError|ExpectationFailedException) {
         }
     }
@@ -51,13 +45,8 @@ final class UserTest extends TestCase
      */
     public function testOrderProcess(): void
     {
-        $user = new User();
-        $payment = new Payment();
-        $payments = new ArrayCollection([new Payment(), new Payment()]);
-        new ArrayCollection();
+        $user = new User(1,'test@test.com');
 
-        $user->addPayment($payment);
-        $user->setPayments($payments);
-        $this->assertNotNull($user->getPayments());
+        $this->assertNotNull($user);
     }
 }

@@ -16,9 +16,9 @@ use OpenTelemetry\SDK\Metrics\View\CriteriaViewRegistry;
 use OpenTelemetry\SDK\Resource\ResourceInfoFactory;
 use function memory_get_usage;
 
-class BasicMetricsExporter
+final readonly class BasicMetricsExporter
 {
-    public function __construct(private readonly ExportingReader $exportingReader, private readonly ClockInterface $clock)
+    public function __construct(private ExportingReader $exportingReader, private ClockInterface $clock)
     {}
 
     public function generate(): void

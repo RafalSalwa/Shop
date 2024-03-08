@@ -13,7 +13,6 @@ use League\Bundle\OAuth2ServerBundle\Model\Client;
 #[ORM\Entity(repositoryClass: OAuth2UserConsentRepository::class)]
 class OAuth2UserConsent
 {
-    public $user;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,18 +41,6 @@ class OAuth2UserConsent
     public function getId(): int|null
     {
         return $this->id;
-    }
-
-    public function getUser(): User|null
-    {
-        return $this->user;
-    }
-
-    public function setUser(User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
     }
 
     public function getCreated(): DateTimeImmutable|null

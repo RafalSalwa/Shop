@@ -4,29 +4,23 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartInsertableInterface;
 use App\Repository\ProductCartItemRepository;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use JsonSerializable;
-
 use function sprintf;
 
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
-class ProductCartItem extends CartItem implements JsonSerializable, CartItemInterface
+class ProductCartItem extends AbstractCartItem
 {
     #[ManyToOne(targetEntity: Product::class)]
     #[JoinColumn(referencedColumnName: 'product_id')]
-    protected CartInsertableInterface $referenceEntity;
+    protected CartInsertableInterface $referencedEntity;
 
-    public function getType(): string
+    public function __construct(CartInsertableInterface $referencedEntity, int $quantity)
     {
-        return 'product';
-    }
-
-    public function getItemName(): string
-    {
-        return $this->referenceEntity->getName();
+        parent::__construct($referencedEntity, $quantity);
     }
 
     public function jsonSerialize(): mixed
@@ -42,26 +36,6 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
         ];
     }
 
-    public function getReferenceEntity(): CartInsertableInterface
-    {
-        return $this->referenceEntity;
-    }
-
-    public function setReferenceEntity(CartInsertableInterface $cartInsertable): void
-    {
-        $this->referenceEntity = $cartInsertable;
-    }
-
-    public function getTypeName(): string
-    {
-        return 'product';
-    }
-
-    public function getQuantity(): int
-    {
-        return $this->quantity;
-    }
-
     public function getDisplayName(): string
     {
         return sprintf(
@@ -72,36 +46,5 @@ class ProductCartItem extends CartItem implements JsonSerializable, CartItemInte
                 ->getCategory()
                 ->getName(),
         );
-    }
-
-    public function getReferencedEntity(): CartInsertableInterface
-    {
-        return $this->referenceEntity;
-    }
-
-    public function getPrice(): float
-    {
-    }
-
-    public function getTotalPrice(): float
-    {
-    }
-
-    public function setReferencedEntity(CartInsertableInterface $cartInsertable): CartItemInterface
-    {
-        $this->referenceEntity = $cartInsertable;
-
-        return $this;
-    }
-
-    public function toCartItem(): CartItem
-    {
-    }
-
-    public function setQuantity(int $quantity): CartItemInterface
-    {
-        $this->quantity = $quantity;
-
-        return $this;
     }
 }

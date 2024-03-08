@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\ShopUserInterface;
+use App\Entity\Contracts\ShopUserInterface;
 use App\ValueObject\EmailAddress;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\DataMapperInterface;

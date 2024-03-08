@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use function assert;
 use function dd;
 
-class CartItemVoter extends Voter
+final class CartItemVoter extends Voter
 {
     final public const ADD_TO_CART = 'ADD_TO_CART';
 
@@ -22,7 +22,7 @@ class CartItemVoter extends Voter
         return self::ADD_TO_CART === $attribute && $subject instanceof ProductCartItem;
     }
 
-    /** @param \App\Entity\ProductCartItem $subject */
+    /** @param ProductCartItem $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();

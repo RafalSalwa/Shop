@@ -6,10 +6,6 @@ namespace App\Exception;
 
 use Exception;
 
-class UserNotFoundException extends Exception implements AuthenticationExceptionInterface
+final class UserNotFoundException extends Exception implements AuthenticationExceptionInterface
 {
-    public function __construct(string $message = '', int $code = 404, ?Throwable $throwable = null)
-    {
-        parent::__construct($message, $code, $throwable);
-    }
 }

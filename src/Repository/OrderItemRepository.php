@@ -16,9 +16,7 @@ final class OrderItemRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, OrderItem::class);
     }
 
-    /**
-     * @throws NonUniqueResultException
-     */
+    /** @throws NonUniqueResultException */
     public function findById(int $id): mixed
     {
         $queryBuilder = $this->createQueryBuilder('p')

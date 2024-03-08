@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartInsertableInterface;
+use App\Entity\Contracts\StockManageableInterface;
 use App\Repository\ProductRepository;
-use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -23,9 +24,6 @@ use function sprintf;
 #[Table(name: 'products', schema: 'interview')]
 class Product implements CartInsertableInterface, StockManageableInterface
 {
-    final public const STOCK_DECREASE = 'decrease';
-
-    final public const STOCK_INCREASE = 'increase';
 
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
@@ -36,11 +34,8 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[Column(name: 'product_name', type: Types::STRING, length: 40)]
     private readonly string $name;
 
-    #[Column(name: 'supplier_id', type: Types::SMALLINT, nullable: true)]
-    private $supplierId;
-
     #[Column(name: 'category_id', type: Types::SMALLINT, nullable: true)]
-    private $categoryId;
+    private int $categoryId;
 
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
     private string $quantityPerUnit;
@@ -73,14 +68,14 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->category;
     }
 
-    public function grossPrice(): string
+    public function getGrossPrice(): string
     {
         $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
 
         return bcdiv($taxedPrice, '100', 2);
     }
 
-    public function getPrice(): float|int
+    public function getPrice(): int
     {
         return $this->price;
     }
@@ -134,16 +129,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this;
     }
 
-    public function toCartItem(): CartItem
+    public function toCartItem(): AbstractCartItem
     {
-        $productCartItem = new ProductCartItem();
-        $productCartItem
-            ->setQuantity(1)
-            ->setReferencedEntity($this)
-            ->setCreatedAt(new DateTime('now'))
-            ->setUpdatedAt(new DateTime('now'));
 
-        return $productCartItem;
     }
 
     public function decreaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface

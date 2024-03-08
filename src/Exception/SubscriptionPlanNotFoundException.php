@@ -7,7 +7,7 @@ namespace App\Exception;
 use Exception;
 use Throwable;
 
-class SubscriptionPlanNotFoundException extends Exception
+final class SubscriptionPlanNotFoundException extends Exception
 {
     public function __construct(string $message = '', int $code = 404, ?Throwable $throwable = null)
     {

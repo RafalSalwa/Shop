@@ -6,7 +6,7 @@ namespace App\Requests;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class CartAddJsonRequest
+readonly final class CartAddJsonRequest
 {
     public function __construct(
         #[Assert\Type('integer')]

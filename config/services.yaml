@@ -50,12 +50,4 @@ services:
     arguments:
       $entityManager: '@doctrine.orm.entity_manager'
 
-
-  App\Security\Voter\CartAddVoter:
-    tags: [ 'security.voter' ]
-  App\Security\Voter\SubscriptionPlanVoter:
-    tags: [ 'security.voter' ]
-  App\Security\Voter\OrderStatusVoter:
-    tags: [ 'security.voter' ]
-
   App\Security\Registration\UserRegistrarInterface: '@App\Security\Registration\AuthApiUserRegistrar'

@@ -11,7 +11,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 use function print_r;
 
-class OrderConfirmedListener implements EventSubscriberInterface
+final class OrderConfirmedListener implements EventSubscriberInterface
 {
     public function __construct(private readonly MailerInterface $mailer, private readonly string $fromEmail)
     {}

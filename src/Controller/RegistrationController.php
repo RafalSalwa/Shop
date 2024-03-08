@@ -4,24 +4,24 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Client\AuthApi\AuthApiClient;
-use App\Client\AuthClientInterface;
+use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\Registration\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
-use App\Security\AuthApiAuthenticator;
+use App\Security\AuthApiFormAuthenticator;
+use App\Security\AuthApiUserProvider;
 use App\Security\Registration\UserRegistrarInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Security\ShopUserAuthenticatorInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 
 #[asController]
 #[Route(path: '/register', name: 'register_', methods: ['GET', 'POST'])]
-final class RegistrationController extends AbstractController
+final class RegistrationController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]
     public function register(Request $request, UserRegistrarInterface $authApiUserRegistrar): Response
@@ -57,12 +57,16 @@ final class RegistrationController extends AbstractController
         $form->handleRequest($request);
 
         if (true === $form->isSubmitted() && true === $form->isValid()) {
-            $userRegistrar->confirm($form->get('confirmationCode')->getData());
+            try {
+                $userRegistrar->confirm($form->get('confirmationCode')->getData());
 
-            return $this->redirectToRoute(
-                'register_thank_you',
-                ['verificationCode' => $form->get('confirmationCode')->getData()],
-            );
+                return $this->redirectToRoute(
+                    'register_thank_you',
+                    ['verificationCode' => $form->get('confirmationCode')->getData()],
+                );
+            } catch (AuthenticationExceptionInterface $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+            }
         }
 
         return $this->render(
@@ -86,15 +90,15 @@ final class RegistrationController extends AbstractController
 
     #[Route(path: '/thank_you/{verificationCode}', name: 'thank_you')]
     public function thankYouPage(
-        Request $request,
         string $verificationCode,
-        UserAuthenticatorInterface $userAuthenticator,
-        AuthApiAuthenticator $authApiAuthenticator,
-        AuthClientInterface $authClient,
+        ShopUserAuthenticatorInterface $authenticator,
+        AuthApiFormAuthenticator $authApiAuthenticator,
+        AuthApiUserProvider $provider,
+        Security $security,
     ): Response {
-        $user = $authClient->getByVerificationCode($verificationCode);
-
-        $userAuthenticator->authenticateUser($user, $authApiAuthenticator, $request);
+        $user = $authenticator->authenticateWithAuthCode($verificationCode);
+        $user = $provider->loadUserByIdentifier($user->getUserIdentifier());
+        $security->login(user: $user, authenticatorName: $authApiAuthenticator::class);
 
         return $this->render('registration/thank_you.html.twig');
     }

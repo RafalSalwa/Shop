@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
 use function dd;
 
-class EmailVerifier
+final class EmailVerifier
 {
     public function __construct(
         private readonly VerifyEmailHelperInterface $verifyEmailHelper,

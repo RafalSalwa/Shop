@@ -1,0 +1,23 @@
+{% if address is not empty %}
+    <table class="table table-bordered text-center mb-5" aria-label="Default delivery address">
+        <thead class="bg-secondary text-dark">
+        <tr>
+            <th>Selected Address</th>
+        </tr>
+        </thead>
+        <tbody class=" items-table-body">
+        <tr>
+            <td class="align-middle text-left">
+                {{ address.firstName ~ " " ~ address.lastName }}, {{ address.addressLine1 }} {{ address.addressLine2 }}
+                <br/>
+                {{ address.postalCode }} {{ address.city }}<br/> {{ address.state }}, {{ address.country }} <br/>
+                {{ address.phoneNo }}
+            </td>
+        </tr>
+        </tbody>
+    </table>
+{% else %}
+    <div class="text-center">
+        You have not set any addresses,<br/> Yet. <br/>Don't worry, let's create one.
+    </div>
+{% endif %}

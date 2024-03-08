@@ -6,7 +6,7 @@ namespace App\Service;
 
 use App\Repository\CategoryRepository;
 
-class CategoriesService
+final class CategoriesService
 {
     public function __construct(private readonly CategoryRepository $categoryRepository)
     {}

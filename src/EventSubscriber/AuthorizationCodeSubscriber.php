@@ -15,7 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-class AuthorizationCodeSubscriber implements EventSubscriberInterface
+final class AuthorizationCodeSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
@@ -37,8 +37,9 @@ class AuthorizationCodeSubscriber implements EventSubscriberInterface
         return ['league.oauth2_server.event.authorization_request_resolve' => 'onLeagueOauth2ServerEventAuthorizationRequestResolve'];
     }
 
-    public function onLeagueOauth2ServerEventAuthorizationRequestResolve(AuthorizationRequestResolveEvent $authorizationRequestResolveEvent): void
-    {
+    public function onLeagueOauth2ServerEventAuthorizationRequestResolve(
+        AuthorizationRequestResolveEvent $authorizationRequestResolveEvent,
+    ): void {
         $request = $this->requestStack->getCurrentRequest();
         $user = $this->security->getUser();
         $this->saveTargetPath($request->getSession(), $this->firewallName, $request->getUri());

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Contracts\CartItemInterface;
+use App\Enum\CartStatus;
+use App\Exception\ItemNotFoundException;
 use App\Repository\CartRepository;
-use DateTime;
+use App\ValueObject\CouponCode;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ReadableCollection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -17,33 +19,32 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\OneToMany;
-use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
-use function assert;
+use function bcadd;
+use function is_null;
+use function sprintf;
 
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
-final class Cart implements JsonSerializable
+class Cart implements JsonSerializable
 {
     final public const STATUS_CREATED = 'created';
-
-    final public const STATUS_CONFIRMED = 'confirmed';
-
-    final public const STATUS_CANCELLED = 'cancelled';
 
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /** @var Collection<int, CartItem> */
+    /**
+     * @var Collection<int, AbstractCartItem>
+     */
     #[OneToMany(
         mappedBy: 'cart',
-        targetEntity: CartItem::class,
+        targetEntity: AbstractCartItem::class,
         cascade: ['persist', 'remove'],
         fetch: 'EAGER',
         orphanRemoval: true,
@@ -52,68 +53,69 @@ final class Cart implements JsonSerializable
     #[Groups('cart')]
     private Collection $items;
 
-    #[Column(name: 'user_id')]
+    #[Column(name: 'user_id', type: Types::INTEGER)]
     #[Groups(groups: 'carts')]
     private int $userId;
 
-    #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false)]
-    private string $status = self::STATUS_CREATED;
+    #[Column(name: 'status', type: Types::STRING, length: 25, nullable: false, enumType: CartStatus::class)]
+    private CartStatus $status = CartStatus::CREATED;
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdAt;
 
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $updatedAt = null;
+    #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
+    private ?string $couponType = null;
+
+    #[Column(name: 'coupon_discount', type: Types::STRING, nullable: true)]
+    private ?string $couponDiscount = null;
+
+    private ?CouponCode $coupon = null;
+
+    #[Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
+        $this->createdAt = new DateTimeImmutable();
         $this->items = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): DateTime|null
+    /** @throws ItemNotFoundException */
+    public function addItem(CartItemInterface $newItem): void
     {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function addItem(CartItemInterface $cartItem): self
-    {
-        if (! $this->itemExists($cartItem)) {
-            $cartItem->setCart($this);
-            $this->getItems()
-                ->add($cartItem);
-
-            return $this;
+        if (false === $this->itemExists($newItem)) {
+            $this->getItems()->add($newItem);
+            $newItem->setCart($this);
+            return;
         }
 
-        $existingItem = $this->getFilteredItems($cartItem)
-            ->first();
-        assert($existingItem instanceof CartItem);
-        $existingItem->increaseQuantity();
-
-        return $this;
+        $currentItem = $this->getItem($newItem);
+        if (null === $currentItem) {
+            throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $newItem->getName()));
+        }
+        $this->removeItem($currentItem);
+        $newItem->updateQuantity(
+            $newItem->getQuantity() + $currentItem->getQuantity(),
+        );
+        $this->getItems()->add($newItem);
+        $newItem->setCart($this);
     }
 
     public function itemExists(CartItemInterface $cartItem): bool
     {
+        if (0 === $this->getItems()->count()) {
+            return false;
+        }
+
         return $this->getItems()
             ->exists(
-                /** @var CartItemInterface $element */
-                static fn ($key, CartItemInterface $element): bool => $element->getReferenceEntity()
-                    ->getId() === $cartItem->getReferenceEntity()
-                    ->getId()
-                    && $element::class === $cartItem::class
+                static fn (int $key, CartItemInterface $element): bool => $element->getReferencedEntity()->getId() === $cartItem->getReferencedEntity()->getId() &&
+                    $element->getReferencedEntity()->getName() === $cartItem->getReferencedEntity()->getName()
             );
     }
 
-    /** @return Collection<int, CartItem>|null */
-    public function getItems(): Collection|null
+    /** @return Collection<int, CartItemInterface> */
+    public function getItems(): Collection
     {
         return $this->items;
     }
@@ -123,36 +125,66 @@ final class Cart implements JsonSerializable
         return $this->id;
     }
 
-    /** @return ReadableCollection<int,CartItem> */
-    public function getFilteredItems(CartItemInterface $newItem): ReadableCollection
+    public function getItem(CartItemInterface $newItem): ?CartItemInterface
     {
-        return $this->getItems()
+        $filtered = $this->getItems()
             ->filter(
-                static fn (CartItemInterface $cartItem): bool => $cartItem->getReferenceEntity()
-                    ->getId() === $newItem->getReferenceEntity()
+                static fn (CartItemInterface $cartItem): bool => $cartItem->getReferencedEntity()
+                    ->getId() === $newItem->getReferencedEntity()
                     ->getId()
                     && $cartItem::class === $newItem::class
             );
+
+        return $filtered->first();
     }
 
-    public function removeItem(CartItem $cartItem): void
+    /** @throws ItemNotFoundException */
+    public function removeItem(CartItemInterface $cartItem): void
     {
-        if (! $this->items->contains($cartItem)) {
-            return;
+        if (0 === $this->getItems()->count()) {
+            throw new ItemNotFoundException('Items list is empty.');
         }
 
-        $this->items->removeElement($cartItem);
+        $currentItem = $this->getItem($cartItem);
+        if (null === $currentItem) {
+            throw new ItemNotFoundException('Item does not exists in cart');
+        }
+        $currentItem->setCart(null);
 
-        $cartItem->setCart(null);
+        $this->getItems()->removeElement($currentItem);
     }
 
-    public function itemTypeExists(CartItemInterface $cartItem): bool
+    public function getTotalItemsCount(): int
     {
-        return $this->getItems()
-            ->exists(static fn ($key, $element): bool => $element::class === $cartItem::class);
+        $sum = 0;
+        foreach ($this->getItems() as $item) {
+            $sum += $item->getQuantity();
+        }
+
+        return $sum;
     }
 
-    public function getUserId(): User
+    public function getItemsPrice()
+    {
+        $total = 0;
+        foreach ($this->getItems() as $item) {
+            $total += $item->getTotalPrice();
+        }
+
+        return $total;
+    }
+
+    public function getTotalAmount(): string
+    {
+        $total = '0';
+        foreach ($this->getItems() as $item) {
+            $total = bcadd($total, $item->getTotalPrice());
+        }
+
+        return $total;
+    }
+
+    public function getUserId(): int
     {
         return $this->userId;
     }
@@ -162,48 +194,49 @@ final class Cart implements JsonSerializable
         $this->userId = $userId;
     }
 
-    #[PrePersist]
-    public function prePersist(): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function jsonSerialize(): mixed
     {
         return [
-            'status' => $this->getStatus(),
+            'status' => $this->getStatus()->value,
             'items' => $this->getItems(),
-            'created_at' => $this->getCreatedAt(),
+            'created_at' => $this->createdAt->getTimestamp(),
         ];
     }
 
-    public function getStatus(): string
+    public function getStatus(): CartStatus
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(CartStatus $status): self
     {
         $this->status = $status;
 
         return $this;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function applyCoupon(CouponCode $coupon): void
     {
-        return $this->createdAt;
+        $this->couponType = $coupon->getType();
+        $this->couponDiscount = $coupon->getValue();
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function getCoupon(): ?CouponCode
     {
-        $this->createdAt = $createdAt;
+        if (null === $this->couponType) {
+            return null;
+        }
+        if (false === is_null($this->coupon)) {
+            return $this->coupon;
+        }
+        $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 
-        return $this;
+        return $this->coupon;
     }
 }

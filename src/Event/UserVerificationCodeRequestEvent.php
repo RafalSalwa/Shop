@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class UserVerificationCodeRequestEvent extends Event {
-
-    /**
-     * @param string $email
-     */
+final class UserVerificationCodeRequestEvent extends Event
+{
     public function __construct(string $email)
     {
     }

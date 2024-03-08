@@ -4,14 +4,19 @@ declare(strict_types=1);
 
 namespace App\Messenger;
 
-use App\Message\AMQPMessage;
+use App\Messenger\Message\AMQPMessage;
 use Exception;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
+use function array_merge;
+use function json_encode;
+use function serialize;
+use const JSON_THROW_ON_ERROR;
 
-class ExternalJsonMessageSerializer implements SerializerInterface
+final class ExternalJsonMessageSerializer implements SerializerInterface
 {
-    public function decode(array $encodedEnvelope): Envelope {}
+    public function decode(array $encodedEnvelope): Envelope
+    {}
 
     public function encode(Envelope $envelope): array
     {
