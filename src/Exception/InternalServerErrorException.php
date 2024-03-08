@@ -6,10 +6,10 @@ namespace App\Exception;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class InternalServerErrorException extends HttpException implements AuthenticationExceptionInterface
+final class InternalServerErrorException extends HttpException implements AuthenticationExceptionInterface
 {
     public function __construct(string $message, int $code = 500, ?Throwable $throwable = null)
     {
-        parent::__construct($code,$message , $throwable);
+        parent::__construct($code, $message, $throwable);
     }
 }

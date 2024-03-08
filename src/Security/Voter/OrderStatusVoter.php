@@ -8,7 +8,7 @@ use App\Entity\Order;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-class OrderStatusVoter extends Voter
+final class OrderStatusVoter extends Voter
 {
     protected function supports($attribute, $subject): bool
     {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\CartItemInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Event\StockDepletedEvent;
 use App\Exception\ItemNotFoundException;
@@ -14,7 +14,7 @@ use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function sprintf;
 
-readonly class SubscriptionStockService
+readonly final class SubscriptionStockService
 {
     public function __construct(
         private LockFactory $productLockFactory,
@@ -23,7 +23,7 @@ readonly class SubscriptionStockService
     ) {}
 
     /**
-     * @throws \App\Exception\ProductStockDepletedException
+     * @throws ProductStockDepletedException
      * @throws ItemNotFoundException
      */
     public function checkStockIsAvailable(CartItemInterface $cartItem): void
@@ -47,7 +47,7 @@ readonly class SubscriptionStockService
         $this->changeStock($cartItem, Product::STOCK_INCREASE, $cartItem->getQuantity());
     }
 
-    /** @phpstan-param \App\Entity\Product::STOCK_* $operation */
+    /** @phpstan-param Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $cartItem, string $operation, int $qty = -1): void
     {
         if (! $cartItem instanceof Product) {
@@ -60,7 +60,7 @@ readonly class SubscriptionStockService
         };
     }
 
-    private function decrease(\App\Entity\CartItemInterface $cartItem): void
+    private function decrease(CartItemInterface $cartItem): void
     {
         $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
         $sharedLock->acquire(true);
@@ -74,7 +74,7 @@ readonly class SubscriptionStockService
         $sharedLock->release();
     }
 
-    private function increase(\App\Entity\CartItemInterface $cartItem, int $qty): void
+    private function increase(CartItemInterface $cartItem, int $qty): void
     {
         $sharedLock = $this->productLockFactory->createLock('product-stock_decrease');
         $sharedLock->acquire(true);

@@ -10,13 +10,12 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<OAuth2UserConsent>
- *
- * @method null|OAuth2UserConsent find($id, $lockMode = null, $lockVersion = null)
- * @method null|OAuth2UserConsent findOneBy(array $criteria, array $orderBy = null)
- * @method OAuth2UserConsent[]    findAll()
- * @method OAuth2UserConsent[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method  OAuth2UserConsent|null find($id, $lockMode = null, $lockVersion = null)
+ * @method  OAuth2UserConsent|null findOneBy(array $criteria, array $orderBy = null)
+ * @method  array<OAuth2UserConsent>    findAll()
+ * @method  array<OAuth2UserConsent>    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OAuth2UserConsentRepository extends ServiceEntityRepository
+final class OAuth2UserConsentRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -29,11 +28,13 @@ class OAuth2UserConsentRepository extends ServiceEntityRepository
             ->persist($oAuth2UserConsent)
         ;
 
-        if ($flush) {
-            $this->getEntityManager()
-                ->flush()
-            ;
+        if (! $flush) {
+            return;
         }
+
+        $this->getEntityManager()
+            ->flush()
+        ;
     }
 
     public function remove(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
@@ -42,10 +43,12 @@ class OAuth2UserConsentRepository extends ServiceEntityRepository
             ->remove($oAuth2UserConsent)
         ;
 
-        if ($flush) {
-            $this->getEntityManager()
-                ->flush()
-            ;
+        if (! $flush) {
+            return;
         }
+
+        $this->getEntityManager()
+            ->flush()
+        ;
     }
 }

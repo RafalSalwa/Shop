@@ -2,22 +2,18 @@
 
 namespace App\Tests\Architecture;
 
-use PHPat\Test\Builder\Rule;
 use PHPat\Selector\Selector;
+use PHPat\Test\Builder\BuildStep;
 use PHPat\Test\PHPat;
 
-class LayersTest {
-
-    public function test_servicesDoesNotDependOnEntities(): Rule
+final class LayersTest
+{
+    public function testClassesDoNotDependOnSecurity(): BuildStep
     {
         return PHPat::rule()
-            ->classes(Selector::inNamespace('App\Service'))
+            ->classes(Selector::inNamespace('App'))
             ->shouldNotDependOn()
-            ->classes(
-                Selector::inNamespace('App\Entity'),
-                Selector::inNamespace('App\Infrastructure'),
-                Selector::classname(SuperForbiddenClass::class),
-                Selector::classname('/^SomeVendor\\\.*\\\ForbiddenSubfolder\\\.*/', true)
-            );
+            ->classes(Selector::inNamespace('Symfony\Bundle\SecurityBundle\Security'))
+            ->because('We cannot rely on Security since we are using JWT Tokens. Use ShopSecurityProviderInterface');
     }
 }

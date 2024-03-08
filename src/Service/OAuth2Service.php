@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use function array_diff;
 use function array_merge;
 
-class OAuth2Service
+final class OAuth2Service
 {
     public function __construct(
         private readonly EntityManagerInterface $entityManager,
@@ -35,7 +35,9 @@ class OAuth2Service
         $request = $this->requestStack->getCurrentRequest();
 
         $userConsents = $user->getOAuth2UserConsents()
-            ->filter(static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient)
+            ->filter(
+                static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient
+            )
             ->first() ?: null;
         $userScopes = ($userConsents?->getScopes() ?? []);
 

@@ -12,6 +12,7 @@ use KnpU\OAuth2ClientBundle\KnpUOAuth2ClientBundle;
 use League\Bundle\OAuth2ServerBundle\LeagueOAuth2ServerBundle;
 use Nelmio\ApiDocBundle\NelmioApiDocBundle;
 use Nelmio\CorsBundle\NelmioCorsBundle;
+use NunoMaduro\CollisionAdapterSymfony\CollisionAdapterSymfonyBundle;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\MakerBundle\MakerBundle;
@@ -24,7 +25,6 @@ use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
-use SymfonyCasts\Bundle\ResetPassword\SymfonyCastsResetPasswordBundle;
 use SymfonyCasts\Bundle\VerifyEmail\SymfonyCastsVerifyEmailBundle;
 use Twig\Extra\TwigExtraBundle\TwigExtraBundle;
 
@@ -47,11 +47,11 @@ return [
     MonologBundle::class => ['all' => true],
     TwigExtraBundle::class => ['all' => true],
     SymfonyCastsVerifyEmailBundle::class => ['all' => true],
-    SymfonyCastsResetPasswordBundle::class => ['all' => true],
     WebpackEncoreBundle::class => ['all' => true],
     TwigComponentBundle::class => ['all' => true],
     LiveComponentBundle::class => ['all' => true],
     DebugBundle::class => ['dev' => true],
     AutocompleteBundle::class => ['all' => true],
     StimulusBundle::class => ['all' => true],
+    CollisionAdapterSymfonyBundle::class => ['all' => true],
 ];

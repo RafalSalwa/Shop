@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\EntityVerifyCode;
-use App\Entity\SignInUserInput;
-use App\Entity\SignUpUserInput;
 use App\Form\SignInType;
 use App\Form\SignUpType;
 use App\Form\UserVerifyCodeType;
+use App\Model\SignInUserInput;
+use App\Model\SignUpUserInput;
 use App\Protobuf\Generated\SignInUserResponse;
 use App\Service\AuthGRPCService;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -20,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 #[asController]
 #[Route(path: '/grpc', name: 'grpc_')]
-final class GRPCController extends AbstractController
+final class GRPCController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]
     public function index(): Response

@@ -4,68 +4,36 @@ declare(strict_types=1);
 
 namespace App\Security;
 
-use App\Model\User;
-use App\Repository\SubscriptionRepository;
-use Exception;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use App\Client\UsersApiClient;
+use App\Entity\Contracts\ShopUserInterface;
+use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
-use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use function func_get_args;
+use function is_subclass_of;
 
-/** @template TUser of PasswordUpgraderInterface */
-class AuthApiUserProvider implements UserProviderInterface, PasswordUpgraderInterface
+/** @template TUser of UserProviderInterface */
+final readonly class AuthApiUserProvider implements UserProviderInterface
 {
-    public function __construct(
-        private readonly HttpClientInterface $httpClient,
-        private readonly SubscriptionRepository $subscriptionRepository,
-        private readonly Security $security,
-    ) {}
-
-    public function refreshUser(UserInterface $user): UserInterface
-    {
-        if (null === $user->getSubscription()) {
-            $subscription = $this->subscriptionRepository->findOneBy(['userId' => $user->getId()]);
-            $user->setSubscription($subscription);
-        }
-
-        return $user;
-    }
+    public function __construct(private UsersApiClient $apiClient)
+    {}
 
     public function supportsClass(string $class): bool
     {
-        return User::class === $class || is_subclass_of($class, User::class);
+        return is_subclass_of($class, ShopUserInterface::class);
+    }
+
+    public function refreshUser(UserInterface $user): UserInterface
+    {
+        /** @var ShopUserInterface $user */
+        if (true === $user->getToken()->isExpired() && true === $user->getRefreshToken()->isExpired()) {
+            throw new CredentialsExpiredException('Session Expired, please login again.');
+        }
+
+        return $this->apiClient->refreshUser($user);
     }
 
     public function loadUserByIdentifier(string $identifier): UserInterface
     {
-        try {
-            $response = $this->httpClient->request('GET', '/user', [
-                'auth_bearer' => $identifier,
-            ]);
-            dd(func_get_args(), $this->security->getUser());
-            $user = new User();
-            $user->setFromAuthApi($response);
-            $user->getTokenPair();
-
-            return $user;
-        } catch (TransportExceptionInterface $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
-        } catch (ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface) {
-        } catch (Exception $ex) {
-            dd($ex->getMessage(), $ex->getTraceAsString(), $response);
-        }
-    }
-
-    public function upgradePassword(PasswordAuthenticatedUserInterface $passwordAuthenticatedUser, string $newHashedPassword): void
-    {
-        dd(__FUNCTION__, self::class);
-        // TODO: Implement upgradePassword() method.
+        return $this->apiClient->loadUserByIdentifier($identifier);
     }
 }

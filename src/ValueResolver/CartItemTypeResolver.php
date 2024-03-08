@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use function is_string;
 
-class CartItemTypeResolver implements ValueResolverInterface
+final class CartItemTypeResolver implements ValueResolverInterface
 {
     /** @return array<int, class-string> */
     public function resolve(Request $request, ArgumentMetadata $argumentMetadata): iterable

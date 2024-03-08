@@ -1,0 +1,36 @@
+{% if deliveryAddresses is not empty %}
+    {% for address in deliveryAddresses %}
+        <div class="card border-secondary col-3 mb-5 mx-5 p-0">
+            <div class="card-header bg-secondary border-0">
+                <h6 class="font-weight-semi-bold m-0">{{ address.firstName ~ " " ~ address.lastName }}</h6>
+            </div>
+            <div class="card-body">
+                <h6 class="font-weight-light mb-3">{{ address.addressLine1 }} {{ address.addressLine2 }}</h6>
+
+                <div class="d-flex justify-content-between mb-3 pt-1">
+                    <h6 class="font-weight-light">{{ address.postalCode }} {{ address.city }}</h6>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="font-weight-light">{{ address.state }}, {{ address.country }}</h6>
+                </div>
+                <p class="font-weight-lighter">{{ address.phoneNo }}</p>
+            </div>
+            <div class="card-footer border-secondary bg-transparent">
+                <button data-address-id="{{ address.id }}"
+                        class="btn btn-lg btn-block btn-primary font-weight-medium my-3 py-3 address-use"> use
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="text-center">
+        You have not set any addresses,<br/> Yet. <br/>Don't worry, let's create one.
+    </div>
+{% endif %}
+<div class="border-secondary bg-transparent col-lg-4 px-xl-0">
+    <div id="address-add">
+        <button class="btn btn-lg btn-block btn-primary font-weight-medium my-3 py-3">
+            Add Delivery Address
+        </button>
+    </div>
+</div>

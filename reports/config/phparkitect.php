@@ -2,23 +2,29 @@
 
 declare(strict_types=1);
 
+use App\Command\AbstractSymfonyCommand;
+use App\Controller\AbstractShopController;
 use Arkitect\ClassSet;
 use Arkitect\CLI\Config;
-use Arkitect\Expression\ForClasses\ContainDocBlockLike;
+use Arkitect\Expression\ForClasses\DependsOnlyOnTheseNamespaces;
 use Arkitect\Expression\ForClasses\Extend;
 use Arkitect\Expression\ForClasses\HaveAttribute;
 use Arkitect\Expression\ForClasses\HaveNameMatching;
 use Arkitect\Expression\ForClasses\IsEnum;
 use Arkitect\Expression\ForClasses\IsFinal;
 use Arkitect\Expression\ForClasses\IsInterface;
-use Arkitect\Expression\ForClasses\IsNotReadonly;
+use Arkitect\Expression\ForClasses\IsNotAbstract;
+use Arkitect\Expression\ForClasses\IsNotFinal;
 use Arkitect\Expression\ForClasses\NotDependsOnTheseNamespaces;
-use Arkitect\Expression\ForClasses\NotHaveDependencyOutsideNamespace;
 use Arkitect\Expression\ForClasses\NotHaveNameMatching;
+use Arkitect\Expression\ForClasses\NotResideInTheseNamespaces;
 use Arkitect\Expression\ForClasses\ResideInOneOfTheseNamespaces;
 use Arkitect\RuleBuilders\Architecture\Architecture;
 use Arkitect\Rules\Rule;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\Mapping\Entity;
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\Routing\Annotation\Route;
 
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(__DIR__ . '/../../src');
@@ -26,31 +32,34 @@ return static function (Config $config): void {
     $rules = [];
 
     $rules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces('App'))
+        ->that(new NotResideInTheseNamespaces('App\\Entity\\'))
+        ->andThat(new NotResideInTheseNamespaces('App\\Protobuf\\'))
         ->should(new IsFinal())
         ->because('all classes should be final by default');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->should(new HaveNameMatching('*Controller'))
-        ->because('we want uniform naming')
+        ->because('we want uniform Controllers naming')
     ;
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
-        ->should(new Extend(AbstractController::class))
+        ->andThat(new IsNotAbstract())
+        ->should(new Extend(AbstractShopController::class))
         ->because('we want to be sure that all controllers extend AbstractController')
     ;
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
-        ->should(new HaveAttribute('AsController'))
+        ->should(new HaveAttribute(AsController::class))
         ->because('it configures the service container')
     ;
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
-        ->should(new HaveAttribute('Route'))
+        ->andThat(new IsNotAbstract())
+        ->should(new HaveAttribute(Route::class))
         ->because('it configures the service container')
     ;
 
@@ -61,15 +70,21 @@ return static function (Config $config): void {
     ;
 
     $rules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces('App\Domain'))
-        ->should(new NotHaveDependencyOutsideNamespace('App\Domain'))
-        ->because('we want protect our domain')
+        ->that(new HaveNameMatching('*Controller'))
+        ->should(new ResideInOneOfTheseNamespaces('App\Controller'))
+        ->because('we want to be sure that all Controllers are in a specific namespace');
+
+    $rules[] = Rule::allClasses()
+        ->that(new ResideInOneOfTheseNamespaces('App\Command'))
+        ->andThat(new IsNotAbstract())
+        ->should(new Extend(AbstractSymfonyCommand::class))
+        ->because('we want to use render functionality in console output')
     ;
 
     $rules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces('App\Domain\Events'))
-        ->should(new ContainDocBlockLike('@psalm-immutable'))
-        ->because('we want to enforce immutability')
+        ->that(new ResideInOneOfTheseNamespaces('App\Command'))
+        ->should(new DependsOnlyOnTheseNamespaces('Symfony\Component', 'Doctrine\ORM', 'App', 'Termwind'))
+        ->because('we want uniform naming')
     ;
 
     $rules[] = Rule::allClasses()
@@ -89,15 +104,23 @@ return static function (Config $config): void {
         ->because('we want to be sure that all classes are enum');
 
     $rules[] = Rule::allClasses()
-        ->that(new ResideInOneOfTheseNamespaces('App\Domain\Entity'))
-        ->should(new IsNotReadonly())
-        ->because('we want to be sure that there are no readonly entities')
+        ->that(new ResideInOneOfTheseNamespaces('App\Entity'))
+        ->should(new IsNotFinal())
+        ->because('we want to be sure that Doctrine LAZY Loading is available')
     ;
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Entity'))
-        ->should(new IsFinal())
-        ->because('we want to be sure that aggregates are final classes')
+        ->andThat(new NotResideInTheseNamespaces('App\Entity\Contracts'))
+        ->should(new HaveAttribute(Entity::class))
+        ->because('we want to be sure that Doctrine LAZY Loading is available and wont cause problems with proxies')
+    ;
+
+    $rules[] = Rule::allClasses()
+        ->that(new ResideInOneOfTheseNamespaces('App\Form'))
+        ->andThat(new NotResideInTheseNamespaces('App\Form\*'))
+        ->should(new Extend(AbstractType::class))
+        ->because('we want to be sure that, all forms extends abstractType')
     ;
 
     $rules[] = Rule::allClasses()
@@ -120,7 +143,7 @@ return static function (Config $config): void {
         ->where('Controller')->mayDependOnComponents('Service', 'Entity')
         ->where('Service')->mayDependOnComponents('Repository', 'Entity')
         ->where('Repository')->mayDependOnComponents('Entity')
-        ->where('Entity')->shouldNotDependOnAnyComponent()
+        ->where('Entity')->mayDependOnComponents('Repository')
         ->where('Domain')->shouldOnlyDependOnComponents('Domain')
         ->rules()
     ;

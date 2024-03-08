@@ -7,37 +7,42 @@
                 <div class="container">
                     <div class="row justify-content-center">
                         <div class="col-xl-5 col-md-8">
-                            <form class="bg-white  rounded-5 shadow-5-strong p-5" action="{{ path('app_login') }}"
+                            <form class="bg-white  rounded-5 shadow-5-strong p-5" action="{{ path('login_index') }}"
                                   method="post">
                                 <!-- Email input -->
                                 <div class="form-outline mb-4">
                                     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                                    <input type="text" id="email" class="form-control" name="email" autocomplete="username"
+                                    <input type="email" id="email" class="form-control" name="email"
+                                           autocomplete="email" required="required" placeholder="Enter your email"
                                            value="{{ last_username }}"/>
                                     <label class="form-label" for="form1Example1">username</label>
                                 </div>
 
                                 <!-- Password input -->
                                 <div class="form-outline mb-4">
-                                    <input type="password" id="password" class="form-control" name="password" autocomplete="current-password"/>
+                                    <input type="password" id="password" class="form-control" name="password"
+                                           required="required" autocomplete="current-password"/>
                                     <label class="form-label" for="form1Example2">Password</label>
                                 </div>
 
                                 <!-- 2 column grid layout for inline styling -->
-                                <div class="row mb-4">
-                                    <div class="col d-flex justify-content-center" style="font-size: 12px;">
-                                        hint: use interview/interview as credentials
-                                    </div>
+                                <div class="form-outline mb-4 text-center">
+
                                     {% if error %}
-                                        {% if error.messageKey == 'Invalid credentials.' %}
-                                            <p class="w3-error">&#x26D4;&#xFE0F; Invalid email address or password.<br>Please
-                                                check your
-                                                details and try again.</p>
+                                        {% if error.message == 'Invalid credentials.' or error.code == 404 %}
+                                            <p class="w3-error" style="font-size: 12px;">
+                                                <i class="fa fa-bell text-primary mr-3"></i>
+                                                Invalid email address or password.<br>Please check your details and try
+                                                again.</p>
                                         {% else %}
                                             <p class="w3-error">
                                                 &#x26D4;&#xFE0F; {{ error.messageKey|trans(error.messageData, 'security') }}</p>
                                         {% endif %}
                                     {% endif %}
+                                    <div class="text-center" style="font-size: 12px;">
+                                        hint: You can use <a href="#" id="prefill-login-form">interview1@interview.com/VeryG00dPass!</a><br/>
+                                        for prepared user
+                                    </div>
                                 </div>
 
                                 <!-- Submit button -->
@@ -52,9 +57,11 @@
 {% endblock %}
 {% block scripts %}
     <script>
-        $( document ).ready(function() {
-            $("#email").val('interview1@interview.com');
-            $("#password").val('VeryG00dPass!');
+        $(document).ready(function () {
+            $('#prefill-login-form').on("click", function () {
+                $("#email").val('interview1@interview.com');
+                $("#password").val('VeryG00dPass!');
+            });
         });
     </script>
 {% endblock %}

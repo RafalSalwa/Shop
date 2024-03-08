@@ -6,7 +6,7 @@ namespace App\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 
-class OrderConfirmedEvent extends Event
+final class OrderConfirmedEvent extends Event
 {
     public function __construct(private readonly int $orderId)
     {}

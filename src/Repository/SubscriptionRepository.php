@@ -9,21 +9,11 @@ use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class SubscriptionRepository extends ServiceEntityRepository
+final class SubscriptionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, Subscription::class);
-    }
-
-    public function save(Subscription $subscription): void
-    {
-        $this->getEntityManager()
-            ->persist($subscription)
-        ;
-        $this->getEntityManager()
-            ->flush()
-        ;
     }
 
     public function remove(Subscription $subscription): void
@@ -36,11 +26,33 @@ class SubscriptionRepository extends ServiceEntityRepository
         ;
     }
 
-    public function createSubscription(SubscriptionPlan $subscriptionPlan): \App\Entity\Subscription
+    public function findForUser(int|string $userId): ?Subscription
+    {
+        return $this->findOneBy(['userId' => $userId]);
+    }
+
+    public function assignSubscription(int $getUserId, SubscriptionPlan $plan): void
+    {
+        $subscription = $this->createSubscription($plan);
+        $subscription->setUserId($getUserId);
+        $this->save($subscription);
+    }
+
+    public function createSubscription(SubscriptionPlan $subscriptionPlan): Subscription
     {
         $subscription = new Subscription();
-        $subscription->setSubscriptionPlan($subscriptionPlan);
+        $subscription->setPlan($subscriptionPlan);
 
         return $subscription;
+    }
+
+    public function save(Subscription $subscription): void
+    {
+        $this->getEntityManager()
+            ->persist($subscription)
+        ;
+        $this->getEntityManager()
+            ->flush()
+        ;
     }
 }

@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Cart checkout{% endblock %}
+
+{% block body %}
+    <!-- Checkout Start -->
+    <div class="container-fluid pt-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-8 table-responsive mb-5">
+                <div id="order-details">
+                    {% include 'cart/partials/items-list.html.twig' %}
+                    <div id="address-default">
+                        {% include 'cart/partials/default_address.html.twig' with {'address': defaultAddress} %}
+                    </div>
+                    <div class="border-secondary bg-transparent col-lg-4 px-xl-0">
+                        <div id="address-change">
+                            <button class="btn btn-lg btn-block btn-primary font-weight-medium my-3 py-3">
+                                Change delivery address
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div id="address-list" style="display: none;">
+                    <div class="col-12 px-2">
+                        <div class="row">
+                            {% include 'cart/partials/_delivery_address_list.html.twig' %}
+                        </div>
+                    </div>
+                </div>
+
+                <div id="address-form" style="display: none;">
+                    {% include 'cart/partials/_address_form.html.twig' with {'form': form} %}
+                </div>
+            </div>
+            <div class="col-lg-4">
+                {% include 'cart/partials/_order_total.html.twig' with {'summary': summary} %}
+                {% include'cart/partials/_payment.html.twig' %}
+            </div>
+        </div>
+    </div>
+    <!-- Checkout End -->
+{% endblock %}
+
+    {% block scripts %}
+        <script>
+            $(document).ready(function () {
+                const $orderDetails = $('#order-details');
+
+                const $addressForm = $('#address-form');
+                const $addressList = $('#address-list');
+                const $addressDefault = $('#address-default');
+
+                $('#address-add').click(function () {
+                    $orderDetails.slideUp();
+                    $addressList.slideUp();
+                    $addressForm.slideDown();
+                });
+
+                $('#address-change').click(function () {
+                    $orderDetails.slideUp();
+                    $addressList.slideDown();
+                });
+                $('.address-use').click(function () {
+                    $el = $(this);
+                    $.ajax({
+                        cache: false,
+                        type: "PUT",
+                        url: "{{ path('checkout_delivery_address_set') }}",
+                        data: {"addrId": $el.data('address-id')},
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        success: function (data) {
+                            $addressDefault.html(data);
+                        }
+                        ,
+                        error: function (xhr, ajaxOptions, thrownError) {
+                            //window.location.replace("{{ path("checkout_delivery_address_set") }}");
+                        }
+                    })
+                    $addressList.slideUp();
+                    $orderDetails.slideDown();
+                });
+            });
+        </script>
+    {% endblock %}

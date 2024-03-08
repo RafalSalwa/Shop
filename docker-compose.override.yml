@@ -1,13 +1,22 @@
 version: '3'
 
 services:
-  php_mailhog:
-    image: mailhog/mailhog
-    container_name: php_mailhog
+  mailpit:
+    image: axllent/mailpit
+    container_name: mailpit
+    restart: always
+    volumes:
+      - ./data:/data
     ports:
-      - "11025:1025" # smtp server
-      - "18025:8025" # web ui
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 50
+      MP_DATA_FILE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+      MP_ALLOW_UNTRUSTED_TLS: true
     networks:
       interview-net:
         aliases:
-          - iphpmailhog
+          - imailpit

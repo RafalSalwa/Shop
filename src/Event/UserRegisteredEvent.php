@@ -4,17 +4,16 @@ declare(strict_types=1);
 
 namespace App\Event;
 
-use App\Model\User;
 use Symfony\Contracts\EventDispatcher\Event;
 
-class UserRegisteredEvent extends Event
+final class UserRegisteredEvent extends Event
 {
-    public function __construct(protected User $user)
+    public function __construct(protected string $email)
     {
     }
 
-    public function getUser(): User
+    public function getEmail(): string
     {
-        return $this->user;
+        return $this->email;
     }
 }

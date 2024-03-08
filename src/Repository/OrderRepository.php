@@ -10,7 +10,7 @@ use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class OrderRepository extends ServiceEntityRepository
+final class OrderRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
@@ -44,7 +44,7 @@ class OrderRepository extends ServiceEntityRepository
         ;
     }
 
-    public function fetchOrders(User $user, int $page): \App\Pagination\Paginator
+    public function fetchOrders(User $user, int $page): Paginator
     {
         $queryBuilder = $this->createQueryBuilder('o')
             ->addSelect('o', 'i', 'p', 'a')

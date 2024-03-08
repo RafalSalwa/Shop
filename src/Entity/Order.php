@@ -15,15 +15,11 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-use Symfony\Component\Security\Core\User\UserInterface;
-
 use function number_format;
 
 #[Entity(repositoryClass: OrderRepository::class)]
@@ -61,23 +57,16 @@ class Order
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime|null $updatedAt = null;
 
-    #[ManyToOne(targetEntity: User::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'user_id', referencedColumnName: 'user_id', nullable: true)]
-    private UserInterface $user;
+    #[Column(name: 'user_id', type: Types::INTEGER)]
+    private int $userId;
 
-    #[ManyToOne(targetEntity: Address::class, inversedBy: 'orders')]
-    #[JoinColumn(name: 'address_id', referencedColumnName: 'address_id', nullable: true)]
     private Address|null $address = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\Payment>
-     */
+    /** @var Collection<int, Payment> */
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private Collection|null $payments = null;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection<int, \App\Entity\OrderItem>
-     */
+    /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection|null $items = null;
 
@@ -111,25 +100,19 @@ class Order
         return $this->id;
     }
 
-    public function getUser(): UserInterface
+    public function getUserId(): int
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(UserInterface $user): self
+    public function setUserId(int $userId): void
     {
-        $this->user = $user;
-
-        return $this;
+        $this->userId = $userId;
     }
 
-    public function getAmount(bool $userFriendly = false): float|int
+    public function getAmount(): string
     {
-        if ($userFriendly) {
-            return $this->amount / 100;
-        }
-
-        return $this->amount;
+        return (string)$this->amount;
     }
 
     public function setAmount(int $amount): self
@@ -142,7 +125,7 @@ class Order
     public function getNetAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
-            return number_format($this->netAmount / 100, 2, '.', ' ');
+            return number_format(($this->netAmount / 100), 2, '.', ' ');
         }
 
         return $this->netAmount;
@@ -156,7 +139,7 @@ class Order
     public function getVatAmount(bool $humanFriendly): int|string
     {
         if ($humanFriendly) {
-            return number_format($this->vatAmount / 100, 2, '.', ' ');
+            return number_format(($this->vatAmount / 100), 2, '.', ' ');
         }
 
         return $this->vatAmount;

@@ -6,12 +6,13 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Entity\Cart;
-use App\Entity\CartItemInterface;
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
 use App\Event\OrderConfirmedEvent;
+use App\Model\User;
 use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,26 +21,33 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function assert;
+use function dd;
+use function dump;
 use function json_decode;
 use const JSON_THROW_ON_ERROR;
 
-class OrderService
+final readonly class OrderService
 {
     public function __construct(
-        private readonly WorkflowInterface $workflow,
-        private readonly EntityManagerInterface $entityManager,
-        private readonly Security $security,
-        private readonly SerializerInterface $serializer,
-        private readonly CartCalculator $cartCalculator,
-        private readonly EventDispatcherInterface $eventDispatcher,
-        private readonly CartService $cartService,
-        private readonly SubscriptionService $subscriptionService,
+        private WorkflowInterface $orderProcessingStateMachine,
+        private EntityManagerInterface $entityManager,
+        private Security $security,
+        private SerializerInterface $serializer,
+        private CartCalculatorService $cartCalculator,
+        private EventDispatcherInterface $eventDispatcher,
+        private CartService $cartService,
+        private SubscriptionService $subscriptionService,
+        private OrderRepository $orderRepository,
     ) {}
 
     public function createPending(Cart $cart): Order
     {
         $order = new Order();
-        $this->workflow->getMarking($order);
+        dump($order);
+        $this->orderProcessingStateMachine->getMarking($order);
+        dump($order);
+        $order->setStatus('raf');
+        dd($order);
         $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
         $user = $this->security->getUser();
@@ -77,7 +85,7 @@ class OrderService
 
     public function confirmOrder(Order $order): void
     {
-        $this->workflow->apply($order, 'to_completed');
+        $this->orderProcessingStateMachine->apply($order, 'to_completed');
 
         $entityRepository = $this->entityManager->getRepository(Order::class);
         assert($entityRepository instanceof OrderRepository);
@@ -111,8 +119,18 @@ class OrderService
                 continue;
             }
 
-            $deserialized = json_decode($item->getCartItem(), true, 512, \JSON_THROW_ON_ERROR);
+            $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
             $this->subscriptionService->assignSubscription($deserialized['plan_name']);
         }
+    }
+
+    public function fetchOrderDetails(int $id)
+    {
+        return $this->orderRepository->fetchOrderDetails($id);
+    }
+
+    public function fetchOrders(User $user, int $page)
+    {
+        return $this->orderRepository->fetchOrders($user, $page);
     }
 }

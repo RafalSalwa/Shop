@@ -1,5 +1,5 @@
 ###> symfony/framework-bundle ###
-/.env.local
+/.env.local.off
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
@@ -11,6 +11,7 @@ reports/results/*
 !reports/results/.gitkeep
 bin/
 !bin/console
+!bin/doctrine_orm
 ###< symfony/framework-bundle ###
 .idea
 ###> league/oauth2-server-bundle ###
@@ -34,14 +35,10 @@ bin/phpunit
 ###> squizlabs/php_codesniffer ###
 /.phpcs-cache
 ###< squizlabs/php_codesniffer ###
-
-###> qossmic/deptrac-shim ###
-/.deptrac.cache
-###< qossmic/deptrac-shim ###
-
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
 /public/build/
+
 npm-debug.log
 yarn-error.log
 ###< symfony/webpack-encore-bundle ###
@@ -49,3 +46,7 @@ yarn-error.log
 ###> sonarqube ###
 /.scannerwork
 ###< sonarqube ###
+
+###> qossmic/deptrac-shim ###
+/.deptrac.cache
+###< qossmic/deptrac-shim ###

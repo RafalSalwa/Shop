@@ -32,6 +32,7 @@ parameters:
     # https://github.com/carlosas/phpat
     phpat:
         ignore_built_in_classes: true
+        show_rule_names: true
     # https://github.com/TomasVotruba/type-coverage
     type_coverage:
         return_type: 50
@@ -52,6 +53,14 @@ parameters:
         noExtends:
             classesAllowedToBeExtended:
                 - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+                - App\Controller\AbstractShopController
+                - Symfony\Component\Form\AbstractType
+                - Symfony\Contracts\EventDispatcher\Event
+                - Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator
+                - Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+                - Symfony\Component\Security\Core\Authorization\Voter\Voter
+                - Exception
+                - AbstractCartItem
 
 includes:
     # https://github.com/symplify/phpstan-rules
@@ -67,7 +76,11 @@ includes:
     # https://github.com/spaze/phpstan-disallowed-calls
     - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
     - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
-
+services:
+    -
+        class: App\Tests\Architecture\LayersTest
+        tags:
+            - phpat.test
 #Additional extensions:
 # https://github.com/phpstan/phpstan-phpunit
 # https://github.com/phpstan/phpstan-beberlei-assert

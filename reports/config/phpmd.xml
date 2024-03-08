@@ -34,19 +34,33 @@
         <exclude name="LongVariable"/>
         <exclude name="ShortMethodName"/>
     </rule>
-    <rule ref="rulesets/naming.xml/ShortVariable">
+    <rule ref="rulesets/naming.xml/ShortVariable"
+          since="0.2"
+          message="Avoid variables with short names like {0}. Configured minimum length is {1}."
+          externalInfoUrl="https://phpmd.org/rules/naming.html#shortvariable">
+        <priority>3</priority>
         <properties>
-            <property name="exceptions" value="ci,id,to,tz"/>
+            <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
+            <property name="exceptions" value="id,q,w,i,j,v,e,f,fp"/>
         </properties>
     </rule>
-    <rule ref="rulesets/naming.xml/LongVariable">
+
+    <rule ref="rulesets/naming.xml/LongVariable"
+          since="0.2"
+          message="Avoid excessively long variable names like {0}. Keep variable name length under {1}."
+          externalInfoUrl="https://phpmd.org/rules/naming.html#longvariable">
+        <description>
+            Detects when a field, formal or local variable is declared with a long name.
+        </description>
+        <priority>3</priority>
         <properties>
-            <property name="subtract-suffixes" value="Enabled,Function,Factory,Timezone,FloorEnd,DiffOptions"/>
+            <property name="maximum" description="The variable length reporting threshold" value="25"/>
         </properties>
     </rule>
     <rule ref="rulesets/naming.xml/ShortMethodName">
         <properties>
-            <property name="exceptions" value="eq,gt,is,lt,ne,to,tz"/>
+            <property name="minimum" description="Minimum length for a variable, property or parameter name" value="3"/>
+            <property name="exceptions" value="eq,gt,is,id,lt,ne,to,tz"/>
         </properties>
     </rule>
     <rule ref="rulesets/unusedcode.xml"/>
@@ -67,12 +81,12 @@
             <property name="maximum" value="100"/>
         </properties>
     </rule>
-    <rule ref="rulesets/codesize.xml/ExcessiveClassLength" />
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength" />
-    <rule ref="rulesets/codesize.xml/ExcessiveParameterList" />
-    <rule ref="rulesets/codesize.xml/ExcessivePublicCount" />
-    <rule ref="rulesets/codesize.xml/TooManyFields" />
-    <rule ref="rulesets/codesize.xml/TooManyMethods" />
+    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+    <rule ref="rulesets/codesize.xml/TooManyFields"/>
+    <rule ref="rulesets/codesize.xml/TooManyMethods"/>
 
     <rule ref="rulesets/controversial.xml/Superglobals"/>
     <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>

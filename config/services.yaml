@@ -4,6 +4,10 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    bind:
+      $fromEmail: '%env(MAILER_FROM)%'
+      $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
+      $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
   Redis:
     class: Redis
     calls:
@@ -19,6 +23,10 @@ services:
       - '../src/Entity/'
       - '../src/Kernel.php'
       - '../src/Tests/'
+
+  Symfony\Component\HttpFoundation\Session\Storage\Handler\RedisSessionHandler:
+    arguments:
+      - '@Redis'
 
   app.twig_extension:
     class: Twig\DeferredExtension\DeferredExtension
@@ -41,17 +49,5 @@ services:
   App\Service\CartAddService:
     arguments:
       $entityManager: '@doctrine.orm.entity_manager'
-  App\EventListener\OrderConfirmedListener:
-    arguments:
-      $fromEmail: '%env(MAILER_FROM)%'
-  App\Service\AuthGRPCService:
-    arguments:
-      $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
-      $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
 
-  App\Security\Voter\CartAddVoter:
-    tags: [ 'security.voter' ]
-  App\Security\Voter\SubscriptionPlanVoter:
-    tags: [ 'security.voter' ]
-  App\Security\Voter\OrderStatusVoter:
-    tags: [ 'security.voter' ]
+  App\Security\Registration\UserRegistrarInterface: '@App\Security\Registration\AuthApiUserRegistrar'
