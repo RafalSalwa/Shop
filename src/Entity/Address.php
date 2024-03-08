@@ -60,6 +60,9 @@ class Address
     #[Column(name: 'user_id', type: Types::INTEGER)]
     private int $userId;
 
+    #[Column(name: 'isDefault', type: Types::BOOLEAN, nullable: false, options: ['default'=> 0])]
+    private bool $isDefault = false;
+
     public function getFirstName(): string
     {
         return $this->firstName;
@@ -78,7 +81,6 @@ class Address
     public function setLastName(string $lastName): void
     {
         $this->lastName = $lastName;
-
     }
 
     public function getAddressLine1(): string
@@ -130,6 +132,17 @@ class Address
     {
         $this->state = $state;
     }
+
+    public function isDefault(): bool
+    {
+        return $this->isDefault;
+    }
+
+    public function setDefault(bool $default): void
+    {
+        $this->isDefault = $default;
+    }
+
 
     public function getPostalCode(): string
     {

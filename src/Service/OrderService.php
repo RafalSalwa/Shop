@@ -21,13 +21,15 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use function assert;
+use function dd;
+use function dump;
 use function json_decode;
 use const JSON_THROW_ON_ERROR;
 
 final readonly class OrderService
 {
     public function __construct(
-        private WorkflowInterface $workflow,
+        private WorkflowInterface $orderProcessingStateMachine,
         private EntityManagerInterface $entityManager,
         private Security $security,
         private SerializerInterface $serializer,
@@ -41,7 +43,11 @@ final readonly class OrderService
     public function createPending(Cart $cart): Order
     {
         $order = new Order();
-        $this->workflow->getMarking($order);
+        dump($order);
+        $this->orderProcessingStateMachine->getMarking($order);
+        dump($order);
+        $order->setStatus('raf');
+        dd($order);
         $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
         $user = $this->security->getUser();
@@ -79,7 +85,7 @@ final readonly class OrderService
 
     public function confirmOrder(Order $order): void
     {
-        $this->workflow->apply($order, 'to_completed');
+        $this->orderProcessingStateMachine->apply($order, 'to_completed');
 
         $entityRepository = $this->entityManager->getRepository(Order::class);
         assert($entityRepository instanceof OrderRepository);

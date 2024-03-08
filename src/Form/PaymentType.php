@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\Payment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,9 +18,16 @@ final class PaymentType extends AbstractType
     {
         $builder
             ->add(
-                'operationNumber',
-                TextType::class,
-                ['label' => 'payment ID'],
+                'operationType',
+                ChoiceType::class,
+                [
+                    'label' => 'payment ID',
+                    'choices' => [
+                        'Stripe' => 'stripe',
+                        'CreditCard' => 'creditcard',
+                    ],
+                    'expanded' => true,
+                ],
             )
             ->add(
                 'amount',

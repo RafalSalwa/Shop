@@ -13,7 +13,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 readonly final class PaymentService
 {
     public function __construct(
-        private WorkflowInterface $workflow,
+        private WorkflowInterface $paymentProcessing,
         private Security $security,
         private PaymentRepository $paymentRepository,
     ) {}
@@ -25,7 +25,7 @@ readonly final class PaymentService
             $payment = new Payment();
         }
 
-        $this->workflow->getMarking($payment);
+        $this->paymentProcessing->getMarking($payment);
         $payment->setUser($this->security->getUser());
         $payment->setAmount($order->getAmount());
 
@@ -43,8 +43,8 @@ readonly final class PaymentService
 
     public function confirmPayment(Payment $payment): void
     {
-        if ($this->workflow->can($payment, 'to_confirm')) {
-            $this->workflow->apply($payment, 'to_confirm');
+        if ($this->paymentProcessing->can($payment, 'to_confirm')) {
+            $this->paymentProcessing->apply($payment, 'to_confirm');
         }
 
         $this->paymentRepository->save($payment);

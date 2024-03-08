@@ -7,6 +7,7 @@ namespace App\Controller;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Form\PaymentType;
+use App\Handler\OrderHandler;
 use App\Service\CartService;
 use App\Service\OrderService;
 use App\Service\PaymentService;
@@ -21,15 +22,11 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
 final class OrderController extends AbstractShopController
 {
-    #[Route(path: '/create/', name: 'create_pending')]
-    public function createPendingOrder(
-        CartService $cartService,
-        OrderService $orderService,
-        PaymentService $paymentService,
-    ): Response {
-        $cart    = $cartService->getCurrentCart();
-        $order = $orderService->createPending($cart);
-        $paymentService->createPendingPayment($order);
+    #[Route(path: '/create/', name: 'create_pending', methods: ['POST'])]
+    public function createPendingOrder(Request $request, OrderHandler $orderHandler): Response
+    {
+        $paymentType = $request->request->get('payment_type');
+        $pendingOrder = $orderHandler->createPendingOrder();
 
         if (0 !== $order->getId()) {
             $cartService->clearCart();

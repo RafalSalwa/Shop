@@ -9,7 +9,6 @@ use App\Enum\CartStatus;
 use App\Exception\ItemNotFoundException;
 use App\Repository\CartRepository;
 use App\ValueObject\CouponCode;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -65,15 +64,15 @@ class Cart implements JsonSerializable
     private DateTimeImmutable $createdAt;
 
     #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
-    private string $couponType;
+    private ?string $couponType = null;
 
     #[Column(name: 'coupon_discount', type: Types::STRING, nullable: true)]
-    private string $couponDiscount;
+    private ?string $couponDiscount = null;
 
     private ?CouponCode $coupon = null;
 
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $updatedAt = null;
+    #[Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $updatedAt = null;
 
     public function __construct()
     {
@@ -87,7 +86,6 @@ class Cart implements JsonSerializable
         if (false === $this->itemExists($newItem)) {
             $this->getItems()->add($newItem);
             $newItem->setCart($this);
-
             return;
         }
 
@@ -199,7 +197,7 @@ class Cart implements JsonSerializable
     #[PreUpdate]
     public function preUpdate(): void
     {
-        $this->updatedAt = new DateTime('now');
+        $this->updatedAt = new DateTimeImmutable();
     }
 
     public function jsonSerialize(): mixed

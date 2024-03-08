@@ -9,6 +9,7 @@ use App\Form\AddressType;
 use App\Service\AddressBookService;
 use App\Service\CartCalculatorService;
 use App\Service\CartService;
+use App\Service\PaymentService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -42,49 +43,37 @@ final class CartCheckoutController extends AbstractShopController
                 'cart' => $cartService->getCurrentCart(),
                 'summary' => $cartCalculator->calculateSummary(),
                 'deliveryAddresses' => $addressBookService->getDeliveryAddresses($this->getUserId()),
+                'defaultAddress' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
                 'form' => $form,
             ],
         );
     }
 
-    #[Route(path: '/shipment', name: 'shipment', methods: ['GET', 'POST'])]
-    public function shipment(
-        Request $request,
-        CartService $cartService,
-        CartCalculatorService $cartCalculator,
-        AddressBookService $addressService,
-    ): Response {
-        $user = $this->getUser();
-
-        $address = new Address();
-        $form = $this->createForm(AddressType::class, $address);
-
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
-            $address = $form->getData();
-            $user->addDeliveryAddress($address);
-            $address->setUser($user);
-            $addressService->save($address);
-        }
+    #[Route(path: '/set_delivery_address', name: 'delivery_address_set', methods: ['PUT'])]
+    public function deliveryAddress(Request $request, AddressBookService $addressBookService): Response
+    {
+        $deliveryAddressId = $request->request->get('addrId');
+        $addressBookService->setDefaultAddress($deliveryAddressId, $this->getUserId());
 
         return $this->render(
-            'checkout/shipment.html.twig',
+            'cart/partials/default_address.html.twig',
             [
-                'form' => $form->createView(),
-                'deliveryAddresses' => $user->getDeliveryAddresses(),
-                'defaultAddress' => $cartService->getDefaultDeliveryAddressId(),
-                'cart' => $cartService->getCurrentCart(),
-                'payment' => $cartCalculator->calculatePayment($cartService->getCurrentCart()),
+                'address' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
             ],
         );
     }
 
-    #[Route(path: '/set_delivery_address', name: 'delivery_address_set', methods: ['POST'])]
-    public function deliveryAddress(Request $request, CartService $cartService): Response
+    #[Route(path: '/payment_method', name: 'payment_method', methods: ['PUT'])]
+    public function paymentMethod(Request $request, PaymentService $paymentService): Response
     {
-        $deliveryAddressId = $request->request->get('addrId');
-        $cartService->useDefaultDeliveryAddress($deliveryAddressId);
+        $paymentMethod = $request->request->get('payment_method');
+        $paymentService->setDefaultAddress($deliveryAddressId, $this->getUserId());
 
-        return new Response('ok');
+        return $this->render(
+            'cart/partials/default_address.html.twig',
+            [
+                'address' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
+            ],
+        );
     }
 }

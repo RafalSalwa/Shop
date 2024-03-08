@@ -41,7 +41,6 @@ final readonly class ShoppingCartHandler
         try {
             $cartItem = $this->factory->create($itemId, $quantity);
             $this->cartService->add($cartItem);
-            $this->cartService->save();
         } catch (ItemNotFoundException | AccessDeniedException  $exception) {
             $this->logger->error($exception->getMessage());
 

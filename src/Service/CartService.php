@@ -8,14 +8,11 @@ use App\Entity\AbstractCartItem;
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\StockManageableInterface;
-use App\Entity\SubscriptionPlanCartItem;
 use App\Enum\CartStatus;
 use App\Enum\StockOperation;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
-use App\Exception\TooManySubscriptionsException;
 use App\Factory\CartFactory;
-use App\Factory\CartItemFactory;
 use App\Storage\CartSessionStorage;
 use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
@@ -28,12 +25,15 @@ final readonly class CartService
         private CartSessionStorage $cartSessionStorage,
         private CartFactory $cartFactory,
         private EntityManagerInterface $entityManager,
-        private CartItemFactory $cartItemFactory,
         private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
     ) {
     }
 
+    /**
+     * @throws ItemNotFoundException
+     * @throws ProductStockDepletedException
+     */
     public function clearCart(): void
     {
         $cart = $this->getCurrentCart();
@@ -50,22 +50,12 @@ final readonly class CartService
     public function getCurrentCart(): Cart
     {
         $cart = $this->cartSessionStorage->getCart();
-        if (! $cart instanceof Cart) {
+        if (null === $cart) {
             $cart = $this->cartFactory->create();
+            $this->save($cart);
         }
 
         return $cart;
-    }
-
-    /** @throws ItemNotFoundException */
-    public function removeItem(AbstractCartItem $cartItem): void
-    {
-        $cart = $this->getCurrentCart();
-        if (false === $cart->itemExists($cartItem)) {
-            throw new ItemNotFoundException('Item already removed');
-        }
-
-        $cart->removeItem($cartItem);
     }
 
     /**
@@ -82,6 +72,17 @@ final readonly class CartService
         $this->cartSessionStorage->setCart($cart);
     }
 
+    /** @throws ItemNotFoundException */
+    public function removeItem(AbstractCartItem $cartItem): void
+    {
+        $cart = $this->getCurrentCart();
+        if (false === $cart->itemExists($cartItem)) {
+            throw new ItemNotFoundException('Item already removed');
+        }
+
+        $cart->removeItem($cartItem);
+    }
+
     public function confirmCart(): void
     {
         $cart = $this->getCurrentCart();
@@ -91,39 +92,21 @@ final readonly class CartService
         $this->entityManager->flush();
     }
 
-    public function useDefaultDeliveryAddress(int $deliveryAddressId): void
-    {
-        $this->cartSessionStorage->setDeliveryAddressId($deliveryAddressId);
-    }
-
-    public function getDefaultDeliveryAddressId(): ?int
-    {
-        return $this->cartSessionStorage->getDeliveryAddressId();
-    }
-
     /** @throws ProductStockDepletedException|ItemNotFoundException */
     public function add(CartItemInterface $cartItem): void
     {
         $lock = $this->cartLockFactory->createLock('cart_item_add');
         $lock->acquire(true);
 
+        $cart = $this->getCurrentCart();
         $this->stockService->checkStockIsAvailable($cartItem);
-        $this->getCurrentCart()->addItem($cartItem);
+        $cart->addItem($cartItem);
 
         if (true === is_subclass_of($cartItem, StockManageableInterface::class)) {
             $this->stockService->changeStock($cartItem, StockOperation::Decrease, $cartItem->getQuantity());
         }
-
+        $this->save($cart);
         $lock->release();
-    }
-
-    public function checkSubscriptionsCount(CartItemInterface $cartItem): void
-    {
-        $cart = $this->getCurrentCart();
-
-        if ($cartItem instanceof SubscriptionPlanCartItem && $cart->itemExists($cartItem)) {
-            throw new TooManySubscriptionsException('You can have only one subscription in cart');
-        }
     }
 
     public function applyCoupon(CouponCode $coupon): void
