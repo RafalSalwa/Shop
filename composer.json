@@ -80,7 +80,7 @@
     "codeception/module-asserts": "*",
     "codeception/module-phpbrowser": "*",
     "codeception/module-symfony": "^3.1",
-    "dama/doctrine-test-bundle": "^7.2",
+    "dama/doctrine-test-bundle": "^8.0",
     "dbrekelmans/bdi": "^1.0",
     "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
     "doctrine/coding-standard": "^12.0",
