@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -15,12 +16,12 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
-use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
-use function number_format;
 
 #[Entity(repositoryClass: OrderRepository::class)]
 #[Table(name: 'orders', schema: 'interview')]
@@ -38,37 +39,35 @@ class Order
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'order_id', type: Types::INTEGER, unique: true, nullable: false)]
-    #[SequenceGenerator(sequenceName: 'order_orderID_seq', allocationSize: 1, initialValue: 1)]
     private int $id;
 
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private string $status;
 
     #[Column(name: 'amount', type: Types::INTEGER)]
-    private int $amount;
+    private int $total;
 
-    #[Column(
-        name: 'created_at',
-        type: Types::DATETIME_MUTABLE,
-        options: ['default' => 'CURRENT_TIMESTAMP'],
-    )]
-    private DateTime $createdAt;
-
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $updatedAt = null;
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdAt;
 
     #[Column(name: 'user_id', type: Types::INTEGER)]
     private int $userId;
 
-    private Address|null $address = null;
-
     /** @var Collection<int, Payment> */
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
-    private Collection|null $payments = null;
+    private Collection $payments;
 
     /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
-    private Collection|null $items = null;
+    private Collection $items;
+
+    #[ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
+    #[JoinColumn(name: 'delivery_address_id', referencedColumnName: 'address_id', unique: false)]
+    private Address $deliveryAddress;
+
+    #[ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
+    #[JoinColumn(name: 'biling_address_id', referencedColumnName: 'address_id', unique: false)]
+    private Address $bilingAddress;
 
     private int $netAmount = 0;
 
@@ -110,62 +109,31 @@ class Order
         $this->userId = $userId;
     }
 
-    public function getAmount(): string
+    public function getTotal(): string
     {
-        return (string)$this->amount;
+        return (string)$this->total;
     }
 
-    public function setAmount(int $amount): self
+    public function setTotal(string $total): void
     {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getNetAmount(bool $humanFriendly): int|string
-    {
-        if ($humanFriendly) {
-            return number_format(($this->netAmount / 100), 2, '.', ' ');
-        }
-
-        return $this->netAmount;
-    }
-
-    public function setNetAmount(int $amount): void
-    {
-        $this->netAmount = $amount;
-    }
-
-    public function getVatAmount(bool $humanFriendly): int|string
-    {
-        if ($humanFriendly) {
-            return number_format(($this->vatAmount / 100), 2, '.', ' ');
-        }
-
-        return $this->vatAmount;
-    }
-
-    public function setVatAmount(int $amount): void
-    {
-        $this->vatAmount = $amount;
-    }
-
-    public function getItems(): Collection|null
-    {
-        return $this->items;
-    }
-
-    public function setItems(ArrayCollection $items): self
-    {
-        $this->items = $items;
-
-        return $this;
+        $this->total = (int)$total;
     }
 
     public function addItem(OrderItem $orderItem): void
     {
         $orderItem->setOrder($this);
-        $this->items[] = $orderItem;
+        $this->getItems()->add($orderItem);
+    }
+
+    /** @return Collection<int, OrderItem> */
+    public function getItems(): Collection
+    {
+        return $this->items;
+    }
+
+    public function setItems(ArrayCollection $items): void
+    {
+        $this->items = $items;
     }
 
     public function removeItems(OrderItem $orderItem): void
@@ -188,7 +156,7 @@ class Order
     #[PrePersist]
     public function prePersist(): void
     {
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new DateTimeImmutable();
     }
 
     #[PreUpdate]
@@ -216,5 +184,25 @@ class Order
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    public function getDeliveryAddress(): Address
+    {
+        return $this->deliveryAddress;
+    }
+
+    public function setDeliveryAddress(Address $address): void
+    {
+        $this->deliveryAddress = $address;
+    }
+
+    public function getBilingAddress(): Address
+    {
+        return $this->bilingAddress;
+    }
+
+    public function setBilingAddress(Address $address): void
+    {
+        $this->bilingAddress = $address;
     }
 }

@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Order;
 use App\Entity\Payment;
+use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
@@ -18,17 +19,14 @@ readonly final class PaymentService
         private PaymentRepository $paymentRepository,
     ) {}
 
-    public function createPendingPayment(Order $order): Payment
+    public function createPayment(Order $order, PaymentProvider $paymentType): Payment
     {
-        $payment = $order->getLastPayment();
-        if (! $payment instanceof Payment) {
-            $payment = new Payment();
-        }
-
+        $payment = new Payment();
         $this->paymentProcessing->getMarking($payment);
-        $payment->setUser($this->security->getUser());
-        $payment->setAmount($order->getAmount());
 
+        $payment->setUserId($this->security->getUser()->getId());
+        $payment->setAmount($order->getTotal());
+        $payment->setOperationType($paymentType);
         $order->addPayment($payment);
 
         $this->save($payment);
@@ -41,9 +39,10 @@ readonly final class PaymentService
         $this->paymentRepository->save($payment);
     }
 
-    public function confirmPayment(Payment $payment): void
+    public function confirmPayment(Order $order): void
     {
-        if ($this->paymentProcessing->can($payment, 'to_confirm')) {
+        $payment = $order->getLastPayment();
+        if (true === $this->paymentProcessing->can($payment, 'to_confirm')) {
             $this->paymentProcessing->apply($payment, 'to_confirm');
         }
 

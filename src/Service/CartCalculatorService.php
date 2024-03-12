@@ -21,17 +21,14 @@ final readonly class CartCalculatorService
     {
     }
 
-    public function calculateSummary(): Summary
+    public function calculateSummary(string $netAmount, ?CouponCode $coupon): Summary
     {
-        $cart = $this->cartService->getCurrentCart();
-
-        $netAmount = $cart->getTotalAmount();
-        $discount = $this->calculateDiscount($netAmount, $cart->getCoupon());
+        $discount = $this->calculateDiscount($netAmount, $coupon);
         $netTotal = bcsub($netAmount, $discount);
         $tax = $this->calculateTaxAmount($netTotal);
 
         $subTotal = bcadd($netTotal, $tax);
-        $shipping = $this->calculateShipping($subTotal, $cart->getCoupon());
+        $shipping = $this->calculateShipping($subTotal, $coupon);
 
         return new Summary(net: $netAmount, discount: $discount, tax: $tax, shipping: $shipping);
     }

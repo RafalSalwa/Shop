@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\OAuth2Api;
 
+use App\Controller\AbstractShopController;
 use App\Entity\OAuth2UserConsent;
 use App\Service\OAuth2Service;
 use Symfony\Component\HttpFoundation\Request;

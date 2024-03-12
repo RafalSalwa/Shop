@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Handler;
+namespace App\Workflow;
 
 use App\Entity\ProductCartItem;
 use App\Enum\StockOperation;
@@ -21,7 +21,7 @@ use App\Service\ProductStockService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
-final readonly class ShoppingCartHandler
+final readonly class CartWorkflow
 {
     public function __construct(
         private CartItemFactory $factory,

@@ -4,132 +4,78 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\Address;
 use App\Entity\Cart;
-use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Order;
-use App\Entity\OrderItem;
-use App\Entity\Product;
-use App\Entity\SubscriptionPlan;
 use App\Event\OrderConfirmedEvent;
+use App\Factory\OrderItemFactory;
 use App\Model\User;
+use App\Pagination\Paginator;
 use App\Repository\OrderRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
-use JMS\Serializer\SerializerInterface;
+use Doctrine\ORM\NonUniqueResultException;
+use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
-use function assert;
-use function dd;
-use function dump;
-use function json_decode;
-use const JSON_THROW_ON_ERROR;
 
 final readonly class OrderService
 {
     public function __construct(
         private WorkflowInterface $orderProcessingStateMachine,
-        private EntityManagerInterface $entityManager,
         private Security $security,
-        private SerializerInterface $serializer,
-        private CartCalculatorService $cartCalculator,
-        private EventDispatcherInterface $eventDispatcher,
-        private CartService $cartService,
-        private SubscriptionService $subscriptionService,
         private OrderRepository $orderRepository,
+        private AddressBookService $addressBookService,
+        private EventDispatcherInterface $eventDispatcher,
+        private CartCalculatorService $calculatorService,
     ) {}
 
     public function createPending(Cart $cart): Order
     {
         $order = new Order();
-        dump($order);
         $this->orderProcessingStateMachine->getMarking($order);
-        dump($order);
-        $order->setStatus('raf');
-        dd($order);
-        $order->setAmount($this->cartCalculator->calculateTotal($cart));
 
-        $user = $this->security->getUser();
+        $order->setUserId($this->security->getUser()->getId());
+        $summary = $this->calculatorService->calculateSummary($cart->getTotalAmount(), $cart->getCoupon());
+        $order->setTotal($summary->getTotal());
 
-        $repository = $this->entityManager->getRepository(Order::class);
-        assert($repository instanceof OrderRepository);
-
-        foreach ($cart->getItems() as $item) {
-            assert($item instanceof CartItemInterface);
-            $entity = $item->getReferencedEntity();
-            $serialized = $this->serializer->serialize($entity, 'json');
-
-            $orderItem = new OrderItem();
-            $orderItem->setCartItem($serialized);
-            $orderItem->setItemType($item->getType());
+        foreach ($cart->getItems() as $cartItem) {
+            $orderItem = OrderItemFactory::createFromCartItem($cartItem);
             $order->addItem($orderItem);
-            $order->setUser($user);
         }
 
-        $repository->save($order);
         $this->assignDeliveryAddress($order);
+        $this->orderRepository->save($order);
 
         return $order;
     }
 
-    public function assignDeliveryAddress(Order $order): void
+    /** @throws NonUniqueResultException */
+    private function assignDeliveryAddress(Order $order): void
     {
-        $entityRepository = $this->entityManager->getRepository(Address::class);
-        $addressId = $this->cartService->getDefaultDeliveryAddressId();
-        $address = $entityRepository->findOneBy(
-            ['id' => $addressId],
-        );
-        $order->setAddress($address);
+        $address = $this->addressBookService->getDefaultDeliveryAddress($order->getUserId());
+        if (null === $address) {
+            throw new RuntimeException('There is no Address in AddressBook');
+        }
+        $order->setDeliveryAddress($address);
+        $order->setBilingAddress($address);
     }
 
     public function confirmOrder(Order $order): void
     {
-        $this->orderProcessingStateMachine->apply($order, 'to_completed');
-
-        $entityRepository = $this->entityManager->getRepository(Order::class);
-        assert($entityRepository instanceof OrderRepository);
-        $entityRepository->save($order);
+        if (true === $this->orderProcessingStateMachine->can($order, 'to_completed')) {
+            $this->orderProcessingStateMachine->apply($order, 'to_completed');
+        }
+        $this->orderRepository->save($order);
 
         $orderConfirmedEvent = new OrderConfirmedEvent($order->getId());
         $this->eventDispatcher->dispatch($orderConfirmedEvent);
     }
 
-    public function deserializeOrderItems(Order $order): void
-    {
-        $orderItems = new ArrayCollection();
-        foreach ($order->getItems() as $item) {
-            $entityType = match ($item->getItemType()) {
-                'plan' => SubscriptionPlan::class,
-                'product' => Product::class
-            };
-
-            $deserialized = $this->serializer->deserialize($item->getCartItem(), $entityType, 'json');
-            $orderItems->add($deserialized);
-        }
-
-        $order->setItems($orderItems);
-    }
-
-    public function proceedSubscriptionsIfAny(Order $order): void
-    {
-        foreach ($order->getItems() as $item) {
-            assert($item instanceof OrderItem);
-            if ('plan' !== $item->getItemType()) {
-                continue;
-            }
-
-            $deserialized = json_decode($item->getCartItem(), true, 512, JSON_THROW_ON_ERROR);
-            $this->subscriptionService->assignSubscription($deserialized['plan_name']);
-        }
-    }
-
-    public function fetchOrderDetails(int $id)
+    public function fetchOrderDetails(int $id): ?Order
     {
         return $this->orderRepository->fetchOrderDetails($id);
     }
 
-    public function fetchOrders(User $user, int $page)
+    public function fetchOrders(User $user, int $page): Paginator
     {
         return $this->orderRepository->fetchOrders($user, $page);
     }

@@ -7,6 +7,7 @@ namespace App\Repository;
 use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
@@ -40,7 +41,7 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
         ;
         $query->enableResultCache(86400, 'subscription_plans');
 
-        return $query->getResult();
+        return $query->getResult(Query::HYDRATE_ARRAY);
     }
 
     public function createFreemiumPlan(): SubscriptionPlan

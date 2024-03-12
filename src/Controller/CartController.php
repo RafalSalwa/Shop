@@ -7,10 +7,10 @@ namespace App\Controller;
 use App\Entity\ProductCartItem;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
-use App\Handler\ShoppingCartHandler;
 use App\Requests\CartAddJsonRequest;
 use App\Service\CartCalculatorService;
 use App\Service\CartService;
+use App\Workflow\CartWorkflow;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,14 +26,10 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class CartController extends AbstractShopController
 {
     #[Route(path: '/add/product/{id}/{quantity}', name: 'add')]
-    public function addToCart(
-        Request $request,
-        int $id,
-        int $quantity,
-        ShoppingCartHandler $cartHandler,
-    ): RedirectResponse {
+    public function addToCart(Request $request, int $id, int $quantity, CartWorkflow $cartWorkflow): RedirectResponse
+    {
         try {
-            $cartHandler->add($id, $quantity);
+            $cartWorkflow->add($id, $quantity);
         } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
             $this->addFlash('danger', $exception->getMessage());
         }
@@ -45,10 +41,10 @@ final class CartController extends AbstractShopController
     public function post(
         #[MapRequestPayload]
         CartAddJsonRequest $cartAddJsonRequest,
-        ShoppingCartHandler $cartHandler,
+        CartWorkflow $cartWorkflow,
     ): JsonResponse {
         try {
-            $cartHandler->add($cartAddJsonRequest->getId(), $cartAddJsonRequest->getQuantity());
+            $cartWorkflow->add($cartAddJsonRequest->getId(), $cartAddJsonRequest->getQuantity());
         } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -57,10 +53,10 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
-    public function removeFromCart(ProductCartItem $cartItem, ShoppingCartHandler $cartHandler): JsonResponse
+    public function removeFromCart(ProductCartItem $cartItem, CartWorkflow $cartWorkflow): JsonResponse
     {
         try {
-            $cartHandler->remove($cartItem);
+            $cartWorkflow->remove($cartItem);
         } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
             $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -69,11 +65,11 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/coupon/apply', name: 'coupon_apply', methods: ['POST'])]
-    public function addCoupon(Request $request, ShoppingCartHandler $cartHandler): Response
+    public function addCoupon(Request $request, CartWorkflow $cartWorkflow): Response
     {
         try {
             $couponCode = $request->request->get('coupon');
-            $cartHandler->applyCouponCode($couponCode);
+            $cartWorkflow->applyCouponCode($couponCode);
         } catch (CartOperationExceptionInterface $exception) {
             $this->addFlash('info', $exception->getMessage());
         }
@@ -84,11 +80,13 @@ final class CartController extends AbstractShopController
     #[Route(path: '/', name: 'index', methods: ['GET'])]
     public function show(CartService $cartService, CartCalculatorService $cartCalculator): Response
     {
+        $cart = $cartService->getCurrentCart();
+
         return $this->render(
             'cart/index.html.twig',
             [
-                'cart' => $cartService->getCurrentCart(),
-                'summary' => $cartCalculator->calculateSummary(),
+                'cart' => $cart,
+                'summary' => $cartCalculator->calculateSummary($cart->getTotalAmount(), $cart->getCoupon()),
             ],
         );
     }

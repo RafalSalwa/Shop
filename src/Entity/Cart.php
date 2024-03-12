@@ -154,6 +154,14 @@ class Cart implements JsonSerializable
         $this->getItems()->removeElement($currentItem);
     }
 
+    public function getItemById(int $id): ?CartItemInterface
+    {
+        $filtered = $this->getItems()
+            ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id);
+
+        return $filtered->first();
+    }
+
     public function getTotalItemsCount(): int
     {
         $sum = 0;

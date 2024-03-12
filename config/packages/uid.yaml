@@ -1,4 +1,7 @@
 framework:
-    uid:
-        default_uuid_version: 7
-        time_based_uuid_version: 7
+  uid:
+    default_uuid_version: 7
+    name_based_uuid_version: 5
+    name_based_uuid_namespace: 018e2881-22b0-770b-902f-3138e19c8c98
+    time_based_uuid_version: 7
+    time_based_uuid_node: 121212121212

@@ -1,16 +1,16 @@
 <?xml version="1.0"?>
 <psalm
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="https://getpsalm.org/schema/config"
-        xsi:schemaLocation="https://getpsalm.org/schema/config ../../vendor/vimeo/psalm/config.xsd"
-        reportMixedIssues="true"
-        findUnusedBaselineEntry="true"
-        findUnusedCode="true"
-        memoizeMethodCallResults="true"
-        errorLevel="6"
-        cacheDirectory="../../var/cache/dev/"
-        restrictReturnTypes="true"
-        runTaintAnalysis="true"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="https://getpsalm.org/schema/config"
+    xsi:schemaLocation="https://getpsalm.org/schema/config ../../vendor/vimeo/psalm/config.xsd"
+    reportMixedIssues="true"
+    findUnusedBaselineEntry="true"
+    findUnusedCode="true"
+    memoizeMethodCallResults="true"
+    errorLevel="1"
+    cacheDirectory="../../var/cache/dev/"
+    restrictReturnTypes="true"
+    runTaintAnalysis="true"
 >
     <!--    Remember: Level 1 is the most strict, level 8 is the most lenient. https://psalm.dev/docs/running_psalm/error_levels/ -->
     <projectFiles>

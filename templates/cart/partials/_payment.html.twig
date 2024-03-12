@@ -1,34 +1,25 @@
-<form method="post" action="{{ path('order_create_pending') }}">
-    <div class="card border-secondary mb-5">
-        <div class="card-header bg-secondary border-0">
-            <h4 class="font-weight-semi-bold m-0">Payment</h4>
-        </div>
-        <div class="card-body" id="payment-form">
-            <div class="form-group">
-                <div class="custom-control custom-radio">
-                    <input type="radio" class="custom-control-input" name="payment" value="paypal" id="paypal" checked>
-                    <label class="custom-control-label" for="paypal">Stripe</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="custom-control custom-radio">
-                    <input type="radio" class="custom-control-input" name="payment" value="credit-card"
-                           id="directcheck">
-                    <label class="custom-control-label" for="directcheck">Credit card</label>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="custom-control custom-radio">
-                    <input type="radio" class="custom-control-input" name="payment" value="payment-on-delivery"
-                           id="delivery">
-                    <label class="custom-control-label" for="delivery">Payment on delivery</label>
-                </div>
-            </div>
-        </div>
+{{ form_start(paymentForm, {'action': path('order_create_pending')}) }}
+<div class="card border-secondary mb-5">
+    <div class="card-header bg-secondary border-0">
+        <h4 class="font-weight-semi-bold m-0">Payment</h4>
     </div>
-    <div class="card-footer border-secondary bg-transparent" id="order-place">
-        <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" id="order-place" type="submit">
-            Place Order
-        </button>
+    <div class="card-body" id="payment-form">
+        {% for label, value in field_choices(paymentForm.operationType) %}
+            <div class="form-group">
+                <div class="custom-control custom-radio">
+                    <input type="radio" {% if loop.first %} checked {% endif %}class="custom-control-input"
+                           name="payment"
+                           value="{{ value }}"
+                        {% if value == paymentForm.operationType.vars %} checked {% endif %}id="{{ value }}">
+                    <label class="custom-control-label" for="{{ value }}">{{ label }}</label>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-</form>
+</div>
+<div class="card-footer border-secondary bg-transparent" id="order-place">
+    <button class="btn btn-lg btn-block btn-primary font-weight-bold my-3 py-3" id="order-place" type="submit">
+        Place Order
+    </button>
+</div>
+{{ form_end(paymentForm, {render_rest: false}) }}

@@ -37,6 +37,28 @@
 {% block scripts %}
     <script>
         $(document).ready(function () {
+            const cart_item_capacity = {{ cart_item_capacity }};
+            $('.btn-minus').click(function () {
+                $el = $(this);
+                $itemId = $($el).closest('tr').data('item-id');
+                $quantity = $el.parent().siblings('select').val();
+                updateQuantity($itemId, --$quantity);
+            });
+
+            $('.item-quantity').click(function () {
+                $el = $(this);
+                $itemId = $($el).closest('tr').data('item-id');
+                $quantity = $el.val();
+                updateQuantity($itemId, $quantity);
+            });
+
+            $('.btn-plus').click(function () {
+                $el = $(this);
+                $itemId = $($el).closest('tr').data('item-id');
+                $quantity = $el.parent().siblings('select').val();
+                updateQuantity($itemId, ++$quantity);
+            });
+
             $('.remove-item').click(function () {
                 $el = $(this);
                 $row = $el.closest('tr');
@@ -56,6 +78,17 @@
                     }
                 });
             });
+
+            function updateQuantity(itemId, quantity) {
+                $.ajax({
+                    url: "{{ path('cart_api_set_quantity') }}",
+                    method: "PUT",
+                    data: {"id": itemId, 'quantity': quantity},
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+            }
         });
     </script>
 {% endblock scripts %}

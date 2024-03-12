@@ -5,77 +5,59 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Order;
-use App\Entity\User;
 use App\Form\PaymentType;
-use App\Handler\OrderHandler;
-use App\Service\CartService;
+use App\Service\CartCalculatorService;
 use App\Service\OrderService;
-use App\Service\PaymentService;
-use App\Service\TaxCalculatorService;
+use App\Workflow\OrderWorkflow;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Throwable;
+use function dd;
 
 #[asController]
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
+#[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class OrderController extends AbstractShopController
 {
     #[Route(path: '/create/', name: 'create_pending', methods: ['POST'])]
-    public function createPendingOrder(Request $request, OrderHandler $orderHandler): Response
+    public function createPendingOrder(Request $request, OrderWorkflow $orderWorkflow): Response
     {
-        $paymentType = $request->request->get('payment_type');
-        $pendingOrder = $orderHandler->createPendingOrder();
-
-        if (0 !== $order->getId()) {
-            $cartService->clearCart();
+        try {
+            $paymentType = $request->request->get('payment');
+            $pendingOrder = $orderWorkflow->createPendingOrder($paymentType);
+        } catch (Throwable $e) {
+            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
         }
 
         return $this->redirectToRoute(
             'order_show',
             [
-                'id' => $order->getId(),
+                'id' => $pendingOrder->getId(),
             ],
         );
     }
 
     #[Route(path: '/pending/{id}', name: 'show')]
-    public function pending(
-        Request $request,
-        Order $order,
-        OrderService $orderService,
-        PaymentService $paymentService,
-        CartService $cartService,
-    ): Response {
+    public function pending(Request $request, Order $order, OrderWorkflow $orderWorkflow): Response
+    {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
 
         $payment = $order->getLastPayment();
         $form    = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
             if (true === $form->get('yes')->isClicked()) {
-                $paymentService->confirmPayment($payment);
-                $orderService->confirmOrder($order);
+                $orderWorkflow->confirmOrder($order);
 
-                $cartService->confirmCart();
-
-                $cartService->clearCart();
-
-                return $this->redirectToRoute(
-                    'order_summary',
-                    [
-                        'id' => $order->getId(),
-                    ],
-                );
+                return $this->redirectToRoute('order_summary', ['id' => $order->getId()]);
             }
-
             if (true === $form->get('no')->isClicked()) {
-                return $this->redirectToRoute(
-                    'order_index',
-                    ['page' => 1],
-                );
+                $orderWorkflow->rejectOrder($order);
             }
         }
 
@@ -90,18 +72,19 @@ final class OrderController extends AbstractShopController
     }
 
     #[Route(path: '/summary/{id}', name: 'summary')]
-    public function summaryOrder(int $id, OrderService $orderService, TaxCalculatorService $taxCalculator): Response
-    {
+    public function summaryOrder(
+        int $id,
+        OrderService $orderService,
+        CartCalculatorService $cartCalculatorService,
+    ): Response {
         $order = $orderService->fetchOrderDetails($id);
-
-        $orderService->proceedSubscriptionsIfAny($order);
-        $orderService->deserializeOrderItems($order);
-
-        $taxCalculator->calculateOrderTax($order);
 
         return $this->render(
             'order/summary.html.twig',
-            ['order' => $order],
+            [
+                'order' => $order,
+                'summary' => $cartCalculatorService->calculateSummary($order->getTotal(), $order->getCoupon()),
+            ],
         );
     }
 

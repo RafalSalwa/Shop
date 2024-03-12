@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\gRPCApi;
 
+use App\Controller\AbstractShopController;
 use App\Entity\EntityVerifyCode;
 use App\Form\SignInType;
 use App\Form\SignUpType;

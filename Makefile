@@ -4,6 +4,7 @@ all:
 
 up:
 	symfony server:stop
+	killall webpack
 	docker compose up -d
 	symfony server:start -d --no-tls
 	symfony run -d --watch=config,src,templates,vendor symfony
@@ -18,7 +19,6 @@ run-always-ci:
 	vendor/bin/easy-ci check-commented-code src
 	vendor/bin/easy-ci check-conflicts src
 	vendor/bin/easy-ci find-multi-classes src
-
 
 run-always:
 	vendor/bin/swiss-knife check-commented-code src

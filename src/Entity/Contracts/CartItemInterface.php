@@ -42,7 +42,7 @@ interface CartItemInterface
      * @return string
      * Determines which Entity was used For this item (i.e. Product,subscription)
      */
-    public function getItemType(): string;
+    public function getType(): string;
 
     /**
      * Assign cart for Item

@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App\Controller\OAuth2Api;
 
-use App\Exception\Contracts\CartOperationExceptionInterface;
+use App\Controller\AbstractShopController;
+use App\Controller\CartManager;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
@@ -27,7 +28,7 @@ use function sprintf;
 use const JSON_THROW_ON_ERROR;
 
 #[asController]
-#[Route(path: '/cart/api', name: 'cart_api_', methods: ['GET', 'POST', 'PUT'])]
+#[Route(path: '/api/cart', name: 'api_cart_', methods: ['GET', 'POST', 'PUT'])]
 final class CartApiController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index', methods: ['GET'])]
@@ -112,14 +113,8 @@ final class CartApiController extends AbstractShopController
     public function setQuantity(
         #[MapRequestPayload]
         CartSetQuantityRequest $cartSetQuantityRequest,
+        Request $request,
         CartService $cartService,
     ): JsonResponse {
-        try {
-            $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
-
-            return $this->json('ok');
-        } catch (CartOperationExceptionInterface $exception) {
-            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
     }
 }

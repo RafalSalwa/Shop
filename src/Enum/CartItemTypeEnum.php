@@ -5,13 +5,22 @@ declare(strict_types=1);
 namespace App\Enum;
 
 use App\Entity\Product;
-use App\Entity\Subscription;
+use App\Entity\SubscriptionPlan;
 use ValueError;
 
 enum CartItemTypeEnum: string
 {
     case product = Product::class;
-    case subscription = Subscription::class;
+    case subscription = SubscriptionPlan::class;
+
+    public static function tryFromName(string $name): string|null
+    {
+        try {
+            return self::fromName($name);
+        } catch (ValueError) {
+            return null;
+        }
+    }
 
     public static function fromName(string $name): string
     {
@@ -22,14 +31,5 @@ enum CartItemTypeEnum: string
         }
 
         throw new ValueError($name . ' is not a valid backing value for enum ' . self::class);
-    }
-
-    public static function tryFromName(string $name): string|null
-    {
-        try {
-            return self::fromName($name);
-        } catch (ValueError) {
-            return null;
-        }
     }
 }
