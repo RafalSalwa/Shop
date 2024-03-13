@@ -182,14 +182,13 @@ class Cart implements JsonSerializable
         return $total;
     }
 
-    public function getTotalAmount(): string
+    public function getTotalAmount(): int
     {
         $total = '0';
         foreach ($this->getItems() as $item) {
             $total = bcadd($total, $item->getTotalPrice());
         }
-
-        return $total;
+        return (int)$total;
     }
 
     public function getUserId(): int

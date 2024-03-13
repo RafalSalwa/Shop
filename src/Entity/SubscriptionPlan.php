@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\Contracts\CartInsertableInterface;
-use App\Entity\Contracts\CartItemInterface;
 use App\Repository\SubscriptionPlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -16,20 +14,15 @@ use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\Index;
-use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
-use function bcdiv;
-use function bcmul;
-use function sprintf;
 
 #[Entity(repositoryClass: SubscriptionPlanRepository::class)]
 #[Table(name: 'plan', schema: 'interview')]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]
 #[HasLifecycleCallbacks]
-class SubscriptionPlan implements CartInsertableInterface
+class SubscriptionPlan
 {
     #[Id]
     #[GeneratedValue]
@@ -44,22 +37,14 @@ class SubscriptionPlan implements CartInsertableInterface
     #[Assert\Length(min: 10, minMessage: 'You need to add any')]
     private string $description;
 
-    #[Column(
-        name: 'is_active',
-        type: Types::BOOLEAN,
-        options: ['default' => false],
-    )]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isActive = false;
 
-    #[Column(
-        name: 'is_visible',
-        type: Types::BOOLEAN,
-        options: ['default' => false],
-    )]
+    #[Column(name: 'is_visible', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isVisible = false;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
-    private int $unitPrice;
+    private int $price;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: false)]
     private int $tier;
@@ -82,47 +67,14 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->description;
     }
 
-    public function setDescription(string $description): self
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function isActive(): bool
     {
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): self
-    {
-        $this->isActive = $isActive;
-
-        return $this;
-    }
-
     public function getPrice(): int
     {
-        return $this->unitPrice;
-    }
-
-    public function getTaxedPrice(): string
-    {
-        $taxedPrice = bcmul((string) $this->getUnitPrice(), '1.23');
-
-        return bcdiv($taxedPrice, '100', 2);
-    }
-
-    public function getUnitPrice(): int
-    {
-        return $this->unitPrice;
-    }
-
-    public function setUnitPrice(int $unitPrice): self
-    {
-        $this->unitPrice = $unitPrice;
-
-        return $this;
+        return $this->price;
     }
 
     public function getTier(): int
@@ -130,92 +82,9 @@ class SubscriptionPlan implements CartInsertableInterface
         return $this->tier;
     }
 
-    public function setTier(int $tier): self
-    {
-        $this->tier = $tier;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): DateTime
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): self
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    public function getUpdatedAt(): DateTime|null
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(DateTime $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getDeletedAt(): DateTime|null
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt(DateTime $deletedAt): self
-    {
-        $this->deletedAt = $deletedAt;
-
-        return $this;
-    }
-
-    public function toCartItem(): CartItemInterface
-    {
-        $subscriptionPlanCartItem = new SubscriptionPlanCartItem();
-        $subscriptionPlanCartItem
-            ->setReferencedEntity($this)
-            ->setQuantity(1)
-            ->setCreatedAt(new DateTime('now'));
-
-        return $subscriptionPlanCartItem;
-    }
-
-    #[PrePersist]
-    public function prePersist(): void
-    {
-        $this->setCreatedAt(new DateTime('now'));
-    }
-
-    #[PreUpdate]
-    public function preUpdate(): void
-    {
-        $this->setUpdatedAt(new DateTime('now'));
-    }
-
-    public function getDisplayName(): string
-    {
-        return sprintf('%s (%s) #%d', $this->getTypeName(), $this->getName(), $this->getId());
-    }
-
-    public function getTypeName(): string
-    {
-        return 'plan';
-    }
-
     public function getName(): string
     {
         return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     public function getId(): int

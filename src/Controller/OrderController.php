@@ -6,7 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Form\PaymentType;
-use App\Service\CartCalculatorService;
+use App\Service\CalculatorService;
 use App\Service\OrderService;
 use App\Workflow\OrderWorkflow;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,7 +75,7 @@ final class OrderController extends AbstractShopController
     public function summaryOrder(
         int $id,
         OrderService $orderService,
-        CartCalculatorService $cartCalculatorService,
+        CalculatorService $cartCalculatorService,
     ): Response {
         $order = $orderService->fetchOrderDetails($id);
 
@@ -83,7 +83,7 @@ final class OrderController extends AbstractShopController
             'order/summary.html.twig',
             [
                 'order' => $order,
-                'summary' => $cartCalculatorService->calculateSummary($order->getTotal(), $order->getCoupon()),
+                'summary' => $cartCalculatorService->calculateSummary($order->getNetAmount(), $order->getCoupon()),
             ],
         );
     }

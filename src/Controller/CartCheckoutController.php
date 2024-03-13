@@ -8,7 +8,7 @@ use App\Entity\Address;
 use App\Form\AddressType;
 use App\Form\PaymentType;
 use App\Service\AddressBookService;
-use App\Service\CartCalculatorService;
+use App\Service\CalculatorService;
 use App\Service\CartService;
 use App\Service\PaymentService;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,7 +26,7 @@ final class CartCheckoutController extends AbstractShopController
     public function index(
         Request $request,
         CartService $cartService,
-        CartCalculatorService $cartCalculator,
+        CalculatorService $cartCalculator,
         AddressBookService $addressBookService,
     ): Response {
         $address = new Address();

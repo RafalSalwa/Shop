@@ -7,7 +7,6 @@ namespace App\Repository;
 use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
@@ -22,26 +21,23 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
-        return $queryBuilder->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function fetchAvailablePlans()
     {
         $query = $this->createQueryBuilder('p')
             ->where('p.isVisible = true')
-            ->orderBy('p.createdAt', 'DESC')
+            ->orderBy('p.tier', 'ASC')
             ->setCacheMode(Cache::MODE_GET)
             ->setCacheable(true)
             ->getQuery()
         ;
         $query->enableResultCache(86400, 'subscription_plans');
 
-        return $query->getResult(Query::HYDRATE_ARRAY);
+        return $query->getResult();
     }
 
     public function createFreemiumPlan(): SubscriptionPlan

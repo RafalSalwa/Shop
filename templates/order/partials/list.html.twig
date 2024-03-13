@@ -1,0 +1,34 @@
+<table class="table table-bordered text-center mb-5">
+    <thead class="bg-secondary text-dark">
+    <tr>
+        <th>ID</th>
+        <th>Amount</th>
+        <th>Items</th>
+        <th>Created</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody class="align-middle items-table-body">
+    {% for order in paginator.results %}
+        {% if order.getStatus() == constant('App\\Entity\\Order::PENDING') %}
+            {% set redirect_uri = path("order_show", {id: order.id}) %}
+        {% else %}
+            {% set redirect_uri = path("order_details", {id: order.id}) %}
+        {% endif %}
+        <tr data-item-id="{{ order.id }}">
+            <td class="align-middle">{{ order.id }}</td>
+            <td class="align-middle">{{ (order.total / 100)|format_currency("USD") }}</td>
+            <td class="align-middle">{{ order.items.count }}</td>
+            <td class="align-middle">{{ order.createdAt|date('d-m-Y') }}</td>
+            <td class="align-middle">
+                <a href="{{ redirect_uri }}">
+                    <button class="btn btn-sm  w-50 btn-primary py-3" data-item-id="{{ order.id }}">
+                        Check
+                    </button>
+                </a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% include "pagination/paginator.html.twig" with {'paginator': orders} %}

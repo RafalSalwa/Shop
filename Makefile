@@ -4,7 +4,7 @@ all:
 
 up:
 	symfony server:stop
-	killall webpack
+	-killall webpack
 	docker compose up -d
 	symfony server:start -d --no-tls
 	symfony run -d --watch=config,src,templates,vendor symfony

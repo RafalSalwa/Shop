@@ -52,13 +52,11 @@
                             <a href="{{ path('login_index') }}" class="nav-item nav-link">Login</a>
                             <a href="{{ path('register_index') }}" class="nav-item nav-link">Register</a>
                         {% else %}
-                            <a href="{{ path('user_profile') }}" class="btn">
+                            <a href="{{ path('user_orders') }}" class="btn" style="padding:0 5px 0 0;">
                                 <i class="fas fa-user text-primary m-1" style="font-size: 22px"></i>
-                                {% if app.user and app.user.subscription is not empty %}
-                                    <p class="subscription-status text-primary" style="font-size: 12px; margin:0;">
-                                        {{ app.user.subscription.plan.name }}
-                                    </p>
-                                {% endif %}
+                                <p class="subscription-status text-primary" style="font-size: 12px; margin:0;">
+                                    Profile
+                                </p>
                             </a>
                         {% endif %}
                     </div>

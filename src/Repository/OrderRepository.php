@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\Order;
-use App\Entity\User;
 use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+use function dump;
 
 final class OrderRepository extends ServiceEntityRepository
 {
@@ -46,17 +46,21 @@ final class OrderRepository extends ServiceEntityRepository
         ;
     }
 
-    public function fetchOrders(User $user, int $page): Paginator
+    public function fetchOrders(int $userId, int $page, array $status): Paginator
     {
+        dump($status);
         $queryBuilder = $this->createQueryBuilder('o')
-            ->addSelect('o', 'i', 'p', 'a')
+            ->addSelect('o', 'i', 'p', 'da', 'ba')
             ->leftJoin('o.items', 'i')
             ->leftJoin('o.payments', 'p')
-            ->leftJoin('o.address', 'a')
-            ->where('o.user = :user')
+            ->leftJoin('o.deliveryAddress', 'da')
+            ->leftJoin('o.bilingAddress', 'ba')
+            ->where('o.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->andWhere('o.status IN (:status)')
+            ->setParameter('status', $status)
             ->orderBy('o.status', 'DESC')
             ->addOrderBy('o.createdAt', 'DESC')
-            ->setParameter('user', $user)
         ;
 
         return (new Paginator($queryBuilder))->paginate($page);

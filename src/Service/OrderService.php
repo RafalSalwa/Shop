@@ -8,7 +8,6 @@ use App\Entity\Cart;
 use App\Entity\Order;
 use App\Event\OrderConfirmedEvent;
 use App\Factory\OrderItemFactory;
-use App\Model\User;
 use App\Pagination\Paginator;
 use App\Repository\OrderRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -25,17 +24,20 @@ final readonly class OrderService
         private OrderRepository $orderRepository,
         private AddressBookService $addressBookService,
         private EventDispatcherInterface $eventDispatcher,
-        private CartCalculatorService $calculatorService,
+        private CalculatorService $calculatorService,
     ) {}
 
     public function createPending(Cart $cart): Order
     {
-        $order = new Order();
+        $order = new Order(
+            netAmount: $cart->getTotalAmount(),
+            userId: $this->security->getUser()->getId(),
+        );
         $this->orderProcessingStateMachine->getMarking($order);
 
-        $order->setUserId($this->security->getUser()->getId());
+        $order->applyCoupon($cart->getCoupon());
         $summary = $this->calculatorService->calculateSummary($cart->getTotalAmount(), $cart->getCoupon());
-        $order->setTotal($summary->getTotal());
+        $order->calculatePrices($summary);
 
         foreach ($cart->getItems() as $cartItem) {
             $orderItem = OrderItemFactory::createFromCartItem($cartItem);
@@ -66,7 +68,7 @@ final readonly class OrderService
         }
         $this->orderRepository->save($order);
 
-        $orderConfirmedEvent = new OrderConfirmedEvent($order->getId());
+        $orderConfirmedEvent = new OrderConfirmedEvent($order);
         $this->eventDispatcher->dispatch($orderConfirmedEvent);
     }
 
@@ -75,8 +77,11 @@ final readonly class OrderService
         return $this->orderRepository->fetchOrderDetails($id);
     }
 
-    public function fetchOrders(User $user, int $page): Paginator
-    {
-        return $this->orderRepository->fetchOrders($user, $page);
+    public function fetchOrders(
+        int $userId,
+        int $page = 1,
+        array $status = [Order::COMPLETED, Order::CANCELLED],
+    ): Paginator {
+        return $this->orderRepository->fetchOrders($userId, $page, $status);
     }
 }

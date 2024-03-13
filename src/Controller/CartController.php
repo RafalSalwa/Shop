@@ -8,7 +8,7 @@ use App\Entity\ProductCartItem;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Requests\CartAddJsonRequest;
-use App\Service\CartCalculatorService;
+use App\Service\CalculatorService;
 use App\Service\CartService;
 use App\Workflow\CartWorkflow;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -78,7 +78,7 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/', name: 'index', methods: ['GET'])]
-    public function show(CartService $cartService, CartCalculatorService $cartCalculator): Response
+    public function show(CartService $cartService, CalculatorService $cartCalculator): Response
     {
         $cart = $cartService->getCurrentCart();
 

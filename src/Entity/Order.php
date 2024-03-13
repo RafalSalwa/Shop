@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use App\ValueObject\CouponCode;
+use App\ValueObject\Summary;
 use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +24,7 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
+use function is_null;
 
 #[Entity(repositoryClass: OrderRepository::class)]
 #[Table(name: 'orders', schema: 'interview')]
@@ -61,6 +64,14 @@ class Order
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $items;
 
+    #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
+    private ?string $couponType = null;
+
+    #[Column(name: 'coupon_discount', type: Types::STRING, nullable: true)]
+    private ?string $couponDiscount = null;
+
+    private ?CouponCode $coupon = null;
+
     #[ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
     #[JoinColumn(name: 'delivery_address_id', referencedColumnName: 'address_id', unique: false)]
     private Address $deliveryAddress;
@@ -69,29 +80,28 @@ class Order
     #[JoinColumn(name: 'biling_address_id', referencedColumnName: 'address_id', unique: false)]
     private Address $bilingAddress;
 
+    #[Column(name: 'netAmount', type: Types::INTEGER)]
     private int $netAmount = 0;
 
-    private int $vatAmount = 0;
+    #[Column(name: 'shipping_cost', type: Types::INTEGER)]
+    private int $shippingCost = 0;
 
-    public function __construct()
+    public function __construct(int $netAmount, int $userId)
     {
+        $this->userId = $userId;
+        $this->netAmount = $netAmount;
+
         $this->payments = new ArrayCollection();
         $this->items    = new ArrayCollection();
     }
 
-    public function getUpdatedAt(): DateTime|null
+    public function applyCoupon(?CouponCode $coupon): void
     {
-        return $this->updatedAt;
-    }
-
-    public function getAddress(): Address|null
-    {
-        return $this->address;
-    }
-
-    public function setAddress(Address $address): void
-    {
-        $this->address = $address;
+        if (true === is_null($coupon)) {
+            return;
+        }
+        $this->couponType = $coupon->getType();
+        $this->couponDiscount = $coupon->getValue();
     }
 
     public function getId(): int
@@ -109,14 +119,14 @@ class Order
         $this->userId = $userId;
     }
 
-    public function getTotal(): string
+    public function getNetAmount(): int
     {
-        return (string)$this->total;
+        return $this->netAmount;
     }
 
-    public function setTotal(string $total): void
+    public function getShippingCost(): int
     {
-        $this->total = (int)$total;
+        return $this->shippingCost;
     }
 
     public function addItem(OrderItem $orderItem): void
@@ -136,21 +146,14 @@ class Order
         $this->items = $items;
     }
 
-    public function removeItems(OrderItem $orderItem): void
-    {
-        $this->items->removeElement($orderItem);
-    }
-
     public function getStatus(): string
     {
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $status): void
     {
         $this->status = $status;
-
-        return $this;
     }
 
     #[PrePersist]
@@ -171,17 +174,12 @@ class Order
         $this->payments[] = $payment;
     }
 
-    public function getPayments(): Collection|null
-    {
-        return $this->payments;
-    }
-
     public function getLastPayment(): Payment|null
     {
         return $this->payments?->last();
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -204,5 +202,34 @@ class Order
     public function setBilingAddress(Address $address): void
     {
         $this->bilingAddress = $address;
+    }
+
+    public function getCoupon(): ?CouponCode
+    {
+        if (null === $this->couponType) {
+            return null;
+        }
+        if (false === is_null($this->coupon)) {
+            return $this->coupon;
+        }
+        $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
+
+        return $this->coupon;
+    }
+
+    public function calculatePrices(Summary $summary): void
+    {
+        $this->total = (int)$summary->getTotal();
+        $this->shippingCost = (int)$summary->getShipping();
+    }
+
+    public function getTotal(): string
+    {
+        return (string)$this->total;
+    }
+
+    public function setTotal(string $total): void
+    {
+        $this->total = (int)$total;
     }
 }
