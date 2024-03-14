@@ -41,7 +41,7 @@ final class OrderController extends AbstractShopController
         );
     }
 
-    #[Route(path: '/pending/{id}', name: 'show')]
+    #[Route(path: '/pending/{id}', name: 'show', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
     public function pending(Request $request, Order $order, OrderWorkflow $orderWorkflow): Response
     {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');

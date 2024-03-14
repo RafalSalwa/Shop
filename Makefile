@@ -3,6 +3,8 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 all:
 
 up:
+	docker compose up -d && docker compose logs -f nginx php
+up_local:
 	symfony server:stop
 	-killall webpack
 	docker compose up -d
@@ -11,6 +13,8 @@ up:
 	symfony run -d yarn encore dev-server --port 9001
 	symfony server:log
 
+prod:
+	composer dump-autoload --no-dev --classmap-authoritative
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 

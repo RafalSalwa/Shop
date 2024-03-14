@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Entity;
 use App\Entity\Address;
 use App\Entity\Payment;
 use App\Entity\Subscription;
+use App\Entity\SubscriptionPlan;
 use App\Model\User;
 use PHPUnit\Framework\AssertionFailedError;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -30,7 +31,8 @@ final class UserTest extends TestCase
     public function testSetters(): void
     {
         $user = new User(1,'test@test.com');
-        $subscription = new Subscription();
+        $plan = new SubscriptionPlan();
+        $subscription = new Subscription($user->getId(), $plan);
 
         $user->setSubscription($subscription);
 
@@ -42,6 +44,7 @@ final class UserTest extends TestCase
 
     /**
      * @covers \App\Entity\Payment
+     * @covers \App\ValueObject\EmailAddress
      */
     public function testOrderProcess(): void
     {

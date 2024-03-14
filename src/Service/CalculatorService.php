@@ -14,8 +14,8 @@ use function is_null;
 
 final readonly class CalculatorService
 {
-    public const FIRST_DISCOUNT_LIMIT = 10000;
-    public const FREE_DELIVERY_LIMIT = 30000;
+    public const FIRST_DISCOUNT_LIMIT = 50_00;
+    public const FREE_DELIVERY_LIMIT = 150_00;
 
     public function __construct(private ?string $taxRate = '23')
     {
@@ -71,8 +71,8 @@ final readonly class CalculatorService
 
         return match (true) {
             $amount >= self::FREE_DELIVERY_LIMIT => 0,
-            $amount >= self::FIRST_DISCOUNT_LIMIT =>1000,
-            default => 2000,
+            $amount >= self::FIRST_DISCOUNT_LIMIT =>10_00,
+            default => 20_00,
         };
     }
 }

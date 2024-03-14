@@ -25,9 +25,10 @@ RUN apt update && apt install -y --no-install-recommends \
 #    && git clone -b v1.57.0 https://github.com/grpc/grpc \
 #    && cd grpc && git submodule update --init \
 #    && mkdir cmake/build && cd cmake/build  \
-#    && cmake ../.. && make protoc grpc_php_plugin
-#ENV PATH "/grpc/cmake/build:${PATH}"
-#ENV PATH "/grpc/cmake/build/third_party/protobuf:${PATH}"
+#    && cmake ../.. && make protoc grpc_php_plugin \
+    && usermod -u 1000 www-data
+ENV PATH "/grpc/cmake/build:${PATH}"
+ENV PATH "/grpc/cmake/build/third_party/protobuf:${PATH}"
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone \

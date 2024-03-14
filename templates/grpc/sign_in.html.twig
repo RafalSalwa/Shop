@@ -1,71 +1,105 @@
-{% extends 'logged.html.twig' %}
+{% extends 'base.html.twig' %}
 
 {% block title %}gRPC SignUp{% endblock %}
 
 {% block body %}
+    <div class="container-fluid">
+        <div class="row border-top p-xl-5 justify-content-center">
+            <div class="col-6 col-auto">
+                {% if previous_sign_up_data is not empty %}
+                    <ul>
+                        <li id="sign_up_email">{{ previous_sign_up_data.username }}</li>
+                        <li id="sign_up_pass">{{ previous_sign_up_data.password }}</li>
+                        <li id="vCode">
+                            <a href="#" id="copy-code">
+                                copy credentials <i class="fa fas fa-copy"></i>
+                            </a>
+                        </li>
 
-    {{ form(form) }}
-    <div class="row">
-        <div class="col-md-8">
-            {% if grpc_credentials is not empty %}
-                psst! You can use credentials from account that was created in previous steps.<br/>
-                use:<br/>
-                {{ grpc_credentials['username'] }}<br/>
-                {{ grpc_credentials['password'] }}<br/>
-                {% if not grpc_credentials['verified'] %}
-                    but this user is still not verified!<br/>
-                    Please visit
-                    <a href="{{ path("grpc_user_verify") }}"
-                       class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                        Verify Account page</a><br/>
-                    and use code: <p class="text-primary">{{ grpc_credentials['vCode'] }}</p>
+                    </ul>
                 {% endif %}
-            {% endif %}
-            {% if grpc_status is not empty %}
-                RPC call status
-                <table class="table table-bordered">
-                    <thead>
-                    </thead>
-                    <tbody>
+                {{ form(form) }}
+                <div class="row">
+                    <div class="col-md-8">
+                        {% if grpc_credentials is not empty %}
+                            psst! You can use credentials from account that was created in previous steps.<br/>
+                            use:<br/>
+                            {{ grpc_credentials['username'] }}<br/>
+                            {{ grpc_credentials['password'] }}<br/>
+                            {% if not grpc_credentials['verified'] %}
+                                but this user is still not verified!<br/>
+                                Please visit
+                                <a href="{{ path("grpc_user_verify") }}"
+                                   class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                                    Verify Account page</a><br/>
+                                and use code: <p class="text-primary">{{ grpc_credentials['vCode'] }}</p>
+                            {% endif %}
+                        {% endif %}
+                        {% if grpc_status is not empty %}
+                            RPC call status
+                            <table class="table table-bordered">
+                                <thead>
+                                </thead>
+                                <tbody>
 
-                    <tr>
-                        <td>status code</td>
-                        <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                            class="p-2">{{ grpc_status.code }}</td>
-                    </tr>
-                    <tr>
-                        <td>status details</td>
-                        <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                            class="p-2">{{ grpc_status.details }}</td>
-                    </tr>
+                                <tr>
+                                    <td>status code</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ grpc_status.code }}</td>
+                                </tr>
+                                <tr>
+                                    <td>status details</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ grpc_status.details }}</td>
+                                </tr>
 
-                    </tbody>
-                </table>
-            {% endif %}
+                                </tbody>
+                            </table>
+                        {% endif %}
 
-            {% if grpc_response is not empty %}
-                RPC response
-                <table class="table table-bordered">
-                    <tbody>
-                    <tr>
-                        <td>user id</td>
-                        <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                            class="p-2">{{ grpc_response.getStatus() }}</td>
-                    </tr>
-                    <tr>
-                        <td>Access token</td>
-                        <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                            class="p-2">{{ grpc_response.getAccessToken() }}</td>
-                    </tr>
-                    <tr>
-                        <td>Refresh token</td>
-                        <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                            class="p-2">{{ grpc_response.getRefreshToken() }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            {% endif %}
+                        {% if grpc_response is not empty %}
+                            RPC response
+                            <table class="table table-bordered">
+                                <tbody>
+                                <tr>
+                                    <td>user id</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ grpc_response.getStatus() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Access token</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ grpc_response.getAccessToken() }}</td>
+                                </tr>
+                                <tr>
+                                    <td>Refresh token</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ grpc_response.getRefreshToken() }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        {% endif %}
 
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $( document ).ready(function() {
+            $('#copy-code').click(function(e){
+                e.preventDefault();
+                $("#sign_in_username").val($('#sign_up_email').text());
+                $("#sign_in_password").val($('#sign_up_pass').text());
+            });
+        });
+    </script>
 {% endblock %}

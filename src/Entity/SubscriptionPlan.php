@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\SubscriptionTier;
 use App\Repository\SubscriptionPlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -61,6 +62,11 @@ class SubscriptionPlan
 
     #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private DateTime|null $deletedAt = null;
+
+    public function __construct()
+    {
+        $this->tier = SubscriptionTier::Freemium->value();
+    }
 
     public function getDescription(): string|null
     {
