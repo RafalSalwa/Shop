@@ -16,6 +16,8 @@ interface ShopUserInterface extends UserInterface
 
     public function getSubscription(): Subscription;
 
+    public function setSubscription(Subscription $subscription): void;
+
     public function getToken(): Token;
 
     public function getRefreshToken(): Token;

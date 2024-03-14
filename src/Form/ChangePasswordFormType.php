@@ -51,8 +51,8 @@ final class ChangePasswordFormType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setDefaults([]);
+        $resolver->setDefaults([]);
     }
 }

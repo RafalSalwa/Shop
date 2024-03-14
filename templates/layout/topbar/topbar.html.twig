@@ -17,12 +17,13 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid">
+    <div class="row p-0">
         {% for type, messages in app.session.flashbag.all() %}
             {% for message in messages %}
-                <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-                    <strong>{{ type }}</strong> {{ message|raw }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="col-12 d-none d-lg-block p-0">
+                    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+                        {{ message|raw }}
+                    </div>
                 </div>
             {% endfor %}
         {% endfor %}
@@ -50,10 +51,10 @@
         </div>
         <div class="col-lg-3 col-6 text-right">
             {% if app.user %}
-                <a href="" class="btn border">
-                    <i class="fas fa-heart text-primary"></i>
-                    <span class="badge">0</span>
-                </a>
+                {#                <a href="" class="btn border"> #}
+                {#                    <i class="fas fa-heart text-primary"></i> #}
+                {#                    <span class="badge">0</span> #}
+                {#                </a> #}
 
                 <a href="{{ path('cart_index') }}" class="btn border">
                     <i class="fas fa-shopping-cart text-primary"></i>

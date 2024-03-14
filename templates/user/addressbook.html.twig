@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid my-5 py-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                <a class="btn shadow-none d-flex align-items-center justify-content-between bg-secondary text-white w-100"
+                   data-toggle="collapse" href="#navbar-vertical"
+                   style="height: 65px; margin-top: -1px; padding: 0 30px;">
+                    <h6 class="m-0">Navigation</h6>
+                </a>
+                <nav
+                    class="navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light w-100"
+                    id="navbar-vertical">
+                    <div class="navbar-nav w-100 overflow-hidden">
+                        <a href="" class="nav-item nav-link active">Orders</a>
+                        <a href="" class="nav-item nav-link">AddressBook</a>
+                    </div>
+                </nav>
+            </div>
+            <div class="col-lg-9 d-none d-lg-block">
+                <div class="col-12 px-2">
+                    <div class="row">
+                        {{ include('user/partials/_delivery_address_list.html.twig') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

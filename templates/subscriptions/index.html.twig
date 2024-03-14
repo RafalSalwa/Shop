@@ -2,21 +2,49 @@
 
 {% block title %}Subscriptions{% endblock %}
 {% block header_description %}
-    <p class="fs-5">Subscription Plans, like Products, are part of Doctrine Class Table Inheritance,
-        Base
-        class for those
-        entities is <strong>App\Entity\CartItem</strong>. <br/> App\Entity\SubscriptionPlan Also
-        implements two
-        interfaces: <i>CartInsertableInterface, CartItemInterface</i>
-    </p>
+    Your current subscription tier is: <br/>
+    {% if app.user and app.user.subscription is not empty %}
+        <p class="text-primary" style="font-size: 12px; margin:0;">
+            {{ app.user.subscription.plan.name }}
+        </p>
+    {% endif %}
 {% endblock %}
 
 {% block body %}
-        <div class="container-xl px-lg-5">
-            <div class="row gx-lg-5">
-                {% for plan in plans %}
-                    {% include "subscriptions/partials/card.html.twig" %}
-                {% endfor %}
-            </div>
+    <div class="container-xl px-lg-5">
+        <div class="row gx-lg-5">
+            {% for plan in plans %}
+                <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
+                    <div class="card product-item border-0 mb-4">
+                        <div
+                            class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
+                            <img class="img-fluid w-100" src="https://picsum.photos/seed/{{ random() }}/500" alt="">
+                        </div>
+                        <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
+                            <h6 class="text-truncate mb-3">{{ plan.name|capitalize }}</h6>
+                            <div class="justify-content-center">
+                                <h6>{{ (plan.price / 100)|format_currency('USD') }}</h6>
+                                <h6 class="text-muted ml-2">
+                                    {{ plan.description }}
+                                </h6>
+                            </div>
+                        </div>
+                        <div class="card-footer d-flex justify-content-center bg-light border text-center">
+                            {% if app.user and is_granted('ORDER_SUBSCRIPTION_PLAN', plan) %}
+                                <a href="{{ path("subscriptions_order", {'id': plan.id}) }}"
+                                   class="btn btn-sm text-dark p-0">
+                                    <i class="fas fa-shopping-cart text-primary mr-1"></i>Buy
+                                </a>
+                            {% else %}
+                                <div class="text-center">
+                                    Already included in Your plan.
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+            {% endfor %}
         </div>
+    </div>
 {% endblock %}

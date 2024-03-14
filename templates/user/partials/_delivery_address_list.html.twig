@@ -1,0 +1,34 @@
+{% if addresses is not empty %}
+    {% for address in addresses %}
+        <div class="card border-secondary col-3 mb-5 mx-5 p-0">
+            <div class="card-header {{ (address.default) ? 'bg-primary' : 'bg-secondary' }} border-0">
+                <h6 class="font-weight-semi-bold m-0">
+                    {{ address.firstName ~ " " ~ address.lastName }} {% if address.default %} Default {% endif %}
+                </h6>
+            </div>
+            <div class="card-body">
+                <h6 class="font-weight-light mb-3">{{ address.addressLine1 }} {{ address.addressLine2 }}</h6>
+
+                <div class="d-flex justify-content-between mb-3 pt-1">
+                    <h6 class="font-weight-light">{{ address.postalCode }} {{ address.city }}</h6>
+                </div>
+                <div class="d-flex justify-content-between mb-3">
+                    <h6 class="font-weight-light">{{ address.state }}, {{ address.country }}</h6>
+                </div>
+                <p class="font-weight-lighter">{{ address.phoneNo }}</p>
+            </div>
+            <div class="card-footer border-secondary bg-transparent justify-content-center">
+                <button data-address-id="{{ address.id }}" style="width:49% !important;"
+                        class="btn btn-lg btn-sm btn-primary col-auto font-weight-medium my-3 py-3 w-40"> Edit
+                </button>
+                <button data-address-id="{{ address.id }}" style="width:49% !important;"
+                        class="btn btn-lg btn-sm btn-primary col-auto font-weight-medium my-3 py-3 w-40 w-50"> Remove
+                </button>
+            </div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="text-center">
+        You have not set any addresses,<br/> Yet. <br/>Don't worry, let's create one.
+    </div>
+{% endif %}

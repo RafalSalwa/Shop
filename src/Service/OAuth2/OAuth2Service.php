@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\OAuth2;
 
 use App\Entity\OAuth2ClientProfile;
 use App\Entity\OAuth2UserConsent;
@@ -14,12 +14,12 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use function array_diff;
 use function array_merge;
 
-final class OAuth2Service
+final readonly class OAuth2Service
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly Security $security,
-        private readonly RequestStack $requestStack,
+        private EntityManagerInterface $entityManager,
+        private Security $security,
+        private RequestStack $requestStack,
     ) {}
 
     public function getProfile($appClient): OAuth2ClientProfile|null

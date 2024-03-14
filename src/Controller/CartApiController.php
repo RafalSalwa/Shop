@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
-use App\Manager\CartManager;
+use App\Requests\CartSetQuantityRequest;
 use App\Service\CartService;
 use App\Service\ProductsService;
 use Doctrine\DBAL\Exception;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -25,7 +27,7 @@ use function sprintf;
 use const JSON_THROW_ON_ERROR;
 
 #[asController]
-#[Route(path: '/api/cart', name: 'api_cart', methods: ['GET', 'POST'])]
+#[Route(path: '/cart/api', name: 'cart_api_', methods: ['GET', 'POST', 'PUT'])]
 final class CartApiController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index', methods: ['GET'])]
@@ -104,5 +106,20 @@ final class CartApiController extends AbstractShopController
         return $this->json(
             ['status' => 'success'],
         );
+    }
+
+    #[Route(path: '/set/quantity', name: 'set_quantity', methods: ['PUT'])]
+    public function setQuantity(
+        #[MapRequestPayload]
+        CartSetQuantityRequest $cartSetQuantityRequest,
+        CartService $cartService,
+    ): JsonResponse {
+        try {
+            $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
+
+            return $this->json('ok');
+        } catch (CartOperationExceptionInterface $exception) {
+            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

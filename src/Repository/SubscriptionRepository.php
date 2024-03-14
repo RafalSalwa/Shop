@@ -28,7 +28,12 @@ final class SubscriptionRepository extends ServiceEntityRepository
 
     public function findForUser(int|string $userId): ?Subscription
     {
-        return $this->findOneBy(['userId' => $userId]);
+        return $this->findOneBy(
+            [
+                'userId' => $userId,
+                'isActive' => true,
+            ],
+        );
     }
 
     public function assignSubscription(int $getUserId, SubscriptionPlan $plan): void
@@ -54,5 +59,16 @@ final class SubscriptionRepository extends ServiceEntityRepository
         $this->getEntityManager()
             ->flush()
         ;
+    }
+
+    public function clearSubscriptionsForUserId(int $userId): void
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->update()
+            ->set('s.isActive', $qb->expr()->literal(false))
+            ->where('s.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->execute();
     }
 }

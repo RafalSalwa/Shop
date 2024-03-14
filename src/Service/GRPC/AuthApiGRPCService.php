@@ -2,19 +2,21 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace App\Service\GRPC;
 
+use App\Model\GRPC\VerificationCodeRequest;
 use App\Protobuf\Generated\AuthServiceClient;
 use App\Protobuf\Generated\SignInUserInput;
 use App\Protobuf\Generated\SignUpUserInput;
 use App\Protobuf\Generated\SignUpUserResponse;
 use App\Protobuf\Generated\UserServiceClient;
+use App\Protobuf\Generated\VerificationResponse;
 use App\Protobuf\Generated\VerifyUserRequest;
 use Grpc\ChannelCredentials;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
-final class AuthGRPCService
+final class AuthApiGRPCService
 {
     private const GRPC_USER_KEY = 'grpc_user';
 
@@ -61,29 +63,24 @@ final class AuthGRPCService
         $signUpUserInput->setPassword($password);
         $signUpUserInput->setPasswordConfirm($password);
 
-        $response = $this->getAuthClient()
-            ->SignUpUser($signUpUserInput)
-            ->wait()
-        ;
+        $response = $this->getAuthClient()->SignUpUser($signUpUserInput)
+            ->wait();
         $user = $response[0];
         if ($user instanceof SignUpUserResponse && $user->getVerificationToken()) {
             $arrUser = [
-                'username' => $user->getUsername(),
+                'username' => $email,
                 'password' => $password,
                 'vCode' => $user->getVerificationToken(),
                 'verified' => false,
             ];
             $this->setUserCredentialsFromLastSignUp($arrUser);
         }
-
         return $response;
     }
 
     public function setUserCredentialsFromLastSignUp(array $arrUser): void
     {
-        $this->getSession()
-            ->set(self::GRPC_USER_KEY, $arrUser)
-        ;
+        $this->getSession()->set(self::GRPC_USER_KEY, $arrUser);
     }
 
     private function getSession(): SessionInterface
@@ -91,26 +88,17 @@ final class AuthGRPCService
         return $this->requestStack->getSession();
     }
 
-    public function getVcodeFromLastSignUp(): ?string
-    {
-        $arrUser = $this->getSession()
-            ->get(self::GRPC_USER_KEY)
-        ;
-
-        return $arrUser['vCode'];
-    }
-
-    public function verifyCode(string $code): array
+    public function verifyUserByCode(string $code): array
     {
         $verifyUserRequest = new VerifyUserRequest();
         $verifyUserRequest->setCode($code);
 
-        $response = $this->getUserClient()
-            ->VerifyUser($verifyUserRequest)
-            ->wait()
-        ;
+        $response = $this->getUserClient()->VerifyUser($verifyUserRequest)
+            ->wait();
+
         $returnObject = $response[0];
-        if ($returnObject->getSuccess()) {
+        assert($returnObject instanceof VerificationResponse);
+        if (true === $returnObject->getSuccess()) {
             $arrUser = $this->getUserCredentialsFromLastSignUp();
             $arrUser['verified'] = true;
             $this->setUserCredentialsFromLastSignUp($arrUser);
@@ -135,8 +123,16 @@ final class AuthGRPCService
 
     public function getUserCredentialsFromLastSignUp(): ?array
     {
-        return $this->getSession()
-            ->get(self::GRPC_USER_KEY)
-        ;
+        return $this->getSession()->get(self::GRPC_USER_KEY);
+    }
+
+    public function assignVerificationCodeFormLastSignUp(
+        VerificationCodeRequest $verificationCodeRequest,
+    ): VerificationCodeRequest {
+        if (true === $this->getSession()->has(self::GRPC_USER_KEY)) {
+            $verificationCodeRequest->setVerificationCode($this->getSession()->get(self::GRPC_USER_KEY));
+        }
+
+        return $verificationCodeRequest;
     }
 }

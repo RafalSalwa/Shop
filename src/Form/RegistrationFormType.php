@@ -75,9 +75,9 @@ final class RegistrationFormType extends AbstractType implements DataMapperInter
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setDefaults(
+        $resolver->setDefaults(
             [
                 'attr' => ['class' => 'bg-white  rounded-5 shadow-5-strong p-5'],
                 'empty_data' => null,

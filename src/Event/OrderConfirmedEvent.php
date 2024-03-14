@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace App\Event;
 
+use App\Entity\Order;
 use Symfony\Contracts\EventDispatcher\Event;
 
 final class OrderConfirmedEvent extends Event
 {
-    public function __construct(private readonly int $orderId)
+    public function __construct(private readonly Order $order)
     {}
 
-    public function getOrderData(): int
+    public function getOrder(): Order
     {
-        return $this->orderId;
+        return $this->order;
     }
 }

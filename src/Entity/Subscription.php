@@ -48,21 +48,33 @@ class Subscription
 
     #[Column(
         name: 'starts_at',
-        type: Types::DATETIME_MUTABLE,
+        type: Types::DATETIME_IMMUTABLE,
         nullable: true,
         options: ['default' => 'CURRENT_TIMESTAMP'],
     )]
-    private DateTime|null $startsAt = null;
+    private DateTimeImmutable $startsAt;
 
-    #[Column(name: 'ends_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $endsAt = null;
+    #[Column(name: 'ends_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private DateTimeImmutable|null $endsAt = null;
 
-    public function __construct()
+    public function __construct(int $userId, SubscriptionPlan $plan)
     {
-        $dateTime = new DateTime();
-        $dateTime->add(new DateInterval('P30D'));
+        $this->userId = $userId;
+        $this->subscriptionPlan = $plan;
+        $this->subscriptionTier = SubscriptionTier::from($plan->getTier());
 
-        $this->endsAt = $dateTime;
+        $this->isActive = true;
+
+        $now = new DateTimeImmutable();
+        $this->createdAt = $now;
+        $this->startsAt = $now;
+
+        $this->endsAt = $now->add(new DateInterval('P30D'));
+    }
+
+    public function getTier(): SubscriptionTier
+    {
+        return $this->subscriptionTier;
     }
 
     public function getPlan(): SubscriptionPlan|null
@@ -133,11 +145,6 @@ class Subscription
     public function getRequiredLevel(): int
     {
         return $this->getTier()->value;
-    }
-
-    public function getTier(): SubscriptionTier
-    {
-        return $this->subscriptionTier;
     }
 
     public function getId(): int

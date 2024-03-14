@@ -1,0 +1,22 @@
+{% set curr_path = path(app.request.get('_route')) %}
+<a class="btn shadow-none d-flex align-items-center justify-content-between bg-secondary text-white w-100"
+   data-toggle="collapse" href="#navbar-vertical"
+   style="height: 65px; margin-top: -1px; padding: 0 30px;">
+    <h6 class="m-0">Navigation</h6>
+</a>
+<nav
+    class="navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light w-100"
+    id="navbar-vertical">
+    <div class="navbar-nav w-100 overflow-hidden">
+        <a href="{{ path('user_orders') }}"
+           class="nav-item nav-link {% if curr_path is same as path('user_orders') %}active{% endif %}">
+            Orders</a>
+        <a href="{{ path('user_addressbook') }}"
+           class="nav-item nav-link {% if curr_path is same as path('user_addressbook') %}active{% endif %}">
+            AddressBook</a>
+        <a href="{{ path('user_subscriptions') }}"
+           class="nav-item nav-link {% if curr_path is same as path('user_subscriptions') %}active{% endif %}">
+            Cancel
+            subscription</a>
+    </div>
+</nav>

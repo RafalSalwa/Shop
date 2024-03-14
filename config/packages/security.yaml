@@ -22,6 +22,8 @@ security:
         max_attempts: 5
         interval: '5 minutes'
       lazy: true
+      access_denied_handler: App\Security\AccessDeniedHandler
+      entry_point: App\Security\AuthenticationEntryPoint
       provider: auth_api_user_provider
       custom_authenticators:
         - App\Security\AuthApiFormAuthenticator

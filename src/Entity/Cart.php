@@ -154,6 +154,14 @@ class Cart implements JsonSerializable
         $this->getItems()->removeElement($currentItem);
     }
 
+    public function getItemById(int $id): ?CartItemInterface
+    {
+        $filtered = $this->getItems()
+            ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id);
+
+        return $filtered->first();
+    }
+
     public function getTotalItemsCount(): int
     {
         $sum = 0;
@@ -174,14 +182,13 @@ class Cart implements JsonSerializable
         return $total;
     }
 
-    public function getTotalAmount(): string
+    public function getTotalAmount(): int
     {
         $total = '0';
         foreach ($this->getItems() as $item) {
             $total = bcadd($total, $item->getTotalPrice());
         }
-
-        return $total;
+        return (int)$total;
     }
 
     public function getUserId(): int

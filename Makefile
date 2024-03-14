@@ -3,13 +3,18 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 all:
 
 up:
+	docker compose up -d && docker compose logs -f nginx php
+up_local:
 	symfony server:stop
+	-killall webpack
 	docker compose up -d
 	symfony server:start -d --no-tls
 	symfony run -d --watch=config,src,templates,vendor symfony
 	symfony run -d yarn encore dev-server --port 9001
 	symfony server:log
 
+prod:
+	composer dump-autoload --no-dev --classmap-authoritative
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
@@ -18,7 +23,6 @@ run-always-ci:
 	vendor/bin/easy-ci check-commented-code src
 	vendor/bin/easy-ci check-conflicts src
 	vendor/bin/easy-ci find-multi-classes src
-
 
 run-always:
 	vendor/bin/swiss-knife check-commented-code src

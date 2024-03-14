@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Entity\EntityVerifyCode;
+use App\Model\GRPC\VerificationCodeRequest;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -17,7 +17,7 @@ final class UserVerifyCodeType extends AbstractType
     {
         $builder
             ->add(
-                'code',
+                'verificationCode',
                 TextType::class,
                 ['label' => 'code'],
             )
@@ -25,11 +25,11 @@ final class UserVerifyCodeType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setDefaults(
+        $resolver->setDefaults(
             [
-                'data_class' => EntityVerifyCode::class,
+                'data_class' => VerificationCodeRequest::class,
             ],
         );
     }

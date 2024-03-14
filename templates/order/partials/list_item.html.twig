@@ -1,15 +1,31 @@
-{% if order.getStatus() == constant('App\\Entity\\Order::PENDING') %}
-    {% set redirect_uri = path("order_show", {id: order.id}) %}
-{% else %}
-    {% set redirect_uri = path("order_details", {id: order.id}) %}
-{% endif %}
-<a href="{{ redirect_uri }}"
-   class="list-group-item list-group-item-action flex-column align-items-start">
-    <div class="d-flex w-100 justify-content-between">
-        <h5 class="mb-1">ID: {{ order.id }}</h5>
-        <small>{{ order.createdAt|date('d-m-Y') }}</small>
-    </div>
-    <p class="mb-1">Status: {{ order.status }}
-        amount: {{ order.getAmount(true)|format_currency("USD") }} status: {{ order.getLastPayment().getStatus() }}</p>
-    <small>Order items {{ order.items.count() }}</small>
-</a>
+<table class="table table-bordered text-center mb-5">
+    <thead class="bg-secondary text-dark">
+    <tr>
+        <th>Product</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Total</th>
+        {% if data_manipulation|default(false) %}
+            <th>Remove</th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody class="align-middle items-table-body">
+
+    {% if order.getStatus() == constant('App\\Entity\\Order::PENDING') %}
+        {% set redirect_uri = path("order_show", {id: order.id}) %}
+    {% else %}
+        {% set redirect_uri = path("order_details", {id: order.id}) %}
+    {% endif %}
+    <a href="{{ redirect_uri }}"
+       class="list-group-item list-group-item-action flex-column align-items-start">
+        <div class="d-flex w-100 justify-content-between">
+            <h5 class="mb-1">ID: {{ order.id }}</h5>
+            <small>{{ order.createdAt|date('d-m-Y') }}</small>
+        </div>
+        <p class="mb-1">Status: {{ order.status }}
+            amount: {{ order.total|format_currency("USD") }} status: {{ order.getLastPayment().getStatus() }}</p>
+        <small>Order items {{ order.items.count() }}</small>
+    </a>
+    </tbody>
+</table>

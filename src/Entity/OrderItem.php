@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -23,38 +24,41 @@ class OrderItem
     #[Column(name: 'order_item_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    #[ManyToOne(targetEntity: Order::class, cascade: ['persist'], inversedBy: 'items')]
-    #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id')]
-    private Order $order;
+    #[Column(name: 'item_name', type: Types::STRING, nullable: false)]
+    private string $name;
 
-    #[Column(name: 'cart_item_entity', type: Types::JSON)]
-    private string $cartItem;
+    #[ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
+    #[JoinColumn(name:'order_id', referencedColumnName: 'order_id', nullable: false)]
+    private $order;
+
+    #[Column(name: 'product_id', type: Types::INTEGER, nullable: false)]
+    private int $prodId;
+
+    #[Column(name: 'quantity', type: Types::INTEGER, nullable: false)]
+    private int $quantity;
+
+    #[Column(name: 'price', type: Types::INTEGER, nullable: false)]
+    private int $price;
 
     #[Column(name: 'cart_item_type', type: Types::STRING, length: 25)]
     private string $itemType;
 
-    public function getOrder(): Order
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdAt;
+
+    public function __construct(int $prodId, int $quantity, int $price, string $name)
     {
-        return $this->order;
+        $this->prodId = $prodId;
+        $this->quantity = $quantity;
+        $this->price = $price;
+        $this->name = $name;
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
-    public function setOrder(Order $order): self
+    public function setOrder(Order $order): void
     {
         $this->order = $order;
-
-        return $this;
-    }
-
-    public function getCartItem(): string
-    {
-        return $this->cartItem;
-    }
-
-    public function setCartItem(string $cartItem): self
-    {
-        $this->cartItem = $cartItem;
-
-        return $this;
     }
 
     public function getItemType(): string
@@ -68,4 +72,26 @@ class OrderItem
 
         return $this;
     }
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    public function getPrice(): int
+    {
+        return $this->price;
+    }
+
+
+    public function getQuantity(): int
+    {
+        return $this->quantity;
+    }
+
 }
