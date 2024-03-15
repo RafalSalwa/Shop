@@ -1,0 +1,65 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}gRPC SignUp{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row border-top p-xl-5 justify-content-center">
+            <div class="col-6 col-auto">
+                {% if api_user_response is not empty %}
+                    <ul>
+                        <li>{{ api_user_response.email }}</li>
+                        <li>{{ api_user_response.password }}</li>
+                        <li id="vCode">{{ api_user_response.vCode }}
+                            <a href="#" id="copy-code">
+                                <i class="fa fas fa-copy"></i>
+                            </a>
+                        </li>
+                    </ul>
+                {% endif %}
+                {{ form(form) }}
+                <div class="row">
+                    <div class="col-md-8">
+                        {% if grpc_responses is not empty %}
+                            RPC call stack
+                            <table class="table table-bordered">
+                                <thead>
+                                <th>status code</th>
+                                <th>Details (or Error)</th>
+                                </thead>
+                                <tbody>
+                                {% for element in grpc_responses %}
+                                <tr>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ element.1.code }}</td>
+                                    <td id="access_token"
+                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                        class="p-2">{{ element.1.details }}</td>
+                                </tr>
+                                {% endfor %}
+
+                                </tbody>
+                            </table>
+                            {% if api_user_response is not empty and api_user_response.verified is same as true%}
+                                Nice, now we can<a href="{{ path('grpc_sign_in') }}"> Sign In </a>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $( document ).ready(function() {
+            $('#copy-code').click(function(e){
+                e.preventDefault();
+                $("#user_verify_code_verificationCode").val($('#vCode').text());
+            });
+        });
+    </script>
+{% endblock %}

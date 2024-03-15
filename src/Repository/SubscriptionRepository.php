@@ -36,16 +36,15 @@ final class SubscriptionRepository extends ServiceEntityRepository
         );
     }
 
-    public function assignSubscription(int $getUserId, SubscriptionPlan $plan): void
+    public function assignSubscription(int $userId, SubscriptionPlan $plan): void
     {
-        $subscription = $this->createSubscription($plan);
-        $subscription->setUserId($getUserId);
+        $subscription = $this->createSubscription($userId, $plan);
         $this->save($subscription);
     }
 
-    public function createSubscription(SubscriptionPlan $subscriptionPlan): Subscription
+    public function createSubscription(int $userId, SubscriptionPlan $subscriptionPlan): Subscription
     {
-        $subscription = new Subscription();
+        $subscription = new Subscription(userId: $userId, plan: $subscriptionPlan);
         $subscription->setPlan($subscriptionPlan);
 
         return $subscription;

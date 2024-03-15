@@ -18,7 +18,7 @@ final class SignInType extends AbstractType
     {
         $builder
             ->add(
-                'username',
+                'email',
                 EmailType::class,
                 ['label' => 'Email'],
             )

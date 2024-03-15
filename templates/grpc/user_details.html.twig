@@ -1,18 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}gRPC SignUp{% endblock %}
-
 {% block body %}
     <div class="container-fluid">
         <div class="row border-top p-xl-5 justify-content-center">
-            <div class="col-6 col-auto">
+            <div class="col-8 col-auto text-wrap text-break">
                 {% if api_user_response is not empty %}
-                    Psst! You can use credentials from account that was created in previous steps.<br/>
-                    use:<br/>
+                    Psst! You can use credentials from account that was created in previous steps.<br/><br/>
                     <ul>
                         <li id="sign_in_api_email">{{ api_user_response.email }}</li>
                         <li id="sign_in_api_password">{{ api_user_response.password }}</li>
-                        <li><a href="#" id="autofill-sign_in">Autofill</a></li>
+                        <li id="sign_in_api_token">{{ api_user_response.tokenPair.token }}</li>
+                        <li id="sign_in_api_refresh_token">{{ api_user_response.tokenPair.refreshToken }}</li>
+                        <li>autofill:
+                            <a href="#" id="autofill_token">token</a>,
+                            <a href="#" id="autofill_refresh_token">refresh token</a>
+                        </li>
                     </ul>
                     {% if not api_user_response.verified %}
                         but this user is still not verified!<br/>
@@ -46,19 +48,31 @@
                                         </td>
                                     </tr>
                                 {% endfor %}
-                                {% if api_user_response.tokenPair is not empty %}
+                                {% if user is not empty %}
                                     <tr>
-                                        <td>JWT token</td>
-                                        <td>{{ api_user_response.tokenPair.token }}</td>
+                                        <td>id</td>
+                                        <td>{{ user.id }}</td>
                                     </tr>
                                     <tr>
-                                        <td>JWT Refresh Token</td>
-                                        <td>{{ api_user_response.tokenPair.refreshToken }}</td>
+                                        <td>email</td>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>verified</td>
+                                        <td>{{ user.verified }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>active</td>
+                                        <td>{{ user.active }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created</td>
+                                        <td>{{ user.createdAt }}</td>
                                     </tr>
                                 {% endif %}
                                 </tbody>
                             </table>
-                            {% if api_user_response is not empty and api_user_response.verified is same as true%}
+                            {% if api_user_response is not empty and api_user_response.verified is same as true %}
                                 Nice, now we can<a href="{{ path('grpc_user_details') }}"> get Account Details</a>
                             {% endif %}
                         {% endif %}
@@ -72,11 +86,14 @@
 
 {% block scripts %}
     <script>
-        $( document ).ready(function() {
-            $('#autofill-sign_in').click(function(e){
+        $(document).ready(function () {
+            $('#autofill_token').click(function (e) {
                 e.preventDefault();
-                $("#sign_in_email").val($('#sign_in_api_email').text());
-                $("#sign_in_password").val($('#sign_in_api_password').text());
+                $("#token_token").val($('#sign_in_api_token').text());
+            });
+            $('#autofill_refresh_token').click(function (e) {
+                e.preventDefault();
+                $("#token_token").val($('#sign_in_api_refresh_token').text());
             });
         });
     </script>
