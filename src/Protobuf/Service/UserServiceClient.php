@@ -114,4 +114,18 @@ class UserServiceClient extends \Grpc\BaseStub {
         $metadata, $options);
     }
 
+    /**
+     * @param \App\Protobuf\Message\GetUserRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     * @return \Grpc\UnaryCall
+     */
+    public function GetUserByToken(\App\Protobuf\Message\GetUserRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/intrvproto.UserService/GetUserByToken',
+        $argument,
+        ['\App\Protobuf\Message\UserDetails', 'decode'],
+        $metadata, $options);
+    }
+
 }

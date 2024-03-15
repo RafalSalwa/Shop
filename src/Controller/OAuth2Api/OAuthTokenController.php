@@ -21,6 +21,12 @@ use function urldecode;
 #[Route(path: '/oauth', name: 'oauth_', methods: ['GET', 'POST'])]
 final class OAuthTokenController extends AbstractShopController
 {
+    #[Route(path: '/oauth/token', name: 'token_index', methods: ['GET'])]
+    public function index(): Response
+    {
+        return $this->render('oauth_token/index.html.twig', []);
+    }
+
     #[Route(path: '/callback', name: 'callback', methods: ['GET'])]
     public function callback(Request $request, Session $session): Response
     {
@@ -43,12 +49,6 @@ final class OAuthTokenController extends AbstractShopController
                 'params'     => http_build_query($params),
             ],
         );
-    }
-
-    #[Route(path: '/oauth/token', name: 'oauth_token_index', methods: ['GET'])]
-    public function index(): Response
-    {
-        return $this->render('oauth_token/index.html.twig', []);
     }
 
     #[Route(path: '/consent', name: 'app_consent', methods: ['GET', 'POST'])]

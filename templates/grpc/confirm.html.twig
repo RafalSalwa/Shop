@@ -6,11 +6,11 @@
     <div class="container-fluid">
         <div class="row border-top p-xl-5 justify-content-center">
             <div class="col-6 col-auto">
-                {% if previous_sign_up_data is not empty %}
+                {% if api_user_response is not empty %}
                     <ul>
-                        <li>{{ previous_sign_up_data.username }}</li>
-                        <li>{{ previous_sign_up_data.password }}</li>
-                        <li id="vCode">{{ previous_sign_up_data.vCode }}
+                        <li>{{ api_user_response.email }}</li>
+                        <li>{{ api_user_response.password }}</li>
+                        <li id="vCode">{{ api_user_response.vCode }}
                             <a href="#" id="copy-code">
                                 <i class="fa fas fa-copy"></i>
                             </a>
@@ -41,22 +41,8 @@
 
                                 </tbody>
                             </table>
-                        {% endif %}
-
-                        {% if grpc_response is not empty %}
-                            RPC response
-                            <table class="table table-bordered">
-                                <tbody>
-                                <tr>
-                                    <td>status</td>
-                                    <td id="access_token"
-                                        style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                        class="p-2">{{ (grpc_response.getSuccess()) ? 'Success' : 'Failure' }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            {% if grpc_response.getSuccess() == true %}
-                                Great, You account is now active. go to <a href="{{ path('grpc_sign_in') }}">SignIn page</a>
+                            {% if api_user_response is not empty and api_user_response.verified is same as true%}
+                                Nice, now we can<a href="{{ path('grpc_sign_in') }}"> Sign In </a>
                             {% endif %}
                         {% endif %}
 

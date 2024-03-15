@@ -1,31 +1,24 @@
-{% extends 'logged.html.twig' %}
+{% extends 'base.html.twig' %}
 
-{% block title %}Hello IndexController!{% endblock %}
+{% block title %}OAuth2 Server{% endblock %}
 
 {% block body %}
-
-    <header class="py-5">
-        <div class="container px-lg-5">
-            <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
-                <div class="m-4 m-lg-5">
-                    <p class="fs-5">Authorization based on
-                        <a href="https://github.com/thephpleague/oauth2-server" target="_blank">thephpleague/oauth2-server</a><br/><br/>
-                        flow :
-                    <ul class="">
-                        <li>OAuthTokenController::index</li>
-                        <li>OAuthTokenController::consent</li>
-                        <li>League\Bundle\OAuth2ServerBundle\Controller\AuthorizationController::indexAction</li>
-                        <li>OAuthTokenController::callback</li>
-                    </ul>
-                    </p>
-                </div>
+    <div class="container-fluid bg-secondary mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 300px">
+            <h1 class="font-weight-semi-bold text-uppercase mb-3">{{ block('title') }}</h1>
+            <div class="d-inline-flex mt-5">
+                <p class="fs-5">
+                    Authorization based on
+                    <a href="https://github.com/thephpleague/oauth2-server"
+                       target="_blank">thephpleague/oauth2-server</a>
+                    <br/><br/></p>
             </div>
         </div>
-    </header>
+    </div>
     <div class="example-wrapper">
         <div class="container">
-            <div class="row mt-5">
-                <div class="col-md-8 col-sm-4 col-xs-6">
+            <div class="row mt-5 align-items-center justify-content-center">
+                <div class="col-md-6 col-auto col-sm-4 col-xs-6">
                     <div class="w3-container">
                         <p><strong>Test Client App</strong> would like to access the following information about you:
                         </p>
@@ -36,8 +29,9 @@
                         </ul>
                         <p>To allow this access, click the button below.</p>
                     </div>
-                    <form action="/consent?response_type=code&amp;client_id=testclient&amp;redirect_uri=https://interview.local/callback&amp;scope=profile%20email"
-                          method="post" class="w3-container">
+                    <form
+                        action="/oauth/consent?response_type=code&amp;client_id=testclient&amp;redirect_uri=https://interview.local/callback&amp;scope=profile%20email"
+                        method="post" class="w3-container">
                         <p>
                             <button class="btn btn-primary" tabindex="1"
                                     type="submit" name="consent" value="yes">Allow
@@ -46,4 +40,6 @@
                     </form>
                 </div>
             </div>
+        </div>
+    </div>
 {% endblock %}

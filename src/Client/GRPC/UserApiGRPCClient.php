@@ -4,24 +4,19 @@ declare(strict_types=1);
 
 namespace App\Client\GRPC;
 
-use App\Client\AuthClientInterface;
-use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthException;
-use App\Model\TokenPair;
-use App\Protobuf\Message\SignInUserInput;
-use App\Protobuf\Message\SignUpUserInput;
+use App\Protobuf\Message\GetUserRequest;
+use App\Protobuf\Message\UserDetails;
 use App\Protobuf\Message\VerificationCodeRequest;
 use App\Protobuf\Message\VerificationCodeResponse;
 use App\Protobuf\Message\VerifyUserRequest;
 use App\Protobuf\Service\UserServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
-use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use stdClass;
 use function assert;
-use function dd;
 
-final class UserApiGRPCClient implements AuthClientInterface
+final class UserApiGRPCClient
 {
     private UserServiceClient $userServiceClient;
 
@@ -35,39 +30,6 @@ final class UserApiGRPCClient implements AuthClientInterface
                 'credentials' => ChannelCredentials::createInsecure(),
             ],
         );
-    }
-
-    public function signIn(string $email, string $password): TokenPair
-    {
-        $signInUserInput = new SignInUserInput();
-        $signInUserInput->setUsername($email);
-        $signInUserInput->setPassword($password);
-        $arrResponse = $this->authServiceClient->SignInUser($signInUserInput)->wait();
-        $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-        $arrMessage = $arrResponse[0];
-
-        dd($arrMessage, $arrStatus);
-        $token = new Token('asd');
-        $refreshToken = new Token('asd');
-
-        return new TokenPair($token, $refreshToken);
-    }
-
-    public function signUp(string $email, string $password): bool
-    {
-        $signUpUserInput = new SignUpUserInput();
-        $signUpUserInput->setEmail($email);
-        $signUpUserInput->setPassword($password);
-        $signUpUserInput->setPasswordConfirm($password);
-
-        $arrResponse = $this->authServiceClient->SignUpUser($signUpUserInput)->wait();
-        $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-
-        assert($arrStatus instanceof stdClass);
-
-        return (new StatusResponse($arrStatus))->isOk();
     }
 
     /** @throws AuthException */
@@ -90,32 +52,60 @@ final class UserApiGRPCClient implements AuthClientInterface
         return $verificationCodeResponse->getCode();
     }
 
+    /**
+     * @throws AuthException
+     */
     public function confirmAccount(string $verificationCode): void
     {
         $verifyUserRequest = new VerifyUserRequest();
         $verifyUserRequest->setCode($verificationCode);
 
-        $response = $this->userServiceClient->VerifyUser($verifyUserRequest)
+        $arrResponse = $this->userServiceClient->VerifyUser($verifyUserRequest)
             ->wait();
-
-    }
-
-    public function getByVerificationCode(string $verificationCode): ShopUserInterface
-    {
-        // TODO: Implement getByVerificationCode() method.
-    }
-
-    public function signInByCode(string $email, string $verificationCode): TokenPair
-    {
-        // TODO: Implement signInByCode() method.
+        $this->responses[__FUNCTION__] = $arrResponse;
+        $status = $arrResponse[1];
+        assert($status instanceof stdClass);
+        $statusResponse = new StatusResponse($status);
+        if (false === $statusResponse->isOk()) {
+            throw new AuthException('missing verification code');
+        }
     }
 
     public function getResponses(): ?array
     {
         if (0 === count($this->responses)) {
-            return null;
+            return [];
         }
         return $this->responses;
 
+    }
+
+    public function getUser(string $token): array
+    {
+        $userRequest = new GetUserRequest();
+        $userRequest->setToken($token);
+
+        $arrResponse = $this->userServiceClient->GetUserByToken($userRequest)
+            ->wait();
+        $this->responses[__FUNCTION__] = $arrResponse;
+
+        $status = $arrResponse[1];
+        assert($status instanceof stdClass);
+
+        $statusResponse = new StatusResponse($status);
+        if (false === $statusResponse->isOk()) {
+           return [];
+        }
+
+        $userResponse = $arrResponse[0];
+        assert($userResponse instanceof UserDetails);
+
+        return [
+            'id'=>$userResponse->getId(),
+            'email'=>$userResponse->getEmail(),
+            'verified'=>$userResponse->getVerified(),
+            'active'=>$userResponse->getActive(),
+            'createdAt'=>$userResponse->getCreatedAt()->toDateTime()->format('d-m-Y H:i:s'),
+        ];
     }
 }

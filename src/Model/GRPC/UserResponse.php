@@ -1,16 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Model\GRPC;
 
-final readonly class UserResponse {
+use App\Model\TokenPair;
 
+final class UserResponse
+{
     public function __construct(
         private string $email,
         private string $password,
         private string $vCode,
         private bool $isVerified,
-    )
-    {
+        private ?TokenPair $tokenPair = null,
+    ) {
     }
 
     public function getEmail(): string
@@ -33,5 +37,24 @@ final readonly class UserResponse {
         return $this->isVerified;
     }
 
+    public function getTokenPair(): ?TokenPair
+    {
+        return $this->tokenPair;
+    }
 
+    public function withIsVerified(bool $isVerified): self
+    {
+        $copy = clone $this;
+        $copy->isVerified = $isVerified;
+
+        return $copy;
+    }
+
+    public function withTokenPair(TokenPair $tokenPair): self
+    {
+        $copy = clone $this;
+        $copy->tokenPair = $tokenPair;
+
+        return $copy;
+    }
 }

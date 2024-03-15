@@ -9,6 +9,7 @@ use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthException;
 use App\Model\TokenPair;
 use App\Protobuf\Message\SignInUserInput;
+use App\Protobuf\Message\SignInUserResponse;
 use App\Protobuf\Message\SignUpUserInput;
 use App\Protobuf\Message\VerificationCodeRequest;
 use App\Protobuf\Message\VerificationCodeResponse;
@@ -19,7 +20,6 @@ use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use stdClass;
 use function assert;
-use function dd;
 
 final class AuthApiGRPCClient implements AuthClientInterface
 {
@@ -40,18 +40,20 @@ final class AuthApiGRPCClient implements AuthClientInterface
     public function signIn(string $email, string $password): TokenPair
     {
         $signInUserInput = new SignInUserInput();
-        $signInUserInput->setUsername($email);
+        $signInUserInput->setEmail($email);
         $signInUserInput->setPassword($password);
         $arrResponse = $this->authServiceClient->SignInUser($signInUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
         $arrStatus = $arrResponse[1];
-        $arrMessage = $arrResponse[0];
+        assert($arrStatus instanceof stdClass);
+        $statusResponse = new StatusResponse($arrStatus);
+        if (false === $statusResponse->isOk()) {
+            throw new AuthException('missing verification code');
+        }
+        $userResponse = $arrResponse[0];
+        assert($userResponse instanceof SignInUserResponse);
 
-        dd($arrMessage, $arrStatus);
-        $token = new Token('asd');
-        $refreshToken = new Token('asd');
-
-        return new TokenPair($token, $refreshToken);
+        return new TokenPair(new Token($userResponse->getAccessToken()), new Token($userResponse->getRefreshToken()));
     }
 
     public function signUp(string $email, string $password): bool
@@ -95,9 +97,16 @@ final class AuthApiGRPCClient implements AuthClientInterface
         $verifyUserRequest = new VerifyUserRequest();
         $verifyUserRequest->setCode($verificationCode);
 
-        $response = $this->getUserClient()->VerifyUser($verifyUserRequest)
+        $arrResponse = $this->getUserClient()->VerifyUser($verifyUserRequest)
             ->wait();
+        $this->responses[__FUNCTION__] = $arrResponse;
+        $arrStatus = $arrResponse[1];
 
+        assert($arrStatus instanceof stdClass);
+        $statusResponse = new StatusResponse($arrStatus);
+        if (false === $statusResponse->isOk()) {
+            throw new AuthException('missing verification code');
+        }
     }
 
     public function getByVerificationCode(string $verificationCode): ShopUserInterface
@@ -113,7 +122,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
     public function getResponses(): ?array
     {
         if (0 === count($this->responses)) {
-            return null;
+            return [];
         }
         return $this->responses;
 

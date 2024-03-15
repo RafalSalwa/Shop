@@ -17,12 +17,12 @@
                         <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
                             <a href="{{ path('grpc_index') }}" class="dropdown-item">Index page</a>
                             <a href="{{ path('grpc_sign_up') }}" class="dropdown-item">1. Create user</a>
-                            <a href="{{ path('grpc_user_verify') }}" class="dropdown-item">2. Verify User</a>
+                            <a href="{{ path('grpc_user_confirm') }}" class="dropdown-item">2. Verify User</a>
                             <a href="{{ path('grpc_sign_in') }}" class="dropdown-item">3. Sign In</a>
-                            <a href="{{ path('grpc_user_get') }}" class="dropdown-item">3. Get User Data</a>
+                            <a href="{{ path('grpc_user_details') }}" class="dropdown-item">3. Get User Data</a>
                         </div>
                     </div>
-                    <a href="" class="nav-item nav-link">OAuth2</a>
+                    <a href="{{ path('oauth_token_index') }}" class="nav-item nav-link">OAuth2</a>
                     <a href="" class="nav-item nav-link">Swager</a>
                 </div>
             </nav>
