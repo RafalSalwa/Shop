@@ -14,7 +14,7 @@ use function sprintf;
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
 class ProductCartItem extends AbstractCartItem
 {
-    #[ManyToOne(targetEntity: Product::class)]
+    #[ManyToOne(targetEntity: Product::class, fetch: 'EAGER')]
     #[JoinColumn(referencedColumnName: 'product_id')]
     protected CartInsertableInterface $referencedEntity;
 

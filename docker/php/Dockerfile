@@ -1,4 +1,4 @@
-FROM php:8.2-fpm-buster
+FROM php:8.3-fpm
 ENV TZ=Europe/Warsaw
 
 COPY ./docker/php/php.ini /usr/local/etc/php/conf.d/docker-php-config.ini
@@ -21,13 +21,14 @@ RUN apt update && apt install -y --no-install-recommends \
     && docker-php-ext-configure gd --with-jpeg --with-freetype \
     && docker-php-ext-configure pgsql --with-pgsql=/usr/local/pgsql \
     && docker-php-ext-configure sysvsem \
-    && docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath sysvsem sockets
+    && docker-php-ext-install pdo pdo_mysql zip xsl gd intl opcache exif mbstring pgsql pdo_pgsql bcmath sysvsem sockets \
 #    && git clone -b v1.57.0 https://github.com/grpc/grpc \
 #    && cd grpc && git submodule update --init \
 #    && mkdir cmake/build && cd cmake/build  \
-#    && cmake ../.. && make protoc grpc_php_plugin
-#ENV PATH "/grpc/cmake/build:${PATH}"
-#ENV PATH "/grpc/cmake/build/third_party/protobuf:${PATH}"
+#    && cmake ../.. && make protoc grpc_php_plugin \
+    && usermod -u 1000 www-data
+ENV PATH "/grpc/cmake/build:${PATH}"
+ENV PATH "/grpc/cmake/build/third_party/protobuf:${PATH}"
 
 # Set timezone
 RUN ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime && echo ${TZ} > /etc/timezone \

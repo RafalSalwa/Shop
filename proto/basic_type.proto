@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package intrvproto;
+option go_package = "github.com/RafalSalwa/interview-app-srv/intrvproto";
+option php_namespace = "App\\Protobuf\\Message";
+option php_metadata_namespace = "App\\Protobuf\\GPBMetadata";
+
+message BoolValue {
+bool value = 1;
+}
+
+message StringValue {
+string value = 1;
+}

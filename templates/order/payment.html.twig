@@ -1,24 +1,22 @@
-{% extends 'logged.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block title %}Payment{% endblock %}
 {% block body %}
-    <header class="py-5">
+    <header>
         <div class="container px-lg-5">
             <div class="p-4 p-lg-5 bg-light rounded-3 text-center">
                 <div class="m-4 m-lg-5">
-                    <p class="fs-5">In this step we have accepted Your pending order request and simulated payment.<br/><br/>
+                    <p class="fs-5">We have accepted Your pending order request and simulated payment.<br/><br/>
                         For testing purposes and to not share any api keys for payment providers, app generated random
                         uuid for payment hash like value and store it in db<br/><br/>
-                        regarding possible supported (and used by dev) payment gateways we can list Dotpay, PayU, tpay,
-                        Przelewy24 with Stripe and Dotpay, <br/><br/>
-                        For test You can choose any options, once confirmed we will send email to mailer_DSN (currently
-                        mailhog (port :8025 on this server<br/><br/>
-                        for <strong>No</strong> option we will allow to revisit this page from orders page, or just
+                        For <strong>Yes</strong> option we will run OrderProcessing workflow and simulate
+                        order and payment confirmation<br/>
+                        For <strong>No</strong> option we will allow to revisit this page from orders page, or just
                         keep pending order for around 3 hours and then, delete order and restore stock.</p>
                 </div>
             </div>
         </div>
     </header>
-
-    {{ form(form) }}
-
+    <div class="container px-lg-5">
+        {{ form(form) }}
+    </div>
 {% endblock %}

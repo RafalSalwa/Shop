@@ -6,8 +6,9 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
+use App\Form\PaymentType;
 use App\Service\AddressBookService;
-use App\Service\CartCalculatorService;
+use App\Service\CalculatorService;
 use App\Service\CartService;
 use App\Service\PaymentService;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,26 +26,29 @@ final class CartCheckoutController extends AbstractShopController
     public function index(
         Request $request,
         CartService $cartService,
-        CartCalculatorService $cartCalculator,
+        CalculatorService $cartCalculator,
         AddressBookService $addressBookService,
     ): Response {
         $address = new Address();
         $form = $this->createForm(AddressType::class, $address);
+        $paymentForm = $this->createForm(PaymentType::class);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             $address->setUserId($this->getUserId());
             $addressBookService->save($address);
         }
+        $cart = $cartService->getCurrentCart();
 
         return $this->render(
             'cart/checkout.html.twig',
             [
-                'cart' => $cartService->getCurrentCart(),
-                'summary' => $cartCalculator->calculateSummary(),
+                'cart' => $cart,
+                'summary' => $cartCalculator->calculateSummary($cart->getTotalAmount(), $cart->getCoupon()),
                 'deliveryAddresses' => $addressBookService->getDeliveryAddresses($this->getUserId()),
                 'defaultAddress' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
                 'form' => $form,
+                'paymentForm' => $paymentForm,
             ],
         );
     }

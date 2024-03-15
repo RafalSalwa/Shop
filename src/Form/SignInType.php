@@ -18,7 +18,7 @@ final class SignInType extends AbstractType
     {
         $builder
             ->add(
-                'username',
+                'email',
                 EmailType::class,
                 ['label' => 'Email'],
             )
@@ -31,9 +31,9 @@ final class SignInType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setDefaults(
+        $resolver->setDefaults(
             [
                 'data_class' => SignInUserInput::class,
             ],

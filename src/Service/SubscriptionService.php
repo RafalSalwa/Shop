@@ -5,45 +5,50 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Subscription;
-use App\Entity\User;
+use App\Entity\SubscriptionPlan;
 use App\Repository\SubscriptionPlanRepository;
 use App\Repository\SubscriptionRepository;
-use Symfony\Bundle\SecurityBundle\Security;
-use function assert;
 
-final class SubscriptionService
+final readonly class SubscriptionService
 {
     public function __construct(
-        private readonly SubscriptionPlanRepository $subscriptionPlanRepository,
-        private readonly SubscriptionRepository $subscriptionRepository,
-        private readonly Security $security,
+        private SubscriptionPlanRepository $subscriptionPlanRepository,
+        private SubscriptionRepository $subscriptionRepository,
     ) {}
 
-    public function cancelSubscription(): void
+    public function cancelSubscription(int $userId): void
     {
-        $this->assignSubscription('Freemium');
+        $this->subscriptionRepository->clearSubscriptionsForUserId($userId);
+        $this->assignFreemium($userId);
     }
 
-    public function assignSubscription(string $type): void
+    public function assignFreemium(int $userId): void
     {
-        $plan = $this->subscriptionPlanRepository->getByName($type);
-        if (! $plan) {
-            return;
-        }
-
-        $user = $this->security->getUser();
-        assert($user instanceof User);
-        $subscription = $user->getSubscription();
-        if ($user->getSubscription()->getSubscriptionPlan()->getName() === $type) {
-            return;
-        }
-
-        $subscription->setSubscriptionPlan($plan);
-        $user->setSubscription($subscription);
+        $subscriptionPlan = $this->subscriptionPlanRepository->createFreemiumPlan();
+        $this->assignSubscription($subscriptionPlan, $userId);
     }
 
-    public function find(int $userId): ?Subscription
+    public function assignSubscription(SubscriptionPlan $plan, int $userId): void
     {
-        return $this->subscriptionRepository->findOneBy(['userId' => $userId]);
+        $this->subscriptionRepository->clearSubscriptionsForUserId($userId);
+        $subscription = new Subscription(userId: $userId, plan: $plan);
+        $this->subscriptionRepository->save($subscription);
+    }
+
+    public function find(int $userId): Subscription
+    {
+        $subscription = $this->subscriptionRepository->findOneBy(
+            [
+                'userId' => $userId,
+                'isActive' => true,
+            ],
+        );
+        if (null !== $subscription) {
+            return $subscription;
+        }
+
+        $this->assignFreemium($userId);
+
+        return $this->find($userId);
     }
 }

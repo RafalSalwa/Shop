@@ -10,8 +10,9 @@ use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\UnencryptedToken;
+use Stringable;
 
-final readonly class Token
+final readonly class Token implements Stringable
 {
     private UnencryptedToken $parsedToken;
 
@@ -40,5 +41,10 @@ final readonly class Token
     public function getExp(): DateTimeImmutable
     {
         return $this->parsedToken->claims()->get("exp");
+    }
+
+    public function __toString()
+    {
+        return $this->token;
     }
 }

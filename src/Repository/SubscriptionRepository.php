@@ -28,19 +28,23 @@ final class SubscriptionRepository extends ServiceEntityRepository
 
     public function findForUser(int|string $userId): ?Subscription
     {
-        return $this->findOneBy(['userId' => $userId]);
+        return $this->findOneBy(
+            [
+                'userId' => $userId,
+                'isActive' => true,
+            ],
+        );
     }
 
-    public function assignSubscription(int $getUserId, SubscriptionPlan $plan): void
+    public function assignSubscription(int $userId, SubscriptionPlan $plan): void
     {
-        $subscription = $this->createSubscription($plan);
-        $subscription->setUserId($getUserId);
+        $subscription = $this->createSubscription($userId, $plan);
         $this->save($subscription);
     }
 
-    public function createSubscription(SubscriptionPlan $subscriptionPlan): Subscription
+    public function createSubscription(int $userId, SubscriptionPlan $subscriptionPlan): Subscription
     {
-        $subscription = new Subscription();
+        $subscription = new Subscription(userId: $userId, plan: $subscriptionPlan);
         $subscription->setPlan($subscriptionPlan);
 
         return $subscription;
@@ -54,5 +58,16 @@ final class SubscriptionRepository extends ServiceEntityRepository
         $this->getEntityManager()
             ->flush()
         ;
+    }
+
+    public function clearSubscriptionsForUserId(int $userId): void
+    {
+        $qb = $this->createQueryBuilder('s');
+        $qb->update()
+            ->set('s.isActive', $qb->expr()->literal(false))
+            ->where('s.userId = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->execute();
     }
 }

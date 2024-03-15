@@ -1,5 +1,23 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    user {{ app.user.email }}
-    <a href="{{ path("login_logout") }}">logout</a>
+    <div class="container-fluid my-5 py-5">
+        <div class="row px-xl-5">
+            <div class="col-lg-3 d-none d-lg-block">
+                {% include 'user/partials/navigation.html.twig' %}
+            </div>
+            <div class="col-lg-9 d-none d-lg-block">
+                <div class="text-center mb-4">
+                    <h2 class="section-title px-5">
+                        <span class="px-2">Pending Orders</span></h2>
+                </div>
+                {% include "order/partials/list.html.twig" with {'paginator': pendings} %}
+
+                <div class="text-center my-4">
+                    <h2 class="section-title px-5">
+                        <span class="px-2">Orders</span></h2>
+                </div>
+                {% include "order/partials/list.html.twig" with {'paginator': orders} %}
+            </div>
+        </div>
+    </div>
 {% endblock %}

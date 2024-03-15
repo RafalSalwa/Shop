@@ -4,31 +4,26 @@
         <div class="col-lg-3 d-none d-lg-block">
             <a class="btn shadow-none d-flex align-items-center justify-content-between bg-primary text-white w-100"
                data-toggle="collapse" href="#navbar-vertical" style="height: 65px; margin-top: -1px; padding: 0 30px;">
-                <h6 class="m-0">Categories</h6>
+                <h6 class="m-0">Features</h6>
                 <i class="fa fa-angle-down text-dark"></i>
             </a>
             <nav
                 class="collapse position-absolute navbar navbar-vertical navbar-light align-items-start p-0 border border-top-0 border-bottom-0 bg-light"
                 id="navbar-vertical" style="width: calc(100% - 30px); z-index: 1;">
-                <div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
+                <div class="navbar-nav w-100 overflow-hidden" style="height: 210px">
                     <div class="nav-item dropdown">
-                        <a href="#" class="nav-link" data-toggle="dropdown">Dresses <i
+                        <a href="#" class="nav-link" data-toggle="dropdown">GRPC <i
                                 class="fa fa-angle-down float-right mt-1"></i></a>
                         <div class="dropdown-menu position-absolute bg-secondary border-0 rounded-0 w-100 m-0">
-                            <a href="" class="dropdown-item">Men's Dresses</a>
-                            <a href="" class="dropdown-item">Women's Dresses</a>
-                            <a href="" class="dropdown-item">Baby's Dresses</a>
+                            <a href="{{ path('grpc_index') }}" class="dropdown-item">Index page</a>
+                            <a href="{{ path('grpc_sign_up') }}" class="dropdown-item">1. Create user</a>
+                            <a href="{{ path('grpc_user_confirm') }}" class="dropdown-item">2. Verify User</a>
+                            <a href="{{ path('grpc_sign_in') }}" class="dropdown-item">3. Sign In</a>
+                            <a href="{{ path('grpc_user_details') }}" class="dropdown-item">3. Get User Data</a>
                         </div>
                     </div>
-                    <a href="" class="nav-item nav-link">Shirts</a>
-                    <a href="" class="nav-item nav-link">Jeans</a>
-                    <a href="" class="nav-item nav-link">Swimwear</a>
-                    <a href="" class="nav-item nav-link">Sleepwear</a>
-                    <a href="" class="nav-item nav-link">Sportswear</a>
-                    <a href="" class="nav-item nav-link">Jumpsuits</a>
-                    <a href="" class="nav-item nav-link">Blazers</a>
-                    <a href="" class="nav-item nav-link">Jackets</a>
-                    <a href="" class="nav-item nav-link">Shoes</a>
+                    <a href="{{ path('oauth_token_index') }}" class="nav-item nav-link">OAuth2</a>
+                    <a href="" class="nav-item nav-link">Swager</a>
                 </div>
             </nav>
         </div>
@@ -52,13 +47,11 @@
                             <a href="{{ path('login_index') }}" class="nav-item nav-link">Login</a>
                             <a href="{{ path('register_index') }}" class="nav-item nav-link">Register</a>
                         {% else %}
-                            <a href="{{ path('user_profile') }}" class="btn">
+                            <a href="{{ path('user_orders') }}" class="btn" style="padding:0 5px 0 0;">
                                 <i class="fas fa-user text-primary m-1" style="font-size: 22px"></i>
-                                {% if app.user and app.user.subscription is not empty %}
-                                    <p class="subscription-status text-primary" style="font-size: 12px; margin:0;">
-                                        {{ app.user.subscription.plan.name }}
-                                    </p>
-                                {% endif %}
+                                <p class="subscription-status text-primary" style="font-size: 12px; margin:0;">
+                                    Profile
+                                </p>
                             </a>
                         {% endif %}
                     </div>

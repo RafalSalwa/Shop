@@ -21,19 +21,16 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
-        return $queryBuilder->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     public function fetchAvailablePlans()
     {
         $query = $this->createQueryBuilder('p')
             ->where('p.isVisible = true')
-            ->orderBy('p.createdAt', 'DESC')
+            ->orderBy('p.tier', 'ASC')
             ->setCacheMode(Cache::MODE_GET)
             ->setCacheable(true)
             ->getQuery()

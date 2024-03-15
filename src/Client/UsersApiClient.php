@@ -52,6 +52,7 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
                 refreshToken: $arrContent['user']['refresh_token'],
             );
             $subscription = $this->subscriptionService->find($user->getId());
+
             $user->setSubscription($subscription);
 
             return $user;

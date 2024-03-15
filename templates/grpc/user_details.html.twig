@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row border-top p-xl-5 justify-content-center">
+            <div class="col-8 col-auto text-wrap text-break">
+                {% if api_user_response is not empty %}
+                    Psst! You can use credentials from account that was created in previous steps.<br/><br/>
+                    <ul>
+                        <li id="sign_in_api_email">{{ api_user_response.email }}</li>
+                        <li id="sign_in_api_password">{{ api_user_response.password }}</li>
+                        <li id="sign_in_api_token">{{ api_user_response.tokenPair.token }}</li>
+                        <li id="sign_in_api_refresh_token">{{ api_user_response.tokenPair.refreshToken }}</li>
+                        <li>autofill:
+                            <a href="#" id="autofill_token">token</a>,
+                            <a href="#" id="autofill_refresh_token">refresh token</a>
+                        </li>
+                    </ul>
+                    {% if not api_user_response.verified %}
+                        but this user is still not verified!<br/>
+                        Please visit
+                        <a href="{{ path("grpc_user_confirm") }}"
+                           class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                            Verify Account page</a><br/>
+                        and use code: <p class="text-primary">{{ grpc_credentials['vCode'] }}</p>
+                    {% endif %}
+                {% endif %}
+                {{ form(form) }}
+                <div class="row">
+                    <div class="col-md-12">
+                        {% if grpc_responses is not empty %}
+                            RPC call stack
+                            <table class="table table-bordered table-responsive">
+                                <thead>
+                                <th>status code</th>
+                                <th>Details (or Error)</th>
+                                </thead>
+                                <tbody>
+                                {% for element in grpc_responses %}
+                                    <tr>
+                                        <td id="access_token"
+                                            style="word-wrap: break-word;"
+                                            class="p-2">{{ element.1.code }}</td>
+                                        <td id="access_token"
+                                            style="word-wrap: break-word;"
+                                            class="p-2">
+                                            {{ element.1.details }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {% if user is not empty %}
+                                    <tr>
+                                        <td>id</td>
+                                        <td>{{ user.id }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>email</td>
+                                        <td>{{ user.email }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>verified</td>
+                                        <td>{{ user.verified }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>active</td>
+                                        <td>{{ user.active }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Created</td>
+                                        <td>{{ user.createdAt }}</td>
+                                    </tr>
+                                {% endif %}
+                                </tbody>
+                            </table>
+                            {% if api_user_response is not empty and api_user_response.verified is same as true %}
+                                Nice, now we can<a href="{{ path('grpc_user_details') }}"> get Account Details</a>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        $(document).ready(function () {
+            $('#autofill_token').click(function (e) {
+                e.preventDefault();
+                $("#token_token").val($('#sign_in_api_token').text());
+            });
+            $('#autofill_refresh_token').click(function (e) {
+                e.preventDefault();
+                $("#token_token").val($('#sign_in_api_refresh_token').text());
+            });
+        });
+    </script>
+{% endblock %}

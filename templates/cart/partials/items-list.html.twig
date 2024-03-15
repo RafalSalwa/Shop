@@ -12,24 +12,35 @@
     </thead>
     <tbody class="align-middle items-table-body">
     {% for item in cart.items %}
-        <tr>
+        <tr data-item-id="{{ item.id }}">
             <td class="align-middle">
-                <img src="{{ asset('img/product-1.jpg') }}" alt="" style="width: 50px;">
                 {{ item.name|capitalize }}
             </td>
             <td class="align-middle">{{ (item.price / 100)|format_currency('USD') }}</td>
             <td class="align-middle">
                 {% if data_manipulation|default(false) %}
-                    <div class="input-group quantity mx-auto" style="width: 100px;">
+                    <div class="input-group quantity mx-auto" style="width: 115px;">
                         <div class="input-group-btn">
-                            <button class="btn btn-sm btn-primary btn-minus">
+                            <button class="btn btn-sm btn-primary btn-minus"
+                                    {% if item.quantity == 1 %}disabled {% endif %}>
                                 <i class="fa fa-minus"></i>
                             </button>
                         </div>
-                        <input type="text" class="form-control form-control-sm bg-secondary text-center"
-                               value="{{ item.quantity }}">
+                        <select class="form-control form-control-sm bg-secondary text-center item-quantity"
+                                data-quantity="{{ item.quantity }}">
+                            {% for i in 1..cart_item_capacity %}
+                                <option
+                                    {% if i is same as item.quantity %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ i }}
+                                </option>
+                            {% endfor %}
+                        </select>
                         <div class="input-group-btn">
-                            <button class="btn btn-sm btn-primary btn-plus">
+                            <button class="btn btn-sm btn-primary btn-plus"
+                                    {% if item.quantity == cart_item_capacity %}disabled {% endif %}>
                                 <i class="fa fa-plus"></i>
                             </button>
                         </div>

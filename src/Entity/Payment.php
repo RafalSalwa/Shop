@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
@@ -67,7 +68,7 @@ class Payment
 
     public function __construct()
     {
-        $this->operationNumber = Uuid::v4()->toBinary();
+        $this->operationNumber = Uuid::v7()->generate();
         $this->createdAt       = new DateTime('now');
     }
 
@@ -76,11 +77,9 @@ class Payment
         return $formatted ? number_format($this->amount / 100, 2, ',', '') : $this->amount;
     }
 
-    public function setAmount(int $amount): self
+    public function setAmount(string $amount): void
     {
-        $this->amount = $amount;
-
-        return $this;
+        $this->amount = (int) $amount;
     }
 
     public function getId(): int
@@ -88,11 +87,9 @@ class Payment
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     public function getOperationNumber(): string|null
@@ -107,16 +104,14 @@ class Payment
         return $this;
     }
 
-    public function getOperationType(): string|null
+    public function getOperationType(): PaymentProvider
     {
-        return $this->operationType;
+        return PaymentProvider::from($this->operationType);
     }
 
-    public function setOperationType(string|null $operationType): self
+    public function setOperationType(PaymentProvider $operationType): void
     {
-        $this->operationType = $operationType;
-
-        return $this;
+        $this->operationType = $operationType->value;
     }
 
     public function getStatus(): string

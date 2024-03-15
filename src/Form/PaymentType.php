@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Form;
 
 use App\Entity\Payment;
+use App\Enum\PaymentProvider;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -18,30 +19,38 @@ final class PaymentType extends AbstractType
     {
         $builder
             ->add(
-                'operationType',
-                ChoiceType::class,
+                'operationNumber',
+                TextType::class,
                 [
-                    'label' => 'payment ID',
-                    'choices' => [
-                        'Stripe' => 'stripe',
-                        'CreditCard' => 'creditcard',
-                    ],
-                    'expanded' => true,
+                    'label' => 'Operation number',
+                    'disabled' => true,
                 ],
             )
             ->add(
                 'amount',
                 TextType::class,
-                ['label' => 'Amount'],
+                [
+                    'label' => 'Amount',
+                    'disabled' => true,
+                ],
+            )->add(
+                'operationType',
+                EnumType::class,
+                [
+                    'class' => PaymentProvider::class,
+                    'expanded' => true,
+                    'disabled' => true,
+                    'empty_data' => PaymentProvider::DefaultValue(),
+                ],
             )
             ->add('yes', SubmitType::class)
             ->add('no', SubmitType::class)
         ;
     }
 
-    public function configureOptions(OptionsResolver $optionsResolver): void
+    public function configureOptions(OptionsResolver $resolver): void
     {
-        $optionsResolver->setDefaults(
+        $resolver->setDefaults(
             [
                 'data_class' => Payment::class,
             ],

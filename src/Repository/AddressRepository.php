@@ -25,7 +25,7 @@ final class AddressRepository extends ServiceEntityRepository
     /** @throws NonUniqueResultException */
     public function getDefaultForUser(int $userId): ?Address
     {
-        return $this
+        $defaultAddress = $this
             ->createQueryBuilder('a')
             ->where('a.userId = :id')
             ->andWhere('a.isDefault = true')
@@ -33,6 +33,18 @@ final class AddressRepository extends ServiceEntityRepository
             ->orderBy('a.id', 'DESC')
             ->getQuery()
             ->getOneOrNullResult();
+
+        if (null === $defaultAddress) {
+            $defaultAddress = $this
+                ->createQueryBuilder('a')
+                ->where('a.userId = :id')
+                ->setParameter('id', $userId)
+                ->orderBy('a.id', 'DESC')
+                ->getQuery()
+                ->getOneOrNullResult();
+        }
+
+        return $defaultAddress;
     }
 
     public function setDefaultAddress(int|string $addressId, int $userId): void

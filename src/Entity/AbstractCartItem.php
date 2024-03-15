@@ -11,6 +11,7 @@ use App\Enum\CartItemTypeEnum;
 use App\Repository\CartItemRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\DiscriminatorColumn;
@@ -62,11 +63,6 @@ abstract class AbstractCartItem implements SerializerInterface, CartItemInterfac
         $this->quantity = $quantity;
     }
 
-    final public function getId(): int
-    {
-        return $this->id;
-    }
-
     final public function setCart(Cart|null $cart): void
     {
         $this->cart = $cart;
@@ -84,7 +80,17 @@ abstract class AbstractCartItem implements SerializerInterface, CartItemInterfac
 
     final public function getType(): string
     {
-        return CartItemTypeEnum::from(self::class)->value;
+        return CartItemTypeEnum::from(ClassUtils::getClass($this->getReferencedEntity()))->value;
+    }
+
+    final public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface
+    {
+        return $this->referencedEntity;
+    }
+
+    final public function getId(): int
+    {
+        return $this->id;
     }
 
     final public function getTotalPrice(): string
@@ -100,11 +106,6 @@ abstract class AbstractCartItem implements SerializerInterface, CartItemInterfac
     final public function getPrice(): string
     {
         return (string)$this->getReferencedEntity()->getPrice();
-    }
-
-    final public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface
-    {
-        return $this->referencedEntity;
     }
 
     public function updateQuantity(int $quantity): void

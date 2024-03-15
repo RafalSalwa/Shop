@@ -4,6 +4,7 @@ twig:
   globals:
     cartService: '@App\Service\CartService'
     mailer_client_url: '%env(MAILER_CLIENT_URL)%'
+    cart_item_capacity: '%env(CART_ITEM_MAX_CAPACITY)%'
 
 when@test:
   twig:

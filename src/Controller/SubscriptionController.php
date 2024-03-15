@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\SubscriptionPlan;
 use App\Service\SubscriptionPlanService;
 use App\Service\SubscriptionService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[asController]
@@ -24,31 +24,20 @@ final class SubscriptionController extends AbstractShopController
 
         return $this->render(
             'subscriptions/index.html.twig',
-            [
-                'controller_name' => 'IndexController',
-                'plans'           => $plans,
-            ],
+            ['plans' => $plans],
         );
     }
 
-    #[Route(path: '/{id<\d+>}', name: 'details', methods: ['GET'])]
-    public function details(SubscriptionPlan $subscriptionPlan): Response
-    {
-        return $this->render(
-            'subscriptions/details.html.twig',
-            [
-                'controller_name' => 'IndexController',
-                'plan'            => $subscriptionPlan,
-            ],
-        );
-    }
+    #[Route(path: '/order/{id}', name: 'order', requirements: ['id' => Requirement::POSITIVE_INT])]
+    public function order(
+        int $id,
+        SubscriptionPlanService $subscriptionPlanService,
+        SubscriptionService $subscriptionService,
+    ): Response {
+            $plan = $subscriptionPlanService->findPlanById($id);
+            $subscriptionService->assignSubscription($plan, $this->getUserId());
+            $this->addFlash('success', ' subscription ordered successfully');
 
-    #[Route(path: '/clear', name: 'clear')]
-    public function clear(SubscriptionService $subscriptionService): Response
-    {
-        $subscriptionService->cancelSubscription();
-        $this->addFlash('info', 'Subscription removed');
-
-        return $this->redirectToRoute('app_index');
+            return $this->redirectToRoute('subscriptions_index');
     }
 }

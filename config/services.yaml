@@ -1,5 +1,5 @@
 parameters:
-
+  .container.dumper.inline_factories: true
 services:
   _defaults:
     autowire: true
@@ -8,6 +8,7 @@ services:
       $fromEmail: '%env(MAILER_FROM)%'
       $authServiceDsn: '%env(GRPC_AUTH_SERVICE_DSN)%'
       $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
+      $cartItemMaxCapacity: '%env(CART_ITEM_MAX_CAPACITY)%'
   Redis:
     class: Redis
     calls:
@@ -46,8 +47,5 @@ services:
     class: App\Repository\AccessTokenRepository
     decorates: 'League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository'
 
-  App\Service\CartAddService:
-    arguments:
-      $entityManager: '@doctrine.orm.entity_manager'
-
   App\Security\Registration\UserRegistrarInterface: '@App\Security\Registration\AuthApiUserRegistrar'
+  App\Client\AuthClientInterface $authApiGRPCClient: '@App\Client\GRPC\AuthApiGRPCClient'

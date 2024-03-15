@@ -6,20 +6,18 @@ namespace App\Model;
 
 final class SignInUserInput
 {
-    protected string $username = '';
+    protected string $email = '';
 
     protected string $password = '';
 
-    public function getUsername(): string
+    public function getEmail(): string
     {
-        return $this->username;
+        return $this->email;
     }
 
-    public function setUsername(string $username): self
+    public function setEmail(string $email): void
     {
-        $this->username = $username;
-
-        return $this;
+        $this->email = $email;
     }
 
     public function getPassword(): string
@@ -27,10 +25,8 @@ final class SignInUserInput
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): void
     {
         $this->password = $password;
-
-        return $this;
     }
 }

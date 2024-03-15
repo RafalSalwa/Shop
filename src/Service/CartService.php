@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Service;
 
-use App\Entity\AbstractCartItem;
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\CartStatus;
 use App\Enum\StockOperation;
+use App\Exception\CartOperationException;
+use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Factory\CartFactory;
@@ -18,6 +19,7 @@ use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
 use function is_subclass_of;
+use function sprintf;
 
 final readonly class CartService
 {
@@ -27,6 +29,7 @@ final readonly class CartService
         private EntityManagerInterface $entityManager,
         private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
+        private string $cartItemMaxCapacity,
     ) {
     }
 
@@ -73,7 +76,7 @@ final readonly class CartService
     }
 
     /** @throws ItemNotFoundException */
-    public function removeItem(AbstractCartItem $cartItem): void
+    public function removeItem(CartItemInterface $cartItem): void
     {
         $cart = $this->getCurrentCart();
         if (false === $cart->itemExists($cartItem)) {
@@ -92,6 +95,39 @@ final readonly class CartService
         $this->entityManager->flush();
     }
 
+    public function applyCoupon(CouponCode $coupon): void
+    {
+        $cart = $this->getCurrentCart();
+        $cart->applyCoupon($coupon);
+    }
+
+    /** @throws CartOperationExceptionInterface */
+    public function updateQuantity(int $itemId, int $quantity): void
+    {
+        if ($quantity > $this->cartItemMaxCapacity) {
+            throw new CartOperationException(
+                message: sprintf(
+                    'maximum number of Items (%s) per product has been exceeded',
+                    $this->cartItemMaxCapacity,
+                ),
+            );
+        }
+        try {
+            $lock = $this->cartLockFactory->createLock('cart_item_update');
+            $lock->acquire(true);
+
+            $cart = $this->getCurrentCart();
+            $cartItem = $cart->getItemById($itemId);
+            $this->removeItem($cartItem);
+            $cartItem->updateQuantity($quantity);
+            $this->add($cartItem);
+            $this->save($cart);
+            $lock->release();
+        } catch (ItemNotFoundException | ProductStockDepletedException $exception) {
+            throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
+        }
+    }
+
     /** @throws ProductStockDepletedException|ItemNotFoundException */
     public function add(CartItemInterface $cartItem): void
     {
@@ -107,11 +143,5 @@ final readonly class CartService
         }
         $this->save($cart);
         $lock->release();
-    }
-
-    public function applyCoupon(CouponCode $coupon): void
-    {
-        $cart = $this->getCurrentCart();
-        $cart->applyCoupon($coupon);
     }
 }
