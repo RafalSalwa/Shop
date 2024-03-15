@@ -1,14 +1,19 @@
 syntax = "proto3";
 
 package intrvproto;
-option php_namespace = "App\\Protobuf\\Generated";
-option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
+option go_package = "github.com/RafalSalwa/interview-app-srv/intrvproto";
+option php_namespace = "App\\Protobuf\\Service";
+option php_metadata_namespace = "App\\Protobuf\\GPBMetadata";
 
 import "user.proto";
+import "basic_type.proto";
 
 service UserService {
-  rpc GetUserById(GetUserRequest) returns (UserResponse) {}
-  rpc GetUserDetails(GetUserRequest) returns (UserDetails) {}
-  rpc VerifyUser(VerifyUserRequest) returns (VerificationResponse) {}
-  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
+    rpc CheckUserExists(StringValue) returns (BoolValue) {}
+    rpc GetUserById(GetUserRequest) returns (UserDetails) {}
+    rpc GetUserDetails(GetUserRequest) returns (UserDetails) {}
+    rpc VerifyUser(VerifyUserRequest) returns (VerificationResponse) {}
+    rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse) {}
+    rpc GetUser(GetUserSignInRequest) returns (UserDetails) {}
+    rpc GetUserByCode(VerificationCode) returns (UserDetails) {}
 }

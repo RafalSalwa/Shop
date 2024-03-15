@@ -5,55 +5,32 @@
 {% block body %}
     <div class="container-fluid">
         <div class="row border-top p-xl-5 justify-content-center">
-            <div class="col-6 col-auto">
+            <div class="col-6 col-auto mx-5">
                 {{ form(form) }}
-                <a href="#" id="autofill-form">generate sample credentials</a><br />
-                {% if grpc_status is not empty %}
-                    RPC call status
+                <a href="#" id="autofill-form">generate sample credentials</a><br/>
+            </div>
+            <div class="col-6 col-auto mx-5">
+                {% if grpc_responses is not empty %}
+                    RPC call stack
                     <table class="table table-bordered">
                         <thead>
+                        <th>Method</th>
+                        <th>status code</th>
+                        <th>Details (or Error)</th>
                         </thead>
                         <tbody>
+                        {% for key, element in grpc_responses %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td id="access_token"
+                                    style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                    class="p-2">{{ element.1.code }}</td>
+                                <td id="access_token"
+                                    style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
+                                    class="p-2">{{ element.1.details }}</td>
+                            </tr>
+                        {% endfor %}
 
-                        <tr>
-                            <td>status code</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_status.code }}</td>
-                        </tr>
-                        <tr>
-                            <td>status details</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_status.details }}</td>
-                        </tr>
-
-                        </tbody>
-                    </table>
-                {% endif %}
-
-                {% if grpc_response is not empty %}
-                    RPC response
-                    <table class="table table-bordered">
-                        <tbody>
-                        <tr>
-                            <td>user id</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_response.getId() }}</td>
-                        </tr>
-                        <tr>
-                            <td>user username</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_response.getUsername() }}</td>
-                        </tr>
-                        <tr>
-                            <td>user verification code</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_response.getVerificationToken() }}</td>
-                        </tr>
-                        <tr>
-                            <td>user created_at</td>
-                            <td id="access_token" style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                class="p-2">{{ grpc_response.getCreatedAt().getSeconds()|date("Y-M-d H:i:s") }}</td>
-                        </tr>
                         </tbody>
                     </table>
                     Great, now we can move to next step, Confirm User Account (DOI Flow)
@@ -66,8 +43,8 @@
 
 {% block scripts %}
     <script>
-        $( document ).ready(function() {
-            $('#autofill-form').click(function(e){
+        $(document).ready(function () {
+            $('#autofill-form').click(function (e) {
                 e.preventDefault();
 
                 min = 100;

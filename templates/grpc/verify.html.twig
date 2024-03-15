@@ -20,25 +20,24 @@
                 {{ form(form) }}
                 <div class="row">
                     <div class="col-md-8">
-                        {% if grpc_status is not empty %}
-                            RPC call status
+                        {% if grpc_responses is not empty %}
+                            RPC call stack
                             <table class="table table-bordered">
                                 <thead>
+                                <th>status code</th>
+                                <th>Details (or Error)</th>
                                 </thead>
                                 <tbody>
-
+                                {% for element in grpc_responses %}
                                 <tr>
-                                    <td>status code</td>
                                     <td id="access_token"
                                         style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                        class="p-2">{{ grpc_status.code }}</td>
-                                </tr>
-                                <tr>
-                                    <td>status details</td>
+                                        class="p-2">{{ element.1.code }}</td>
                                     <td id="access_token"
                                         style="word-wrap: break-word;min-width: 160px;max-width: 160px;"
-                                        class="p-2">{{ grpc_status.details }}</td>
+                                        class="p-2">{{ element.1.details }}</td>
                                 </tr>
+                                {% endfor %}
 
                                 </tbody>
                             </table>
@@ -56,6 +55,9 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            {% if grpc_response.getSuccess() == true %}
+                                Great, You account is now active. go to <a href="{{ path('grpc_sign_in') }}">SignIn page</a>
+                            {% endif %}
                         {% endif %}
 
                     </div>

@@ -140,8 +140,10 @@ proto:
 		echo "error: protoc not installed" >&2; \
 		exit 1; \
 	fi
-		protoc --proto_path=proto --php_out=src/ --grpc_out=src/ --plugin=protoc-gen-grpc=vendor/bin/grpc_php_plugin proto/*.proto;
-
+		protoc --proto_path=proto --php_out=src/ --grpc_out=src/ --plugin=protoc-gen-grpc=bin/grpc_php_plugin proto/*.proto;
+	-rm -rf src/Protobuf/
+	mv src/App/Protobuf src/
+	rm -rf src/App/
 .PHONY: git_remote_cleaner
 git_remote_cleaner:
 	git remote prune origin

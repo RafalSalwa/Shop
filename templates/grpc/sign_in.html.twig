@@ -7,6 +7,8 @@
         <div class="row border-top p-xl-5 justify-content-center">
             <div class="col-6 col-auto">
                 {% if previous_sign_up_data is not empty %}
+                    Psst! You can use credentials from account that was created in previous steps.<br/>
+                    use:<br/>
                     <ul>
                         <li id="sign_up_email">{{ previous_sign_up_data.username }}</li>
                         <li id="sign_up_pass">{{ previous_sign_up_data.password }}</li>
@@ -15,26 +17,19 @@
                                 copy credentials <i class="fa fas fa-copy"></i>
                             </a>
                         </li>
-
                     </ul>
+                    {% if not grpc_credentials['verified'] %}
+                        but this user is still not verified!<br/>
+                        Please visit
+                        <a href="{{ path("grpc_user_verify") }}"
+                           class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
+                            Verify Account page</a><br/>
+                        and use code: <p class="text-primary">{{ grpc_credentials['vCode'] }}</p>
+                    {% endif %}
                 {% endif %}
                 {{ form(form) }}
                 <div class="row">
                     <div class="col-md-8">
-                        {% if grpc_credentials is not empty %}
-                            psst! You can use credentials from account that was created in previous steps.<br/>
-                            use:<br/>
-                            {{ grpc_credentials['username'] }}<br/>
-                            {{ grpc_credentials['password'] }}<br/>
-                            {% if not grpc_credentials['verified'] %}
-                                but this user is still not verified!<br/>
-                                Please visit
-                                <a href="{{ path("grpc_user_verify") }}"
-                                   class="link-info link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">
-                                    Verify Account page</a><br/>
-                                and use code: <p class="text-primary">{{ grpc_credentials['vCode'] }}</p>
-                            {% endif %}
-                        {% endif %}
                         {% if grpc_status is not empty %}
                             RPC call status
                             <table class="table table-bordered">
@@ -97,7 +92,7 @@
         $( document ).ready(function() {
             $('#copy-code').click(function(e){
                 e.preventDefault();
-                $("#sign_in_username").val($('#sign_up_email').text());
+                $("#sign_in_email").val($('#sign_up_email').text());
                 $("#sign_in_password").val($('#sign_up_pass').text());
             });
         });

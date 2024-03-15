@@ -1,38 +1,44 @@
 syntax = "proto3";
 
 package intrvproto;
-option php_namespace = "App\\Protobuf\\Generated";
-option php_metadata_namespace = "App\\Protobuf\\Generated\\GPBMetadata";
+option go_package = "github.com/RafalSalwa/interview-app-srv/intrvproto";
+option php_namespace = "App\\Protobuf\\Message";
+option php_metadata_namespace = "App\\Protobuf\\GPBMetadata";
 
 import "google/protobuf/timestamp.proto";
 
 message SignInUserInput {
-  string username = 1;
-  string password = 2;
+    string username = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message SignInByCodeUserInput {
+    string email = 1;
+    string authCode = 2;
 }
 
 message SignInUserResponse {
-  string status = 1;
-  string access_token = 2;
-  string refresh_token = 3;
+    string access_token = 1;
+    string refresh_token = 2;
 }
 
 message SignUpUserInput {
-  string email = 1;
-  string password = 2;
-  string passwordConfirm = 3;
+    string email = 1;
+    string password = 2;
+    string passwordConfirm = 3;
 }
 
 message SignUpUserResponse {
-  int64 id = 1;
-  string username = 2;
-  string verification_token = 3;
-  google.protobuf.Timestamp created_at = 4;
+    int64 id = 1;
+    string username = 2;
+    string verification_token = 3;
+    google.protobuf.Timestamp created_at = 4;
 }
 
 message VerificationCodeRequest{
-  string email = 1;
+    string email = 1;
 }
 message VerificationCodeResponse {
-  string code = 1;
+    string code = 1;
 }

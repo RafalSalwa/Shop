@@ -48,3 +48,4 @@ services:
     decorates: 'League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository'
 
   App\Security\Registration\UserRegistrarInterface: '@App\Security\Registration\AuthApiUserRegistrar'
+  App\Client\AuthClientInterface $authApiGRPCClient: '@App\Client\GRPC\AuthApiGRPCClient'
