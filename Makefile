@@ -133,6 +133,9 @@ test_functional: ### run test
 test_e2e: ### run test
 	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
 
+.PHONY: phpdoc
+phpdoc: 
+	docker run --rm -v "$(pwd):/data" "phpdoc/phpdoc:3"
 
 .PHONY: proto
 proto:
