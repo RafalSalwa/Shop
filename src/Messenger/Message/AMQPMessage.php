@@ -34,6 +34,7 @@ final class AMQPMessage implements JsonSerializable
         return $this;
     }
 
+    /** @return array<string, string> */
     public function jsonSerialize(): array
     {
         return [

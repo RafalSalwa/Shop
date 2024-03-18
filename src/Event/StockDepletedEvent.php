@@ -9,21 +9,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class StockDepletedEvent extends Event
 {
-    private array $arrProd = [];
-
-    public function __construct(StockManageableInterface $stockManageable)
+    public function __construct(private readonly StockManageableInterface $item)
     {
-        $prod = $stockManageable->getReferenceEntity();
-        $this->arrProd = [
-            'id' => $prod->getId(),
-            'name' => $prod->getName(),
-            'category' => $prod->getCategory()
-                ->getName(),
-        ];
     }
 
-    public function getEventData(): array
+    public function getItem(): StockManageableInterface
     {
-        return $this->arrProd;
+        return $this->item;
     }
 }

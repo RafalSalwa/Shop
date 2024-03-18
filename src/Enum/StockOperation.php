@@ -9,12 +9,12 @@ enum StockOperation: string
     case Increase = 'increase';
     case Decrease = 'decrease';
 
-    public static function Decrease(): string
+    public static function decrease(): string
     {
         return self::Decrease->value;
     }
 
-    public static function Increase(): string
+    public static function increase(): string
     {
         return self::Increase->value;
     }

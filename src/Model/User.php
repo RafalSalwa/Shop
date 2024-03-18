@@ -5,18 +5,18 @@ declare(strict_types=1);
 namespace App\Model;
 
 use App\Entity\Contracts\ShopUserInterface;
+use App\Entity\OAuth2UserConsent;
 use App\Entity\Subscription;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use JsonSerializable;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use function array_key_exists;
-use function array_unique;
 
 final class User implements JsonSerializable, UserInterface, ShopUserInterface, EquatableInterface
 {
-
     private EmailAddress $email;
 
     private ?Token $token = null;
@@ -28,11 +28,14 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     private Subscription $subscription;
 
     /**
-     * Roles property to meet UserInterface requirements.
+     * Roles property to meet User requirements.
      *
      * @var array<int,string>
      */
     private array $roles;
+
+    /** @var Collection<int, OAuth2UserConsent> */
+    private Collection $consents;
 
     public function __construct(
         private readonly int $id,
@@ -52,6 +55,7 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
         if (null !== $authCode) {
             $this->setAuthCode($authCode);
         }
+        $this->consents = new ArrayCollection();
         $this->setRoles(['ROLE_USER']);
     }
 
@@ -78,16 +82,7 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     /** @return array<int,string> */
     public function getRoles(): array
     {
-        $roles = $this->roles;
-        if (null !== $roles) {
-            $roles = array_key_exists('roles', $this->roles)
-                ? $this->roles['roles']
-                : $this->roles;
-
-            return array_unique($roles);
-        }
-
-        return array_unique($this->roles);
+        return $this->roles;
     }
 
     public function setRoles(?array $roles): void
@@ -104,7 +99,9 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     }
 
     public function eraseCredentials(): void
-    {}
+    {
+        $this->password = null;
+    }
 
     public function getRefreshToken(): Token
     {
@@ -145,4 +142,14 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
         return $this->email->toString();
     }
 
+    /** @return array<int, OAuth2UserConsent>|null */
+    public function getConsents(): ?Collection
+    {
+        return $this->consents;
+    }
+
+    public function addConsent(OAuth2UserConsent $consent): void
+    {
+        $this->consents->add($consent);
+    }
 }

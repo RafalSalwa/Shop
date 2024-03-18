@@ -7,12 +7,10 @@ namespace App\Entity;
 use App\Repository\OrderRepository;
 use App\ValueObject\CouponCode;
 use App\ValueObject\Summary;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
@@ -22,7 +20,6 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use function is_null;
 
@@ -160,12 +157,6 @@ class Order
     public function prePersist(): void
     {
         $this->createdAt = new DateTimeImmutable();
-    }
-
-    #[PreUpdate]
-    public function preUpdate(PreUpdateEventArgs $preUpdateEventArgs): void
-    {
-        $this->updatedAt = new DateTime('now');
     }
 
     public function addPayment(Payment|TValue $payment): void

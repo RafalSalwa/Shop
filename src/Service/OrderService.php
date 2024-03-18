@@ -77,6 +77,7 @@ final readonly class OrderService
         return $this->orderRepository->fetchOrderDetails($id);
     }
 
+    /** @param array<string> $status */
     public function fetchOrders(
         int $userId,
         int $page = 1,

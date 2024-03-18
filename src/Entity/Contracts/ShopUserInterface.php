@@ -8,7 +8,7 @@ use App\Entity\Subscription;
 use App\ValueObject\Token;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-interface ShopUserInterface extends UserInterface
+interface ShopUserInterface extends UserInterface, OAuth2UserInterface
 {
     public function getId(): ?int;
 

@@ -22,7 +22,6 @@ framework:
 
     routing:
       # Route your messages to the transports
-      'App\Messenger\Message\UserLoggedIn': async
       'App\Messenger\Message\OrderMessage': async
       'App\Messenger\Message\AMQPMessage': async
 # when@test:

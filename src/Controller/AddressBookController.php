@@ -19,7 +19,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 final class AddressBookController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]
-    public function index(Request $request, AddressBookService $service): Response
+    public function index(AddressBookService $service): Response
     {
         return $this->render(
             'addressbook/index.html.twig',

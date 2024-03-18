@@ -26,16 +26,15 @@ final readonly class ProductStockService
     public function checkStockIsAvailable(CartItemInterface $cartItem): void
     {
         $referencedEntity = $cartItem->getReferencedEntity();
-        if (        true === is_subclass_of($referencedEntity, StockManageableInterface::class)
-            && 0 === $referencedEntity->getUnitsInStock()
-        ) {
+        if (false === is_subclass_of($referencedEntity, StockManageableInterface::class)) {
+            return;
+        }
+        if (0 === $referencedEntity->getUnitsInStock()) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
         }
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
+    /** @throws ProductStockDepletedException */
     public function restoreStock(CartItemInterface $cartItem): void
     {
         $referencedEntity = $cartItem->getReferencedEntity();
@@ -46,9 +45,7 @@ final readonly class ProductStockService
         $this->changeStock($referencedEntity, StockOperation::Increase, $cartItem->getQuantity());
     }
 
-    /**
-     * @throws ProductStockDepletedException
-     */
+    /** @throws ProductStockDepletedException */
     public function changeStock(StockManageableInterface $entity, StockOperation $operation, int $quantity): void
     {
         match ($operation) {

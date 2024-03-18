@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class ResetPasswordRequestFormType extends AbstractType
 {
+    /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder

@@ -39,9 +39,7 @@ class Cart implements JsonSerializable
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /**
-     * @var Collection<int, AbstractCartItem>
-     */
+    /** @var Collection<int, AbstractCartItem> */
     #[OneToMany(
         mappedBy: 'cart',
         targetEntity: AbstractCartItem::class,
@@ -86,6 +84,7 @@ class Cart implements JsonSerializable
         if (false === $this->itemExists($newItem)) {
             $this->getItems()->add($newItem);
             $newItem->setCart($this);
+
             return;
         }
 
@@ -109,8 +108,9 @@ class Cart implements JsonSerializable
 
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $element): bool => $element->getReferencedEntity()->getId() === $cartItem->getReferencedEntity()->getId() &&
-                    $element->getReferencedEntity()->getName() === $cartItem->getReferencedEntity()->getName()
+                static fn (int $key, CartItemInterface $element): bool => $key &&
+                    $element->getReferencedEntity()->getId() === $cartItem->getReferencedEntity()->getId() &&
+                    $element->getReferencedEntity()->getName() === $cartItem->getReferencedEntity()->getName(),
             );
     }
 
@@ -132,7 +132,7 @@ class Cart implements JsonSerializable
                 static fn (CartItemInterface $cartItem): bool => $cartItem->getReferencedEntity()
                     ->getId() === $newItem->getReferencedEntity()
                     ->getId()
-                    && $cartItem::class === $newItem::class
+                    && $cartItem::class === $newItem::class,
             );
 
         return $filtered->first();
@@ -172,7 +172,7 @@ class Cart implements JsonSerializable
         return $sum;
     }
 
-    public function getItemsPrice()
+    public function getItemsPrice(): int
     {
         $total = 0;
         foreach ($this->getItems() as $item) {
@@ -188,6 +188,7 @@ class Cart implements JsonSerializable
         foreach ($this->getItems() as $item) {
             $total = bcadd($total, $item->getTotalPrice());
         }
+
         return (int)$total;
     }
 

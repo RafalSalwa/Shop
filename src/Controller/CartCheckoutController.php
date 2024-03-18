@@ -10,7 +10,6 @@ use App\Form\PaymentType;
 use App\Service\AddressBookService;
 use App\Service\CalculatorService;
 use App\Service\CartService;
-use App\Service\PaymentService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -58,20 +57,6 @@ final class CartCheckoutController extends AbstractShopController
     {
         $deliveryAddressId = $request->request->get('addrId');
         $addressBookService->setDefaultAddress($deliveryAddressId, $this->getUserId());
-
-        return $this->render(
-            'cart/partials/default_address.html.twig',
-            [
-                'address' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
-            ],
-        );
-    }
-
-    #[Route(path: '/payment_method', name: 'payment_method', methods: ['PUT'])]
-    public function paymentMethod(Request $request, PaymentService $paymentService): Response
-    {
-        $paymentMethod = $request->request->get('payment_method');
-        $paymentService->setDefaultAddress($deliveryAddressId, $this->getUserId());
 
         return $this->render(
             'cart/partials/default_address.html.twig',

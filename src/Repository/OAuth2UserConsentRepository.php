@@ -24,31 +24,23 @@ final class OAuth2UserConsentRepository extends ServiceEntityRepository
 
     public function add(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
     {
-        $this->getEntityManager()
-            ->persist($oAuth2UserConsent)
-        ;
+        $this->getEntityManager()->persist($oAuth2UserConsent);
 
-        if (! $flush) {
+        if (false === $flush) {
             return;
         }
 
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->flush();
     }
 
     public function remove(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
     {
-        $this->getEntityManager()
-            ->remove($oAuth2UserConsent)
-        ;
+        $this->getEntityManager()->remove($oAuth2UserConsent);
 
-        if (! $flush) {
+        if (false === $flush) {
             return;
         }
 
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->flush();
     }
 }

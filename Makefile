@@ -46,7 +46,7 @@ rector: vendor ## Automatic code fixes with Rector
 
 .PHONY: phpcs
 phpcs:
-	vendor/bin/phpcs --standard=reports/config/phpcs.xml src tests
+	vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
@@ -68,6 +68,21 @@ phpstan: lint
 .PHONY: phpinsights
 phpinsights:
 	vendor/bin/phpinsights analyse --composer=composer.json --config-path=phpinsights.php
+
+.PHONY: static_analysis
+static_analysis:
+	#$(MAKE) test_unit
+#	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+	-vendor/bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+#	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+#	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
+#	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+#	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
+#	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
+#	-vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
+#	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+#	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
+
 
 .PHONY: jenkins_static_analysis
 jenkins_static_analysis:
@@ -134,7 +149,7 @@ test_e2e: ### run test
 	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
 
 .PHONY: phpdoc
-phpdoc: 
+phpdoc:
 	docker run --rm -v "$(pwd):/data" "phpdoc/phpdoc:3"
 
 .PHONY: proto

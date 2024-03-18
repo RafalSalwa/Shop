@@ -80,9 +80,4 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
 
         return $this->getUser($user->getToken());
     }
-
-    public function supportsClass(string $class): void
-    {
-        // TODO: Implement supportsClass() method.
-    }
 }

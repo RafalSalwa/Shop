@@ -14,12 +14,13 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Core\User\UserInterface;
+use function assert;
 
 final class CartSessionStorage
 {
-    final public const CART_KEY_NAME = 'cart_id';
+    public const CART_KEY_NAME = 'cart_id';
 
-    final public const ADDR_KEY_NAME = 'addr_id';
+    public const ADDR_KEY_NAME = 'addr_id';
 
     public function __construct(
         private readonly RequestStack $requestStack,
@@ -50,16 +51,12 @@ final class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (
-            true === $request instanceof Request &&
-            true === $this->security->getFirewallConfig($request)?->isStateless())
-        {
+        assert($request instanceof Request);
+        if (true === $this->security->getFirewallConfig($request)?->isStateless()) {
             return;
         }
 
-        $this->getSession()
-            ->set(self::CART_KEY_NAME, $cart->getId())
-        ;
+        $this->getSession()->set(self::CART_KEY_NAME, $cart->getId());
     }
 
     private function getSession(): SessionInterface

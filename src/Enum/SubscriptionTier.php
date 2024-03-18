@@ -13,9 +13,6 @@ enum SubscriptionTier: int
     case FIVE_HUNDRED = 50;
     case EIGHT_HUNDRED = 80;
 
-    public function getLabel(): void
-    {}
-
     public function value(): int
     {
         return $this->value;

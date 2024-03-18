@@ -4,14 +4,16 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Category;
 use App\Repository\CategoryRepository;
 
-final class CategoriesService
+final readonly class CategoriesService
 {
-    public function __construct(private readonly CategoryRepository $categoryRepository)
+    public function __construct(private CategoryRepository $categoryRepository)
     {}
 
-    public function list()
+    /** @return array<Category>|null */
+    public function list(): ?array
     {
         return $this->categoryRepository->findAll();
     }

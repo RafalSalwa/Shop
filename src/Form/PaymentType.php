@@ -15,6 +15,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 final class PaymentType extends AbstractType
 {
+    /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -40,7 +41,7 @@ final class PaymentType extends AbstractType
                     'class' => PaymentProvider::class,
                     'expanded' => true,
                     'disabled' => true,
-                    'empty_data' => PaymentProvider::DefaultValue(),
+                    'empty_data' => PaymentProvider::defaultValue(),
                 ],
             )
             ->add('yes', SubmitType::class)

@@ -9,9 +9,9 @@ use App\Model\TokenPair;
 final class UserResponse
 {
     public function __construct(
-        private string $email,
-        private string $password,
-        private string $vCode,
+        private readonly string $email,
+        private readonly string $password,
+        private readonly string $confirmationCode,
         private bool $isVerified,
         private ?TokenPair $tokenPair = null,
     ) {
@@ -27,9 +27,9 @@ final class UserResponse
         return $this->password;
     }
 
-    public function getVCode(): string
+    public function getConfirmationCode(): string
     {
-        return $this->vCode;
+        return $this->confirmationCode;
     }
 
     public function isVerified(): bool

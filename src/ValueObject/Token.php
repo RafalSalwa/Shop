@@ -35,15 +35,15 @@ final readonly class Token implements Stringable
 
     public function getSub(): string
     {
-        return $this->parsedToken->claims()->get("sub");
+        return $this->parsedToken->claims()->get('sub');
     }
 
     public function getExp(): DateTimeImmutable
     {
-        return $this->parsedToken->claims()->get("exp");
+        return $this->parsedToken->claims()->get('exp');
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->token;
     }

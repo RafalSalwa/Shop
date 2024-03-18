@@ -8,13 +8,11 @@ use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\SubscriptionPlan;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use function assert;
 use function is_null;
-use function is_subclass_of;
 
 final class OrderSubscriptionPlanVoter extends Voter
 {
-    final public const ORDER_SUBSCRIPTION_PLAN = 'ORDER_SUBSCRIPTION_PLAN';
+    public const ORDER_SUBSCRIPTION_PLAN = 'ORDER_SUBSCRIPTION_PLAN';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
@@ -24,17 +22,19 @@ final class OrderSubscriptionPlanVoter extends Voter
     /** @param SubscriptionPlan $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        if (self::ORDER_SUBSCRIPTION_PLAN !== $attribute) {
+            return false;
+        }
         $user = $token->getUser();
-        assert($user instanceof ShopUserInterface);
 
-        if (false === is_subclass_of($user, ShopUserInterface::class)) {
+        if (null === $user && false === $user instanceof ShopUserInterface) {
             return false;
         }
 
         $planSubscriptionTier = $subject->getTier();
         $userSubscriptionTier = $user->getSubscription()->getTier();
 
-        if (is_null($planSubscriptionTier) || is_null($userSubscriptionTier)) {
+        if (true === is_null($planSubscriptionTier) || true === is_null($userSubscriptionTier)) {
             return false;
         }
 

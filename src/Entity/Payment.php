@@ -17,7 +17,6 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Uid\Uuid;
-use function number_format;
 
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment', schema: 'interview')]
@@ -72,14 +71,14 @@ class Payment
         $this->createdAt       = new DateTime('now');
     }
 
-    public function getAmount($formatted = true): int|string
+    public function getAmount(): int
     {
-        return $formatted ? number_format($this->amount / 100, 2, ',', '') : $this->amount;
+        return $this->amount;
     }
 
-    public function setAmount(string $amount): void
+    public function setAmount(int $amount): void
     {
-        $this->amount = (int) $amount;
+        $this->amount = $amount;
     }
 
     public function getId(): int
