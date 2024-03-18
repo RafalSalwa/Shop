@@ -26,9 +26,9 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
         return is_subclass_of($class, ShopUserInterface::class);
     }
 
+    /** @param ShopUserInterface $user */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        /** @var ShopUserInterface $user */
         if (true === $user->getToken()->isExpired() && true === $user->getRefreshToken()->isExpired()) {
             throw new CredentialsExpiredException('Session Expired, please login again.');
         }

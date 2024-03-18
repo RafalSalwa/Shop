@@ -36,7 +36,7 @@ final readonly class CartItemFactory
         if ($product->getUnitsInStock() < $quantity) {
             throw new InsufficientStockException(sprintf('Product #%s does not have sufficient stock', $id));
         }
-        if (false === $this->addToCartVoter->isGranted(CartOperationEnum::ADD_TO_CART(), $product)) {
+        if (false === $this->addToCartVoter->isGranted(CartOperationEnum::addToCart(), $product)) {
             throw new AccessDeniedException('Higher subscription required');
         }
 

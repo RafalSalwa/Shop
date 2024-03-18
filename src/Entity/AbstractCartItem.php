@@ -24,7 +24,6 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Serializer\Annotation\Groups;
-use Symfony\Component\Serializer\SerializerInterface;
 use function bcmul;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
@@ -32,7 +31,7 @@ use function bcmul;
 #[HasLifecycleCallbacks]
 #[InheritanceType(value: 'SINGLE_TABLE')]
 #[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30, enumType: CartItemTypeEnum::class)]
-abstract class AbstractCartItem implements SerializerInterface, CartItemInterface
+abstract class AbstractCartItem implements CartItemInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -117,15 +116,5 @@ abstract class AbstractCartItem implements SerializerInterface, CartItemInterfac
     final public function getItemType(): string
     {
         return self::class;
-    }
-
-    public function serialize(mixed $data, string $format, array $context = []): string
-    {
-        // TODO: Implement serialize() method.
-    }
-
-    public function deserialize(mixed $data, string $type, string $format, array $context = []): mixed
-    {
-        // TODO: Implement deserialize() method.
     }
 }

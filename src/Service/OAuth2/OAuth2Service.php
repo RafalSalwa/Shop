@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\OAuth2;
 
+use App\Entity\Contracts\OAuth2UserInterface;
 use App\Entity\OAuth2ClientProfile;
 use App\Entity\OAuth2UserConsent;
 use DateTimeImmutable;
@@ -13,6 +14,7 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use function array_diff;
 use function array_merge;
+use function assert;
 
 final readonly class OAuth2Service
 {
@@ -22,23 +24,25 @@ final readonly class OAuth2Service
         private RequestStack $requestStack,
     ) {}
 
-    public function getProfile($appClient): OAuth2ClientProfile|null
+    public function getProfile(Client $appClient): OAuth2ClientProfile|null
     {
         return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy(
             ['client' => $appClient],
         );
     }
 
-    public function createConsent(Client|null $appClient)
+    public function createConsent(Client $appClient): OAuth2UserConsent
     {
         $user = $this->security->getUser();
         $request = $this->requestStack->getCurrentRequest();
 
-        $userConsents = $user->getOAuth2UserConsents()
-            ->filter(
-                static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient
-            )
-            ->first() ?: null;
+        assert($user instanceof OAuth2UserInterface);
+
+        $userConsents = $user->getConsents();
+
+        $userConsents = $userConsents->filter(
+            static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient,
+        );
         $userScopes = ($userConsents?->getScopes() ?? []);
 
         $requestedScopes = ['profile', 'email', 'cart'];

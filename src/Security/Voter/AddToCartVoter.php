@@ -10,6 +10,7 @@ use App\Enum\CartOperationEnum;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+use function is_subclass_of;
 
 /** @extends Voter<string,Product> */
 final class AddToCartVoter extends Voter
@@ -26,6 +27,13 @@ final class AddToCartVoter extends Voter
     /** @param Product $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
+        if (false === is_subclass_of($subject, Product::class)) {
+            return false;
+        }
+        if (CartOperationEnum::ADD_TO_CART->value !== $attribute) {
+            return false;
+        }
+
         $user = $token->getUser();
         if (null === $user && false === $user instanceof ShopUserInterface) {
             return false;

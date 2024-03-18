@@ -17,10 +17,6 @@ use Doctrine\ORM\Mapping\Table;
 #[Table(name: 'suppliers', schema: 'interview')]
 class Supplier
 {
-    public $description;
-
-    public $picture;
-
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'supplier_id', type: Types::SMALLINT, unique: true, nullable: false)]
@@ -38,15 +34,5 @@ class Supplier
     public function getName(): string|null
     {
         return $this->name;
-    }
-
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    public function getPicture()
-    {
-        return $this->picture;
     }
 }

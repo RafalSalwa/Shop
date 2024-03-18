@@ -23,6 +23,7 @@ use function iterator_to_array;
 
 final class RegistrationFormType extends AbstractType implements DataMapperInterface
 {
+    /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -65,8 +66,6 @@ final class RegistrationFormType extends AbstractType implements DataMapperInter
                             [
                                 'min' => 6,
                                 'minMessage' => 'Your password should be at least {{ limit }} characters',
-                                // max length allowed by Symfony for security reasons
-                                'max' => 4096,
                             ],
                         ),
                     ],

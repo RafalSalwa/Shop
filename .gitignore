@@ -50,3 +50,7 @@ yarn-error.log
 ###> qossmic/deptrac-shim ###
 /.deptrac.cache
 ###< qossmic/deptrac-shim ###
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###

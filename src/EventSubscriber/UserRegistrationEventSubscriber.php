@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\EventSubscriber;
 
+use App\Entity\Subscription;
 use App\Event\UserConfirmedEvent;
 use App\Event\UserRegisteredEvent;
-use App\Event\UserVerificationCodeRequestEvent;
 use App\Exception\SubscriptionPlanNotFoundException;
 use App\Repository\SubscriptionPlanRepository;
 use App\Repository\SubscriptionRepository;
@@ -24,7 +24,6 @@ final class UserRegistrationEventSubscriber implements EventSubscriberInterface
     {
         return [
             UserRegisteredEvent::class => 'onRegistrationCompleted',
-            UserVerificationCodeRequestEvent::class => 'onVerificationCodeRequest',
             UserConfirmedEvent::class => 'onConfirmed',
         ];
     }
@@ -32,22 +31,16 @@ final class UserRegistrationEventSubscriber implements EventSubscriberInterface
     /** @throws SubscriptionPlanNotFoundException */
     public function onRegistrationCompleted(UserRegisteredEvent $userRegisteredEvent): void
     {
-        //        $user = $userRegisteredEvent->getEmail();
-        //
-        //        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
-        //        if (null === $subscriptionPlan) {
-        //            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
-        //        }
-        //
-        //        $subscription = new Subscription();
-        //        $subscription->setUserId($user->getId());
-        //        $subscription->setPlan($subscriptionPlan);
-        //
-        //        $this->subscriptionRepository->save($subscription);
-    }
+        $user = $userRegisteredEvent->getEmail();
 
-    public function onVerificationCodeRequest(UserVerificationCodeRequestEvent $event): void
-    {
+        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
+        if (null === $subscriptionPlan) {
+            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
+        }
+
+        $subscription = new Subscription($user->getId(), $subscriptionPlan);
+
+        $this->subscriptionRepository->save($subscription);
     }
 
     public function onConfirmed(UserConfirmedEvent $event): void

@@ -15,8 +15,15 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
     public function __construct(private BaseAccessTokenRepository $baseAccessTokenRepository)
     {}
 
-    public function getNewToken(ClientEntityInterface $clientEntity, array $scopes, $userIdentifier = null)
-    {
+    /**
+     * @param array<string> $scopes
+     * @param string $userIdentifier
+     */
+    public function getNewToken(
+        ClientEntityInterface $clientEntity,
+        array $scopes,
+        $userIdentifier = null,
+    ): AccessTokenEntity {
         $accessToken = new AccessTokenEntity();
         $accessToken->setClient($clientEntity);
         $accessToken->setUserIdentifier($userIdentifier);
@@ -33,11 +40,13 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
         $this->baseAccessTokenRepository->persistNewAccessToken($accessTokenEntity);
     }
 
+    /** @param string $tokenId */
     public function revokeAccessToken($tokenId): void
     {
         $this->baseAccessTokenRepository->revokeAccessToken($tokenId);
     }
 
+    /** @param string $tokenId */
     public function isAccessTokenRevoked($tokenId): bool
     {
         return $this->baseAccessTokenRepository->isAccessTokenRevoked($tokenId);

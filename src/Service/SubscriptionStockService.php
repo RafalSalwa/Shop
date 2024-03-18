@@ -12,6 +12,7 @@ use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function is_null;
 use function sprintf;
 
 readonly final class SubscriptionStockService
@@ -28,12 +29,12 @@ readonly final class SubscriptionStockService
      */
     public function checkStockIsAvailable(CartItemInterface $cartItem): void
     {
-        if (! ($cartItem instanceof Product)) {
+        if (false === $cartItem instanceof Product) {
             return;
         }
 
         $product = $this->productRepository->find($cartItem->getId());
-        if (! $product) {
+        if (true === is_null($product)) {
             throw new ItemNotFoundException(sprintf('Product #%d not found.', $cartItem->getId()));
         }
 
@@ -42,15 +43,10 @@ readonly final class SubscriptionStockService
         }
     }
 
-    public function restoreStock(CartItemInterface $cartItem, string $STOCK_INCREASE): void
-    {
-        $this->changeStock($cartItem, Product::STOCK_INCREASE, $cartItem->getQuantity());
-    }
-
     /** @phpstan-param Product::STOCK_* $operation */
     public function changeStock(CartItemInterface $cartItem, string $operation, int $qty = -1): void
     {
-        if (! $cartItem instanceof Product) {
+        if (false === $cartItem instanceof Product) {
             return;
         }
 

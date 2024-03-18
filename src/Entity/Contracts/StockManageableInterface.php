@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Entity\Contracts;
 
-interface StockManageableInterface
+interface StockManageableInterface extends CartInsertableInterface
 {
     public function getId(): int;
 
-    public function decreaseStock(self $product, int $quantity): self;
+    public function decreaseStock(int $quantity): void;
 
-    public function increaseStock(self $product, int $quantity): self;
+    public function increaseStock(int $quantity): void;
 
-    public function changeStock(self $product, int $quantity): self;
+    public function changeStock(int $quantity): void;
 
     public function getUnitsInStock(): int;
 }

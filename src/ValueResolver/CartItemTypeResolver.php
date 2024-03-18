@@ -20,7 +20,7 @@ final class CartItemTypeResolver implements ValueResolverInterface
         }
 
         $value = $request->attributes->get($argumentMetadata->getName());
-        if (! is_string($value)) {
+        if (false === is_string($value)) {
             return [];
         }
 

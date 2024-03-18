@@ -1,15 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\ValueObject\GRPC;
 
 use stdClass;
 use const Grpc\STATUS_OK;
 
-final class StatusResponse {
-
+/**
+ * Converts GRPC response array into more readable form
+ */
+final class StatusResponse
+{
+    /** @var array<string, string> $metadata */
     private array $metadata;
+
     private int $code;
+
     private string $details;
+
     public function __construct(stdClass $class)
     {
         $this->metadata = $class->metadata;
@@ -17,6 +26,7 @@ final class StatusResponse {
         $this->details = $class->details;
     }
 
+    /** @return array<string, string> */
     public function getMetadata(): array
     {
         return $this->metadata;
@@ -34,6 +44,6 @@ final class StatusResponse {
 
     public function isOk(): bool
     {
-        return $this->code === STATUS_OK;
+        return STATUS_OK === $this->code;
     }
 }

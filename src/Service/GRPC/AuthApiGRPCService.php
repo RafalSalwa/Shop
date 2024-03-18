@@ -9,6 +9,7 @@ use App\Client\GRPC\UserApiGRPCClient;
 use App\Exception\AuthException;
 use App\Model\GRPC\UserResponse;
 use App\Model\TokenPair;
+use App\Protobuf\Message\UserDetails;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Throwable;
 use function dd;
@@ -40,7 +41,12 @@ final class AuthApiGRPCService
             $this->authApiGRPCClient->signUp($email, $password);
 
             $key = $this->authApiGRPCClient->getVerificationCode($email);
-            $userResponse = new UserResponse(email: $email, password: $password, vCode: $key, isVerified: false);
+            $userResponse = new UserResponse(
+                email: $email,
+                password: $password,
+                confirmationCode: $key,
+                isVerified: false,
+            );
 
             $this->setUserCredentialsFromLastSignUp($userResponse);
 
@@ -82,10 +88,7 @@ final class AuthApiGRPCService
         return $this->authApiGRPCClient->getResponses() + $this->userApiGRPCClient->getResponses();
     }
 
-    /**
-     * @throws AuthException
-     */
-    public function getUserDetails(string $token):mixed
+    public function getUserDetails(string $token): ?UserDetails
     {
         return $this->userApiGRPCClient->getUser($token);
     }

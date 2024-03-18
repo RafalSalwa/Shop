@@ -18,11 +18,6 @@ class ProductCartItem extends AbstractCartItem
     #[JoinColumn(referencedColumnName: 'product_id')]
     protected CartInsertableInterface $referencedEntity;
 
-    public function __construct(CartInsertableInterface $referencedEntity, int $quantity)
-    {
-        parent::__construct($referencedEntity, $quantity);
-    }
-
     public function jsonSerialize(): mixed
     {
         return [

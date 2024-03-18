@@ -24,7 +24,6 @@ use function sprintf;
 #[Table(name: 'products', schema: 'interview')]
 class Product implements CartInsertableInterface, StockManageableInterface
 {
-
     #[Id]
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'product_id', type: Types::INTEGER, unique: true, nullable: false)]
@@ -41,7 +40,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
     private string $quantityPerUnit;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
-    private $price;
+    private int $price;
 
     #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: true)]
     private int $unitsInStock;
@@ -56,16 +55,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
     public function getRequiredSubscription(): SubscriptionPlan
     {
         return $this->subscriptionPlan;
-    }
-
-    public function getCategoryId()
-    {
-        return $this->categoryId;
-    }
-
-    public function getCategory(): Category
-    {
-        return $this->category;
     }
 
     public function getGrossPrice(): string
@@ -129,20 +118,18 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this;
     }
 
-    public function toCartItem(): AbstractCartItem
+    public function decreaseStock(int $quantity): void
     {
-
+        $this->setUnitsInStock($this->getUnitsInStock() - $quantity);
     }
 
-    public function decreaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
+    public function increaseStock(int $quantity): void
     {
+        $this->setUnitsInStock($this->getUnitsInStock() + $quantity);
     }
 
-    public function increaseStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
+    public function changeStock(int $quantity): void
     {
-    }
-
-    public function changeStock(StockManageableInterface $stockManageable, int $quantity): StockManageableInterface
-    {
+        $this->setUnitsInStock($quantity);
     }
 }

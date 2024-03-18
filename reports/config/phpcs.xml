@@ -35,6 +35,7 @@
         <exclude name="Squiz.WhiteSpace.FunctionClosingBraceSpace.SpacingBeforeClose"/>
         <exclude name="Squiz.PHP.DisallowBooleanStatement.Found"/>
         <exclude name="Squiz.Formatting.OperatorBracket.MissingBrackets"/>
+        <exclude name="Squiz.WhiteSpace.MemberVarSpacing.FirstIncorrect"/>
     </rule>
 
     <rule ref="Generic">
@@ -80,14 +81,12 @@
         <exclude name="SlevomatCodingStandard.Namespaces.UseSpacing.IncorrectLinesCountBetweenDifferentTypeOfUse"/>
         <exclude
             name="SlevomatCodingStandard.Attributes.AttributeAndTargetSpacing.IncorrectLinesCountBetweenAttributeAndTarget"/>
-        <!--        Ignore () in new, we want new Foo() instead of new Foo -->
         <exclude name="SlevomatCodingStandard.ControlStructures.NewWithoutParentheses.UselessParentheses"/>
         <exclude
             name="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation.NonFullyQualifiedClassName"/>
         <exclude
             name="SlevomatCodingStandard.Classes.DisallowConstructorPropertyPromotion.DisallowedConstructorPropertyPromotion"/>
         <exclude name="SlevomatCodingStandard.TypeHints.UnionTypeHintFormat.DisallowedShortNullable"/>
-        <!--        we like non-capturing exception catches-->
         <exclude name="SlevomatCodingStandard.Exceptions.DisallowNonCapturingCatch.DisallowedNonCapturingCatch"/>
         <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedExceptions.NonFullyQualifiedException"/>
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousInterfaceNaming.SuperfluousSuffix"/>
@@ -96,12 +95,11 @@
         <exclude name="SlevomatCodingStandard.Classes.SuperfluousAbstractClassNaming.SuperfluousPrefix"/>
         <exclude name="SlevomatCodingStandard.TypeHints.DisallowMixedTypeHint.DisallowedMixedTypeHint"/>
         <exclude name="SlevomatCodingStandard.Namespaces.FullyQualifiedGlobalConstants.NonFullyQualified"/>
-    </rule>
-
-    <rule ref="SlevomatCodingStandard.Files.FunctionLength.FunctionLength">
-        <properties>
-            <property name="maxLinesLength" value="35"/>
-        </properties>
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint"/>
+        <exclude name="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment.OneLinePropertyComment"/>
+        <exclude
+            name="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator.DisallowedNullSafeObjectOperator"/>
+        <exclude name="SlevomatCodingStandard.Numbers.DisallowNumericLiteralSeparator.DisallowedNumericLiteralSeparator"/>
     </rule>
 
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
@@ -175,6 +173,19 @@
     <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace.EmptyLines">
         <!-- turned off by PSR2 -> turning back on -->
         <severity>5</severity>
+    </rule>
+
+    <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter.FoundInExtendedClassAfterLastUsed">
+        <exclude-pattern>src/Form/</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.FunctionLength.FunctionLength">
+        <exclude-pattern>src/Form/</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+        <exclude-pattern>src/Form/</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.PHP.DisallowReference.DisallowedPassingByReference">
+        <exclude-pattern>src/Form/</exclude-pattern>
     </rule>
 
     <file>config/</file>

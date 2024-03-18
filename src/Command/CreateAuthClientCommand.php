@@ -12,14 +12,23 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
-use function explode;
 use function implode;
 
 #[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
 final class CreateAuthClientCommand extends AbstractSymfonyCommand
 {
-    public function __construct(private readonly EntityManagerInterface $entityManager)
-    {
+    /**
+     * @param array<string> $scopes
+     * @param array<string> $grantTypes
+     * @param array<string> $redirectUris
+     */
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+        private readonly string $clientId = 'testclient',
+        private readonly array $scopes = ['profile', 'email', 'cart'],
+        private readonly array $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'],
+        private readonly array $redirectUris = ['https://interview.local/callback'],
+    ) {
         parent::__construct();
     }
 
@@ -27,34 +36,25 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        $clientName = 'Test Client';
-        $clientId = 'testclient';
-        $clientSecret = 'testpass';
-        $clientDescription = 'Test Client App';
-        $scopes = ['profile', 'email', 'cart'];
-        $grantTypes = ['authorization_code', 'client_credentials ', 'refresh_token'];
-        $redirectUris = explode(',', 'https://interview.local/callback');
-
         $user = new User(id: 1, email: 'test@test.com');
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
-        //        $this->em->persist($user);
-        //        $this->em->flush();
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
-        // Create the client
         $conn = $this->entityManager->getConnection();
-        $conn->beginTransaction();
 
         try {
+            $conn->beginTransaction();
             $conn->insert(
                 'oauth2_client',
                 [
-                    'identifier' => $clientId,
-                    'secret' => $clientSecret,
-                    'name' => $clientName,
-                    'redirect_uris' => implode(' ', $redirectUris),
-                    'grants' => implode(' ', $grantTypes),
-                    'scopes' => implode(' ', $scopes),
+                    'identifier' => $this->clientId,
+                    'secret' => 'testclientsecret',
+                    'name' => 'Test Client',
+                    'redirect_uris' => implode(' ', $this->redirectUris),
+                    'grants' => implode(' ', $this->grantTypes),
+                    'scopes' => implode(' ', $this->scopes),
                     'active' => 1,
                     'allow_plain_text_pkce' => 0,
                 ],
@@ -64,8 +64,8 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
                 'oauth2_client_profile',
                 [
                     'id' => 1,
-                    'client_id' => $clientId,
-                    'name' => $clientDescription,
+                    'client_id' => $this->clientId,
+                    'name' => 'Test Client App',
                 ],
             );
             $conn->commit();

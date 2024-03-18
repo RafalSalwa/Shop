@@ -66,7 +66,7 @@ final readonly class CartService
      */
     public function save(?Cart $cart = null): void
     {
-        if (! $cart instanceof Cart) {
+        if (false === $cart instanceof Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);

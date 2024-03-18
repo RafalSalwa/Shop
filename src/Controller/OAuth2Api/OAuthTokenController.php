@@ -55,26 +55,24 @@ final class OAuthTokenController extends AbstractShopController
     public function consent(Request $request, OAuth2Service $oAuth2Service): Response
     {
         $appClient    = $oAuth2Service->getClient();
-        $user         = $this->getUser();
-        $userConsents = $user->getOAuth2UserConsents()
+        $user         = $this->getShopUser();
+        $userConsents = $user->getConsents()
             ->filter(
-                static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient
+                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
             )
-            ->first()
-        ;
+            ->first();
+
         $userScopes      = $userConsents->getScopes();
         $requestedScopes = explode(' ', $request->query->get('scope'));
         if ([] === array_diff($requestedScopes, $userScopes)) {
-            $request->getSession()
-                ->set('consent_granted', true)
-            ;
+            $request->getSession()->set('consent_granted', true);
 
             return $this->redirectToRoute('oauth2_authorize', $request->query->all());
         }
 
-        if ($request->isMethod('POST')) {
+        if (true === $request->isMethod(Request::METHOD_POST)) {
             $consents = $oAuth2Service->createConsent($appClient);
-            $user->addOAuth2UserConsent($consents);
+            $user->addConsent($consents);
             $oAuth2Service->save($consents);
 
             return $this->redirectToRoute('oauth2_authorize', $request->query->all(), 307);

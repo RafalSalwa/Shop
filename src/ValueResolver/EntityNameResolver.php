@@ -17,7 +17,7 @@ final class EntityNameResolver
             'plan' => SubscriptionPlan::class,
         ];
 
-        if (! isset($entityTypeMap[$entityType])) {
+        if (false === isset($entityTypeMap[$entityType])) {
             throw new InvalidArgumentException('Unknown entity type: ' . $entityType);
         }
 

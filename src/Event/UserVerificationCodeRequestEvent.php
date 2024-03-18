@@ -8,7 +8,12 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 final class UserVerificationCodeRequestEvent extends Event
 {
-    public function __construct(string $email)
+    public function __construct(private readonly string $email)
     {
+    }
+
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

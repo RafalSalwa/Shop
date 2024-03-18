@@ -48,7 +48,7 @@ final readonly class CartWorkflow
         } catch (InsufficientStockException | ProductStockDepletedException $exception) {
             $this->logger->error(
                 $exception->getMessage(),
-                ['operation' => StockOperation::Decrease(), 'item_id' => $itemId, 'quantity' => $quantity],
+                ['operation' => StockOperation::decrease(), 'item_id' => $itemId, 'quantity' => $quantity],
             );
 
             throw new StockOperationException(message: $exception->getMessage(), previous: $exception);

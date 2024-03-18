@@ -8,8 +8,6 @@ interface CartInsertableInterface
 {
     public function getId(): int;
 
-    public function toCartItem(): CartItemInterface;
-
     public function getPrice(): int;
 
     public function getName(): string;
