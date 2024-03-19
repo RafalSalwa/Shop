@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace App\Service;
 
+use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
 use App\Entity\Payment;
 use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
+use function assert;
+use function is_subclass_of;
 
 readonly final class PaymentService
 {
@@ -19,19 +22,17 @@ readonly final class PaymentService
         private PaymentRepository $paymentRepository,
     ) {}
 
-    public function createPayment(Order $order, PaymentProvider $paymentType): Payment
+    public function createPayment(Order $order, PaymentProvider $paymentType): void
     {
         $payment = new Payment();
         $this->paymentProcessing->getMarking($payment);
 
-        $payment->setUserId($this->security->getUser()->getId());
+        $payment->setUserId($this->getUser()->getId());
         $payment->setAmount($order->getTotal());
         $payment->setOperationType($paymentType);
         $order->addPayment($payment);
 
         $this->save($payment);
-
-        return $payment;
     }
 
     public function save(Payment $payment): void
@@ -47,5 +48,13 @@ readonly final class PaymentService
         }
 
         $this->paymentRepository->save($payment);
+    }
+
+    private function getUser(): ShopUserInterface
+    {
+        $user = $this->security->getUser();
+        assert(is_subclass_of($user, ShopUserInterface::class));
+
+        return $user;
     }
 }

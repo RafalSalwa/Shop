@@ -21,7 +21,7 @@ final readonly class SubscriptionPlanService
     }
 
     /** @throws NonUniqueResultException */
-    public function findPlanById(int $id): SubscriptionPlan
+    public function findPlanById(int $id): ?SubscriptionPlan
     {
         return $this->subscriptionPlanRepository->findById($id);
     }

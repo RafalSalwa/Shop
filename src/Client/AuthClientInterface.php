@@ -10,7 +10,7 @@ interface AuthClientInterface
 {
     public function signIn(string $email, string $password): TokenPair;
 
-    public function signUp(string $email, string $password): bool;
+    public function signUp(string $email, string $password): void;
 
     public function confirmAccount(string $verificationCode): void;
 }

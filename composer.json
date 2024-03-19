@@ -102,7 +102,7 @@
     "nunomaduro/collision": "^7.10",
     "nunomaduro/phpinsights": "^2.10",
     "orklah/psalm-insane-comparison": "^2.2",
-    "pdepend/pdepend": "2.15.1",
+    "pdepend/pdepend": "2.16.2",
     "phan/phan": "^5.4.3",
     "phing/phing": "^2.17.4",
     "php-parallel-lint/php-console-highlighter": "^1.0",

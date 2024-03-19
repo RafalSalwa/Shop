@@ -12,14 +12,14 @@ use function is_string;
 
 final class CartItemTypeResolver implements ValueResolverInterface
 {
-    /** @return array<int, class-string> */
-    public function resolve(Request $request, ArgumentMetadata $argumentMetadata): iterable
+    /** @return array<class-string> */
+    public function resolve(Request $request, ArgumentMetadata $argument): iterable
     {
-        if ('type' !== $argumentMetadata->getName()) {
+        if ('type' !== $argument->getName()) {
             return [];
         }
 
-        $value = $request->attributes->get($argumentMetadata->getName());
+        $value = $request->attributes->get($argument->getName());
         if (false === is_string($value)) {
             return [];
         }

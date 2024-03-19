@@ -34,10 +34,15 @@ final class SubscriptionController extends AbstractShopController
         SubscriptionPlanService $subscriptionPlanService,
         SubscriptionService $subscriptionService,
     ): Response {
-            $plan = $subscriptionPlanService->findPlanById($id);
-            $subscriptionService->assignSubscription($plan, $this->getUserId());
-            $this->addFlash('success', ' subscription ordered successfully');
+        $plan = $subscriptionPlanService->findPlanById($id);
+        if (null === $plan) {
+            $this->addFlash('error', 'The subscription plan does not exist.');
 
             return $this->redirectToRoute('subscriptions_index');
+        }
+        $subscriptionService->assignSubscription($plan, $this->getUserId());
+        $this->addFlash('success', ' subscription ordered successfully');
+
+        return $this->redirectToRoute('subscriptions_index');
     }
 }
