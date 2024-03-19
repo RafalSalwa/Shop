@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Client\GRPC;
 
 use App\Client\AuthClientInterface;
-use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthException;
 use App\Model\TokenPair;
 use App\Protobuf\Message\SignInUserInput;
@@ -18,13 +17,16 @@ use App\Protobuf\Service\AuthServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
+use Grpc\UnaryCall;
 use stdClass;
 use function assert;
+use function count;
 
 final class AuthApiGRPCClient implements AuthClientInterface
 {
     private AuthServiceClient $authServiceClient;
 
+    /** @var array<string, UnaryCall> */
     private array $responses = [];
 
     public function __construct(private string $authServiceDsn)
@@ -56,7 +58,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         return new TokenPair(new Token($userResponse->getAccessToken()), new Token($userResponse->getRefreshToken()));
     }
 
-    public function signUp(string $email, string $password): bool
+    public function signUp(string $email, string $password): void
     {
         $signUpUserInput = new SignUpUserInput();
         $signUpUserInput->setEmail($email);
@@ -65,11 +67,6 @@ final class AuthApiGRPCClient implements AuthClientInterface
 
         $arrResponse = $this->authServiceClient->SignUpUser($signUpUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-
-        assert($arrStatus instanceof stdClass);
-
-        return (new StatusResponse($arrStatus))->isOk();
     }
 
     /** @throws AuthException */
@@ -92,6 +89,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         return $verificationCodeResponse->getCode();
     }
 
+    /** @throws AuthException */
     public function confirmAccount(string $verificationCode): void
     {
         $verifyUserRequest = new VerifyUserRequest();
@@ -109,22 +107,13 @@ final class AuthApiGRPCClient implements AuthClientInterface
         }
     }
 
-    public function getByVerificationCode(string $verificationCode): ShopUserInterface
-    {
-        // TODO: Implement getByVerificationCode() method.
-    }
-
-    public function signInByCode(string $email, string $verificationCode): TokenPair
-    {
-        // TODO: Implement signInByCode() method.
-    }
-
+    /** @return array<string, UnaryCall>|null */
     public function getResponses(): ?array
     {
         if (0 === count($this->responses)) {
             return [];
         }
-        return $this->responses;
 
+        return $this->responses;
     }
 }

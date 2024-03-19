@@ -13,7 +13,6 @@ use League\Bundle\OAuth2ServerBundle\Model\Client;
 #[ORM\Entity(repositoryClass: OAuth2UserConsentRepository::class)]
 class OAuth2UserConsent
 {
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -25,8 +24,12 @@ class OAuth2UserConsent
     #[ORM\Column(nullable: true)]
     private DateTimeImmutable|null $expires = null;
 
+    /**
+     * @var list<string>
+     * $scopes = ['email', 'id']
+     */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
-    private array $scopes = [];
+    private array $scopes = ['email', 'id'];
 
     #[ORM\Column(length: 255, nullable: true)]
     private string|null $ipAddress = null;
@@ -67,6 +70,7 @@ class OAuth2UserConsent
         return $this;
     }
 
+    /** @return array<string> */
     public function getScopes(): array
     {
         return $this->scopes;

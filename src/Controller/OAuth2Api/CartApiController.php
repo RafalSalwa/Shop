@@ -9,7 +9,6 @@ use App\Controller\CartManager;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
-use App\Requests\CartSetQuantityRequest;
 use App\Service\CartService;
 use App\Service\ProductsService;
 use Doctrine\DBAL\Exception;
@@ -19,7 +18,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
@@ -107,14 +105,5 @@ final class CartApiController extends AbstractShopController
         return $this->json(
             ['status' => 'success'],
         );
-    }
-
-    #[Route(path: '/set/quantity', name: 'set_quantity', methods: ['PUT'])]
-    public function setQuantity(
-        #[MapRequestPayload]
-        CartSetQuantityRequest $cartSetQuantityRequest,
-        Request $request,
-        CartService $cartService,
-    ): JsonResponse {
     }
 }

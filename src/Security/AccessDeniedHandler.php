@@ -13,6 +13,10 @@ final class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function handle(Request $request, AccessDeniedException $accessDeniedException): ?Response
     {
-        return new Response('', 403);
+        return new Response(
+            content: $accessDeniedException->getMessage(),
+            status: Response::HTTP_FORBIDDEN,
+            headers: $request->attributes->all(),
+        );
     }
 }

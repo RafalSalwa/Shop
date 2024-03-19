@@ -17,7 +17,7 @@ final class AccessToken implements AccessTokenEntityInterface
     use EntityTrait;
     use TokenEntityTrait;
 
-    private function convertToJWT(): UnencryptedToken
+    private function convert(): UnencryptedToken
     {
         $this->initJwtConfiguration();
 

@@ -7,22 +7,23 @@ namespace App\Client\GRPC;
 use App\Exception\AuthException;
 use App\Protobuf\Message\GetUserRequest;
 use App\Protobuf\Message\UserDetails;
-use App\Protobuf\Message\VerificationCodeRequest;
-use App\Protobuf\Message\VerificationCodeResponse;
 use App\Protobuf\Message\VerifyUserRequest;
 use App\Protobuf\Service\UserServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use Grpc\ChannelCredentials;
+use Grpc\UnaryCall;
 use stdClass;
 use function assert;
+use function count;
 
 final class UserApiGRPCClient
 {
     private UserServiceClient $userServiceClient;
 
+    /** @var array<string, UnaryCall> */
     private array $responses = [];
 
-    public function __construct(private readonly string $userServiceDsn,)
+    public function __construct(private readonly string $userServiceDsn)
     {
         $this->userServiceClient = new UserServiceClient(
             $this->userServiceDsn,
@@ -33,28 +34,6 @@ final class UserApiGRPCClient
     }
 
     /** @throws AuthException */
-    public function getVerificationCode(string $email): string
-    {
-        $verificationCodeRequest = new VerificationCodeRequest();
-        $verificationCodeRequest->setEmail($email);
-        $arrResponse = $this->authServiceClient->getVerificationKey($verificationCodeRequest)->wait();
-        $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-
-        assert($arrStatus instanceof stdClass);
-        $statusResponse = new StatusResponse($arrStatus);
-        if (false === $statusResponse->isOk()) {
-            throw new AuthException('missing verification code');
-        }
-        $verificationCodeResponse = $arrResponse[0];
-        assert($verificationCodeResponse instanceof VerificationCodeResponse);
-
-        return $verificationCodeResponse->getCode();
-    }
-
-    /**
-     * @throws AuthException
-     */
     public function confirmAccount(string $verificationCode): void
     {
         $verifyUserRequest = new VerifyUserRequest();
@@ -71,16 +50,17 @@ final class UserApiGRPCClient
         }
     }
 
+    /** @return array<string, UnaryCall> */
     public function getResponses(): ?array
     {
         if (0 === count($this->responses)) {
             return [];
         }
-        return $this->responses;
 
+        return $this->responses;
     }
 
-    public function getUser(string $token): array
+    public function getUser(string $token): ?UserDetails
     {
         $userRequest = new GetUserRequest();
         $userRequest->setToken($token);
@@ -94,18 +74,12 @@ final class UserApiGRPCClient
 
         $statusResponse = new StatusResponse($status);
         if (false === $statusResponse->isOk()) {
-           return [];
+            return null;
         }
 
         $userResponse = $arrResponse[0];
         assert($userResponse instanceof UserDetails);
 
-        return [
-            'id'=>$userResponse->getId(),
-            'email'=>$userResponse->getEmail(),
-            'verified'=>$userResponse->getVerified(),
-            'active'=>$userResponse->getActive(),
-            'createdAt'=>$userResponse->getCreatedAt()->toDateTime()->format('d-m-Y H:i:s'),
-        ];
+        return $userResponse;
     }
 }

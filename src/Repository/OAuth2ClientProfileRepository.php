@@ -24,31 +24,23 @@ final class OAuth2ClientProfileRepository extends ServiceEntityRepository
 
     public function add(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
     {
-        $this->getEntityManager()
-            ->persist($oAuth2ClientProfile)
-        ;
+        $this->getEntityManager()->persist($oAuth2ClientProfile);
 
-        if (! $flush) {
+        if (false === $flush) {
             return;
         }
 
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->flush();
     }
 
     public function remove(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
     {
-        $this->getEntityManager()
-            ->remove($oAuth2ClientProfile)
-        ;
+        $this->getEntityManager()->remove($oAuth2ClientProfile);
 
-        if (! $flush) {
+        if (false === $flush) {
             return;
         }
 
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->flush();
     }
 }

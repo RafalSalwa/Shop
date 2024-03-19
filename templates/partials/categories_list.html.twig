@@ -1,7 +1,0 @@
-<div class="navbar-nav w-100 overflow-hidden" style="height: 410px">
-    {% for category in categories %}
-        <a href="{{ path('categories_index',{'slug':category.slug }) }}"
-           class="nav-item nav-link">{{ category.name }}</a>
-    {% endfor %}
-
-</div>

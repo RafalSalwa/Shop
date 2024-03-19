@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\OAuth2;
 
-use App\Entity\OAuth2ClientProfile;
+use App\Entity\Contracts\OAuth2UserInterface;
 use App\Entity\OAuth2UserConsent;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
@@ -13,6 +13,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
 use function array_diff;
 use function array_merge;
+use function assert;
+use function is_null;
+use function is_subclass_of;
 
 final readonly class OAuth2Service
 {
@@ -22,36 +25,32 @@ final readonly class OAuth2Service
         private RequestStack $requestStack,
     ) {}
 
-    public function getProfile($appClient): OAuth2ClientProfile|null
+    public function createConsent(Client $appClient): OAuth2UserConsent
     {
-        return $this->entityManager->getRepository(OAuth2ClientProfile::class)->findOneBy(
-            ['client' => $appClient],
-        );
-    }
-
-    public function createConsent(Client|null $appClient)
-    {
-        $user = $this->security->getUser();
+        $user = $this->getUser();
         $request = $this->requestStack->getCurrentRequest();
+        $consent = new OAuth2UserConsent();
+        $userScopes = [];
 
-        $userConsents = $user->getOAuth2UserConsents()
-            ->filter(
-                static fn (OAuth2UserConsent $oAuth2UserConsent): bool => $oAuth2UserConsent->getClient() === $appClient
-            )
-            ->first() ?: null;
-        $userScopes = ($userConsents?->getScopes() ?? []);
+        $userConsents = $user->getConsents();
+        if (false === is_null($userConsents)) {
+            $userConsents = $userConsents->filter(
+                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
+            );
+            $consent = $userConsents->first();
+            $userScopes = ($consent ?? []);
+        }
 
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);
 
-        $consents = ($userConsents ?? new OAuth2UserConsent());
-        $consents->setScopes(array_merge($requestedScopes, $userScopes));
-        $consents->setClient($appClient);
-        $consents->setCreated(new DateTimeImmutable());
-        $consents->setExpires(new DateTimeImmutable('+30 days'));
-        $consents->setIpAddress($request->getClientIp());
+        $consent->setScopes(array_merge($requestedScopes, $userScopes));
+        $consent->setClient($appClient);
+        $consent->setCreated(new DateTimeImmutable());
+        $consent->setExpires(new DateTimeImmutable('+30 days'));
+        $consent->setIpAddress($request->getClientIp());
 
-        return $consents;
+        return $consent;
     }
 
     public function getClient(): Client|null
@@ -61,6 +60,14 @@ final readonly class OAuth2Service
         return $this->entityManager->getRepository(Client::class)->findOneBy(
             ['identifier' => $clientId],
         );
+    }
+
+    private function getUser(): OAuth2UserInterface
+    {
+        $user = $this->security->getUser();
+        assert(is_subclass_of($user, OAuth2UserInterface::class));
+
+        return $user;
     }
 
     public function save(OAuth2UserConsent $oAuth2UserConsent): void

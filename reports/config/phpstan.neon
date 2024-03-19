@@ -61,6 +61,7 @@ parameters:
                 - Symfony\Component\Security\Core\Authorization\Voter\Voter
                 - Exception
                 - AbstractCartItem
+                - RuntimeException
 
 includes:
     # https://github.com/symplify/phpstan-rules

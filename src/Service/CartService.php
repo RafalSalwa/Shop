@@ -29,7 +29,7 @@ final readonly class CartService
         private EntityManagerInterface $entityManager,
         private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
-        private string $cartItemMaxCapacity,
+        private int $cartItemMaxCapacity,
     ) {
     }
 
@@ -66,7 +66,7 @@ final readonly class CartService
      */
     public function save(?Cart $cart = null): void
     {
-        if (! $cart instanceof Cart) {
+        if (false === $cart instanceof Cart) {
             $cart = $this->getCurrentCart();
         }
         $this->entityManager->persist($cart);

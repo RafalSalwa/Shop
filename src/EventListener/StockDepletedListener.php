@@ -14,18 +14,19 @@ final class StockDepletedListener implements EventSubscriberInterface
     public function __construct(private readonly MailerInterface $mailer)
     {}
 
-    public static function getSubscribedEvents()
+    /** @return array<string, string|array{0: string, 1: int}|list<array{0: string, 1?: int}>> */
+    public static function getSubscribedEvents(): array
     {
         return [StockDepletedEvent::class => 'onStockDepleted'];
     }
 
     public function onStockDepleted(StockDepletedEvent $stockDepletedEvent): void
     {
-        $productData = $stockDepletedEvent->getEventData();
+        $item = $stockDepletedEvent->getItem();
         $email = (new Email())
             ->from('system@interview.com')
             ->to('system@interview.com')
-            ->subject('[PHP] Stock depleted for product ' . $productData['name'] . ' with ID #' . $productData['id'])
+            ->subject('[PHP] Stock depleted for product ' . $item->getName() . ' with ID #' . $item->getId())
             ->html('We need to restock :)')
         ;
 

@@ -11,7 +11,7 @@ enum PaymentProvider: string
     case CreditCard = 'credit-card';
     case PaymentOnDelivery = 'payment-on-delivery';
 
-    public static function DefaultValue(): string
+    public static function defaultValue(): string
     {
         return self::Stripe->value;
     }

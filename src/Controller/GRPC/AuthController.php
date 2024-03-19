@@ -12,7 +12,6 @@ use App\Form\UserVerifyCodeType;
 use App\Model\GRPC\VerificationCodeRequest;
 use App\Model\SignInUserInput;
 use App\Model\SignUpUserInput;
-use App\Protobuf\SignInUserResponse;
 use App\Service\GRPC\AuthApiGRPCService;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +72,6 @@ final class AuthController extends AbstractShopController
     #[Route(path: '/user/sign_in', name: 'sign_in')]
     public function signIn(Request $request, AuthApiGRPCService $authGRPCService): Response
     {
-        $tokenPair = null;
         $signInUserInput = new SignInUserInput();
         $form        = $this->createForm(SignInType::class, $signInUserInput);
 

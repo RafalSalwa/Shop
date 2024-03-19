@@ -4,20 +4,23 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Config\Cache as ConfigCache;
 use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
+use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
-final class SubscriptionPlanRepository extends ServiceEntityRepository
+final class PlanRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, SubscriptionPlan::class);
     }
 
-    public function findById(int $id)
+    /** @throws NonUniqueResultException */
+    public function findById(int $id): ?SubscriptionPlan
     {
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
@@ -26,7 +29,8 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function fetchAvailablePlans()
+    /** @return array<SubscriptionPlan>|null */
+    public function fetchAvailablePlans(): ?array
     {
         $query = $this->createQueryBuilder('p')
             ->where('p.isVisible = true')
@@ -35,7 +39,7 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
             ->setCacheable(true)
             ->getQuery()
         ;
-        $query->enableResultCache(86400, 'subscription_plans');
+        $query->enableResultCache(ConfigCache::DEFAULT_TTL, 'subscription_plans');
 
         return $query->getResult();
     }

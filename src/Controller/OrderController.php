@@ -41,7 +41,7 @@ final class OrderController extends AbstractShopController
         );
     }
 
-    #[Route(path: '/pending/{id}', name: 'show', requirements: ['id'=>'\d+'], methods: ['GET', 'POST'])]
+    #[Route(path: '/pending/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function pending(Request $request, Order $order, OrderWorkflow $orderWorkflow): Response
     {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
@@ -50,15 +50,10 @@ final class OrderController extends AbstractShopController
         $form    = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid()) {
-            if (true === $form->get('yes')->isClicked()) {
-                $orderWorkflow->confirmOrder($order);
+        if (true === $form->isSubmitted() && true === $form->isValid() && true === $form->get('yes')->isClicked()) {
+            $orderWorkflow->confirmOrder($order);
 
-                return $this->redirectToRoute('order_summary', ['id' => $order->getId()]);
-            }
-            if (true === $form->get('no')->isClicked()) {
-                $orderWorkflow->rejectOrder($order);
-            }
+            return $this->redirectToRoute('order_summary', ['id' => $order->getId()]);
         }
 
         return $this->render(

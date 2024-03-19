@@ -13,11 +13,6 @@ final readonly class Summary
     {
     }
 
-    public function getNet(): int
-    {
-        return $this->net;
-    }
-
     public function getShipping(): int
     {
         return $this->shipping;
@@ -36,15 +31,5 @@ final readonly class Summary
         }
 
         return (int)bcadd((string)$subTotal, (string)$this->tax);
-    }
-
-    public function getTax(): int
-    {
-        return $this->tax;
-    }
-
-    public function getDiscount(): int
-    {
-        return $this->discount;
     }
 }

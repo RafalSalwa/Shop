@@ -15,6 +15,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+use function dd;
 
 final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements ShopUserAuthenticatorInterface
 {
@@ -45,11 +46,12 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        dd($request, $token, $firewallName);
     }
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
     {
-        // TODO: Implement onAuthenticationFailure() method.
+        dd($request, $exception);
     }
 
     public function authenticateWithAuthCode(string $authCode): ShopUserInterface

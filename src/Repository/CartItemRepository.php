@@ -14,7 +14,4 @@ final class CartItemRepository extends ServiceEntityRepository
     {
         parent::__construct($managerRegistry, AbstractCartItem::class);
     }
-
-    public function exists(): void
-    {}
 }

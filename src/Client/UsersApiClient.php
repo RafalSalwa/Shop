@@ -7,11 +7,13 @@ namespace App\Client;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
+use App\Exception\AuthenticationExceptionInterface;
 use App\Model\User;
 use App\Service\SubscriptionService;
 use App\ValueObject\Token;
 use JsonException;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -29,7 +31,8 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
     ) {
     }
 
-    public function loadUserByIdentifier(string $identifier): ShopUserInterface
+    /** @throws AuthenticationExceptionInterface */
+    public function loadUserByIdentifier(string $identifier): UserInterface
     {
         return $this->getUser(new Token($identifier));
     }
@@ -79,10 +82,5 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
         }
 
         return $this->getUser($user->getToken());
-    }
-
-    public function supportsClass(string $class): void
-    {
-        // TODO: Implement supportsClass() method.
     }
 }

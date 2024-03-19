@@ -13,7 +13,6 @@ use App\Model\User;
 use App\ValueObject\Token;
 use JsonException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
@@ -26,7 +25,7 @@ use function json_decode;
 use function json_encode;
 use const JSON_THROW_ON_ERROR;
 
-final readonly class AuthApiClient implements AuthClientInterface
+final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClientInterface
 {
     public function __construct(private HttpClientInterface $authApi, private LoggerInterface $logger)
     {}
@@ -61,10 +60,10 @@ final readonly class AuthApiClient implements AuthClientInterface
         }
     }
 
-    public function signUp(string $email, string $password): bool
+    public function signUp(string $email, string $password): void
     {
         try {
-            $response = $this->authApi->request(
+            $this->authApi->request(
                 'POST',
                 '/auth/signup',
                 [
@@ -78,8 +77,6 @@ final readonly class AuthApiClient implements AuthClientInterface
                     ),
                 ],
             );
-
-            return Response::HTTP_OK === $response->getStatusCode();
         } catch (TransportExceptionInterface | JsonException $exception) {
             $this->logger->error($exception->getMessage());
 

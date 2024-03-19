@@ -28,8 +28,8 @@ class OrderItem
     private string $name;
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'items')]
-    #[JoinColumn(name:'order_id', referencedColumnName: 'order_id', nullable: false)]
-    private $order;
+    #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: false)]
+    private Order $order;
 
     #[Column(name: 'product_id', type: Types::INTEGER, nullable: false)]
     private int $prodId;
@@ -88,10 +88,8 @@ class OrderItem
         return $this->price;
     }
 
-
     public function getQuantity(): int
     {
         return $this->quantity;
     }
-
 }

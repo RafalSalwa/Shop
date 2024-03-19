@@ -18,12 +18,8 @@ final class SubscriptionRepository extends ServiceEntityRepository
 
     public function remove(Subscription $subscription): void
     {
-        $this->getEntityManager()
-            ->remove($subscription)
-        ;
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->remove($subscription);
+        $this->getEntityManager()->flush();
     }
 
     public function findForUser(int|string $userId): ?Subscription
@@ -52,19 +48,15 @@ final class SubscriptionRepository extends ServiceEntityRepository
 
     public function save(Subscription $subscription): void
     {
-        $this->getEntityManager()
-            ->persist($subscription)
-        ;
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->persist($subscription);
+        $this->getEntityManager()->flush();
     }
 
-    public function clearSubscriptionsForUserId(int $userId): void
+    public function clearSubscriptions(int $userId): void
     {
-        $qb = $this->createQueryBuilder('s');
-        $qb->update()
-            ->set('s.isActive', $qb->expr()->literal(false))
+        $queryBuilder = $this->createQueryBuilder('s');
+        $queryBuilder->update()
+            ->set('s.isActive', $queryBuilder->expr()->literal(false))
             ->where('s.userId = :userId')
             ->setParameter('userId', $userId)
             ->getQuery()

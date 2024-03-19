@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace App\ValueObject;
 
 use DateTime;
-use DateTimeImmutable;
 use Lcobucci\JWT\Encoding\JoseEncoder;
 use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\UnencryptedToken;
 use Stringable;
+use function assert;
+use function is_string;
 
 final readonly class Token implements Stringable
 {
@@ -20,7 +21,7 @@ final readonly class Token implements Stringable
     public function __construct(private string $token)
     {
         $parser = new Parser(new JoseEncoder());
-        $this->parsedToken = $parser->parse($this->token);
+        $this->parsedToken = $parser->parse($token);
     }
 
     public function value(): string
@@ -35,15 +36,13 @@ final readonly class Token implements Stringable
 
     public function getSub(): string
     {
-        return $this->parsedToken->claims()->get("sub");
+        $sub = $this->parsedToken->claims()->get('sub');
+        assert(is_string($sub));
+
+        return $sub;
     }
 
-    public function getExp(): DateTimeImmutable
-    {
-        return $this->parsedToken->claims()->get("exp");
-    }
-
-    public function __toString()
+    public function __toString(): string
     {
         return $this->token;
     }

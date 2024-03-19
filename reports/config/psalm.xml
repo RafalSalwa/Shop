@@ -3,14 +3,27 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config ../../vendor/vimeo/psalm/config.xsd"
-    reportMixedIssues="true"
+
+    allowStringToStandInForClass="true"
+    cacheDirectory="../../var/cache/dev/"
+    disableVarParsing="false"
+    checkForThrowsInGlobalScope="true"
+    ensureArrayIntOffsetsExist="true"
+    ensureArrayStringOffsetsExist="true"
+    ensureOverrideAttribute="true"
+    errorLevel="6"
     findUnusedBaselineEntry="true"
     findUnusedCode="true"
+    findUnusedVariablesAndParams="true"
+    inferPropertyTypesFromConstructor="true"
     memoizeMethodCallResults="true"
-    errorLevel="1"
-    cacheDirectory="../../var/cache/dev/"
+    rememberPropertyAssignmentsAfterCall="true"
+    reportMixedIssues="true"
+    resolveFromConfigFile="true"
     restrictReturnTypes="true"
-    runTaintAnalysis="true"
+    strictBinaryOperands="true"
+    useDocblockPropertyTypes="true"
+    useDocblockTypes="true"
 >
     <!--    Remember: Level 1 is the most strict, level 8 is the most lenient. https://psalm.dev/docs/running_psalm/error_levels/ -->
     <projectFiles>
@@ -18,6 +31,7 @@
         <ignoreFiles>
             <directory name="../../vendor"/>
             <directory name="../../src/Protobuf"/>
+            <directory name="../../src/Repository"/>
         </ignoreFiles>
     </projectFiles>
 

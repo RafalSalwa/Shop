@@ -35,14 +35,6 @@ services:
     tags:
       - { name: twig.extension }
 
-  App\ValueResolver\CartItemTypeResolver:
-    tags:
-      - controller.argument_value_resolver:
-          name: cart_item_type
-          priority: 150
-
-  League\Bundle\OAuth2ServerBundle\Entity\AccessToken:
-    class: App\Entity\AccessToken
   League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface:
     class: App\Repository\AccessTokenRepository
     decorates: 'League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository'

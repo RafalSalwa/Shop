@@ -43,8 +43,4 @@ final readonly class OrderWorkflow
 
         $this->cartService->confirmCart();
     }
-
-    public function rejectOrder(Order $order): void
-    {
-    }
 }

@@ -1,4 +1,4 @@
-{% extends 'shop.html.twig' %}
+{% extends 'base.html.twig' %}
 {% block header_description %}
     <div class="row">
         <div class="col-12 text-center">
@@ -124,7 +124,7 @@
                             </div>
                         </div>
                     </div>
-                    {% for product in paginator.results %}
+                    {% for product in paginator.getResults() %}
                         {% include "product/partials/card.html.twig" %}
                     {% endfor %}
                     {% include "pagination/paginator.html.twig" %}

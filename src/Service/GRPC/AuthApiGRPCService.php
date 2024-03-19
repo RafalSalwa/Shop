@@ -8,10 +8,11 @@ use App\Client\AuthClientInterface;
 use App\Client\GRPC\UserApiGRPCClient;
 use App\Exception\AuthException;
 use App\Model\GRPC\UserResponse;
-use App\Model\TokenPair;
+use App\Protobuf\Message\UserDetails;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Throwable;
 use function dd;
+use function is_null;
 
 final class AuthApiGRPCService
 {
@@ -23,34 +24,38 @@ final class AuthApiGRPCService
         private readonly UserApiGRPCClient $userApiGRPCClient,
     ) {}
 
-    public function signInUser(string $email, string $password): TokenPair
+    public function signInUser(string $email, string $password): void
     {
         $tokenPair = $this->authApiGRPCClient->signIn($email, $password);
         $user = $this->getUserCredentialsFromLastSignUp();
-        if (null !== $user) {
-            $this->setUserCredentialsFromLastSignUp($user->withTokenPair($tokenPair));
+        if (true === is_null($user)) {
+            return;
         }
 
-        return $tokenPair;
+        $user = $user->withTokenPair($tokenPair);
+        $this->setUserCredentialsFromLastSignUp($user);
     }
 
-    public function signUpUser(string $email, string $password): bool
+    public function signUpUser(string $email, string $password): void
     {
         try {
             $this->authApiGRPCClient->signUp($email, $password);
 
             $key = $this->authApiGRPCClient->getVerificationCode($email);
-            $userResponse = new UserResponse(email: $email, password: $password, vCode: $key, isVerified: false);
+            $userResponse = new UserResponse(
+                email: $email,
+                password: $password,
+                confirmationCode: $key,
+                isVerified: false,
+            );
 
             $this->setUserCredentialsFromLastSignUp($userResponse);
-
-            return true;
         } catch (Throwable $e) {
             dd($e->getMessage(), $e->getTraceAsString());
         }
     }
 
-    public function confirmAccount(string $code): bool
+    public function confirmAccount(string $code): void
     {
         try {
             $this->userApiGRPCClient->confirmAccount($code);
@@ -59,8 +64,6 @@ final class AuthApiGRPCService
             if (null !== $userResponse) {
                 $this->setUserCredentialsFromLastSignUp($userResponse->withIsVerified(true));
             }
-
-            return true;
         } catch (AuthException $e) {
             dd($e->getMessage(), $e->getTraceAsString());
         }
@@ -82,10 +85,7 @@ final class AuthApiGRPCService
         return $this->authApiGRPCClient->getResponses() + $this->userApiGRPCClient->getResponses();
     }
 
-    /**
-     * @throws AuthException
-     */
-    public function getUserDetails(string $token):mixed
+    public function getUserDetails(string $token): ?UserDetails
     {
         return $this->userApiGRPCClient->getUser($token);
     }

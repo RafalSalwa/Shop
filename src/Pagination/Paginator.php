@@ -16,9 +16,11 @@ namespace App\Pagination;
 use Doctrine\ORM\QueryBuilder as DoctrineQueryBuilder;
 use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Exception;
 use Traversable;
 use function ceil;
 use function count;
+use function is_null;
 use function max;
 use function min;
 
@@ -36,9 +38,7 @@ final class Paginator
 
     private int $numResults;
 
-    /**
-     * @var Traversable<int, object>
-     */
+    /** @var Traversable<int, object> */
     private Traversable $traversable;
 
     public function __construct(
@@ -46,6 +46,7 @@ final class Paginator
         private readonly int $pageSize = self::PAGE_SIZE,
     ) {}
 
+    /** @throws Exception */
     public function paginate(int $page = 1): self
     {
         $this->currentPage = max(1, $page);
@@ -57,9 +58,7 @@ final class Paginator
             ->getQuery()
         ;
 
-        /**
-         * @var array<string, mixed> $joinDqlParts
-         */
+        /** @var array<string, mixed> $joinDqlParts */
         $joinDqlParts = $this->doctrineQueryBuilder->getDQLPart('join');
 
         if ([] === $joinDqlParts) {
@@ -68,13 +67,12 @@ final class Paginator
 
         $paginator = new DoctrinePaginator($query, true);
 
-        /**
-         * @var array<string, mixed> $havingDqlParts
-         */
+        /** @var array<string, mixed> $havingDqlParts */
         $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
-        $useOutputWalkers = count($havingDqlParts ?: []) > 0;
-        $paginator->setUseOutputWalkers($useOutputWalkers);
+        if (false === is_null($havingDqlParts) && count($havingDqlParts) > 0) {
+            $paginator->setUseOutputWalkers(true);
+        }
 
         $this->traversable = $paginator->getIterator();
         $this->numResults = $paginator->count();
@@ -127,9 +125,7 @@ final class Paginator
         return $this->numResults;
     }
 
-    /**
-     * @return Traversable<int, object>
-     */
+    /** @return Traversable<int, object> */
     public function getResults(): Traversable
     {
         return $this->traversable;

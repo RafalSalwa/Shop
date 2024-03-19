@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\Cart;
+use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
 use App\Event\OrderConfirmedEvent;
 use App\Factory\OrderItemFactory;
@@ -15,6 +16,8 @@ use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use function assert;
+use function is_subclass_of;
 
 final readonly class OrderService
 {
@@ -31,7 +34,7 @@ final readonly class OrderService
     {
         $order = new Order(
             netAmount: $cart->getTotalAmount(),
-            userId: $this->security->getUser()->getId(),
+            userId: $this->getUser()->getId(),
         );
         $this->orderProcessingStateMachine->getMarking($order);
 
@@ -77,11 +80,20 @@ final readonly class OrderService
         return $this->orderRepository->fetchOrderDetails($id);
     }
 
+    /** @param array<string> $status */
     public function fetchOrders(
         int $userId,
         int $page = 1,
         array $status = [Order::COMPLETED, Order::CANCELLED],
     ): Paginator {
         return $this->orderRepository->fetchOrders($userId, $page, $status);
+    }
+
+    private function getUser(): ShopUserInterface
+    {
+        $user = $this->security->getUser();
+        assert(is_subclass_of($user, ShopUserInterface::class));
+
+        return $user;
     }
 }

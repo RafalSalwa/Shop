@@ -30,9 +30,4 @@ final class EmailAddress
     {
         return $this->email;
     }
-
-    public function value(): string
-    {
-        return $this->email;
-    }
 }

@@ -7,16 +7,17 @@ namespace App\EventSubscriber;
 use App\Event\UserConfirmedEvent;
 use App\Event\UserRegisteredEvent;
 use App\Event\UserVerificationCodeRequestEvent;
-use App\Exception\SubscriptionPlanNotFoundException;
-use App\Repository\SubscriptionPlanRepository;
+use App\Repository\PlanRepository;
 use App\Repository\SubscriptionRepository;
+use App\Security\EmailVerifier;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 final class UserRegistrationEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        protected SubscriptionRepository $subscriptionRepository,
-        protected SubscriptionPlanRepository $subscriptionPlanRepository,
+        private SubscriptionRepository $subscriptionRepository,
+        private PlanRepository $planRepository,
+        private EmailVerifier $emailVerifier,
     ) {}
 
     /** @return array<class-string,string> */
@@ -29,30 +30,25 @@ final class UserRegistrationEventSubscriber implements EventSubscriberInterface
         ];
     }
 
-    /** @throws SubscriptionPlanNotFoundException */
     public function onRegistrationCompleted(UserRegisteredEvent $userRegisteredEvent): void
     {
-        //        $user = $userRegisteredEvent->getEmail();
-        //
-        //        $subscriptionPlan = $this->subscriptionPlanRepository->findOneBy(['name' => 'freemium']);
-        //        if (null === $subscriptionPlan) {
-        //            throw new SubscriptionPlanNotFoundException('Subscription plan not found');
-        //        }
-        //
-        //        $subscription = new Subscription();
-        //        $subscription->setUserId($user->getId());
-        //        $subscription->setPlan($subscriptionPlan);
-        //
-        //        $this->subscriptionRepository->save($subscription);
+        $this->emailVerifier->sendEmailConfirmation(
+            $userRegisteredEvent->getEmail(),
+            $userRegisteredEvent->getConfirmationCode(),
+        );
     }
 
     public function onVerificationCodeRequest(UserVerificationCodeRequestEvent $event): void
     {
+        $this->emailVerifier->sendEmailConfirmation(
+            $event->getEmail(),
+            $event->getConfirmationCode(),
+        );
     }
 
     public function onConfirmed(UserConfirmedEvent $event): void
     {
-        $plan = $this->subscriptionPlanRepository->createFreemiumPlan();
+        $plan = $this->planRepository->createFreemiumPlan();
         $this->subscriptionRepository->assignSubscription($event->getUserId(), $plan);
     }
 }

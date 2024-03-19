@@ -5,20 +5,23 @@ declare(strict_types=1);
 namespace App\Service;
 
 use App\Entity\SubscriptionPlan;
-use App\Repository\SubscriptionPlanRepository;
+use App\Repository\PlanRepository;
+use Doctrine\ORM\NonUniqueResultException;
 
 final readonly class SubscriptionPlanService
 {
-    public function __construct(private SubscriptionPlanRepository $subscriptionPlanRepository)
+    public function __construct(private PlanRepository $subscriptionPlanRepository)
     {
     }
 
-    public function fetchAvailablePlans()
+    /** @return array<SubscriptionPlan>|null */
+    public function fetchAvailablePlans(): ?array
     {
         return $this->subscriptionPlanRepository->fetchAvailablePlans();
     }
 
-    public function findPlanById(int $id): SubscriptionPlan
+    /** @throws NonUniqueResultException */
+    public function findPlanById(int $id): ?SubscriptionPlan
     {
         return $this->subscriptionPlanRepository->findById($id);
     }

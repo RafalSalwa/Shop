@@ -9,7 +9,6 @@ use App\Pagination\Paginator;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
-use function dump;
 
 final class OrderRepository extends ServiceEntityRepository
 {
@@ -46,9 +45,9 @@ final class OrderRepository extends ServiceEntityRepository
         ;
     }
 
+    /** @param array<string> $status */
     public function fetchOrders(int $userId, int $page, array $status): Paginator
     {
-        dump($status);
         $queryBuilder = $this->createQueryBuilder('o')
             ->addSelect('o', 'i', 'p', 'da', 'ba')
             ->leftJoin('o.items', 'i')
