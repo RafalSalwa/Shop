@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
+
 use function bcdiv;
 use function bcmul;
 use function sprintf;
@@ -59,7 +60,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
 
     public function getGrossPrice(): string
     {
-        $taxedPrice = bcmul((string)$this->getPrice(), '1.23');
+        $taxedPrice = bcmul((string) $this->getPrice(), '1.23');
 
         return bcdiv($taxedPrice, '100', 2);
     }

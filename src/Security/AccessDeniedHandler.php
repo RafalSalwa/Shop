@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
+
 use function dd;
 use function func_get_args;
 

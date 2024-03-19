@@ -30,6 +30,6 @@ enum CartItemTypeEnum: string
             }
         }
 
-        throw new ValueError($name . ' is not a valid backing value for enum ' . self::class);
+        throw new ValueError($name.' is not a valid backing value for enum '.self::class);
     }
 }

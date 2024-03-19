@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType as EmailBaseType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
+
 use function iterator_to_array;
 
 final class EmailType extends AbstractType implements DataMapperInterface

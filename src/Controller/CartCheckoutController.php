@@ -42,12 +42,12 @@ final class CartCheckoutController extends AbstractShopController
         return $this->render(
             'cart/checkout.html.twig',
             [
-                'cart' => $cart,
-                'summary' => $cartCalculator->calculateSummary($cart->getTotalAmount(), $cart->getCoupon()),
+                'cart'              => $cart,
+                'summary'           => $cartCalculator->calculateSummary($cart->getTotalAmount(), $cart->getCoupon()),
                 'deliveryAddresses' => $addressBookService->getDeliveryAddresses($this->getUserId()),
-                'defaultAddress' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
-                'form' => $form,
-                'paymentForm' => $paymentForm,
+                'defaultAddress'    => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
+                'form'              => $form,
+                'paymentForm'       => $paymentForm,
             ],
         );
     }

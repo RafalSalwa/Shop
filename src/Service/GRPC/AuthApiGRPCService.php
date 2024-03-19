@@ -12,6 +12,7 @@ use App\Model\TokenPair;
 use App\Protobuf\Message\UserDetails;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Throwable;
+
 use function dd;
 
 final class AuthApiGRPCService
@@ -22,7 +23,8 @@ final class AuthApiGRPCService
         private readonly RequestStack $requestStack,
         private readonly AuthClientInterface $authApiGRPCClient,
         private readonly UserApiGRPCClient $userApiGRPCClient,
-    ) {}
+    ) {
+    }
 
     public function signInUser(string $email, string $password): TokenPair
     {

@@ -32,7 +32,7 @@ final class AuthController extends AbstractShopController
     public function signUp(Request $request, AuthApiGRPCService $authGRPCService): Response
     {
         $signUpUserInput = new SignUpUserInput();
-        $form        = $this->createForm(SignUpType::class, $signUpUserInput);
+        $form = $this->createForm(SignUpType::class, $signUpUserInput);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
@@ -62,7 +62,7 @@ final class AuthController extends AbstractShopController
         return $this->render(
             'grpc/confirm.html.twig',
             [
-                'form'          => $form->createView(),
+                'form'              => $form->createView(),
                 'grpc_responses'    => $authGRPCService->getResponses(),
                 'api_user_response' => $authGRPCService->getUserCredentialsFromLastSignUp(),
             ],
@@ -73,7 +73,7 @@ final class AuthController extends AbstractShopController
     public function signIn(Request $request, AuthApiGRPCService $authGRPCService): Response
     {
         $signInUserInput = new SignInUserInput();
-        $form        = $this->createForm(SignInType::class, $signInUserInput);
+        $form = $this->createForm(SignInType::class, $signInUserInput);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
@@ -83,7 +83,7 @@ final class AuthController extends AbstractShopController
         return $this->render(
             'grpc/sign_in.html.twig',
             [
-                'form'             => $form->createView(),
+                'form'              => $form->createView(),
                 'grpc_responses'    => $authGRPCService->getResponses(),
                 'api_user_response' => $authGRPCService->getUserCredentialsFromLastSignUp(),
             ],
@@ -105,10 +105,10 @@ final class AuthController extends AbstractShopController
         return $this->render(
             'grpc/user_details.html.twig',
             [
-                'form'             => $form->createView(),
+                'form'              => $form->createView(),
                 'grpc_responses'    => $authGRPCService->getResponses(),
                 'api_user_response' => $authGRPCService->getUserCredentialsFromLastSignUp(),
-                'user' => $user,
+                'user'              => $user,
             ],
         );
     }

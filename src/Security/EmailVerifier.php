@@ -11,6 +11,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use SymfonyCasts\Bundle\VerifyEmail\VerifyEmailHelperInterface;
+
 use function dd;
 
 final class EmailVerifier
@@ -19,7 +20,8 @@ final class EmailVerifier
         private readonly VerifyEmailHelperInterface $verifyEmailHelper,
         private readonly MailerInterface $mailer,
         private readonly UrlGeneratorInterface $urlGenerator,
-    ) {}
+    ) {
+    }
 
     public function sendEmailConfirmation(string $email, string $verificationCode): void
     {
@@ -27,8 +29,7 @@ final class EmailVerifier
             ->from(new Address('noreply@interview.com', 'Interview Shop Bot'))
             ->to($email)
             ->subject('Please Confirm your Email')
-            ->htmlTemplate('registration/email/confirmation_email.html.twig')
-        ;
+            ->htmlTemplate('registration/email/confirmation_email.html.twig');
 
         $context = $templatedEmail->getContext();
         $context['signedUrl'] = $this->urlGenerator->generate(

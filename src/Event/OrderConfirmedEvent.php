@@ -10,7 +10,8 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class OrderConfirmedEvent extends Event
 {
     public function __construct(private readonly Order $order)
-    {}
+    {
+    }
 
     public function getOrder(): Order
     {

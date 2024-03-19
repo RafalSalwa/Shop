@@ -11,7 +11,8 @@ use Symfony\Bundle\SecurityBundle\Security;
 final readonly class CartFactory
 {
     public function __construct(private Security $security)
-    {}
+    {
+    }
 
     public function create(): Cart
     {

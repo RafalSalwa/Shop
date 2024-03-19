@@ -15,12 +15,14 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Badge\RememberMeBadge
 use Symfony\Component\Security\Http\Authenticator\Passport\Badge\UserBadge;
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPassport;
+
 use function dd;
 
 final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements ShopUserAuthenticatorInterface
 {
     public function __construct(private readonly AuthApiClient $authApiClient)
-    {}
+    {
+    }
 
     public function supports(Request $request): ?bool
     {

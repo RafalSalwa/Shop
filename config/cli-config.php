@@ -9,20 +9,19 @@ use Doctrine\ORM\Tools\Console\EntityManagerProvider\SingleManagerProvider;
 use Symfony\Component\Dotenv\Dotenv;
 
 // replace with path to your own project bootstrap file
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__.'/../vendor/autoload.php';
 
 // replace with mechanism to retrieve EntityManager in your app
 function GetEntityManager()
 {
-    (new Dotenv())->bootEnv(__DIR__ . '/../.env');
+    (new Dotenv())->bootEnv(__DIR__.'/../.env');
 
-    $kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
+    $kernel = new Kernel($_SERVER['APP_ENV'], (bool) $_SERVER['APP_DEBUG']);
     $kernel->boot();
 
     return $kernel->getContainer()
         ->get('doctrine')
-        ->getManager()
-            ;
+        ->getManager();
 }
 
 $entityManager = GetEntityManager();

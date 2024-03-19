@@ -11,7 +11,8 @@ use App\Repository\ProductRepository;
 final class ProductsService
 {
     public function __construct(private readonly ProductRepository $productRepository)
-    {}
+    {
+    }
 
     /** @return array<Product>|null */
     public function all(): ?array

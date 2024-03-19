@@ -19,18 +19,16 @@ final class SubscriptionRepository extends ServiceEntityRepository
     public function remove(Subscription $subscription): void
     {
         $this->getEntityManager()
-            ->remove($subscription)
-        ;
+            ->remove($subscription);
         $this->getEntityManager()
-            ->flush()
-        ;
+            ->flush();
     }
 
     public function findForUser(int|string $userId): ?Subscription
     {
         return $this->findOneBy(
             [
-                'userId' => $userId,
+                'userId'   => $userId,
                 'isActive' => true,
             ],
         );
@@ -53,11 +51,9 @@ final class SubscriptionRepository extends ServiceEntityRepository
     public function save(Subscription $subscription): void
     {
         $this->getEntityManager()
-            ->persist($subscription)
-        ;
+            ->persist($subscription);
         $this->getEntityManager()
-            ->flush()
-        ;
+            ->flush();
     }
 
     public function clearSubscriptionsForUserId(int $userId): void

@@ -6,6 +6,7 @@ namespace App\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\GuardEvent;
+
 use function dd;
 
 final class OrderStateEventSubscriber implements EventSubscriberInterface

@@ -6,11 +6,12 @@ namespace App\Tests\Benchmark;
 
 class ClosuresBench
 {
-    private const TRIES= 2000;
+    private const TRIES = 2000;
+
     public function benchLargeObjectStatic(): void
     {
         $processors = [];
-        for ($i = 0; $i < self::TRIES; ++$i) {
+        for ($i = 0; $i < self::TRIES; $i++) {
             $lo = new LargeObject();
             $processors[] = $lo->getItemProcessorStatic();
         }
@@ -19,7 +20,7 @@ class ClosuresBench
     public function benchLargeObject(): void
     {
         $processors = [];
-        for ($i = 0; $i < self::TRIES; ++$i) {
+        for ($i = 0; $i < self::TRIES; $i++) {
             $lo = new LargeObject();
             $processors[] = $lo->getItemProcessor();
         }
@@ -28,7 +29,7 @@ class ClosuresBench
     public function benchLargeObjectArrowFunctionStatic(): void
     {
         $processors = [];
-        for ($i = 0; $i < self::TRIES; ++$i) {
+        for ($i = 0; $i < self::TRIES; $i++) {
             $lo = new LargeObject();
             $processors[] = $lo->getItemProcessorArrowStatic();
         }
@@ -37,7 +38,7 @@ class ClosuresBench
     public function benchLargeObjectArrowFunction(): void
     {
         $processors = [];
-        for ($i = 0; $i < self::TRIES; ++$i) {
+        for ($i = 0; $i < self::TRIES; $i++) {
             $lo = new LargeObject();
             $processors[] = $lo->getItemProcessorArrow();
         }

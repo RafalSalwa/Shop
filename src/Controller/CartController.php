@@ -30,7 +30,7 @@ final class CartController extends AbstractShopController
     {
         try {
             $cartWorkflow->add($id, $quantity);
-        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+        } catch (CartOperationExceptionInterface|StockOperationExceptionInterface $exception) {
             $this->addFlash('danger', $exception->getMessage());
         }
 
@@ -45,7 +45,7 @@ final class CartController extends AbstractShopController
     ): JsonResponse {
         try {
             $cartWorkflow->add($cartAddJsonRequest->getId(), $cartAddJsonRequest->getQuantity());
-        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+        } catch (CartOperationExceptionInterface|StockOperationExceptionInterface $exception) {
             return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -57,7 +57,7 @@ final class CartController extends AbstractShopController
     {
         try {
             $cartWorkflow->remove($cartItem);
-        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+        } catch (CartOperationExceptionInterface|StockOperationExceptionInterface $exception) {
             $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
@@ -85,7 +85,7 @@ final class CartController extends AbstractShopController
         return $this->render(
             'cart/index.html.twig',
             [
-                'cart' => $cart,
+                'cart'    => $cart,
                 'summary' => $cartCalculator->calculateSummary($cart->getTotalAmount(), $cart->getCoupon()),
             ],
         );

@@ -10,6 +10,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
+
 use function mb_strtolower;
 
 final class SubscriptionPlanRepository extends ServiceEntityRepository
@@ -37,8 +38,7 @@ final class SubscriptionPlanRepository extends ServiceEntityRepository
             ->orderBy('p.tier', 'ASC')
             ->setCacheMode(Cache::MODE_GET)
             ->setCacheable(true)
-            ->getQuery()
-        ;
+            ->getQuery();
         $query->enableResultCache(ConfigCache::DEFAULT_TTL, 'subscription_plans');
 
         return $query->getResult();

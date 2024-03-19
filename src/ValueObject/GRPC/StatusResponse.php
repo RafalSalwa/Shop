@@ -5,14 +5,15 @@ declare(strict_types=1);
 namespace App\ValueObject\GRPC;
 
 use stdClass;
+
 use const Grpc\STATUS_OK;
 
 /**
- * Converts GRPC response array into more readable form
+ * Converts GRPC response array into more readable form.
  */
 final class StatusResponse
 {
-    /** @var array<string, string> $metadata */
+    /** @var array<string, string> */
     private array $metadata;
 
     private int $code;

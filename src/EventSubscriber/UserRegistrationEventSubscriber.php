@@ -17,14 +17,15 @@ final class UserRegistrationEventSubscriber implements EventSubscriberInterface
     public function __construct(
         protected SubscriptionRepository $subscriptionRepository,
         protected SubscriptionPlanRepository $subscriptionPlanRepository,
-    ) {}
+    ) {
+    }
 
     /** @return array<class-string,string> */
     public static function getSubscribedEvents(): array
     {
         return [
             UserRegisteredEvent::class => 'onRegistrationCompleted',
-            UserConfirmedEvent::class => 'onConfirmed',
+            UserConfirmedEvent::class  => 'onConfirmed',
         ];
     }
 

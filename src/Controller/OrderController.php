@@ -16,6 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Throwable;
+
 use function dd;
 
 #[asController]
@@ -47,7 +48,7 @@ final class OrderController extends AbstractShopController
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
 
         $payment = $order->getLastPayment();
-        $form    = $this->createForm(PaymentType::class, $payment);
+        $form = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid() && true === $form->get('yes')->isClicked()) {
@@ -77,7 +78,7 @@ final class OrderController extends AbstractShopController
         return $this->render(
             'order/summary.html.twig',
             [
-                'order' => $order,
+                'order'   => $order,
                 'summary' => $cartCalculatorService->calculateSummary($order->getNetAmount(), $order->getCoupon()),
             ],
         );

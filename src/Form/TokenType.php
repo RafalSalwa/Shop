@@ -20,7 +20,6 @@ final class TokenType extends AbstractType
                 TextType::class,
                 ['label' => 'token/refreshToken'],
             )
-            ->add('send', SubmitType::class)
-        ;
+            ->add('send', SubmitType::class);
     }
 }

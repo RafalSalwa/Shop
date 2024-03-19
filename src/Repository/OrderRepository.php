@@ -20,11 +20,9 @@ final class OrderRepository extends ServiceEntityRepository
     public function save(Order $order): void
     {
         $this->getEntityManager()
-            ->persist($order)
-        ;
+            ->persist($order);
         $this->getEntityManager()
-            ->flush()
-        ;
+            ->flush();
     }
 
     /** @throws NonUniqueResultException */
@@ -38,11 +36,9 @@ final class OrderRepository extends ServiceEntityRepository
             ->leftJoin('o.bilingAddress', 'ba')
             ->where('o.id = :id')
             ->orderBy('o.createdAt', 'DESC')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
-        return $queryBuilder->getQuery()->getOneOrNullResult()
-        ;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /** @param array<string> $status */
@@ -59,8 +55,7 @@ final class OrderRepository extends ServiceEntityRepository
             ->andWhere('o.status IN (:status)')
             ->setParameter('status', $status)
             ->orderBy('o.status', 'DESC')
-            ->addOrderBy('o.createdAt', 'DESC')
-        ;
+            ->addOrderBy('o.createdAt', 'DESC');
 
         return (new Paginator($queryBuilder))->paginate($page);
     }

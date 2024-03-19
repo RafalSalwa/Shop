@@ -10,10 +10,11 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * @extends ServiceEntityRepository<OAuth2ClientProfile>
- * @method  OAuth2ClientProfile|null find($id, $lockMode = null, $lockVersion = null)
- * @method  OAuth2ClientProfile|null findOneBy(array $criteria, array $orderBy = null)
- * @method  array<OAuth2ClientProfile>    findAll()
- * @method  array<OAuth2ClientProfile>    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ *
+ * @method OAuth2ClientProfile|null   find($id, $lockMode = null, $lockVersion = null)
+ * @method OAuth2ClientProfile|null   findOneBy(array $criteria, array $orderBy = null)
+ * @method array<OAuth2ClientProfile> findAll()
+ * @method array<OAuth2ClientProfile> findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 final class OAuth2ClientProfileRepository extends ServiceEntityRepository
 {

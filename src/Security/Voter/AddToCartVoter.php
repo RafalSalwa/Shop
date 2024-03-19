@@ -10,6 +10,7 @@ use App\Enum\CartOperationEnum;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
 use function is_subclass_of;
 
 /** @extends Voter<string,Product> */

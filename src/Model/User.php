@@ -93,7 +93,7 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     public function jsonSerialize(): mixed
     {
         return [
-            'id' => $this->id,
+            'id'    => $this->id,
             'email' => $this->email,
         ];
     }

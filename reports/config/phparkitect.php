@@ -27,7 +27,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
 return static function (Config $config): void {
-    $classSet = ClassSet::fromDir(__DIR__ . '/../../src');
+    $classSet = ClassSet::fromDir(__DIR__.'/../../src');
 
     $rules = [];
 
@@ -40,34 +40,29 @@ return static function (Config $config): void {
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->should(new HaveNameMatching('*Controller'))
-        ->because('we want uniform Controllers naming')
-    ;
+        ->because('we want uniform Controllers naming');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->andThat(new IsNotAbstract())
         ->should(new Extend(AbstractShopController::class))
-        ->because('we want to be sure that all controllers extend AbstractController')
-    ;
+        ->because('we want to be sure that all controllers extend AbstractController');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->should(new HaveAttribute(AsController::class))
-        ->because('it configures the service container')
-    ;
+        ->because('it configures the service container');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->andThat(new IsNotAbstract())
         ->should(new HaveAttribute(Route::class))
-        ->because('it configures the service container')
-    ;
+        ->because('it configures the service container');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
         ->should(new IsFinal())
-        ->because('it configures the service container')
-    ;
+        ->because('it configures the service container');
 
     $rules[] = Rule::allClasses()
         ->that(new HaveNameMatching('*Controller'))
@@ -78,25 +73,21 @@ return static function (Config $config): void {
         ->that(new ResideInOneOfTheseNamespaces('App\Command'))
         ->andThat(new IsNotAbstract())
         ->should(new Extend(AbstractSymfonyCommand::class))
-        ->because('we want to use render functionality in console output')
-    ;
+        ->because('we want to use render functionality in console output');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Command'))
         ->should(new DependsOnlyOnTheseNamespaces('Symfony\Component', 'Doctrine\ORM', 'App', 'Termwind'))
-        ->because('we want uniform naming')
-    ;
+        ->because('we want uniform naming');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Service'))
         ->should(new HaveNameMatching('*Service'))
-        ->because('we want uniform naming for services')
-    ;
+        ->because('we want uniform naming for services');
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Application'))
         ->should(new NotDependsOnTheseNamespaces('App\Infrastructure'))
-        ->because('we want to avoid coupling between application layer and infrastructure layer')
-    ;
+        ->because('we want to avoid coupling between application layer and infrastructure layer');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Enum'))
@@ -106,22 +97,19 @@ return static function (Config $config): void {
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Entity'))
         ->should(new IsNotFinal())
-        ->because('we want to be sure that Doctrine LAZY Loading is available')
-    ;
+        ->because('we want to be sure that Doctrine LAZY Loading is available');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Entity'))
         ->andThat(new NotResideInTheseNamespaces('App\Entity\Contracts'))
         ->should(new HaveAttribute(Entity::class))
-        ->because('we want to be sure that Doctrine LAZY Loading is available and wont cause problems with proxies')
-    ;
+        ->because('we want to be sure that Doctrine LAZY Loading is available and wont cause problems with proxies');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Form'))
         ->andThat(new NotResideInTheseNamespaces('App\Form\*'))
         ->should(new Extend(AbstractType::class))
-        ->because('we want to be sure that, all forms extends abstractType')
-    ;
+        ->because('we want to be sure that, all forms extends abstractType');
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Interfaces'))
@@ -131,8 +119,7 @@ return static function (Config $config): void {
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App'))
         ->should(new NotHaveNameMatching('*Manager'))
-        ->because('*Manager is too vague and they suck.')
-    ;
+        ->because('*Manager is too vague and they suck.');
 
     $layeredArchitectureRules = Architecture::withComponents()
         ->component('Controller')->definedBy('App\Controller\*')
@@ -145,8 +132,7 @@ return static function (Config $config): void {
         ->where('Repository')->mayDependOnComponents('Entity')
         ->where('Entity')->mayDependOnComponents('Repository')
         ->where('Domain')->shouldOnlyDependOnComponents('Domain')
-        ->rules()
-    ;
+        ->rules();
 
     $config
         ->add($classSet, ...$layeredArchitectureRules, ...$rules);

@@ -25,17 +25,17 @@ final readonly class Summary
 
     public function getTotal(): int
     {
-        return (int)bcadd((string)$this->getSubTotal(), (string)$this->shipping, 2);
+        return (int) bcadd((string) $this->getSubTotal(), (string) $this->shipping, 2);
     }
 
     public function getSubTotal(): int
     {
         $subTotal = $this->net;
         if (0 !== $this->discount) {
-            $subTotal = bcsub((string)$this->net, (string)$this->discount, 2);
+            $subTotal = bcsub((string) $this->net, (string) $this->discount, 2);
         }
 
-        return (int)bcadd((string)$subTotal, (string)$this->tax);
+        return (int) bcadd((string) $subTotal, (string) $this->tax);
     }
 
     public function getTax(): int

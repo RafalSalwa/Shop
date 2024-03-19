@@ -26,7 +26,7 @@ class OAuth2UserConsent
 
     /**
      * @var list<string>
-     * $scopes = ['email', 'id']
+     *                   $scopes = ['email', 'id']
      */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
     private array $scopes = ['email', 'id'];

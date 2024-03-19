@@ -13,8 +13,7 @@ trait CartAssertionsTrait
     {
         $actualCount = $crawler
             ->filter('.cart-item')
-            ->count()
-        ;
+            ->count();
 
         Assert::assertEquals(
             $expectedCount,
@@ -28,19 +27,17 @@ trait CartAssertionsTrait
         $infoText = $crawler
             ->filter('.cart-items')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
         $infoText = self::normalizeWhitespace($infoText);
         Assert::assertEquals('Cart is empty', $infoText, 'The cart should be empty.');
     }
 
     public static function assertCartTotalEquals(Crawler $crawler, int $expectedTotal): void
     {
-        $actualTotal = (float)$crawler
+        $actualTotal = (float) $crawler
             ->filter('.cart-payment-total')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
 
         Assert::assertEquals(
             $expectedTotal,
@@ -54,11 +51,10 @@ trait CartAssertionsTrait
         string $productName,
         int $expectedQuantity
     ): void {
-        $actualQuantity = (int)self::getItemByProductName($crawler, $productName)
+        $actualQuantity = (int) self::getItemByProductName($crawler, $productName)
             ->filter('.cart-item-qty')
             ->getNode(0)
-            ->textContent
-        ;
+            ->textContent;
 
         Assert::assertEquals(
             $expectedQuantity,
@@ -91,8 +87,7 @@ trait CartAssertionsTrait
 
                     return false;
                 }
-            )
-        ;
+            );
 
         return $items->eq(0);
     }

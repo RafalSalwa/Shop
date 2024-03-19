@@ -22,7 +22,7 @@ final class ChangePasswordFormType extends AbstractType
                 'plainPassword',
                 RepeatedType::class,
                 [
-                    'type' => PasswordType::class,
+                    'type'    => PasswordType::class,
                     'options' => [
                         'attr' => ['autocomplete' => 'new-password'],
                     ],
@@ -33,19 +33,18 @@ final class ChangePasswordFormType extends AbstractType
                             ),
                             new Length(
                                 [
-                                    'min' => 6,
+                                    'min'        => 6,
                                     'minMessage' => 'Your password should be at least {{ limit }} characters',
                                 ],
                             ),
                         ],
                         'label' => 'New password',
                     ],
-                    'second_options' => ['label' => 'Repeat Password'],
+                    'second_options'  => ['label' => 'Repeat Password'],
                     'invalid_message' => 'The password fields must match.',
-                    'mapped' => false,
+                    'mapped'          => false,
                 ],
-            )
-        ;
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void

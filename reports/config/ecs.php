@@ -45,11 +45,11 @@ use Symplify\EasyCodingStandard\Config\ECSConfig;
 return ECSConfig::configure()
     ->withPaths(
         [
-            __DIR__ . '/../../config',
-            __DIR__ . '/../../public',
-            __DIR__ . '/../../reports',
-            __DIR__ . '/../../src',
-            __DIR__ . '/../../tests',
+            __DIR__.'/../../config',
+            __DIR__.'/../../public',
+            __DIR__.'/../../reports',
+            __DIR__.'/../../src',
+            __DIR__.'/../../tests',
         ],
     )
 
@@ -135,5 +135,4 @@ return ECSConfig::configure()
         strict: true,
         cleanCode: true,
     )
-    ->withPhpCsFixerSets()
-     ;
+    ->withPhpCsFixerSets();

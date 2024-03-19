@@ -40,7 +40,7 @@ final class ProfileController extends AbstractShopController
         return $this->render(
             'user/addressbook.html.twig',
             [
-                'addresses' => $addressBookService->getDeliveryAddresses($this->getUserId()),
+                'addresses'      => $addressBookService->getDeliveryAddresses($this->getUserId()),
                 'defaultAddress' => $addressBookService->getDefaultDeliveryAddress($this->getUserId()),
             ],
         );

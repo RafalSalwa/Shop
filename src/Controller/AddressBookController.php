@@ -35,7 +35,7 @@ final class AddressBookController extends AbstractShopController
         $user = $this->getShopUser();
 
         $address = new Address();
-        $form    = $this->createForm(AddressType::class, $address);
+        $form = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {

@@ -8,6 +8,7 @@ use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\SubscriptionPlan;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
 use function is_null;
 
 final class OrderSubscriptionPlanVoter extends Voter

@@ -25,7 +25,8 @@ final readonly class OrderService
         private AddressBookService $addressBookService,
         private EventDispatcherInterface $eventDispatcher,
         private CalculatorService $calculatorService,
-    ) {}
+    ) {
+    }
 
     public function createPending(Cart $cart): Order
     {

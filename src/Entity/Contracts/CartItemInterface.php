@@ -40,12 +40,12 @@ interface CartItemInterface
 
     /**
      * @return string
-     * Determines which Entity was used For this item (i.e. Product,subscription)
+     *                Determines which Entity was used For this item (i.e. Product,subscription)
      */
     public function getType(): string;
 
     /**
-     * Assign cart for Item
+     * Assign cart for Item.
      */
     public function setCart(Cart $cart): void;
 

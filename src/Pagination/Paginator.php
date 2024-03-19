@@ -18,6 +18,7 @@ use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Exception;
 use Traversable;
+
 use function ceil;
 use function count;
 use function max;
@@ -43,7 +44,8 @@ final class Paginator
     public function __construct(
         private readonly DoctrineQueryBuilder $doctrineQueryBuilder,
         private readonly int $pageSize = self::PAGE_SIZE,
-    ) {}
+    ) {
+    }
 
     /** @throws Exception */
     public function paginate(int $page = 1): self
@@ -54,8 +56,7 @@ final class Paginator
         $query = $this->doctrineQueryBuilder
             ->setFirstResult($firstResult)
             ->setMaxResults($this->pageSize)
-            ->getQuery()
-        ;
+            ->getQuery();
 
         /** @var array<string, mixed> $joinDqlParts */
         $joinDqlParts = $this->doctrineQueryBuilder->getDQLPart('join');
@@ -106,7 +107,7 @@ final class Paginator
 
     public function getLastPage(): int
     {
-        return (int)ceil($this->numResults / $this->pageSize);
+        return (int) ceil($this->numResults / $this->pageSize);
     }
 
     public function getNextPage(): int

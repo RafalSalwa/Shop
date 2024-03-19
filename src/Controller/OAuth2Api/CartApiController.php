@@ -21,8 +21,10 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
+
 use function json_decode;
 use function sprintf;
+
 use const JSON_THROW_ON_ERROR;
 
 #[asController]
@@ -77,13 +79,13 @@ final class CartApiController extends AbstractShopController
         }
 
         try {
-            $prodId = (int)$params['id'];
+            $prodId = (int) $params['id'];
 
             $product = $productsService->byId($prodId);
             if (null === $product) {
                 return $this->json(
                     [
-                        'status' => 'product not found',
+                        'status'  => 'product not found',
                         'message' => sprintf('There is no such product with prvided ID #%s', $prodId),
                     ],
                     Response::HTTP_NOT_FOUND,
@@ -94,12 +96,12 @@ final class CartApiController extends AbstractShopController
         } catch (ProductStockDepletedException $e) {
             return $this->json(
                 [
-                    'status' => 'something went wrong, please try again later',
+                    'status'  => 'something went wrong, please try again later',
                     'message' => $e->getMessage(),
                 ],
                 Response::HTTP_NOT_FOUND,
             );
-        } catch (Exception | ItemNotFoundException | TooManySubscriptionsException) {
+        } catch (Exception|ItemNotFoundException|TooManySubscriptionsException) {
         }
 
         return $this->json(

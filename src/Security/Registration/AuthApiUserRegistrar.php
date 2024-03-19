@@ -17,7 +17,8 @@ final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
         private AuthApiClient $authApiClient,
         private EventDispatcherInterface $eventDispatcher,
         private EmailVerifier $emailVerifier,
-    ) {}
+    ) {
+    }
 
     public function register(string $email, string $password): void
     {

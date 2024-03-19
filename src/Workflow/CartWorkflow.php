@@ -41,11 +41,11 @@ final readonly class CartWorkflow
         try {
             $cartItem = $this->factory->create($itemId, $quantity);
             $this->cartService->add($cartItem);
-        } catch (ItemNotFoundException | AccessDeniedException  $exception) {
+        } catch (ItemNotFoundException|AccessDeniedException  $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
-        } catch (InsufficientStockException | ProductStockDepletedException $exception) {
+        } catch (InsufficientStockException|ProductStockDepletedException $exception) {
             $this->logger->error(
                 $exception->getMessage(),
                 ['operation' => StockOperation::decrease(), 'item_id' => $itemId, 'quantity' => $quantity],

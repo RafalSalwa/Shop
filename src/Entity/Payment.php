@@ -68,7 +68,7 @@ class Payment
     public function __construct()
     {
         $this->operationNumber = Uuid::v7()->generate();
-        $this->createdAt       = new DateTime('now');
+        $this->createdAt = new DateTime('now');
     }
 
     public function getAmount(): int

@@ -24,6 +24,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 use function bcmul;
 
 #[Entity(repositoryClass: CartItemRepository::class)]
@@ -94,7 +95,7 @@ abstract class AbstractCartItem implements CartItemInterface
 
     final public function getTotalPrice(): string
     {
-        return bcmul((string)$this->getQuantity(), $this->getPrice(), 2);
+        return bcmul((string) $this->getQuantity(), $this->getPrice(), 2);
     }
 
     final public function getQuantity(): int
@@ -104,7 +105,7 @@ abstract class AbstractCartItem implements CartItemInterface
 
     final public function getPrice(): string
     {
-        return (string)$this->getReferencedEntity()->getPrice();
+        return (string) $this->getReferencedEntity()->getPrice();
     }
 
     public function updateQuantity(int $quantity): void

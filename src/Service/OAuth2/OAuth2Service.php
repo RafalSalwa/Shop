@@ -12,6 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RequestStack;
+
 use function array_diff;
 use function array_merge;
 use function assert;
@@ -22,7 +23,8 @@ final readonly class OAuth2Service
         private EntityManagerInterface $entityManager,
         private Security $security,
         private RequestStack $requestStack,
-    ) {}
+    ) {
+    }
 
     public function getProfile(Client $appClient): OAuth2ClientProfile|null
     {

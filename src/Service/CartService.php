@@ -18,6 +18,7 @@ use App\Storage\CartSessionStorage;
 use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
+
 use function is_subclass_of;
 use function sprintf;
 
@@ -112,6 +113,7 @@ final readonly class CartService
                 ),
             );
         }
+
         try {
             $lock = $this->cartLockFactory->createLock('cart_item_update');
             $lock->acquire(true);
@@ -123,7 +125,7 @@ final readonly class CartService
             $this->add($cartItem);
             $this->save($cart);
             $lock->release();
-        } catch (ItemNotFoundException | ProductStockDepletedException $exception) {
+        } catch (ItemNotFoundException|ProductStockDepletedException $exception) {
             throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
         }
     }

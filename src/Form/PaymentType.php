@@ -23,7 +23,7 @@ final class PaymentType extends AbstractType
                 'operationNumber',
                 TextType::class,
                 [
-                    'label' => 'Operation number',
+                    'label'    => 'Operation number',
                     'disabled' => true,
                 ],
             )
@@ -31,22 +31,21 @@ final class PaymentType extends AbstractType
                 'amount',
                 TextType::class,
                 [
-                    'label' => 'Amount',
+                    'label'    => 'Amount',
                     'disabled' => true,
                 ],
             )->add(
                 'operationType',
                 EnumType::class,
                 [
-                    'class' => PaymentProvider::class,
-                    'expanded' => true,
-                    'disabled' => true,
+                    'class'      => PaymentProvider::class,
+                    'expanded'   => true,
+                    'disabled'   => true,
                     'empty_data' => PaymentProvider::defaultValue(),
                 ],
             )
             ->add('yes', SubmitType::class)
-            ->add('no', SubmitType::class)
-        ;
+            ->add('no', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

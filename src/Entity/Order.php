@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
+
 use function is_null;
 
 #[Entity(repositoryClass: OrderRepository::class)]
@@ -89,7 +90,7 @@ class Order
         $this->netAmount = $netAmount;
 
         $this->payments = new ArrayCollection();
-        $this->items    = new ArrayCollection();
+        $this->items = new ArrayCollection();
     }
 
     public function applyCoupon(?CouponCode $coupon): void
@@ -210,17 +211,17 @@ class Order
 
     public function calculatePrices(Summary $summary): void
     {
-        $this->total = (int)$summary->getTotal();
-        $this->shippingCost = (int)$summary->getShipping();
+        $this->total = (int) $summary->getTotal();
+        $this->shippingCost = (int) $summary->getShipping();
     }
 
     public function getTotal(): string
     {
-        return (string)$this->total;
+        return (string) $this->total;
     }
 
     public function setTotal(string $total): void
     {
-        $this->total = (int)$total;
+        $this->total = (int) $total;
     }
 }

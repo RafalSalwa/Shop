@@ -16,6 +16,7 @@ interface OAuth2UserInterface
      *
      * @psalm-template   TKey of array-key
      * @psalm-template   T
+     *
      * @template-extends ReadableCollection<TKey, T>
      * @template-extends ArrayAccess<TKey, T>
      */

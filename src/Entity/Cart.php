@@ -23,6 +23,7 @@ use Doctrine\ORM\Mapping\PreUpdate;
 use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
+
 use function bcadd;
 use function is_null;
 use function sprintf;
@@ -189,7 +190,7 @@ class Cart implements JsonSerializable
             $total = bcadd($total, $item->getTotalPrice());
         }
 
-        return (int)$total;
+        return (int) $total;
     }
 
     public function getUserId(): int
@@ -211,8 +212,8 @@ class Cart implements JsonSerializable
     public function jsonSerialize(): mixed
     {
         return [
-            'status' => $this->getStatus()->value,
-            'items' => $this->getItems(),
+            'status'     => $this->getStatus()->value,
+            'items'      => $this->getItems(),
             'created_at' => $this->createdAt->getTimestamp(),
         ];
     }

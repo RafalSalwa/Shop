@@ -74,7 +74,7 @@ return [
     'config' => [
         PropertyTypeHintSniff::class => [
             'enableNativeTypeHint' => false,
-            'exclude' => ['src/Search/Engine/Query/AggregationQuery.php'],
+            'exclude'              => ['src/Search/Engine/Query/AggregationQuery.php'],
         ],
         ForbiddenNormalClasses::class => [
             'exclude' => [],
@@ -91,16 +91,16 @@ return [
         DisallowLateStaticBindingForConstantsSniff::class => [
             'exclude' => [],
         ],
-        DeclareStrictTypesSniff::class => ['newlinesCountBetweenOpenTagAndDeclare' => 0],
+        DeclareStrictTypesSniff::class   => ['newlinesCountBetweenOpenTagAndDeclare' => 0],
         BinaryOperatorSpacesFixer::class => [],
-        DocCommentSpacingSniff::class => [
+        DocCommentSpacingSniff::class    => [
             'linesCountBetweenAnnotationsGroups' => 0,
-            'annotationsGroups' => [
+            'annotationsGroups'                  => [
                 ['@package', '@author', '@copyright'],
             ],
         ],
         LineLengthSniff::class => [
-            'lineLimit' => 80,
+            'lineLimit'         => 80,
             'absoluteLineLimit' => 120,
         ],
     ],

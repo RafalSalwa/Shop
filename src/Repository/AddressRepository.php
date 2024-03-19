@@ -65,7 +65,6 @@ final class AddressRepository extends ServiceEntityRepository
             ->andWhere('a.id = :addressId')
             ->setParameter('addressId', $addressId)
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 }

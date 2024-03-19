@@ -28,7 +28,8 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly UsersApiClient $usersApiClient,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly LoggerInterface $logger,
-    ) {}
+    ) {
+    }
 
     public function authenticate(Request $request): Passport
     {

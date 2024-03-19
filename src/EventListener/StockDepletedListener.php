@@ -12,7 +12,8 @@ use Symfony\Component\Mime\Email;
 final class StockDepletedListener implements EventSubscriberInterface
 {
     public function __construct(private readonly MailerInterface $mailer)
-    {}
+    {
+    }
 
     /** @return array<string, string|array{0: string, 1: int}|list<array{0: string, 1?: int}>> */
     public static function getSubscribedEvents(): array
@@ -26,9 +27,8 @@ final class StockDepletedListener implements EventSubscriberInterface
         $email = (new Email())
             ->from('system@interview.com')
             ->to('system@interview.com')
-            ->subject('[PHP] Stock depleted for product ' . $item->getName() . ' with ID #' . $item->getId())
-            ->html('We need to restock :)')
-        ;
+            ->subject('[PHP] Stock depleted for product '.$item->getName().' with ID #'.$item->getId())
+            ->html('We need to restock :)');
 
         $this->mailer->send($email);
     }

@@ -28,7 +28,7 @@ final class LoginController extends AbstractShopController
         return $this->render(
             'login/index.html.twig',
             [
-                'error' => $error,
+                'error'         => $error,
                 'last_username' => $lastUsername,
             ],
         );

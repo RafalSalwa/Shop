@@ -22,8 +22,7 @@ trait PrepareSessionValuesTrait
                 }
 
                 $requestEvent->getRequest()
-                    ->setSession($session)
-                ;
+                    ->setSession($session);
             }
         );
     }

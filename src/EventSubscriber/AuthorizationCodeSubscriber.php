@@ -15,6 +15,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+
 use function is_null;
 
 final class AuthorizationCodeSubscriber implements EventSubscriberInterface
@@ -53,8 +54,7 @@ final class AuthorizationCodeSubscriber implements EventSubscriberInterface
             if (null !== $request->getSession()->get('consent_granted')) {
                 $authorizationRequestResolveEvent->resolveAuthorization($request->getSession()->get('consent_granted'));
                 $request->getSession()
-                    ->remove('consent_granted')
-                ;
+                    ->remove('consent_granted');
 
                 return;
             }

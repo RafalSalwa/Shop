@@ -12,16 +12,18 @@ use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function is_null;
 use function sprintf;
 
-readonly final class SubscriptionStockService
+final readonly class SubscriptionStockService
 {
     public function __construct(
         private LockFactory $productLockFactory,
         private ProductRepository $productRepository,
         private EventDispatcherInterface $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     /**
      * @throws ProductStockDepletedException

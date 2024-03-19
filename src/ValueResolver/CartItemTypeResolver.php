@@ -8,6 +8,7 @@ use App\Enum\CartItemTypeEnum;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
+
 use function is_string;
 
 final class CartItemTypeResolver implements ValueResolverInterface

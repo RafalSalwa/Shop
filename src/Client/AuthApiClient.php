@@ -20,16 +20,19 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
+
 use function array_key_exists;
 use function dd;
 use function json_decode;
 use function json_encode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClientInterface
 {
     public function __construct(private HttpClientInterface $authApi, private LoggerInterface $logger)
-    {}
+    {
+    }
 
     /** @throws AuthenticationExceptionInterface */
     public function signIn(string $email, string $password): TokenPair
@@ -41,7 +44,7 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
                 [
                     'body' => json_encode(
                         [
-                            'email' => $email,
+                            'email'    => $email,
                             'password' => $password,
                         ],
                         JSON_THROW_ON_ERROR,
@@ -50,11 +53,11 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
             );
 
             return TokenPair::fromJson($response->getContent());
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface|ServerExceptionInterface|RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);
@@ -70,8 +73,8 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
                 [
                     'body' => json_encode(
                         [
-                            'email' => $email,
-                            'password' => $password,
+                            'email'           => $email,
+                            'password'        => $password,
                             'passwordConfirm' => $password,
                         ],
                         JSON_THROW_ON_ERROR,
@@ -80,7 +83,7 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
             );
 
             return Response::HTTP_OK === $response->getStatusCode();
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage());
@@ -116,8 +119,8 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
     public function confirmAccount(string $verificationCode): void
     {
         try {
-            $this->authApi->request('GET', '/auth/verify/' . $verificationCode)->getContent();
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+            $this->authApi->request('GET', '/auth/verify/'.$verificationCode)->getContent();
+        } catch (ClientExceptionInterface|ServerExceptionInterface|RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
@@ -131,15 +134,15 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
     public function getByVerificationCode(string $verificationCode): ShopUserInterface
     {
         try {
-            $response = $this->authApi->request('GET', '/auth/code/' . $verificationCode);
+            $response = $this->authApi->request('GET', '/auth/code/'.$verificationCode);
             $arrResponse = json_decode($response->getContent(throw: true), true, JSON_THROW_ON_ERROR);
 
             return new User(id: $arrResponse['user']['id'], email: $arrResponse['user']['email']);
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface|ServerExceptionInterface|RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);
@@ -151,7 +154,7 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
         try {
             $response = $this->authApi->request(
                 'POST',
-                '/auth/signin/' . $verificationCode,
+                '/auth/signin/'.$verificationCode,
                 [
                     'body' => json_encode(
                         ['email' => $email],
@@ -164,11 +167,11 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
             $refreshToken = new Token($arrResponse['user']['refresh_token']);
 
             return new TokenPair($token, $refreshToken);
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface|ServerExceptionInterface|RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);

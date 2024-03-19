@@ -24,8 +24,7 @@ final class ProductRepository extends ServiceEntityRepository
             ->innerJoin('p.subscriptionPlan', 's')
             ->where('p.unitsInStock > 0')
             ->orderBy('s.tier', 'ASC')
-            ->addOrderBy('p.unitsInStock', 'DESC')
-        ;
+            ->addOrderBy('p.unitsInStock', 'DESC');
 
         return (new Paginator($queryBuilder))->paginate($page);
     }
@@ -39,7 +38,6 @@ final class ProductRepository extends ServiceEntityRepository
             ->where('p.id = :id')
             ->setParameter('id', $entity->getId())
             ->getQuery()
-            ->execute()
-        ;
+            ->execute();
     }
 }

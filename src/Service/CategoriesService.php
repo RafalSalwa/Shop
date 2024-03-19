@@ -10,7 +10,8 @@ use App\Repository\CategoryRepository;
 final readonly class CategoriesService
 {
     public function __construct(private CategoryRepository $categoryRepository)
-    {}
+    {
+    }
 
     /** @return array<Category>|null */
     public function list(): ?array

@@ -13,7 +13,8 @@ final readonly class AuthApiUserActivator implements UserActivatorInterface
     public function __construct(
         private AuthApiClient $authApiClient,
         private EventDispatcherInterface $eventDispatcher,
-    ) {}
+    ) {
+    }
 
     public function activate(string $verificationCode): bool
     {

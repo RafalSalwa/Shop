@@ -14,11 +14,11 @@ final class EntityNameResolver
     {
         $entityTypeMap = [
             'product' => Product::class,
-            'plan' => SubscriptionPlan::class,
+            'plan'    => SubscriptionPlan::class,
         ];
 
         if (false === isset($entityTypeMap[$entityType])) {
-            throw new InvalidArgumentException('Unknown entity type: ' . $entityType);
+            throw new InvalidArgumentException('Unknown entity type: '.$entityType);
         }
 
         return $entityTypeMap[$entityType];

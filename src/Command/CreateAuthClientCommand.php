@@ -12,6 +12,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Throwable;
+
 use function implode;
 
 #[AsCommand(name: 'auth:client:create', description: 'creates auth client')]
@@ -49,13 +50,13 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
             $conn->insert(
                 'oauth2_client',
                 [
-                    'identifier' => $this->clientId,
-                    'secret' => 'testclientsecret',
-                    'name' => 'Test Client',
-                    'redirect_uris' => implode(' ', $this->redirectUris),
-                    'grants' => implode(' ', $this->grantTypes),
-                    'scopes' => implode(' ', $this->scopes),
-                    'active' => 1,
+                    'identifier'            => $this->clientId,
+                    'secret'                => 'testclientsecret',
+                    'name'                  => 'Test Client',
+                    'redirect_uris'         => implode(' ', $this->redirectUris),
+                    'grants'                => implode(' ', $this->grantTypes),
+                    'scopes'                => implode(' ', $this->scopes),
+                    'active'                => 1,
                     'allow_plain_text_pkce' => 0,
                 ],
             );
@@ -63,9 +64,9 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
             $conn->insert(
                 'oauth2_client_profile',
                 [
-                    'id' => 1,
+                    'id'        => 1,
                     'client_id' => $this->clientId,
-                    'name' => 'Test Client App',
+                    'name'      => 'Test Client App',
                 ],
             );
             $conn->commit();

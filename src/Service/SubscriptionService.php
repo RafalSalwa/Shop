@@ -14,7 +14,8 @@ final readonly class SubscriptionService
     public function __construct(
         private SubscriptionPlanRepository $subscriptionPlanRepository,
         private SubscriptionRepository $subscriptionRepository,
-    ) {}
+    ) {
+    }
 
     public function cancelSubscription(int $userId): void
     {
@@ -39,7 +40,7 @@ final readonly class SubscriptionService
     {
         $subscription = $this->subscriptionRepository->findOneBy(
             [
-                'userId' => $userId,
+                'userId'   => $userId,
                 'isActive' => true,
             ],
         );

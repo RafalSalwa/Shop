@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
+
 use function array_diff;
 use function explode;
 use function http_build_query;
@@ -39,7 +40,7 @@ final class OAuthTokenController extends AbstractShopController
             'client_id'     => 'testclient',
             'client_secret' => 'testpass',
             'redirect_uri'  => 'http://localhost:8080/callback',
-            'code'          => urldecode((string)$request->get('code')),
+            'code'          => urldecode((string) $request->get('code')),
         ];
 
         return $this->render(
@@ -54,15 +55,15 @@ final class OAuthTokenController extends AbstractShopController
     #[Route(path: '/consent', name: 'app_consent', methods: ['GET', 'POST'])]
     public function consent(Request $request, OAuth2Service $oAuth2Service): Response
     {
-        $appClient    = $oAuth2Service->getClient();
-        $user         = $this->getShopUser();
+        $appClient = $oAuth2Service->getClient();
+        $user = $this->getShopUser();
         $userConsents = $user->getConsents()
             ->filter(
                 static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
             )
             ->first();
 
-        $userScopes      = $userConsents->getScopes();
+        $userScopes = $userConsents->getScopes();
         $requestedScopes = explode(' ', $request->query->get('scope'));
         if ([] === array_diff($requestedScopes, $userScopes)) {
             $request->getSession()->set('consent_granted', true);

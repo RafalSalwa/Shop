@@ -38,12 +38,12 @@ final class AMQPMessage implements JsonSerializable
     public function jsonSerialize(): array
     {
         return [
-            'id' => $this->getId(),
-            'name' => $this->getName(),
-            'seq' => $this->getSequenceId(),
-            'ts' => $this->getTimestamp(),
+            'id'      => $this->getId(),
+            'name'    => $this->getName(),
+            'seq'     => $this->getSequenceId(),
+            'ts'      => $this->getTimestamp(),
             'content' => $this->getContent(),
-            'store' => $this->getPersist(),
+            'store'   => $this->getPersist(),
         ];
     }
 

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Benchmark;
 
 use Closure;
+
 use function count;
 
 class ClosureObject

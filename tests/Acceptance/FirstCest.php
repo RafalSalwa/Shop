@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Tests\Acceptance;
 
 use Tests\Support\AcceptanceTester;
@@ -9,7 +8,6 @@ class FirstCest
 {
     public function _before(AcceptanceTester $acceptanceTester)
     {
-
     }
 
     // tests
@@ -22,5 +20,4 @@ class FirstCest
         $acceptanceTester->amOnPage('/login');
         $acceptanceTester->see('Login');
     }
-
 }

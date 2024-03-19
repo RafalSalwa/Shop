@@ -14,8 +14,7 @@ final class RegistrationConfirmationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('confirmationCode')
-        ;
+            ->add('confirmationCode');
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -23,7 +22,7 @@ final class RegistrationConfirmationFormType extends AbstractType
         $resolver->setDefaults(
             [
                 'attr' => [
-                    'class' => 'bg-white  rounded-5 shadow-5-strong p-5',
+                    'class'        => 'bg-white  rounded-5 shadow-5-strong p-5',
                     'autocomplete' => 'off',
                 ],
             ],

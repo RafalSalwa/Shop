@@ -22,11 +22,9 @@ final class OrderItemRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('p')
             ->where('p.id = :id')
             ->orderBy('p.createdAt', 'DESC')
-            ->setParameter('id', $id)
-        ;
+            ->setParameter('id', $id);
 
         return $queryBuilder->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
 }

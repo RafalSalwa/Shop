@@ -27,12 +27,11 @@ final class SignUpType extends AbstractType
                 'password',
                 RepeatedType::class,
                 [
-                    'first_options' => ['label' => 'Password'],
+                    'first_options'  => ['label' => 'Password'],
                     'second_options' => ['label' => 'Repeat Password'],
                 ],
             )
-            ->add('send', SubmitType::class)
-        ;
+            ->add('send', SubmitType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

@@ -12,16 +12,16 @@ use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRect
 return RectorConfig::configure()
     ->withPaths(
         [
-            __DIR__ . '/config',
-            __DIR__ . '/public',
-            __DIR__ . '/reports',
-            __DIR__ . '/src',
-            __DIR__ . '/tests',
+            __DIR__.'/config',
+            __DIR__.'/public',
+            __DIR__.'/reports',
+            __DIR__.'/src',
+            __DIR__.'/tests',
         ],
     )
     ->withSkip(
         [
-            __DIR__ . '/src/Protobuf',
+            __DIR__.'/src/Protobuf',
         ],
     )
     ->withPhpSets(php83: true)
@@ -51,8 +51,8 @@ return RectorConfig::configure()
     // if typeDeclaration is too high use this
     ->withTypeCoverageLevel(1)
     ->withDeadCodeLevel(1)
-    ->withSymfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml')
-    ->withSymfonyContainerPhp(__DIR__ . '/tests/symfony-container.php')
+    ->withSymfonyContainerXml(__DIR__.'/var/cache/dev/App_KernelDevDebugContainer.xml')
+    ->withSymfonyContainerPhp(__DIR__.'/tests/symfony-container.php')
     ->withRules(
         [
             AddVoidReturnTypeWhereNoReturnRector::class,

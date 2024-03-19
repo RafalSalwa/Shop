@@ -17,7 +17,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function json_decode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class UsersApiClient implements ShopUserProviderInterface
@@ -56,11 +58,11 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             $user->setSubscription($subscription);
 
             return $user;
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface|ServerExceptionInterface|RedirectionExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (TransportExceptionInterface|JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);

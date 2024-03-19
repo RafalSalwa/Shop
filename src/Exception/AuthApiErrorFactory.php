@@ -16,10 +16,10 @@ final class AuthApiErrorFactory
         $statusCode = $httpException->getResponse()->getStatusCode();
 
         return match ($statusCode) {
-            Response::HTTP_NOT_FOUND => new UserNotFoundException('Invalid credentials.', $statusCode),
+            Response::HTTP_NOT_FOUND             => new UserNotFoundException('Invalid credentials.', $statusCode),
             Response::HTTP_INTERNAL_SERVER_ERROR => new InternalServerErrorException($message, $statusCode),
-            Response::HTTP_BAD_REQUEST => new BadRequestException($message, $statusCode, $httpException),
-            default => new AuthApiRuntimeException($message, $statusCode, $httpException),
+            Response::HTTP_BAD_REQUEST           => new BadRequestException($message, $statusCode, $httpException),
+            default                              => new AuthApiRuntimeException($message, $statusCode, $httpException),
         };
     }
 }

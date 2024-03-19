@@ -17,7 +17,9 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * @internal
+ *
  * @covers User
+ *
  * @uses \App\Entity\Payment
  * @uses \App\Entity\Address
  */
@@ -27,10 +29,9 @@ use PHPUnit\Framework\TestCase;
 #[\PHPUnit\Framework\Attributes\CoversNothing]
 final class UserTest extends TestCase
 {
-
     public function testSetters(): void
     {
-        $user = new User(1,'test@test.com');
+        $user = new User(1, 'test@test.com');
         $plan = new SubscriptionPlan();
         $subscription = new Subscription($user->getId(), $plan);
 
@@ -48,7 +49,7 @@ final class UserTest extends TestCase
      */
     public function testOrderProcess(): void
     {
-        $user = new User(1,'test@test.com');
+        $user = new User(1, 'test@test.com');
 
         $this->assertNotNull($user);
     }

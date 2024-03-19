@@ -37,14 +37,13 @@ final readonly class OrderConfirmedListener implements EventSubscriberInterface
             ->htmlTemplate('email/order_summary.html.twig')
             ->context(
                 [
-                    'order' => $order,
+                    'order'   => $order,
                     'summary' => $this->calculatorService->calculateSummary(
                         $order->getNetAmount(),
                         $order->getCoupon(),
                     ),
                 ],
-            )
-        ;
+            );
 
         try {
             $this->mailer->send($email);

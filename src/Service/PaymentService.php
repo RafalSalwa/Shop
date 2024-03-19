@@ -11,13 +11,14 @@ use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 
-readonly final class PaymentService
+final readonly class PaymentService
 {
     public function __construct(
         private WorkflowInterface $paymentProcessing,
         private Security $security,
         private PaymentRepository $paymentRepository,
-    ) {}
+    ) {
+    }
 
     public function createPayment(Order $order, PaymentProvider $paymentType): Payment
     {

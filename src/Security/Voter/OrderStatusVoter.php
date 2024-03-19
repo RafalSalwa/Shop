@@ -7,6 +7,7 @@ namespace App\Security\Voter;
 use App\Entity\Order;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
 use function is_null;
 use function is_subclass_of;
 

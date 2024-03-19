@@ -22,7 +22,7 @@ final class AddressType extends AbstractType
                 TextType::class,
                 [
                     'label' => 'First Name',
-                    'attr' => ['placeholder' => 'John'],
+                    'attr'  => ['placeholder' => 'John'],
                 ],
             )
             ->add(
@@ -30,7 +30,7 @@ final class AddressType extends AbstractType
                 TextType::class,
                 [
                     'label' => 'Last Name',
-                    'attr' => ['placeholder' => 'Doe'],
+                    'attr'  => ['placeholder' => 'Doe'],
                 ],
             )
             ->add(
@@ -47,8 +47,8 @@ final class AddressType extends AbstractType
                 'addressLine2',
                 TextType::class,
                 [
-                    'label' => 'Address Line 2',
-                    'attr' => ['placeholder' => 'Street 123'],
+                    'label'    => 'Address Line 2',
+                    'attr'     => ['placeholder' => 'Street 123'],
                     'required' => false,
                 ],
             )

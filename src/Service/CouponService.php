@@ -6,8 +6,10 @@ namespace App\Service;
 
 use App\Exception\InvalidCouponCodeException;
 use App\ValueObject\CouponCode;
+
 use function array_filter;
 use function array_key_exists;
+
 use const ARRAY_FILTER_USE_KEY;
 
 final class CouponService
@@ -32,11 +34,11 @@ final class CouponService
     {
         return [
             'discount10' => [
-                'type' => 'cart-discount',
+                'type'  => 'cart-discount',
                 'value' => '10',
             ],
             'freeshipping' => [
-                'type' => 'shipping-discount',
+                'type'  => 'shipping-discount',
                 'value' => '100',
             ],
         ];
