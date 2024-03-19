@@ -29,7 +29,7 @@ final readonly class CartService
         private EntityManagerInterface $entityManager,
         private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
-        private string $cartItemMaxCapacity,
+        private int $cartItemMaxCapacity,
     ) {
     }
 

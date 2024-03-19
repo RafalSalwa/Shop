@@ -13,12 +13,6 @@ final class ProductsService
     public function __construct(private readonly ProductRepository $productRepository)
     {}
 
-    /** @return array<Product>|null */
-    public function all(): ?array
-    {
-        return $this->productRepository->findAll();
-    }
-
     public function byId(int $prodId): ?Product
     {
         return $this->productRepository->find($prodId);

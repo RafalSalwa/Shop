@@ -18,21 +18,9 @@ prod:
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
-.PHONY: run-always-ci
-run-always-ci:
-	vendor/bin/easy-ci check-commented-code src
-	vendor/bin/easy-ci check-conflicts src
-	vendor/bin/easy-ci find-multi-classes src
-
-run-always:
-	vendor/bin/swiss-knife check-commented-code src
-	vendor/bin/swiss-knife check-conflicts src
-	vendor/bin/swiss-knife find-multi-classes src
-	# vendor/bin/swiss-knife namespace-to-psr-4 src --namespace-root "App\\"
-
-.PHONY: lint
-lint: run-always
+lint:
 	vendor/bin/parallel-lint src --blame --no-progress
+
 .PHONY: cloc
 cloc:
 	cloc . --vcs git --exclude-dir=vendor,public,node_modules
@@ -44,9 +32,11 @@ ecs:
 rector: vendor ## Automatic code fixes with Rector
 	composer rector
 
-.PHONY: phpcs
 phpcs:
 	vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
+
+psalm:
+	vendor/bin/psalm --standard=reports/config/phpcs.xml -s src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
@@ -56,7 +46,6 @@ php-cs-fixer:
 bench: ## Runs benchmarks with phpbench
 	composer bench
 
-.PHONY: deptrac
 deptrac:
 	-./vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
 	-./vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
@@ -69,19 +58,19 @@ phpstan: lint
 phpinsights:
 	vendor/bin/phpinsights analyse --composer=composer.json --config-path=phpinsights.php
 
-.PHONY: static_analysis
-static_analysis:
+static_analysis: lint
 	#$(MAKE) test_unit
 #	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
-	-vendor/bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+	-vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
+	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
 #	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
-#	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
 #	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 #	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
 #	-vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
 #	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
 #	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
+# pdepend!
 
 
 .PHONY: jenkins_static_analysis

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Storage;
 
 use App\Entity\Cart;
+use App\Entity\Contracts\ShopUserInterface;
 use App\Repository\CartRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
@@ -13,7 +14,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
-use Symfony\Component\Security\Core\User\UserInterface;
 use function assert;
 
 final class CartSessionStorage
@@ -43,9 +43,12 @@ final class CartSessionStorage
         );
     }
 
-    private function getUser(): ?UserInterface
+    private function getUser(): ShopUserInterface
     {
-        return $this->security->getUser();
+        $user = $this->security->getUser();
+        assert($user instanceof ShopUserInterface);
+
+        return $user;
     }
 
     public function setCart(Cart $cart): void
@@ -64,7 +67,7 @@ final class CartSessionStorage
         // until this https://github.com/symfony/symfony/discussions/45662 won't be fixed
         // that is the easiest solution for session storage between redis and filesystem
         if ('test' === $this->parameterBag->get('kernel.environment')) {
-            $sessionSavePath = (string)$this->parameterBag->get('session.save_path');
+            $sessionSavePath = $this->parameterBag->get('session.save_path');
 
             $mockFileSessionStorage = new MockFileSessionStorage($sessionSavePath);
             $session = new Session($mockFileSessionStorage);
@@ -80,22 +83,6 @@ final class CartSessionStorage
 
     public function removeCart(): void
     {
-        $this->getSession()
-            ->remove(self::CART_KEY_NAME)
-        ;
-    }
-
-    public function setDeliveryAddressId(int $addId): void
-    {
-        $this->getSession()
-            ->set(self::ADDR_KEY_NAME, $addId)
-        ;
-    }
-
-    public function getDeliveryAddressId(): mixed
-    {
-        return $this->getSession()
-            ->get(self::ADDR_KEY_NAME)
-        ;
+        $this->getSession()->remove(self::CART_KEY_NAME);
     }
 }

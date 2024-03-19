@@ -8,6 +8,7 @@ use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\Registration\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
+use App\Form\ResetPasswordRequestFormType;
 use App\Security\AuthApiFormAuthenticator;
 use App\Security\AuthApiUserProvider;
 use App\Security\Registration\UserRegistrarInterface;
@@ -34,7 +35,6 @@ final class RegistrationController extends AbstractShopController
                 $password = $form->get('password')->getData();
 
                 $authApiUserRegistrar->register($email, $password);
-                $authApiUserRegistrar->sendVerificationCode($email);
 
                 return $this->redirectToRoute('register_confirm_email');
             } catch (RegistrationExceptionInterface $exception) {
@@ -59,6 +59,33 @@ final class RegistrationController extends AbstractShopController
         if (true === $form->isSubmitted() && true === $form->isValid()) {
             try {
                 $userRegistrar->confirm($form->get('confirmationCode')->getData());
+
+                return $this->redirectToRoute(
+                    'register_thank_you',
+                    ['verificationCode' => $form->get('confirmationCode')->getData()],
+                );
+            } catch (AuthenticationExceptionInterface $exception) {
+                $form->addError(new FormError($exception->getMessage()));
+            }
+        }
+
+        return $this->render(
+            'registration/confirm.html.twig',
+            [
+                'confirmationForm' => $form->createView(),
+            ],
+        );
+    }
+
+    #[Route(path: '/resend/', name: 'resend_confirmmation_email')]
+    public function resendConfirmationEmail(Request $request, UserRegistrarInterface $userRegistrar): Response
+    {
+        $form = $this->createForm(ResetPasswordRequestFormType::class);
+        $form->handleRequest($request);
+
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            try {
+                $userRegistrar->sendVerificationCode($form->get('email')->getData());
 
                 return $this->redirectToRoute(
                     'register_thank_you',

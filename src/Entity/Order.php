@@ -214,9 +214,9 @@ class Order
         $this->shippingCost = (int)$summary->getShipping();
     }
 
-    public function getTotal(): string
+    public function getTotal(): int
     {
-        return (string)$this->total;
+        return $this->total;
     }
 
     public function setTotal(string $total): void

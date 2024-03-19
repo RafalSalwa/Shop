@@ -20,6 +20,7 @@ use Exception;
 use Traversable;
 use function ceil;
 use function count;
+use function is_null;
 use function max;
 use function min;
 
@@ -69,7 +70,7 @@ final class Paginator
         /** @var array<string, mixed> $havingDqlParts */
         $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
-        if (count($havingDqlParts) > 0) {
+        if (false === is_null($havingDqlParts) && count($havingDqlParts) > 0) {
             $paginator->setUseOutputWalkers(true);
         }
 

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Exception;
 
-interface AuthenticationExceptionInterface
+use Throwable;
+
+interface AuthenticationExceptionInterface extends Throwable
 {
 }

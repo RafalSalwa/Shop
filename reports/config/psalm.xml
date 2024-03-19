@@ -3,7 +3,7 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
     xsi:schemaLocation="https://getpsalm.org/schema/config ../../vendor/vimeo/psalm/config.xsd"
-    
+
     allowStringToStandInForClass="true"
     cacheDirectory="../../var/cache/dev/"
     disableVarParsing="false"
@@ -11,7 +11,7 @@
     ensureArrayIntOffsetsExist="true"
     ensureArrayStringOffsetsExist="true"
     ensureOverrideAttribute="true"
-    errorLevel="4"
+    errorLevel="6"
     findUnusedBaselineEntry="true"
     findUnusedCode="true"
     findUnusedVariablesAndParams="true"
@@ -31,6 +31,7 @@
         <ignoreFiles>
             <directory name="../../vendor"/>
             <directory name="../../src/Protobuf"/>
+            <directory name="../../src/Repository"/>
         </ignoreFiles>
     </projectFiles>
 

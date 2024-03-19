@@ -12,24 +12,11 @@ use const Grpc\STATUS_OK;
  */
 final class StatusResponse
 {
-    /** @var array<string, string> $metadata */
-    private array $metadata;
-
     private int $code;
-
-    private string $details;
 
     public function __construct(stdClass $class)
     {
-        $this->metadata = $class->metadata;
         $this->code = $class->code;
-        $this->details = $class->details;
-    }
-
-    /** @return array<string, string> */
-    public function getMetadata(): array
-    {
-        return $this->metadata;
     }
 
     public function getCode(): int
@@ -37,13 +24,8 @@ final class StatusResponse
         return $this->code;
     }
 
-    public function getDetails(): string
-    {
-        return $this->details;
-    }
-
     public function isOk(): bool
     {
-        return STATUS_OK === $this->code;
+        return STATUS_OK === $this->getCode();
     }
 }

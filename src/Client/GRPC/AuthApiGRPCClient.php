@@ -58,7 +58,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         return new TokenPair(new Token($userResponse->getAccessToken()), new Token($userResponse->getRefreshToken()));
     }
 
-    public function signUp(string $email, string $password): bool
+    public function signUp(string $email, string $password): void
     {
         $signUpUserInput = new SignUpUserInput();
         $signUpUserInput->setEmail($email);
@@ -67,11 +67,6 @@ final class AuthApiGRPCClient implements AuthClientInterface
 
         $arrResponse = $this->authServiceClient->SignUpUser($signUpUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-
-        assert($arrStatus instanceof stdClass);
-
-        return (new StatusResponse($arrStatus))->isOk();
     }
 
     /** @throws AuthException */
