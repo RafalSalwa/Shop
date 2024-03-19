@@ -10,9 +10,14 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use function is_null;
 
+/**
+ * @template TAttribute of 'order'
+ * @template TSubject of SubscriptionPlan
+ * @extends  Voter<'order', SubscriptionPlan>
+ */
 final class OrderSubscriptionPlanVoter extends Voter
 {
-    public const ORDER_SUBSCRIPTION_PLAN = 'ORDER_SUBSCRIPTION_PLAN';
+    public const ORDER_SUBSCRIPTION_PLAN = 'ORDER';
 
     protected function supports(string $attribute, mixed $subject): bool
     {

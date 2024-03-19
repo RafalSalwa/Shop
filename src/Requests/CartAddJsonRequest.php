@@ -9,12 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly final class CartAddJsonRequest
 {
     public function __construct(
-        #[Assert\Type('integer')]
+        #[Assert\Type(type: 'integer')]
         #[Assert\NotBlank()]
         public int $id,
-        #[Assert\NotBlank([])]
-        public string $type,
-        #[Assert\Type('integer')]
+        #[Assert\Type(type: 'integer')]
         #[Assert\NotBlank()]
         public int $quantity,
     ) {}
@@ -22,11 +20,6 @@ readonly final class CartAddJsonRequest
     public function getId(): int
     {
         return $this->id;
-    }
-
-    public function getType(): string
-    {
-        return $this->type;
     }
 
     public function getQuantity(): int

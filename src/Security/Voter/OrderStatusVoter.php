@@ -10,12 +10,17 @@ use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use function is_null;
 use function is_subclass_of;
 
+/**
+ * @template TAttribute of 'view'
+ * @template TSubject of Order
+ * @extends  Voter<'view', Order>
+ */
 final class OrderStatusVoter extends Voter
 {
     /** @param Order $subject */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return $subject instanceof Order && 'view' === $attribute && Order::PENDING === $subject->getStatus();
+        return 'view' === $attribute && Order::PENDING === $subject->getStatus();
     }
 
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool

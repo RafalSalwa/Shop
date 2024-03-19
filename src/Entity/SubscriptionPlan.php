@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Enum\SubscriptionTier;
-use App\Repository\SubscriptionPlanRepository;
+use App\Repository\PlanRepository;
 use DateTime;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Cache;
@@ -18,7 +18,7 @@ use Doctrine\ORM\Mapping\Index;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
-#[Entity(repositoryClass: SubscriptionPlanRepository::class)]
+#[Entity(repositoryClass: PlanRepository::class)]
 #[Table(name: 'plan', schema: 'interview')]
 #[Index(columns: ['plan_name'], name: 'u_plan_idx')]
 #[Cache(usage: 'READ_ONLY')]

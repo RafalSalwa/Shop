@@ -8,7 +8,7 @@
                 </a>
             </li>
             {% for i in 1..paginator.lastPage %}
-                <li class="page-item {% if i == paginator.currentPage %}active{% endif%}"><a class="page-link" href="{{ path(app.request.get('_route'), {page: i}) }}">{{ i }}</a></li>
+                <li class="page-item {% if i == paginator.currentPage %}active{% endif %}"><a class="page-link" href="{{ path(app.request.get('_route'), {page: i}) }}">{{ i }}</a></li>
             {% endfor %}
             <li class="page-item {% if not paginator.hasNextPage %} disabled {% endif %}">
                 <a class="page-link" href="{{ path(app.request.get('_route'), {page: paginator.nextPage}) }}" aria-label="Next">

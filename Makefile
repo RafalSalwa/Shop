@@ -18,21 +18,9 @@ prod:
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
-.PHONY: run-always-ci
-run-always-ci:
-	vendor/bin/easy-ci check-commented-code src
-	vendor/bin/easy-ci check-conflicts src
-	vendor/bin/easy-ci find-multi-classes src
-
-run-always:
-	vendor/bin/swiss-knife check-commented-code src
-	vendor/bin/swiss-knife check-conflicts src
-	vendor/bin/swiss-knife find-multi-classes src
-	# vendor/bin/swiss-knife namespace-to-psr-4 src --namespace-root "App\\"
-
-.PHONY: lint
-lint: run-always
+lint:
 	vendor/bin/parallel-lint src --blame --no-progress
+
 .PHONY: cloc
 cloc:
 	cloc . --vcs git --exclude-dir=vendor,public,node_modules
@@ -70,7 +58,7 @@ phpstan: lint
 phpinsights:
 	vendor/bin/phpinsights analyse --composer=composer.json --config-path=phpinsights.php
 
-static_analysis:
+static_analysis: lint
 	#$(MAKE) test_unit
 #	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests

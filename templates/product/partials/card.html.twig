@@ -1,21 +1,22 @@
-{% if product.unitsInStock > 0 %}
+{% if product.getUnitsInStock() > 0 %}
     <div class="col-lg-4 col-md-6 col-sm-12 pb-1">
         <div class="card product-item border-0 mb-4">
             <div class="card-header product-img position-relative overflow-hidden bg-transparent border p-0">
                 <img class="img-fluid w-100" src="https://picsum.photos/seed/{{ random() }}/500" alt="">
             </div>
             <div class="card-body border-left border-right text-center p-0 pt-4 pb-3">
-                <h6 class="text-truncate mb-3">{{ product.name|capitalize }} ({{ product.unitsInStock }})</h6>
+                <h6 class="text-truncate mb-3">{{ product.getName()|capitalize }} ({{ product.getUnitsInStock() }})</h6>
                 <div class="d-flex justify-content-center">
-                    <h6>{{ product.grossPrice|number_format(2, '.', ',')|format_currency('USD') }}</h6>
+                    <h6>{{ product.getGrossPrice()|number_format(2, '.', ',')|format_currency('USD') }}</h6>
                 </div>
             </div>
             <div class="card-footer d-flex justify-content-between bg-light border">
-                <a href="{{ path("products_details", { id: product.id}) }}" class="btn btn-sm text-dark p-0"><i
-                            class="fas fa-eye text-primary mr-1"></i>View
-                    Detail</a>
+                <a href="{{ path("products_details", {id: product.id}) }}" class="btn btn-sm text-dark p-0">
+                    <i class="fas fa-eye text-primary mr-1"></i>
+                    View Detail
+                </a>
                 {% if app.user and is_granted('ADD_TO_CART', product) %}
-                    <a href="{{ path("cart_add", {type:"product", id: product.id, quantity:1}) }}" class="btn btn-sm text-dark p-0"><i
+                    <a href="{{ path("cart_add", {type: "product", id: product.id, quantity: 1}) }}" class="btn btn-sm text-dark p-0"><i
                                 class="fas fa-shopping-cart text-primary mr-1"></i>Add To Cart</a>
                 {% endif %}
             </div>

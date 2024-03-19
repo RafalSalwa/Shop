@@ -81,6 +81,7 @@
   },
   "require-dev": {
     "behat/behat": "^3.14",
+    "bmitch/churn-php": "^1.7",
     "codeception/codeception": "^5.1.2",
     "codeception/module-asserts": ">=3",
     "codeception/module-phpbrowser": ">=3.0.1",
@@ -147,7 +148,7 @@
     "symfony/stopwatch": "~6.4.0",
     "symfony/web-profiler-bundle": "~6.4.0",
     "symplify/coding-standard": "^12.1.4",
-    "symplify/easy-coding-standard": "^12.1.14",
+    "symplify/easy-coding-standard": "^12.1",
     "symplify/phpstan-extensions": "^11.4.3",
     "symplify/phpstan-rules": "^12.4.9",
     "tomasvotruba/class-leak": "^0.2.11",

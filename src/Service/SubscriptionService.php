@@ -6,19 +6,19 @@ namespace App\Service;
 
 use App\Entity\Subscription;
 use App\Entity\SubscriptionPlan;
-use App\Repository\SubscriptionPlanRepository;
+use App\Repository\PlanRepository;
 use App\Repository\SubscriptionRepository;
 
 final readonly class SubscriptionService
 {
     public function __construct(
-        private SubscriptionPlanRepository $subscriptionPlanRepository,
+        private PlanRepository $subscriptionPlanRepository,
         private SubscriptionRepository $subscriptionRepository,
     ) {}
 
     public function cancelSubscription(int $userId): void
     {
-        $this->subscriptionRepository->clearSubscriptionsForUserId($userId);
+        $this->subscriptionRepository->clearSubscriptions($userId);
         $this->assignFreemium($userId);
     }
 
@@ -30,7 +30,7 @@ final readonly class SubscriptionService
 
     public function assignSubscription(SubscriptionPlan $plan, int $userId): void
     {
-        $this->subscriptionRepository->clearSubscriptionsForUserId($userId);
+        $this->subscriptionRepository->clearSubscriptions($userId);
         $subscription = new Subscription(userId: $userId, plan: $plan);
         $this->subscriptionRepository->save($subscription);
     }

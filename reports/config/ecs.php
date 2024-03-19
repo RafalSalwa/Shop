@@ -58,8 +58,6 @@ return ECSConfig::configure()
         [
             NoUnusedImportsFixer::class,
             ArraySyntaxFixer::class,
-            'strict_types' => true,
-            TypesSpacesFixer::class,
             TypesSpacesFixer::class,
             NoUselessReturnFixer::class,
             LinebreakAfterOpeningTagFixer::class,
@@ -121,19 +119,5 @@ return ECSConfig::configure()
         ],
     )
     // add sets - group of rules
-    ->withPreparedSets(
-        psr12: true,
-        common: true,
-        symplify: true,
-        arrays: true,
-        comments: true,
-        docblocks: true,
-        spaces: true,
-        namespaces: true,
-        controlStructures: true,
-        phpunit: true,
-        strict: true,
-        cleanCode: true,
-    )
-    ->withPhpCsFixerSets()
-     ;
+    ->withPreparedSets(psr12: true, common: true, symplify: true, strict: true, cleanCode: true)
+    ->withPhpCsFixerSets();

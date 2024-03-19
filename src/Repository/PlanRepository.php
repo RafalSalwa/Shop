@@ -12,7 +12,7 @@ use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use function mb_strtolower;
 
-final class SubscriptionPlanRepository extends ServiceEntityRepository
+final class PlanRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {

@@ -35,7 +35,7 @@ final readonly class OAuth2Service
         $userConsents = $user->getConsents();
         if (false === is_null($userConsents)) {
             $userConsents = $userConsents->filter(
-                static fn (int $id, OAuth2UserConsent $consent): bool => $id && $consent->getClient() === $appClient,
+                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
             );
             $consent = $userConsents->first();
             $userScopes = ($consent ?? []);
