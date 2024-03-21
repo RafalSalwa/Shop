@@ -6,7 +6,7 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
          bootstrap="../../tests/bootstrap.php"
-         cacheDirectory="../../var/cache/phpunit.cache"
+         cacheDirectory="../../var/cache/dev/phpunit.cache"
          colors="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerErrors="true"

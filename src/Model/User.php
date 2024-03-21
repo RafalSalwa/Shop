@@ -22,7 +22,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
 
     private ?Token $refreshToken = null;
 
-    private Subscription $subscription;
+    private ?Subscription $subscription = null;
 
     /**
      * Roles property to meet User requirements.
@@ -78,10 +78,9 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         $this->roles = $roles;
     }
 
+    /** we are not storing any sensitive data so there no need to erase anything */
     public function eraseCredentials(): void
-    {
-        $this->password = null;
-    }
+    {}
 
     public function getRefreshToken(): Token
     {
