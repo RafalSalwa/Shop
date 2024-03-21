@@ -78,9 +78,10 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         $this->roles = $roles;
     }
 
-    /** we are not storing any sensitive data so there no need to erase anything */
     public function eraseCredentials(): void
-    {}
+    {
+        // We are not storing any sensitive data so there no need to erase anything
+    }
 
     public function getRefreshToken(): Token
     {
