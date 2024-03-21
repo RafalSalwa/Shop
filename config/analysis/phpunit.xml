@@ -6,7 +6,7 @@
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
          bootstrap="../../tests/bootstrap.php"
-         cacheDirectory="../results/phpunit.cache"
+         cacheDirectory="../../var/cache/phpunit.cache"
          colors="true"
          displayDetailsOnTestsThatTriggerDeprecations="true"
          displayDetailsOnTestsThatTriggerErrors="true"
@@ -63,14 +63,14 @@
               ignoreDeprecatedCodeUnits="true"
               disableCodeCoverageIgnore="true">
         <report>
-            <clover outputFile="../results/phpunit.clover.xml"/>
-            <html outputDirectory="../results/phpunit/" lowUpperBound="50" highLowerBound="90"/>
-            <cobertura outputFile="../results/phpunit.cobertura.xml"/>
+            <clover outputFile="../../var/reports/phpunit.clover.xml"/>
+            <html outputDirectory="../../var/reports/phpunit/" lowUpperBound="50" highLowerBound="90"/>
+            <cobertura outputFile="../../var/reports/phpunit.cobertura.xml"/>
         </report>
     </coverage>
 
     <logging>
-        <junit outputFile="../results/phpunit.junit.xml"/>
+        <junit outputFile="../../var/reports/phpunit.junit.xml"/>
     </logging>
 
     <source restrictDeprecations="true" restrictNotices="true" restrictWarnings="true">
