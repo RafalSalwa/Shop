@@ -58,6 +58,10 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
+        $this->logger->debug(
+            'AuthenticationSuccess',
+            ['route' => $request->getPathInfo(), 'firewallName' => $firewallName],
+        );
         $token->eraseCredentials();
 
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
@@ -76,6 +80,6 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     protected function getLoginUrl(Request $request): string
     {
-        return $this->urlGenerator->generate('login_index');
+        return $this->urlGenerator->generate('login_index', $request->query->all());
     }
 }

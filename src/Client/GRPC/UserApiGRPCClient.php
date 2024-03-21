@@ -26,7 +26,7 @@ final class UserApiGRPCClient
     public function __construct(private readonly string $userServiceDsn)
     {
         $this->userServiceClient = new UserServiceClient(
-            $this->userServiceDsn,
+            $userServiceDsn,
             [
                 'credentials' => ChannelCredentials::createInsecure(),
             ],

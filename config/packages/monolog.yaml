@@ -9,7 +9,7 @@ when@dev:
       main:
         type: stream
         path: php://stderr
-        level: debug
+        level: info
         channels: [ "!event", "!deprecation" ]
       console:
         type: console

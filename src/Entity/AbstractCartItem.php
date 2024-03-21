@@ -52,17 +52,17 @@ abstract class AbstractCartItem implements CartItemInterface
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $updatedAt = null;
 
-    private readonly CartItemTypeEnum $itemType;
+    private readonly string $itemType;
 
     public function __construct(protected CartInsertableInterface $referencedEntity, int $quantity)
     {
-        $this->itemType = CartItemTypeEnum::from($referencedEntity::class);
+        $this->itemType = $referencedEntity::class;
         $this->createdAt = new DateTimeImmutable();
 
         $this->quantity = $quantity;
     }
 
-    final public function setCart(Cart|null $cart): void
+    final public function setCart(?Cart $cart): void
     {
         $this->cart = $cart;
     }
@@ -82,7 +82,7 @@ abstract class AbstractCartItem implements CartItemInterface
         return CartItemTypeEnum::from(ClassUtils::getClass($this->getReferencedEntity()))->value;
     }
 
-    final public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface
+    final public function getReferencedEntity(): StockManageableInterface
     {
         return $this->referencedEntity;
     }

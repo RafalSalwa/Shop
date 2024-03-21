@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\OAuth2Api;
 
 use App\Controller\AbstractShopController;
-use App\Controller\CartManager;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\TooManySubscriptionsException;
@@ -32,9 +31,9 @@ final class CartApiController extends AbstractShopController
     #[Route(path: '/', name: 'index', methods: ['GET'])]
     #[OA\Tag(name: 'Cart')]
     #[Security(name: 'Bearer')]
-    public function index(CartManager $cartManager, SerializerInterface $serializer): JsonResponse
+    public function index(CartService $cartService, SerializerInterface $serializer): JsonResponse
     {
-        $cart = $cartManager->getCurrentCart();
+        $cart = $cartService->getCurrentCart();
         $serialized = $serializer->serialize($cart, 'json', ['groups' => ['carts', 'cart_item']]);
 
         return new JsonResponse($serialized);
@@ -99,7 +98,11 @@ final class CartApiController extends AbstractShopController
                 ],
                 Response::HTTP_NOT_FOUND,
             );
-        } catch (Exception | ItemNotFoundException | TooManySubscriptionsException) {
+        } catch (Exception | ItemNotFoundException | TooManySubscriptionsException $exception) {
+            return $this->json(
+                ['message' => $exception->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR,
+            );
         }
 
         return $this->json(

@@ -50,11 +50,10 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             $user = new User(
                 id: $arrContent['user']['id'],
                 email: $arrContent['user']['email'],
-                authCode: $arrContent['user']['verification_token'],
                 token: $arrContent['user']['token'],
                 refreshToken: $arrContent['user']['refresh_token'],
             );
-            $subscription = $this->subscriptionService->find($user->getId());
+            $subscription = $this->subscriptionService->findForUser($user->getId());
 
             $user->setSubscription($subscription);
 

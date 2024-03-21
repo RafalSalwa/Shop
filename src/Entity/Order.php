@@ -159,7 +159,7 @@ class Order
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function addPayment(Payment|TValue $payment): void
+    public function addPayment(Payment $payment): void
     {
         $payment->setOrder($this);
         $this->payments[] = $payment;

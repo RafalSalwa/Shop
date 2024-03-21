@@ -41,6 +41,11 @@ final readonly class CartWorkflow
         try {
             $cartItem = $this->factory->create($itemId, $quantity);
             $this->cartService->add($cartItem);
+            $this->productStockService->changeStock(
+                $cartItem->getReferencedEntity(),
+                StockOperation::Decrease,
+                $quantity,
+            );
         } catch (ItemNotFoundException | AccessDeniedException  $exception) {
             $this->logger->error($exception->getMessage());
 

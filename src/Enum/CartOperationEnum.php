@@ -6,10 +6,10 @@ namespace App\Enum;
 
 enum CartOperationEnum: string
 {
-    case ADD_TO_CART = 'ADD_TO_CART';
+    case ADD = 'add';
 
     public static function addToCart(): string
     {
-        return self::ADD_TO_CART->value;
+        return self::ADD->value;
     }
 }

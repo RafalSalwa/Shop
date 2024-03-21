@@ -33,9 +33,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[Column(name: 'product_name', type: Types::STRING, length: 40)]
     private readonly string $name;
 
-    #[Column(name: 'category_id', type: Types::SMALLINT, nullable: true)]
-    private int $categoryId;
-
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
     private string $quantityPerUnit;
 

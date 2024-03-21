@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Psalm 5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4" time="5.21" failures="0" tests="12" errors="0">
+  <testsuite name="/tmp/Psalmtemp_folder41915/src/Form/PaymentType.php" failures="0" tests="1" errors="0">
+    <testcase name="/tmp/Psalmtemp_folder41915/src/Form/PaymentType.php" classname=".tmp.Psalmtemp_folder41915.src.Form.PaymentType"/>
+  </testsuite>
+  <testsuite name="../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php" failures="0" tests="11" errors="0">
+    <testcase name="PossiblyUndefinedStringArrayOffset at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (31:27)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: PossiblyUndefinedStringArrayOffset - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:31:27 - Possibly undefined array offset ''disabled'' is risky given expected type 'string'. Consider using isset beforehand.
+31:            -&gt;setDisabled($options['disabled'])
+</skipped>
+    </testcase>
+    <testcase name="MixedArgument at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (31:27)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: MixedArgument - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:31:27 - Argument 1 of Symfony\Component\Form\FormBuilderInterface::setDisabled cannot be mixed, expecting bool
+31:            -&gt;setDisabled($options['disabled'])
+</skipped>
+    </testcase>
+    <testcase name="DocblockTypeContradiction at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (79:13)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: DocblockTypeContradiction - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:79:13 - App\Entity\Payment does not contain null
+79:        if (null === $viewData) {
+</skipped>
+    </testcase>
+    <testcase name="InvalidArrayOffset at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (83:9)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: InvalidArrayOffset - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:83:9 - Cannot access value on variable $forms using offset value of 'amount', expecting int
+83:        $forms['amount']-&gt;setData($viewData-&gt;getAmount() / 100);
+</skipped>
+    </testcase>
+    <testcase name="InvalidArrayOffset at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (84:9)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: InvalidArrayOffset - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:84:9 - Cannot access value on variable $forms using offset value of 'operationType', expecting int
+84:        $forms['operationType']-&gt;setData($viewData-&gt;getOperationType());
+</skipped>
+    </testcase>
+    <testcase name="InvalidArrayOffset at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (85:9)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: InvalidArrayOffset - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:85:9 - Cannot access value on variable $forms using offset value of 'operationNumber', expecting int
+85:        $forms['operationNumber']-&gt;setData($viewData-&gt;getOperationNumber());
+</skipped>
+    </testcase>
+    <testcase name="RedundantCondition at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (94:13)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: RedundantCondition - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:94:13 - Type int for $viewData-&gt;getamount() is never float
+94:        if (true !== is_float($viewData-&gt;getAmount())) {
+</skipped>
+    </testcase>
+    <testcase name="TypeDoesNotContainType at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (94:22)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: TypeDoesNotContainType - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:94:22 - Cannot resolve types for $viewData-&gt;getamount() - int does not contain float
+94:        if (true !== is_float($viewData-&gt;getAmount())) {
+</skipped>
+    </testcase>
+    <testcase name="InvalidArrayOffset at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (98:30)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: InvalidArrayOffset - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:98:30 - Cannot access value on variable $forms using offset value of 'amount', expecting int
+98:        $viewData-&gt;setAmount($forms['amount']-&gt;getData() * 100);
+</skipped>
+    </testcase>
+    <testcase name="MixedOperand at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (98:30)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: MixedOperand - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:98:30 - Left operand cannot be mixed
+98:        $viewData-&gt;setAmount($forms['amount']-&gt;getData() * 100);
+</skipped>
+    </testcase>
+    <testcase name="MixedArgument at ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php (98:30)" classname=".....................tmp.Psalmtemp_folder41915.src.Form.PaymentType">
+      <skipped>info: MixedArgument - ../../../../../../../tmp/Psalmtemp_folder41915/src/Form/PaymentType.php:98:30 - Argument 1 of App\Entity\Payment::setAmount cannot be mixed, expecting int
+98:        $viewData-&gt;setAmount($forms['amount']-&gt;getData() * 100);
+</skipped>
+    </testcase>
+  </testsuite>
+</testsuites>

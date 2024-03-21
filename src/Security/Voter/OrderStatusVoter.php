@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Security\Voter;
 
 use App\Entity\Order;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use function is_null;
-use function is_subclass_of;
+use function is_a;
 
 /**
  * @template TAttribute of 'view'
@@ -17,24 +18,29 @@ use function is_subclass_of;
  */
 final class OrderStatusVoter extends Voter
 {
+    public function __construct(private LoggerInterface $logger)
+    {
+    }
+
     /** @param Order $subject */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return 'view' === $attribute && Order::PENDING === $subject->getStatus();
+        return 'view' === $attribute && is_a($subject, Order::class) && Order::PENDING === $subject->getStatus();
     }
 
+    /** @param Order $subject */
+    // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if (false === is_subclass_of($subject, Order::class)) {
+        $user = $token->getUser();
+        if (null === $user) {
             return false;
         }
-        if (true === is_null($token->getUser())) {
-            return false;
-        }
-        if ('view' !== $attribute) {
-            return false;
+        if ($user->getId() !== $subject->getUserId()) {
+            throw new UnauthorizedHttpException('You cannot view this order.');
         }
 
-        return Order::PENDING === $subject->getStatus();
+        return true;
     }
 }

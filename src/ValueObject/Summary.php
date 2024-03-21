@@ -5,12 +5,23 @@ declare(strict_types=1);
 namespace App\ValueObject;
 
 use function bcadd;
+use function bcdiv;
 use function bcsub;
 
 final readonly class Summary
 {
     public function __construct(private int $net, private int $discount, private int $tax, private int $shipping)
     {
+    }
+
+    public function getNet(): int
+    {
+        return $this->net;
+    }
+
+    public function getTax(): int
+    {
+        return $this->tax;
     }
 
     public function getShipping(): int
@@ -31,5 +42,10 @@ final readonly class Summary
         }
 
         return (int)bcadd((string)$subTotal, (string)$this->tax);
+    }
+
+    public function getDiscount(): string
+    {
+        return bcdiv((string)$this->discount, '100', 2);
     }
 }

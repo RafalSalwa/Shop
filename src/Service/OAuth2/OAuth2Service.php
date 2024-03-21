@@ -29,7 +29,7 @@ final readonly class OAuth2Service
     {
         $user = $this->getUser();
         $request = $this->requestStack->getCurrentRequest();
-        $consent = new OAuth2UserConsent();
+        $consent = new OAuth2UserConsent($user->getId(), $appClient);
         $userScopes = [];
 
         $userConsents = $user->getConsents();

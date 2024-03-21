@@ -16,7 +16,9 @@ use const JSON_THROW_ON_ERROR;
 final class ExternalJsonMessageSerializer implements SerializerInterface
 {
     public function decode(array $encodedEnvelope): Envelope
-    {}
+    {
+        return new Envelope($encodedEnvelope['body']);
+    }
 
     public function encode(Envelope $envelope): array
     {

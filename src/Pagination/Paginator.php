@@ -24,6 +24,7 @@ use function is_null;
 use function max;
 use function min;
 
+/** @psalm-api */
 final class Paginator
 {
     /**

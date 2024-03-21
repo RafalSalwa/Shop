@@ -65,9 +65,9 @@ final readonly class ProductStockService
         }
 
         if (1 === $entity->getUnitsInStock()) {
-            $stockDepletedEvent = new StockDepletedEvent($entity);
-            $this->eventDispatcher->dispatch($stockDepletedEvent);
+            $this->eventDispatcher->dispatch(new StockDepletedEvent($entity));
         }
+
         $newQty = $entity->getUnitsInStock() - $qty;
         $this->productRepository->updateStock($entity, $newQty);
 
@@ -79,7 +79,7 @@ final readonly class ProductStockService
         $sharedLock = $this->productLockFactory->createLock('product-stock_increase');
         $sharedLock->acquire(true);
 
-        $newQty = $entity->getUnitsInStock() - $qty;
+        $newQty = $entity->getUnitsInStock() + $qty;
         $this->productRepository->updateStock($entity, $newQty);
 
         $sharedLock->release();

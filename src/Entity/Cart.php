@@ -24,7 +24,7 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use function bcadd;
-use function is_null;
+use function is_int;
 use function sprintf;
 
 #[Entity(repositoryClass: CartRepository::class)]
@@ -100,7 +100,7 @@ class Cart implements JsonSerializable
         $newItem->setCart($this);
     }
 
-    public function itemExists(CartItemInterface $cartItem): bool
+    public function itemExists(CartItemInterface $search): bool
     {
         if (0 === $this->getItems()->count()) {
             return false;
@@ -108,9 +108,8 @@ class Cart implements JsonSerializable
 
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $element): bool => $key &&
-                    $element->getReferencedEntity()->getId() === $cartItem->getReferencedEntity()->getId() &&
-                    $element->getReferencedEntity()->getName() === $cartItem->getReferencedEntity()->getName(),
+                static fn (int $key, CartItemInterface $item): bool => is_int($key) &&
+                        $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
             );
     }
 
@@ -222,11 +221,9 @@ class Cart implements JsonSerializable
         return $this->status;
     }
 
-    public function setStatus(CartStatus $status): self
+    public function setStatus(CartStatus $status): void
     {
         $this->status = $status;
-
-        return $this;
     }
 
     public function applyCoupon(CouponCode $coupon): void
@@ -240,7 +237,7 @@ class Cart implements JsonSerializable
         if (null === $this->couponType) {
             return null;
         }
-        if (false === is_null($this->coupon)) {
+        if (null !== $this->coupon) {
             return $this->coupon;
         }
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);

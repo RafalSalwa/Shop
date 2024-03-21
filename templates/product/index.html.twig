@@ -125,7 +125,7 @@
                         </div>
                     </div>
                     {% for product in paginator.getResults() %}
-                        {% include "product/partials/card.html.twig" %}
+                        {% include "product/partials/card.html.twig" with {'product': product} %}
                     {% endfor %}
                     {% include "pagination/paginator.html.twig" %}
 

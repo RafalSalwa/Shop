@@ -8,12 +8,17 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
+/**
+ * @template T
+ * @extends  AbstractType<T>
+ */
 final class RegistrationConfirmationFormType extends AbstractType
 {
     /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setDisabled($options['disabled'])
             ->add('confirmationCode')
         ;
     }

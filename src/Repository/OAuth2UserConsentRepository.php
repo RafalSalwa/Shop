@@ -22,25 +22,15 @@ final class OAuth2UserConsentRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, OAuth2UserConsent::class);
     }
 
-    public function add(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
+    public function add(OAuth2UserConsent $oAuth2UserConsent): void
     {
         $this->getEntityManager()->persist($oAuth2UserConsent);
-
-        if (false === $flush) {
-            return;
-        }
-
         $this->getEntityManager()->flush();
     }
 
-    public function remove(OAuth2UserConsent $oAuth2UserConsent, bool $flush = false): void
+    public function remove(OAuth2UserConsent $oAuth2UserConsent): void
     {
         $this->getEntityManager()->remove($oAuth2UserConsent);
-
-        if (false === $flush) {
-            return;
-        }
-
         $this->getEntityManager()->flush();
     }
 }

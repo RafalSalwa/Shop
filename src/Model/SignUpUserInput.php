@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+/** @psalm-api */
 final class SignUpUserInput
 {
     protected string $email = '';

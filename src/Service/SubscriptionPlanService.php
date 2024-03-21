@@ -10,19 +10,19 @@ use Doctrine\ORM\NonUniqueResultException;
 
 final readonly class SubscriptionPlanService
 {
-    public function __construct(private PlanRepository $subscriptionPlanRepository)
+    public function __construct(private PlanRepository $planRepository)
     {
     }
 
     /** @return array<SubscriptionPlan>|null */
     public function fetchAvailablePlans(): ?array
     {
-        return $this->subscriptionPlanRepository->fetchAvailablePlans();
+        return $this->planRepository->fetchAvailablePlans();
     }
 
     /** @throws NonUniqueResultException */
     public function findPlanById(int $id): ?SubscriptionPlan
     {
-        return $this->subscriptionPlanRepository->findById($id);
+        return $this->planRepository->findById($id);
     }
 }

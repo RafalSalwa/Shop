@@ -25,6 +25,4 @@ interface ShopUserInterface extends UserInterface, OAuth2UserInterface
     public function setToken(Token $token): void;
 
     public function setRefreshToken(Token $refreshToken): void;
-
-    public function setAuthCode(string $code): void;
 }

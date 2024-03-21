@@ -135,11 +135,11 @@ grumphp:
       output: null
       triggered_by: [ php ]
     phparkitect:
-      config: reports/config/phparkitect.php
+      config: config/analysis/phparkitect.php
       target_php_version: "8.2"
       stop_on_failure: false
     phpcs:
-      standard: [ 'reports/config/phpcs.xml' ]
+      standard: [ 'config/analysis/phpcs.xml' ]
       severity: ~
       error_severity: ~
       warning_severity: ~
@@ -265,6 +265,7 @@ grumphp:
         - eslint
         - jsonlint
         - phparkitect
+        - phpcs
         - phplint
         - phpmnd
         - phpunit

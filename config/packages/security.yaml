@@ -28,13 +28,6 @@ security:
       custom_authenticators:
         - App\Security\AuthApiFormAuthenticator
         - App\Security\AuthApiTokenAuthenticator
-
-      #      form_login:
-      #        login_path: app_login
-      #        check_path: app_login
-      #        enable_csrf: true
-      #        default_target_path: app_index
-      #        use_referer: true
       logout:
         path: login_logout
         target: login_index

@@ -21,12 +21,18 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Traversable;
 use function iterator_to_array;
 
+/**
+ * @template T
+ * @extends  AbstractType<T>
+ */
 final class RegistrationFormType extends AbstractType implements DataMapperInterface
 {
     /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setDisabled($options['disabled'])
+            ->setDataMapper($this)
             ->add(
                 'email',
                 EmailType::class,
@@ -34,7 +40,7 @@ final class RegistrationFormType extends AbstractType implements DataMapperInter
                     'mapped' => false,
                     'attr' => ['autocomplete' => 'username'],
                 ],
-            )->setDataMapper($this)
+            )
             ->add(
                 'agreeTerms',
                 CheckboxType::class,

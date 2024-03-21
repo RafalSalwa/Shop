@@ -41,6 +41,12 @@ class OAuth2UserConsent
     #[ORM\Column]
     private int $userId;
 
+    public function __construct(int $userId, Client $client)
+    {
+        $this->userId = $userId;
+        $this->client = $client;
+    }
+
     public function getId(): int|null
     {
         return $this->id;

@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Order;
 use App\Form\PaymentType;
+use App\Model\User;
 use App\Service\CalculatorService;
 use App\Service\OrderService;
 use App\Workflow\OrderWorkflow;
@@ -20,7 +21,7 @@ use function dd;
 
 #[asController]
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
-#[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
+#[IsGranted(attribute: 'ROLE_USER', statusCode: 401)]
 final class OrderController extends AbstractShopController
 {
     #[Route(path: '/create/', name: 'create_pending', methods: ['POST'])]
@@ -34,14 +35,14 @@ final class OrderController extends AbstractShopController
         }
 
         return $this->redirectToRoute(
-            'order_show',
+            'order_pending',
             [
                 'id' => $pendingOrder->getId(),
             ],
         );
     }
 
-    #[Route(path: '/pending/{id}', name: 'show', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
+    #[Route(path: '/pending/{id}', name: 'pending', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function pending(Request $request, Order $order, OrderWorkflow $orderWorkflow): Response
     {
         $this->denyAccessUnlessGranted('view', $order, 'Access denied: You can only view pending orders.');
@@ -86,7 +87,7 @@ final class OrderController extends AbstractShopController
     #[Route(path: '/orders/{page<\d+>}', name: 'index')]
     public function index(int $page, #[CurrentUser] User $user, OrderService $service): Response
     {
-        $orders = $service->fetchOrders($user, $page);
+        $orders = $service->fetchOrders($user->getId(), $page);
 
         return $this->render(
             'order/index.html.twig',

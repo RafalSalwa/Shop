@@ -6,9 +6,7 @@ namespace App\Service;
 
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\CartStatus;
-use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\ItemNotFoundException;
@@ -18,7 +16,6 @@ use App\Storage\CartSessionStorage;
 use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
-use function is_subclass_of;
 use function sprintf;
 
 final readonly class CartService
@@ -138,9 +135,6 @@ final readonly class CartService
         $this->stockService->checkStockIsAvailable($cartItem);
         $cart->addItem($cartItem);
 
-        if (true === is_subclass_of($cartItem, StockManageableInterface::class)) {
-            $this->stockService->changeStock($cartItem, StockOperation::Decrease, $cartItem->getQuantity());
-        }
         $this->save($cart);
         $lock->release();
     }

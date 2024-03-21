@@ -21,7 +21,7 @@ final class AuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         $this->logger->info($authException ?? new AuthenticationException());
-        $request->getSession()->getFlashBag()->add('info', 'Authentication error');
+        $request->getSession()->getFlashBag()->add('info', 'You have to login in order to access this page.');
 
         return new RedirectResponse($this->urlGenerator->generate('login_index'));
     }
