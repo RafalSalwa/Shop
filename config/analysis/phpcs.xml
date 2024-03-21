@@ -195,4 +195,5 @@
     <file>tests/</file>
     <exclude-pattern type="relative">*.(js|css|proto)</exclude-pattern>
     <exclude-pattern>*/src/Protobuf/*</exclude-pattern>
+    <exclude-pattern>*cli-config*</exclude-pattern>
 </ruleset>

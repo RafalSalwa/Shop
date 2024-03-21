@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Psalm 5.23.1@8471a896ccea3526b26d082f4461eeea467f10a4" time="6.03" failures="0" tests="5" errors="0">
+  <testsuite name="/tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php" failures="0" tests="1" errors="0">
+    <testcase name="/tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php" classname=".tmp.Psalmtemp_folder24131.src.Messenger.ExternalJsonMessageSerializer"/>
+  </testsuite>
+  <testsuite name="../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php" failures="0" tests="4" errors="0">
+    <testcase name="PossiblyUndefinedStringArrayOffset at ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php (22:29)" classname=".....................tmp.Psalmtemp_folder24131.src.Messenger.ExternalJsonMessageSerializer">
+      <skipped>info: PossiblyUndefinedStringArrayOffset - ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php:22:29 - Possibly undefined array offset ''body'' is risky given expected type 'array-key'. Consider using isset beforehand.
+22:        return new Envelope($encodedEnvelope['body']);
+</skipped>
+    </testcase>
+    <testcase name="MixedArgument at ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php (22:29)" classname=".....................tmp.Psalmtemp_folder24131.src.Messenger.ExternalJsonMessageSerializer">
+      <skipped>info: MixedArgument - ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php:22:29 - Argument 1 of Symfony\Component\Messenger\Envelope::__construct cannot be mixed, expecting object
+22:        return new Envelope($encodedEnvelope['body']);
+</skipped>
+    </testcase>
+    <testcase name="InvalidReturnType at ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php (26:16)" classname=".....................tmp.Psalmtemp_folder24131.src.Messenger.ExternalJsonMessageSerializer">
+      <skipped>info: InvalidReturnType - ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php:26:16 - The declared return type 'array&lt;string, string&gt;' for App\Messenger\ExternalJsonMessageSerializer::encode is incorrect, got 'array{body: non-empty-string, headers: array{stamps: string}}'
+26:     * @return array&lt;string,string&gt;
+</skipped>
+    </testcase>
+    <testcase name="InvalidReturnStatement at ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php (42:16)" classname=".....................tmp.Psalmtemp_folder24131.src.Messenger.ExternalJsonMessageSerializer">
+      <skipped>info: InvalidReturnStatement - ../../../../../../../tmp/Psalmtemp_folder24131/src/Messenger/ExternalJsonMessageSerializer.php:42:16 - The inferred type 'array{body: non-empty-string, headers: array{stamps: string}}' does not match the declared return type 'array&lt;string, string&gt;' for App\Messenger\ExternalJsonMessageSerializer::encode
+42:        return [
+43:            'body' =&gt; json_encode($message, JSON_THROW_ON_ERROR),
+44:            'headers' =&gt; [
+45:                'stamps' =&gt; serialize($allStamps),
+46:            ],
+47:        ];
+</skipped>
+    </testcase>
+  </testsuite>
+</testsuites>

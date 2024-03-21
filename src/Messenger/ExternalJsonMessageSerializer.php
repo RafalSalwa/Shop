@@ -6,6 +6,7 @@ namespace App\Messenger;
 
 use App\Messenger\Message\AMQPMessage;
 use Exception;
+use JsonException;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 use function array_merge;
@@ -23,7 +24,8 @@ final class ExternalJsonMessageSerializer implements SerializerInterface
 
     /**
      * @return array<string,string>
-     * @throws \JsonException
+     *
+     * @throws JsonException
      */
     public function encode(Envelope $envelope): array
     {
