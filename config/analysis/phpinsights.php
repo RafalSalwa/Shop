@@ -61,15 +61,9 @@ return [
 
     'exclude' => ['src/Protobuf'],
 
-    'add' => [
-        //  ExampleMetric::class => [
-        //      ExampleInsight::class,
-        //  ]
-    ],
+    'add' => [],
 
-    'remove' => [
-        //  ExampleInsight::class,
-    ],
+    'remove' => [],
 
     'config' => [
         PropertyTypeHintSniff::class => [
@@ -117,11 +111,11 @@ return [
     */
 
     'requirements' => [
-        //        'min-quality' => 0,
-        //        'min-complexity' => 0,
-        //        'min-architecture' => 0,
-        //        'min-style' => 0,
-        //        'disable-security-check' => false,
+        'min-quality' => 70,
+        'min-complexity' => 70,
+        'min-architecture' => 70,
+        'min-style' => 70,
+        'disable-security-check' => false,
     ],
 
     /*

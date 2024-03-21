@@ -17,7 +17,7 @@ final readonly class CalculatorService
     public const FIRST_DISCOUNT_LIMIT = 50_00;
     public const FREE_DELIVERY_LIMIT = 150_00;
 
-    public function __construct(private ?string $taxRate = '23')
+    public function __construct(private string $taxRate = '23')
     {
     }
 
@@ -35,7 +35,7 @@ final readonly class CalculatorService
 
     private function calculateDiscount(int $netAmount, ?CouponCode $coupon): int
     {
-        if (true === is_null($coupon)) {
+        if (null === $coupon) {
             return 0;
         }
         if (false === $coupon->isCartDiscount()) {

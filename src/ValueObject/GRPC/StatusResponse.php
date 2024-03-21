@@ -14,14 +14,22 @@ final class StatusResponse
 {
     private int $code;
 
+    private string $details;
+
     public function __construct(stdClass $class)
     {
         $this->code = $class->code;
+        $this->details = $class->details;
     }
 
     public function getCode(): int
     {
         return $this->code;
+    }
+
+    public function getDetails(): string
+    {
+        return $this->details;
     }
 
     public function isOk(): bool

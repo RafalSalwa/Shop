@@ -69,7 +69,7 @@ final readonly class CartWorkflow
         try {
             $this->cartService->removeItem($cartItem);
             $this->productStockService->restoreStock($cartItem);
-            $this->cartService->save();
+            $this->cartService->save($this->cartService->getCurrentCart());
         } catch (ItemNotFoundException $exception) {
             $this->logger->error($exception->getMessage());
 
@@ -83,7 +83,7 @@ final readonly class CartWorkflow
         try {
             $coupon = $this->couponService->getCouponType($couponCode);
             $this->cartService->applyCoupon($coupon);
-            $this->cartService->save();
+            $this->cartService->save($this->cartService->getCurrentCart());
         } catch (InvalidCouponCodeException $exception) {
             $this->logger->error($exception->getMessage());
 

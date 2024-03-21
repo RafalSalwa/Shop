@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace App\Security;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use function dd;
 
 final class EmailVerifier
 {
     public function __construct(
         private readonly MailerInterface $mailer,
         private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly LoggerInterface $logger,
     ) {
     }
 
@@ -44,7 +45,7 @@ final class EmailVerifier
         try {
             $this->mailer->send($templatedEmail);
         } catch (TransportExceptionInterface $transportException) {
-            dd($transportException->getMessage());
+            $this->logger->critical($transportException->getMessage());
         }
     }
 }

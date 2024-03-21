@@ -40,9 +40,8 @@ final readonly class CartService
         foreach ($cart->getItems() as $item) {
             $cart->removeItem($item);
             $this->stockService->restoreStock($item);
-            $this->save($cart);
         }
-
+        $this->save($cart);
         $cart->getItems()->clear();
         $this->cartSessionStorage->removeCart();
     }
@@ -61,11 +60,8 @@ final readonly class CartService
     /**
      * Persists the cart in database and session.
      */
-    public function save(?Cart $cart = null): void
+    public function save(Cart $cart): void
     {
-        if (false === $cart instanceof Cart) {
-            $cart = $this->getCurrentCart();
-        }
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
@@ -115,10 +111,12 @@ final readonly class CartService
 
             $cart = $this->getCurrentCart();
             $cartItem = $cart->getItemById($itemId);
+
             $this->removeItem($cartItem);
             $cartItem->updateQuantity($quantity);
             $this->add($cartItem);
             $this->save($cart);
+
             $lock->release();
         } catch (ItemNotFoundException | ProductStockDepletedException $exception) {
             throw new CartOperationException(message: $exception->getMessage(), previous: $exception);

@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Entity\Address;
 use App\Repository\AddressRepository;
-use Doctrine\ORM\NonUniqueResultException;
 
 final readonly class AddressBookService
 {
@@ -25,13 +24,12 @@ final readonly class AddressBookService
         $this->addressRepository->setDefaultAddress($addressId, $userId);
     }
 
-    /** @return array<Address> */
+    /** @return list<Address> */
     public function getDeliveryAddresses(int $userId): array
     {
         return $this->addressRepository->findBy(['userId' => $userId]);
     }
 
-    /** @throws NonUniqueResultException */
     public function getDefaultDeliveryAddress(int $userId): ?Address
     {
         return $this->addressRepository->getDefaultForUser($userId);

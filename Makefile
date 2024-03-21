@@ -52,7 +52,7 @@ deptrac:
 
 .PHONY: phpstan
 phpstan: lint
-	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon src
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon src
 
 .PHONY: phpinsights
 phpinsights:
@@ -72,7 +72,7 @@ static_analysis: lint test_unit
 #	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=var/reports/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
-#	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
 #	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 #	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true

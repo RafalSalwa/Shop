@@ -51,7 +51,7 @@ final class UserApiGRPCClient
     }
 
     /** @return array<string, UnaryCall> */
-    public function getResponses(): ?array
+    public function getResponses(): array
     {
         if (0 === count($this->responses)) {
             return [];

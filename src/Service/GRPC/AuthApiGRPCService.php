@@ -6,13 +6,14 @@ namespace App\Service\GRPC;
 
 use App\Client\AuthClientInterface;
 use App\Client\GRPC\UserApiGRPCClient;
+use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\AuthException;
 use App\Model\GRPC\UserResponse;
 use App\Protobuf\Message\UserDetails;
+use Grpc\UnaryCall;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Throwable;
-use function dd;
-use function is_null;
+use function array_merge;
 
 final class AuthApiGRPCService
 {
@@ -22,13 +23,14 @@ final class AuthApiGRPCService
         private readonly RequestStack $requestStack,
         private readonly AuthClientInterface $authApiGRPCClient,
         private readonly UserApiGRPCClient $userApiGRPCClient,
+        private readonly LoggerInterface $logger,
     ) {}
 
     public function signInUser(string $email, string $password): void
     {
         $tokenPair = $this->authApiGRPCClient->signIn($email, $password);
         $user = $this->getUserCredentialsFromLastSignUp();
-        if (true === is_null($user)) {
+        if (null === $user) {
             return;
         }
 
@@ -50,8 +52,8 @@ final class AuthApiGRPCService
             );
 
             $this->setUserCredentialsFromLastSignUp($userResponse);
-        } catch (Throwable $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
+        } catch (AuthenticationExceptionInterface $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 
@@ -64,8 +66,8 @@ final class AuthApiGRPCService
             if (null !== $userResponse) {
                 $this->setUserCredentialsFromLastSignUp($userResponse->withIsVerified(true));
             }
-        } catch (AuthException $e) {
-            dd($e->getMessage(), $e->getTraceAsString());
+        } catch (AuthException $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 
@@ -79,10 +81,10 @@ final class AuthApiGRPCService
         $this->requestStack->getSession()->set(self::GRPC_USER_KEY, $arrUser);
     }
 
-    /** @return array<string,string>|null */
-    public function getResponses(): ?array
+    /** @return array<string,UnaryCall> */
+    public function getResponses(): array
     {
-        return $this->authApiGRPCClient->getResponses() + $this->userApiGRPCClient->getResponses();
+        return array_merge($this->authApiGRPCClient->getResponses(), $this->userApiGRPCClient->getResponses());
     }
 
     public function getUserDetails(string $token): ?UserDetails

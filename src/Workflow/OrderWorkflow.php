@@ -6,11 +6,13 @@ namespace App\Workflow;
 
 use App\Entity\Order;
 use App\Enum\PaymentProvider;
+use App\Exception\ItemNotFoundException;
+use App\Exception\OrderOperationException;
+use App\Exception\ProductStockDepletedException;
 use App\Service\CartService;
 use App\Service\OrderService;
 use App\Service\PaymentService;
-use Throwable;
-use function dd;
+use ValueError;
 
 final readonly class OrderWorkflow
 {
@@ -21,6 +23,10 @@ final readonly class OrderWorkflow
     ) {
     }
 
+    /**
+     * @throws ProductStockDepletedException
+     * @throws OrderOperationException
+     */
     public function createPendingOrder(string $paymentOperator): Order
     {
         try {
@@ -31,8 +37,10 @@ final readonly class OrderWorkflow
             $this->cartService->clearCart();
 
             return $order;
-        } catch (Throwable $exception) {
-            dd($exception->getMessage(), $exception::class, $exception->getTraceAsString());
+        } catch (ItemNotFoundException $exception) {
+            throw new OrderOperationException($exception->getMessage(), $exception->getCode(), $exception);
+        } catch (ValueError $exception) {
+            throw new OrderOperationException('Wrong payment type provided', $exception->getCode(), $exception);
         }
     }
 

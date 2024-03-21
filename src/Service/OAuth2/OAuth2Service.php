@@ -14,7 +14,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use function array_diff;
 use function array_merge;
 use function assert;
-use function is_null;
 use function is_subclass_of;
 
 final readonly class OAuth2Service
@@ -33,11 +32,10 @@ final readonly class OAuth2Service
         $userScopes = [];
 
         $userConsents = $user->getConsents();
-        if (false === is_null($userConsents)) {
-            $userConsents = $userConsents->filter(
+        if (null !== $userConsents) {
+            $consent = $userConsents->filter(
                 static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
-            );
-            $consent = $userConsents->first();
+            )->first();
             $userScopes = ($consent ?? []);
         }
 

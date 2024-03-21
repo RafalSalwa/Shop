@@ -8,11 +8,10 @@ use App\Entity\Cart;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
 use App\Event\OrderConfirmedEvent;
+use App\Exception\ItemNotFoundException;
 use App\Factory\OrderItemFactory;
 use App\Pagination\Paginator;
 use App\Repository\OrderRepository;
-use Doctrine\ORM\NonUniqueResultException;
-use RuntimeException;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -53,12 +52,12 @@ final readonly class OrderService
         return $order;
     }
 
-    /** @throws NonUniqueResultException */
+    /** @throws ItemNotFoundException */
     private function assignDeliveryAddress(Order $order): void
     {
         $address = $this->addressBookService->getDefaultDeliveryAddress($order->getUserId());
         if (null === $address) {
-            throw new RuntimeException('There is no Address in AddressBook');
+            throw new ItemNotFoundException('There is no Address in AddressBook');
         }
         $order->setDeliveryAddress($address);
         $order->setBilingAddress($address);

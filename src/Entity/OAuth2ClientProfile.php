@@ -49,11 +49,9 @@ class OAuth2ClientProfile
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getDescription(): string|null
@@ -61,10 +59,8 @@ class OAuth2ClientProfile
         return $this->description;
     }
 
-    public function setDescription(string|null $description): self
+    public function setDescription(string|null $description): void
     {
         $this->description = $description;
-
-        return $this;
     }
 }

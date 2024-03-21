@@ -38,7 +38,8 @@ final readonly class Summary
     {
         $subTotal = $this->net;
         if (0 !== $this->discount) {
-            $subTotal = bcsub((string)$this->net, (string)$this->discount, 2);
+            $subDiscounted = bcsub((string)$this->net, (string)$this->discount, 2);
+            $subTotal = (int)$subDiscounted;
         }
 
         return (int)bcadd((string)$subTotal, (string)$this->tax);

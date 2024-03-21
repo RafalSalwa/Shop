@@ -5,19 +5,20 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Exception\Contracts\OrderOperationExceptionInterface;
 use App\Form\PaymentType;
 use App\Model\User;
+use App\Requests\PaymentTypeRequest;
 use App\Service\CalculatorService;
 use App\Service\OrderService;
 use App\Workflow\OrderWorkflow;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Throwable;
-use function dd;
 
 #[asController]
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
@@ -25,13 +26,17 @@ use function dd;
 final class OrderController extends AbstractShopController
 {
     #[Route(path: '/create/', name: 'create_pending', methods: ['POST'])]
-    public function createPendingOrder(Request $request, OrderWorkflow $orderWorkflow): Response
-    {
+    public function createPendingOrder(
+        #[MapRequestPayload]
+        PaymentTypeRequest $paymentType,
+        OrderWorkflow $orderWorkflow,
+    ): Response {
         try {
-            $paymentType = $request->request->get('payment');
-            $pendingOrder = $orderWorkflow->createPendingOrder($paymentType);
-        } catch (Throwable $e) {
-            dd($e->getMessage(), $e->getCode(), $e->getTraceAsString());
+            $pendingOrder = $orderWorkflow->createPendingOrder($paymentType->getPaymentType());
+        } catch (OrderOperationExceptionInterface $exception) {
+            $this->addFlash('error', $exception->getMessage());
+
+            return $this->redirectToRoute('checkout_index');
         }
 
         return $this->redirectToRoute(

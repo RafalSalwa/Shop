@@ -96,11 +96,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->unitsInStock;
     }
 
-    public function setUnitsInStock(int $unitsInStock): self
+    public function setUnitsInStock(int $unitsInStock): void
     {
         $this->unitsInStock = $unitsInStock;
-
-        return $this;
     }
 
     public function getUnitsOnOrder(): int
@@ -108,11 +106,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->unitsOnOrder;
     }
 
-    public function setUnitsOnOrder(int $unitsOnOrder): self
+    public function setUnitsOnOrder(int $unitsOnOrder): void
     {
         $this->unitsOnOrder = $unitsOnOrder;
-
-        return $this;
     }
 
     public function decreaseStock(int $quantity): void

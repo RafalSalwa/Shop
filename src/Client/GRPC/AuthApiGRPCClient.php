@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Client\GRPC;
 
 use App\Client\AuthClientInterface;
+use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\AuthException;
+use App\Exception\Factory\AuthApiGRPCExceptionFactory;
 use App\Model\TokenPair;
 use App\Protobuf\Message\SignInUserInput;
 use App\Protobuf\Message\SignInUserResponse;
 use App\Protobuf\Message\SignUpUserInput;
+use App\Protobuf\Message\SignUpUserResponse;
 use App\Protobuf\Message\VerificationCodeRequest;
 use App\Protobuf\Message\VerificationCodeResponse;
 use App\Protobuf\Message\VerifyUserRequest;
@@ -39,6 +42,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         );
     }
 
+    /** @throws AuthException */
     public function signIn(string $email, string $password): TokenPair
     {
         $signInUserInput = new SignInUserInput();
@@ -58,6 +62,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         return new TokenPair(new Token($userResponse->getAccessToken()), new Token($userResponse->getRefreshToken()));
     }
 
+    /** @throws AuthenticationExceptionInterface */
     public function signUp(string $email, string $password): void
     {
         $signUpUserInput = new SignUpUserInput();
@@ -67,6 +72,13 @@ final class AuthApiGRPCClient implements AuthClientInterface
 
         $arrResponse = $this->authServiceClient->SignUpUser($signUpUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
+
+        $statusResponse = new StatusResponse($arrResponse[1]);
+        if (false === $statusResponse->isOk()) {
+            throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+        }
+        $userResponse = $arrResponse[0];
+        assert($userResponse instanceof SignUpUserResponse);
     }
 
     /** @throws AuthException */
@@ -107,8 +119,8 @@ final class AuthApiGRPCClient implements AuthClientInterface
         }
     }
 
-    /** @return array<string, UnaryCall>|null */
-    public function getResponses(): ?array
+    /** @return array<string, UnaryCall> */
+    public function getResponses(): array
     {
         if (0 === count($this->responses)) {
             return [];
