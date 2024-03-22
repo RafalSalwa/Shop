@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: CalculatorService::class)]
 #[UsesClass(className: Summary::class)]
 #[UsesClass(className: CouponCode::class)]
-class CalculatorServiceTest extends TestCase
+final class CalculatorServiceTest extends TestCase
 {
     public function testCalculateSummaryNoCoupon(): void
     {
