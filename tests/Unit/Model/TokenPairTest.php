@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Unit\Model;
 
@@ -15,7 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: TokenPair::class)]
 #[UsesClass(className: Token::class)]
-class TokenPairTest extends TestCase
+final class TokenPairTest extends TestCase
 {
     private string $token;
 

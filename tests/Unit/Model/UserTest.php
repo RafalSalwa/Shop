@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Tests\Unit\Model;
+declare(strict_types=1);
 
-namespace App\Tests\Model;
+namespace App\Tests\Unit\Model;
 
 use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\OAuth2UserConsent;
@@ -31,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: Subscription::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
-class UserTest extends TestCase
+final class UserTest extends TestCase
 {
     private string $token;
 
