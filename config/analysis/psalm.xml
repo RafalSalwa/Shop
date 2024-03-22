@@ -50,7 +50,7 @@
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Orklah\PsalmInsaneComparison\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="DQ5Studios\PsalmJunit\Plugin">
-            <filepath>../results/psalm_junit_report.xml</filepath>
+            <filepath>../../var/reports/psalm_junit_report.xml</filepath>
             <always/>
         </pluginClass>
     </plugins>
