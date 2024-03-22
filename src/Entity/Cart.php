@@ -93,10 +93,8 @@ class Cart implements JsonSerializable
             throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $newItem->getName()));
         }
         $this->removeItem($currentItem);
-        $newItem->updateQuantity(
-            $newItem->getQuantity() + $currentItem->getQuantity(),
-        );
-        $this->getItems()->add($newItem);
+        $currentItem->updateQuantity($newItem->getQuantity() + $currentItem->getQuantity());
+        $this->getItems()->add($currentItem);
         $newItem->setCart($this);
     }
 

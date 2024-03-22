@@ -13,11 +13,16 @@ use League\OAuth2\Server\Entities\Traits\TokenEntityTrait;
 
 final class AccessToken implements AccessTokenEntityInterface
 {
+    public function __construct(string $privateJWTKey)
+    {
+        $this->privateKey = $privateJWTKey;
+    }
+
     use AccessTokenTrait;
     use EntityTrait;
     use TokenEntityTrait;
 
-    private function convert(): UnencryptedToken
+    public function convert(): UnencryptedToken
     {
         $this->initJwtConfiguration();
 
