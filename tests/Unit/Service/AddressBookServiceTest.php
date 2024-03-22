@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
 
@@ -12,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: AddressBookService::class)]
 #[UsesClass(className: AddressRepository::class)]
 #[UsesClass(className: Address::class)]
-class AddressBookServiceTest extends TestCase
+final class AddressBookServiceTest extends TestCase
 {
     public function testSaveAddress(): void
     {
@@ -21,16 +22,27 @@ class AddressBookServiceTest extends TestCase
             ->method('save')
             ->willReturnCallback(function (Address $address) {
                 $this->assertEquals(1, $address->getUserId());
-                $this->assertEquals('Test Street', $address->getStreet());
-                // Add more assertions if needed
+                $this->assertEquals('Test Street', $address->getAddressLine1());
+                $this->assertEquals('Test Street 2', $address->getAddressLine2());
+                $this->assertEquals('Test City', $address->getCity());
+                $this->assertEquals('Test State', $address->getState());
+                $this->assertEquals('Test Zip', $address->getPostalCode());
+                $this->assertEquals('Test Country', $address->getCountry());
+                $this->assertTrue($address->isDefault());
             });
 
         $addressService = new AddressBookService($addressRepositoryMock);
 
         $address = new Address();
+        $address->setId(1);
         $address->setUserId(1);
-        $address->setStreet('Test Street');
-
+        $address->setAddressLine1('Test Street');
+        $address->setAddressLine2('Test Street 2');
+        $address->setCity('Test City');
+        $address->setState('Test State');
+        $address->setPostalCode('Test Zip');
+        $address->setCountry('Test Country');
+        $address->setDefault(true);
         $addressService->save($address);
     }
 
