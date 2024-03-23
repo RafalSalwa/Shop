@@ -36,15 +36,18 @@ jobs:
     steps:
       # Checkout the repository to the GitHub Actions runner
       - name: Checkout code
-        uses: actions/checkout@v3
-        
+        uses: actions/checkout@v4
+
       - name: Setup PHP with fail-fast
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
-          
+          extensions: amqp, ast, bcmath, ctype, grpc, iconv, mbstring, xml
+          coverage: pcov
+          tools: composer
+
       - uses: "ramsey/composer-install@v2"
-      
+
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@d840f886c4bd4edc059706d09c6a1586111c540b
@@ -60,6 +63,9 @@ jobs:
           # Force 0 exit code to allow SARIF file generation
           # This will handover control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
+        run: |
+          make test_unit
+          bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r var/reports/phpunit.clover.xml
 
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
