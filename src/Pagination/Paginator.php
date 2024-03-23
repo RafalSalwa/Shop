@@ -24,6 +24,7 @@ use function is_null;
 use function max;
 use function min;
 
+/** @psalm-api */
 final class Paginator
 {
     /**
@@ -34,9 +35,9 @@ final class Paginator
      */
     public const PAGE_SIZE = 15;
 
-    private int $currentPage;
+    private int $currentPage = 1;
 
-    private int $numResults;
+    private int $numResults = 0;
 
     /** @var Traversable<int, object> */
     private Traversable $traversable;

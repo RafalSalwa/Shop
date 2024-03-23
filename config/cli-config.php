@@ -12,20 +12,17 @@ use Symfony\Component\Dotenv\Dotenv;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 // replace with mechanism to retrieve EntityManager in your app
-function GetEntityManager()
+function getEntityManager()
 {
     (new Dotenv())->bootEnv(__DIR__ . '/../.env');
 
     $kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
     $kernel->boot();
 
-    return $kernel->getContainer()
-        ->get('doctrine')
-        ->getManager()
-            ;
+    return $kernel->getContainer()->get('doctrine')->getManager();
 }
 
-$entityManager = GetEntityManager();
+$entityManager = getEntityManager();
 
 $commands = [];
 

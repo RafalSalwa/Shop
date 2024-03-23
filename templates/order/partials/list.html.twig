@@ -11,7 +11,7 @@
     <tbody class="align-middle items-table-body">
     {% for order in paginator.results %}
         {% if order.getStatus() == constant('App\\Entity\\Order::PENDING') %}
-            {% set redirect_uri = path("order_show", {id: order.id}) %}
+            {% set redirect_uri = path("order_pending", {id: order.id}) %}
         {% else %}
             {% set redirect_uri = path("order_details", {id: order.id}) %}
         {% endif %}

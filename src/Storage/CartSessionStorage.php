@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use function assert;
+use function is_a;
+use function is_subclass_of;
 
 final class CartSessionStorage
 {
@@ -46,7 +48,7 @@ final class CartSessionStorage
     private function getUser(): ShopUserInterface
     {
         $user = $this->security->getUser();
-        assert($user instanceof ShopUserInterface);
+        assert(is_subclass_of($user, ShopUserInterface::class));
 
         return $user;
     }
@@ -54,7 +56,7 @@ final class CartSessionStorage
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        assert($request instanceof Request);
+        assert(is_a($request, Request::class));
         if (true === $this->security->getFirewallConfig($request)?->isStateless()) {
             return;
         }

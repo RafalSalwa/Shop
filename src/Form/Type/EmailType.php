@@ -13,6 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 use function iterator_to_array;
 
+/** @template-extends AbstractType<string> */
 final class EmailType extends AbstractType implements DataMapperInterface
 {
     /** @param Traversable<int, FormInterface> $forms */

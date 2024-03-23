@@ -99,11 +99,9 @@ class Subscription
         return $this->isActive;
     }
 
-    public function setIsActive(bool $isActive): self
+    public function setIsActive(bool $isActive): void
     {
         $this->isActive = $isActive;
-
-        return $this;
     }
 
     public function getCreatedAt(): DateTimeImmutable
@@ -111,11 +109,9 @@ class Subscription
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTimeImmutable $createdAt): self
+    public function setCreatedAt(DateTimeImmutable $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getStartsAt(): DateTime|null
@@ -123,11 +119,9 @@ class Subscription
         return $this->startsAt;
     }
 
-    public function setStartsAt(DateTime|null $startsAt): self
+    public function setStartsAt(DateTime|null $startsAt): void
     {
         $this->startsAt = $startsAt;
-
-        return $this;
     }
 
     public function getEndsAt(): DateTime|null
@@ -135,11 +129,9 @@ class Subscription
         return $this->endsAt;
     }
 
-    public function setEndsAt(DateTime|null $endsAt): self
+    public function setEndsAt(DateTime|null $endsAt): void
     {
         $this->endsAt = $endsAt;
-
-        return $this;
     }
 
     public function getRequiredLevel(): int
@@ -152,11 +144,9 @@ class Subscription
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     #[PrePersist]

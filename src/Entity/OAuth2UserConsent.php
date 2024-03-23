@@ -41,6 +41,12 @@ class OAuth2UserConsent
     #[ORM\Column]
     private int $userId;
 
+    public function __construct(int $userId, Client $client)
+    {
+        $this->userId = $userId;
+        $this->client = $client;
+    }
+
     public function getId(): int|null
     {
         return $this->id;
@@ -51,11 +57,9 @@ class OAuth2UserConsent
         return $this->created;
     }
 
-    public function setCreated(DateTimeImmutable $created): self
+    public function setCreated(DateTimeImmutable $created): void
     {
         $this->created = $created;
-
-        return $this;
     }
 
     public function getExpires(): DateTimeImmutable|null
@@ -63,11 +67,9 @@ class OAuth2UserConsent
         return $this->expires;
     }
 
-    public function setExpires(DateTimeImmutable|null $expires): self
+    public function setExpires(DateTimeImmutable|null $expires): void
     {
         $this->expires = $expires;
-
-        return $this;
     }
 
     /** @return array<string> */
@@ -76,11 +78,9 @@ class OAuth2UserConsent
         return $this->scopes;
     }
 
-    public function setScopes(array|null $scopes): self
+    public function setScopes(array|null $scopes): void
     {
         $this->scopes = $scopes;
-
-        return $this;
     }
 
     public function getIpAddress(): string|null
@@ -88,11 +88,9 @@ class OAuth2UserConsent
         return $this->ipAddress;
     }
 
-    public function setIpAddress(string|null $ipAddress): self
+    public function setIpAddress(string|null $ipAddress): void
     {
         $this->ipAddress = $ipAddress;
-
-        return $this;
     }
 
     public function getClient(): Client|null
@@ -100,10 +98,8 @@ class OAuth2UserConsent
         return $this->client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(Client $client): void
     {
         $this->client = $client;
-
-        return $this;
     }
 }

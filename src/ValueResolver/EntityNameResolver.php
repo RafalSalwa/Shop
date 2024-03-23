@@ -7,20 +7,21 @@ namespace App\ValueResolver;
 use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
 use InvalidArgumentException;
+use function array_key_exists;
 
 final class EntityNameResolver
 {
     public function resolve(string $entityType): string
     {
-        $entityTypeMap = [
+        $entitiesMap = [
             'product' => Product::class,
             'plan' => SubscriptionPlan::class,
         ];
 
-        if (false === isset($entityTypeMap[$entityType])) {
+        if (false === array_key_exists($entityType, $entitiesMap)) {
             throw new InvalidArgumentException('Unknown entity type: ' . $entityType);
         }
 
-        return $entityTypeMap[$entityType];
+        return $entitiesMap[$entityType];
     }
 }

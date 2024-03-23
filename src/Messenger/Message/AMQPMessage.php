@@ -52,11 +52,9 @@ final class AMQPMessage implements JsonSerializable
         return $this->id;
     }
 
-    public function setId(int $id): self
+    public function setId(int $id): void
     {
         $this->id = $id;
-
-        return $this;
     }
 
     public function getName(): string
@@ -64,11 +62,9 @@ final class AMQPMessage implements JsonSerializable
         return $this->name;
     }
 
-    public function setName(string $name): self
+    public function setName(string $name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
     public function getSequenceId(): string
@@ -76,11 +72,9 @@ final class AMQPMessage implements JsonSerializable
         return $this->sequenceId;
     }
 
-    public function setSequenceId(string $sequenceId): self
+    public function setSequenceId(string $sequenceId): void
     {
         $this->sequenceId = $sequenceId;
-
-        return $this;
     }
 
     public function getTimestamp(): string
@@ -88,11 +82,9 @@ final class AMQPMessage implements JsonSerializable
         return $this->timestamp;
     }
 
-    public function setTimestamp(string $timestamp): self
+    public function setTimestamp(string $timestamp): void
     {
         $this->timestamp = $timestamp;
-
-        return $this;
     }
 
     public function getContent(): string
@@ -100,11 +92,9 @@ final class AMQPMessage implements JsonSerializable
         return $this->content;
     }
 
-    public function setContent(string $content): self
+    public function setContent(string $content): void
     {
         $this->content = $content;
-
-        return $this;
     }
 
     public function getPersist(): string
@@ -112,10 +102,8 @@ final class AMQPMessage implements JsonSerializable
         return $this->persist;
     }
 
-    public function setPersist(string $persist): self
+    public function setPersist(string $persist): void
     {
         $this->persist = $persist;
-
-        return $this;
     }
 }

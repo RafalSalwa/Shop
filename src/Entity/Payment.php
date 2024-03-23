@@ -86,21 +86,9 @@ class Payment
         return $this->id;
     }
 
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
     public function getOperationNumber(): string|null
     {
         return $this->operationNumber;
-    }
-
-    public function setOperationNumber(string|null $operationNumber): self
-    {
-        $this->operationNumber = $operationNumber;
-
-        return $this;
     }
 
     public function getOperationType(): PaymentProvider
@@ -118,11 +106,9 @@ class Payment
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(string $status): void
     {
         $this->status = $status;
-
-        return $this;
     }
 
     public function getPaymentDate(): DateTime
@@ -130,11 +116,9 @@ class Payment
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(DateTime $paymentDate): self
+    public function setPaymentDate(DateTime $paymentDate): void
     {
         $this->paymentDate = $paymentDate;
-
-        return $this;
     }
 
     public function getCreatedAt(): DateTime
@@ -142,11 +126,9 @@ class Payment
         return $this->createdAt;
     }
 
-    public function setCreatedAt(DateTime $createdAt): self
+    public function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
-
-        return $this;
     }
 
     public function getUserId(): int

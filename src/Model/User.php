@@ -11,11 +11,10 @@ use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use JsonSerializable;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-final class User implements JsonSerializable, UserInterface, ShopUserInterface, EquatableInterface
+final class User implements UserInterface, ShopUserInterface, EquatableInterface
 {
     private EmailAddress $email;
 
@@ -23,9 +22,7 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
 
     private ?Token $refreshToken = null;
 
-    private readonly string $authCode;
-
-    private Subscription $subscription;
+    private ?Subscription $subscription = null;
 
     /**
      * Roles property to meet User requirements.
@@ -40,7 +37,6 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
     public function __construct(
         private readonly int $id,
         string $email,
-        ?string $authCode = null,
         ?string $token = null,
         ?string $refreshToken = null,
     ) {
@@ -52,16 +48,8 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
         if (null !== $refreshToken) {
             $this->setRefreshToken(new Token($refreshToken));
         }
-        if (null !== $authCode) {
-            $this->setAuthCode($authCode);
-        }
         $this->consents = new ArrayCollection();
         $this->setRoles(['ROLE_USER']);
-    }
-
-    public function setAuthCode(string $code): void
-    {
-        $this->authCode = $code;
     }
 
     public function getUserIdentifier(): string
@@ -90,17 +78,9 @@ final class User implements JsonSerializable, UserInterface, ShopUserInterface, 
         $this->roles = $roles;
     }
 
-    public function jsonSerialize(): mixed
-    {
-        return [
-            'id' => $this->id,
-            'email' => $this->email,
-        ];
-    }
-
     public function eraseCredentials(): void
     {
-        $this->password = null;
+        // We are not storing any sensitive data so there no need to erase anything
     }
 
     public function getRefreshToken(): Token

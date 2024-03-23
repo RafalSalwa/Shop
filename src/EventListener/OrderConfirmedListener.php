@@ -6,6 +6,7 @@ namespace App\EventListener;
 
 use App\Event\OrderConfirmedEvent;
 use App\Service\CalculatorService;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -17,6 +18,7 @@ final readonly class OrderConfirmedListener implements EventSubscriberInterface
         private MailerInterface $mailer,
         private string $fromEmail,
         private CalculatorService $calculatorService,
+        private LoggerInterface $logger,
     ) {
     }
 
@@ -49,6 +51,7 @@ final readonly class OrderConfirmedListener implements EventSubscriberInterface
         try {
             $this->mailer->send($email);
         } catch (TransportExceptionInterface) {
+            $this->logger->error('Failed to send email to order confirmation.');
         }
     }
 }

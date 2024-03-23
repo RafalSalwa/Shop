@@ -36,33 +36,33 @@ abstract class AbstractCartItem implements CartItemInterface
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
-    private int $id;
+    protected int $id;
 
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     #[Groups(groups: 'cart_item')]
-    private Cart|null $cart = null;
+    protected Cart|null $cart = null;
 
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
-    private int $quantity;
+    protected int $quantity;
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private readonly DateTimeImmutable $createdAt;
+    protected readonly DateTimeImmutable $createdAt;
 
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTimeInterface $updatedAt = null;
+    protected ?DateTimeInterface $updatedAt = null;
 
-    private readonly CartItemTypeEnum $itemType;
+    protected readonly string $itemType;
 
     public function __construct(protected CartInsertableInterface $referencedEntity, int $quantity)
     {
-        $this->itemType = CartItemTypeEnum::from($referencedEntity::class);
+        $this->itemType = $referencedEntity::class;
         $this->createdAt = new DateTimeImmutable();
 
         $this->quantity = $quantity;
     }
 
-    final public function setCart(Cart|null $cart): void
+    final public function setCart(?Cart $cart): void
     {
         $this->cart = $cart;
     }
@@ -82,7 +82,7 @@ abstract class AbstractCartItem implements CartItemInterface
         return CartItemTypeEnum::from(ClassUtils::getClass($this->getReferencedEntity()))->value;
     }
 
-    final public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface
+    final public function getReferencedEntity(): StockManageableInterface
     {
         return $this->referencedEntity;
     }
@@ -94,7 +94,7 @@ abstract class AbstractCartItem implements CartItemInterface
 
     final public function getTotalPrice(): string
     {
-        return bcmul((string)$this->getQuantity(), $this->getPrice(), 2);
+        return bcmul((string)$this->getQuantity(), $this->getPrice(), 0);
     }
 
     final public function getQuantity(): int

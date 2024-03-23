@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use App\ValueObject\CouponCode;
-use App\ValueObject\Summary;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -41,25 +40,28 @@ class Order
     #[Column(name: 'order_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    #[Column(name: 'status', type: Types::STRING, length: 25)]
-    private string $status;
+    #[Column(name: 'user_id', type: Types::INTEGER)]
+    private int $userId;
+
+    #[Column(name: 'netAmount', type: Types::INTEGER)]
+    private int $netAmount;
+
+    #[Column(name: 'shipping_cost', type: Types::INTEGER)]
+    private int $shippingCost;
 
     #[Column(name: 'amount', type: Types::INTEGER)]
     private int $total;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
-    private DateTimeImmutable $createdAt;
-
-    #[Column(name: 'user_id', type: Types::INTEGER)]
-    private int $userId;
-
-    /** @var Collection<int, Payment> */
-    #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
-    private Collection $payments;
+    #[Column(name: 'status', type: Types::STRING, length: 25)]
+    private string $status;
 
     /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $items;
+
+    /** @var Collection<int, Payment> */
+    #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
+    private Collection $payments;
 
     #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
     private ?string $couponType = null;
@@ -77,16 +79,15 @@ class Order
     #[JoinColumn(name: 'biling_address_id', referencedColumnName: 'address_id', unique: false)]
     private Address $bilingAddress;
 
-    #[Column(name: 'netAmount', type: Types::INTEGER)]
-    private int $netAmount = 0;
+    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    private DateTimeImmutable $createdAt;
 
-    #[Column(name: 'shipping_cost', type: Types::INTEGER)]
-    private int $shippingCost = 0;
-
-    public function __construct(int $netAmount, int $userId)
+    public function __construct(int $netAmount, int $userId, int $shippingCost, int $total)
     {
         $this->userId = $userId;
         $this->netAmount = $netAmount;
+        $this->shippingCost = $shippingCost;
+        $this->total = $total;
 
         $this->payments = new ArrayCollection();
         $this->items    = new ArrayCollection();
@@ -95,8 +96,12 @@ class Order
     public function applyCoupon(?CouponCode $coupon): void
     {
         if (true === is_null($coupon)) {
+            $this->couponType = null;
+            $this->couponDiscount = null;
+
             return;
         }
+
         $this->couponType = $coupon->getType();
         $this->couponDiscount = $coupon->getValue();
     }
@@ -138,11 +143,6 @@ class Order
         return $this->items;
     }
 
-    public function setItems(ArrayCollection $items): void
-    {
-        $this->items = $items;
-    }
-
     public function getStatus(): string
     {
         return $this->status;
@@ -159,7 +159,7 @@ class Order
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function addPayment(Payment|TValue $payment): void
+    public function addPayment(Payment $payment): void
     {
         $payment->setOrder($this);
         $this->payments[] = $payment;
@@ -200,27 +200,13 @@ class Order
         if (null === $this->couponType) {
             return null;
         }
-        if (false === is_null($this->coupon)) {
-            return $this->coupon;
-        }
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 
         return $this->coupon;
     }
 
-    public function calculatePrices(Summary $summary): void
-    {
-        $this->total = (int)$summary->getTotal();
-        $this->shippingCost = (int)$summary->getShipping();
-    }
-
     public function getTotal(): int
     {
         return $this->total;
-    }
-
-    public function setTotal(string $total): void
-    {
-        $this->total = (int)$total;
     }
 }

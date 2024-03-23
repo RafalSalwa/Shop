@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use App\Enum\SubscriptionTier;
 use App\Repository\PlanRepository;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Cache;
 use Doctrine\ORM\Mapping\Column;
@@ -52,20 +52,16 @@ class SubscriptionPlan
 
     #[Column(
         name: 'created_at',
-        type: Types::DATETIME_MUTABLE,
+        type: Types::DATETIME_IMMUTABLE,
         options: ['default' => 'CURRENT_TIMESTAMP'],
     )]
-    private DateTime $createdAt;
-
-    #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $updatedAt = null;
-
-    #[Column(name: 'deleted_at', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private DateTime|null $deletedAt = null;
+    private DateTimeImmutable $createdAt;
 
     public function __construct()
     {
         $this->tier = SubscriptionTier::Freemium->value();
+        $this->isVisible = true;
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function getDescription(): string|null

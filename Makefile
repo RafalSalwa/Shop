@@ -18,6 +18,10 @@ prod:
 down:
 	docker-compose down --remove-orphans -f docker/docker-compose.yml
 
+phive_installation:
+	phive install phploc
+	phive install churn # churn run src tests
+
 lint:
 	vendor/bin/parallel-lint src --blame --no-progress
 
@@ -27,10 +31,6 @@ cloc:
 .PHONY: ecs
 ecs:
 	vendor/bin/ecs check src --config reports/config/ecs.php
-
-.PHONY: rector
-rector: vendor ## Automatic code fixes with Rector
-	composer rector
 
 phpcs:
 	vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
@@ -52,26 +52,34 @@ deptrac:
 
 .PHONY: phpstan
 phpstan: lint
-	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon src
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon src
 
 .PHONY: phpinsights
 phpinsights:
 	vendor/bin/phpinsights analyse --composer=composer.json --config-path=phpinsights.php
 
-static_analysis: lint
-	#$(MAKE) test_unit
+.PHONY: phparkitect
+phparkitect:
+	vendor/bin/phparkitect check --config=reports/config/phparkitect.php
+
+statistics:
+	vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml --report-html=var/results/phpmetrics src/
+	vendor/bin/pdepend --summary-xml=var/reports/pdepend.summary.xml --jdepend-chart=var/reports/pdepend.chart.svg --overview-pyramid=var/reports/pdepend.pyramid.svg src/
+	vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --no-interaction --format=checkstyle > reports/results/phpinsights.xml
+
+static_analysis: lint test_unit
+	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 #	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
-	-vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
-	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
-#	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
+	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
+	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=var/reports/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
 #	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 #	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
-#	-vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --no-interaction --format=checkstyle > reports/results/phpinsights.xml
 #	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
 #	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
+#   -vendor/bin/rector process --dry-run
 # pdepend!
-
 
 .PHONY: jenkins_static_analysis
 jenkins_static_analysis:
@@ -108,10 +116,6 @@ sonar_static_analysis:
 	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=json src > reports/results/phpstan.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}
 
-.PHONY: phparkitect
-phparkitect:
-	vendor/bin/phparkitect check --config=reports/config/phparkitect.php
-
 .PHONY: test_unit phpmetrics
 phpmetrics:
 	$(MAKE) test_unit
@@ -119,7 +123,7 @@ phpmetrics:
 	xdg-open ${ROOT_DIR}/reports/results/phpmetrics/html/index.html >/dev/null
 .PHONY: test_unit
 test_unit: ### run test
-	./vendor/bin/phpunit --configuration ${ROOT_DIR}/reports/config/phpunit.xml --testsuite=unit --no-output
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=unit --no-output
 
 .PHONY: test_integration
 test_integration: ### run test

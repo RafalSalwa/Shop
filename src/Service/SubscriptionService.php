@@ -8,12 +8,16 @@ use App\Entity\Subscription;
 use App\Entity\SubscriptionPlan;
 use App\Repository\PlanRepository;
 use App\Repository\SubscriptionRepository;
+use function array_key_exists;
 
-final readonly class SubscriptionService
+final class SubscriptionService
 {
+    /** @var array<int, Subscription> */
+    private array $memCache = [];
+
     public function __construct(
-        private PlanRepository $subscriptionPlanRepository,
-        private SubscriptionRepository $subscriptionRepository,
+        private readonly PlanRepository $planRepository,
+        private readonly SubscriptionRepository $subscriptionRepository,
     ) {}
 
     public function cancelSubscription(int $userId): void
@@ -24,7 +28,7 @@ final readonly class SubscriptionService
 
     public function assignFreemium(int $userId): void
     {
-        $subscriptionPlan = $this->subscriptionPlanRepository->createFreemiumPlan();
+        $subscriptionPlan = $this->planRepository->createFreemiumPlan();
         $this->assignSubscription($subscriptionPlan, $userId);
     }
 
@@ -35,8 +39,11 @@ final readonly class SubscriptionService
         $this->subscriptionRepository->save($subscription);
     }
 
-    public function find(int $userId): Subscription
+    public function findForUser(int $userId): Subscription
     {
+        if (true === array_key_exists($userId, $this->memCache)) {
+            return $this->memCache[$userId];
+        }
         $subscription = $this->subscriptionRepository->findOneBy(
             [
                 'userId' => $userId,
@@ -44,11 +51,12 @@ final readonly class SubscriptionService
             ],
         );
         if (null !== $subscription) {
+            $this->memCache[$userId] = $subscription;
+
             return $subscription;
         }
-
         $this->assignFreemium($userId);
 
-        return $this->find($userId);
+        return $this->findForUser($userId);
     }
 }

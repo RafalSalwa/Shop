@@ -26,7 +26,7 @@ final class UserApiGRPCClient
     public function __construct(private readonly string $userServiceDsn)
     {
         $this->userServiceClient = new UserServiceClient(
-            $this->userServiceDsn,
+            $userServiceDsn,
             [
                 'credentials' => ChannelCredentials::createInsecure(),
             ],
@@ -51,7 +51,7 @@ final class UserApiGRPCClient
     }
 
     /** @return array<string, UnaryCall> */
-    public function getResponses(): ?array
+    public function getResponses(): array
     {
         if (0 === count($this->responses)) {
             return [];
