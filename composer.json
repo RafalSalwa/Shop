@@ -47,7 +47,7 @@
     "rybakit/twig-deferred-extension": "^3.0.4",
     "stripe/stripe-php": "^13.14",
     "symfony/amqp-messenger": "~6.4.0",
-    "symfony/asset": "~6.4.0",
+    "symfony/asset": "~7.0.3",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
     "symfony/event-dispatcher": "~6.4.0",
