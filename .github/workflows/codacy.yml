@@ -63,6 +63,7 @@ jobs:
           # Force 0 exit code to allow SARIF file generation
           # This will handover control about PR rejection to the GitHub side
           max-allowed-issues: 2147483647
+      - name: Run Codacy Coverage Reporter
         run: |
           make test_unit
           bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r var/reports/phpunit.clover.xml
