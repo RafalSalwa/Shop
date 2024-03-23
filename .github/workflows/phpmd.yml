@@ -1,4 +1,4 @@
-name: PHPMD
+name: "PHPMD - Mess Detector"
 
 on:
   push:
