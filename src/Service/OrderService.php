@@ -36,7 +36,8 @@ final readonly class OrderService
         $order = new Order(
             netAmount: $cart->getTotalAmount(),
             userId: $this->getUser()->getId(),
-            shippingCost: $summary->getShipping()
+            shippingCost: $summary->getShipping(),
+            total: $summary->getTotal(),
         );
         $this->orderProcessingStateMachine->getMarking($order);
 

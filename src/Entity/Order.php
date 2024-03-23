@@ -58,7 +58,7 @@ class Order
     /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $items;
-    
+
     /** @var Collection<int, Payment> */
     #[OneToMany(mappedBy: 'order', targetEntity: Payment::class, orphanRemoval: true)]
     private Collection $payments;

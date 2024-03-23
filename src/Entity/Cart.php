@@ -24,6 +24,7 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 use function bcadd;
+use function count;
 use function is_int;
 use function sprintf;
 
