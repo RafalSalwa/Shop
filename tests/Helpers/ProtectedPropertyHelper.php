@@ -2,7 +2,9 @@
 
 namespace App\Tests\Helpers;
 
-class ProtectedPropertyHelper {
+use ReflectionClass;
+
+trait ProtectedPropertyHelper {
 
     private function setProtectedProperty($object, $property, $value)
     {
