@@ -24,7 +24,7 @@ jobs:
         with:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, xml, ctype, iconv, grpc
-          coverage: none
+          coverage: pcov
           tools: composer
 
       - name: Get composer cache directory
