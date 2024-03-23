@@ -10,7 +10,6 @@ services:
       $userServiceDsn: '%env(GRPC_USER_SERVICE_DSN)%'
       $cartItemMaxCapacity: '%env(CART_ITEM_MAX_CAPACITY)%'
       $privateJWTKey: '%env(JWT_ACCESS_TOKEN_PRIVATE_KEY)%'
-      $publicJWTKey: '%env(JWT_ACCESS_TOKEN_PUBLIC_KEY)%'
   Redis:
     class: Redis
     calls:
