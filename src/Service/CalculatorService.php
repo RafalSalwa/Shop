@@ -16,10 +16,7 @@ final readonly class CalculatorService
 {
     public const FIRST_DISCOUNT_LIMIT = 50_00;
     public const FREE_DELIVERY_LIMIT = 150_00;
-
-    public function __construct(private ?string $taxRate = '23')
-    {
-    }
+    private const TAX_RATE = '23';
 
     public function calculateSummary(int $netAmount, ?CouponCode $coupon): Summary
     {
@@ -35,7 +32,7 @@ final readonly class CalculatorService
 
     private function calculateDiscount(int $netAmount, ?CouponCode $coupon): int
     {
-        if (true === is_null($coupon)) {
+        if (null === $coupon) {
             return 0;
         }
         if (false === $coupon->isCartDiscount()) {
@@ -53,7 +50,7 @@ final readonly class CalculatorService
 
     private function calculateTax(int $subTotal): int
     {
-        $taxDivisor = bcdiv($this->taxRate, '100', 2);
+        $taxDivisor = bcdiv(self::TAX_RATE, '100', 2);
 
         return (int)bcmul((string)$subTotal, $taxDivisor, 2);
     }

@@ -9,10 +9,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly final class CartSetQuantityRequest
 {
     public function __construct(
-        #[Assert\Type('integer')]
+        #[Assert\Type(type: 'integer')]
         #[Assert\NotBlank()]
         public int $id,
-        #[Assert\Type('integer')]
+        #[Assert\Type(type: 'integer')]
         #[Assert\NotBlank()]
         public int $quantity,
     ) {}

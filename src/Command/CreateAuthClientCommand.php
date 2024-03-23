@@ -39,9 +39,6 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
         $user = new User(id: 1, email: 'test@test.com');
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
         $conn = $this->entityManager->getConnection();
 
         try {
@@ -74,6 +71,7 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
         }
 
         $symfonyStyle->success('Bootstrap complete.');
+        $this->render('<info>Bootstrap complete</info>');
 
         return Command::SUCCESS;
     }

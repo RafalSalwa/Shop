@@ -7,6 +7,7 @@ namespace App\Security\Registration;
 use App\Client\AuthApiClient;
 use App\Event\UserConfirmedEvent;
 use App\Event\UserVerificationCodeRequestEvent;
+use App\Security\Contracts\UserRegistrarInterface;
 use App\Security\EmailVerifier;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 

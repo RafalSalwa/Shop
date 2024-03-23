@@ -22,7 +22,7 @@ final class SubscriptionRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    public function findForUser(int|string $userId): ?Subscription
+    public function findForUser(int|string $userId): Subscription
     {
         return $this->findOneBy(
             [

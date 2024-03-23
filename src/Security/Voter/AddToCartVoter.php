@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Product;
 use App\Enum\CartOperationEnum;
-use App\Repository\SubscriptionRepository;
+use App\Service\SubscriptionService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use function is_subclass_of;
@@ -15,32 +16,27 @@ use function is_subclass_of;
 /** @extends Voter<string,Product> */
 final class AddToCartVoter extends Voter
 {
-    public function __construct(private SubscriptionRepository $subscriptionRepository)
+    public function __construct(private SubscriptionService $service)
     {
     }
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return CartOperationEnum::ADD_TO_CART->value === $attribute && $subject instanceof Product;
+        return CartOperationEnum::ADD->value === $attribute && is_subclass_of($subject, CartInsertableInterface::class);
     }
 
     /** @param Product $subject */
+    // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if (false === is_subclass_of($subject, Product::class)) {
-            return false;
-        }
-        if (CartOperationEnum::ADD_TO_CART->value !== $attribute) {
-            return false;
-        }
-
         $user = $token->getUser();
-        if (null === $user && false === $user instanceof ShopUserInterface) {
+        if (null === $user || false === is_subclass_of($user, ShopUserInterface::class)) {
             return false;
         }
 
         $productSubscription = $subject->getRequiredSubscription();
-        $userSubscription = $this->subscriptionRepository->findForUser($token->getUser()->getToken()->getSub());
+        $userSubscription = $this->service->findForUser($user->getId());
 
         return $userSubscription->getRequiredLevel() >= $productSubscription->getId();
     }

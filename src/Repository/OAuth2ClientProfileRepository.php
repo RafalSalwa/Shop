@@ -22,25 +22,15 @@ final class OAuth2ClientProfileRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, OAuth2ClientProfile::class);
     }
 
-    public function add(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
+    public function add(OAuth2ClientProfile $oAuth2ClientProfile): void
     {
         $this->getEntityManager()->persist($oAuth2ClientProfile);
-
-        if (false === $flush) {
-            return;
-        }
-
         $this->getEntityManager()->flush();
     }
 
-    public function remove(OAuth2ClientProfile $oAuth2ClientProfile, bool $flush = false): void
+    public function remove(OAuth2ClientProfile $oAuth2ClientProfile): void
     {
         $this->getEntityManager()->remove($oAuth2ClientProfile);
-
-        if (false === $flush) {
-            return;
-        }
-
         $this->getEntityManager()->flush();
     }
 }

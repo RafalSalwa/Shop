@@ -6,9 +6,7 @@ namespace App\Service;
 
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\CartStatus;
-use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\ItemNotFoundException;
@@ -18,7 +16,6 @@ use App\Storage\CartSessionStorage;
 use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Lock\LockFactory;
-use function is_subclass_of;
 use function sprintf;
 
 final readonly class CartService
@@ -43,9 +40,8 @@ final readonly class CartService
         foreach ($cart->getItems() as $item) {
             $cart->removeItem($item);
             $this->stockService->restoreStock($item);
-            $this->save($cart);
         }
-
+        $this->save($cart);
         $cart->getItems()->clear();
         $this->cartSessionStorage->removeCart();
     }
@@ -64,11 +60,8 @@ final readonly class CartService
     /**
      * Persists the cart in database and session.
      */
-    public function save(?Cart $cart = null): void
+    public function save(Cart $cart): void
     {
-        if (false === $cart instanceof Cart) {
-            $cart = $this->getCurrentCart();
-        }
         $this->entityManager->persist($cart);
         $this->entityManager->flush();
 
@@ -118,10 +111,12 @@ final readonly class CartService
 
             $cart = $this->getCurrentCart();
             $cartItem = $cart->getItemById($itemId);
+
             $this->removeItem($cartItem);
             $cartItem->updateQuantity($quantity);
             $this->add($cartItem);
             $this->save($cart);
+
             $lock->release();
         } catch (ItemNotFoundException | ProductStockDepletedException $exception) {
             throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
@@ -138,9 +133,6 @@ final readonly class CartService
         $this->stockService->checkStockIsAvailable($cartItem);
         $cart->addItem($cartItem);
 
-        if (true === is_subclass_of($cartItem, StockManageableInterface::class)) {
-            $this->stockService->changeStock($cartItem, StockOperation::Decrease, $cartItem->getQuantity());
-        }
         $this->save($cart);
         $lock->release();
     }

@@ -6,7 +6,6 @@ namespace App\Repository;
 
 use App\Entity\Address;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 final class AddressRepository extends ServiceEntityRepository
@@ -22,7 +21,9 @@ final class AddressRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    /** @throws NonUniqueResultException */
+    /**
+     * Checks for default(isDefault=true) address, if not, takes latest address, otherwise return null.
+     */
     public function getDefaultForUser(int $userId): ?Address
     {
         $defaultAddress = $this
@@ -31,6 +32,7 @@ final class AddressRepository extends ServiceEntityRepository
             ->andWhere('a.isDefault = true')
             ->setParameter('id', $userId)
             ->orderBy('a.id', 'DESC')
+            ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();
 
@@ -40,6 +42,7 @@ final class AddressRepository extends ServiceEntityRepository
                 ->where('a.userId = :id')
                 ->setParameter('id', $userId)
                 ->orderBy('a.id', 'DESC')
+                ->setMaxResults(1)
                 ->getQuery()
                 ->getOneOrNullResult();
         }

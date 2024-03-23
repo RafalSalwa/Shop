@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model;
 
+/** @psalm-api */
 final class SignUpUserInput
 {
     protected string $email = '';
@@ -17,11 +18,9 @@ final class SignUpUserInput
         return $this->email;
     }
 
-    public function setEmail(string $email): self
+    public function setEmail(string $email): void
     {
         $this->email = $email;
-
-        return $this;
     }
 
     public function getPassword(): string
@@ -29,11 +28,9 @@ final class SignUpUserInput
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password): void
     {
         $this->password = $password;
-
-        return $this;
     }
 
     public function getPasswordConfirm(): string
@@ -41,10 +38,8 @@ final class SignUpUserInput
         return $this->passwordConfirm;
     }
 
-    public function setPasswordConfirm(string $passwordConfirm): self
+    public function setPasswordConfirm(string $passwordConfirm): void
     {
         $this->passwordConfirm = $passwordConfirm;
-
-        return $this;
     }
 }

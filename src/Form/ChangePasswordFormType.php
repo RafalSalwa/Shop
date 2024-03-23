@@ -12,12 +12,17 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
+/**
+ * @template T
+ * @extends  AbstractType<T>
+ */
 final class ChangePasswordFormType extends AbstractType
 {
     /** @param array<string, mixed> $options */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->setDisabled($options['disabled'])
             ->add(
                 'plainPassword',
                 RepeatedType::class,

@@ -33,9 +33,6 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[Column(name: 'product_name', type: Types::STRING, length: 40)]
     private readonly string $name;
 
-    #[Column(name: 'category_id', type: Types::SMALLINT, nullable: true)]
-    private int $categoryId;
-
     #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
     private string $quantityPerUnit;
 
@@ -99,11 +96,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->unitsInStock;
     }
 
-    public function setUnitsInStock(int $unitsInStock): self
+    public function setUnitsInStock(int $unitsInStock): void
     {
         $this->unitsInStock = $unitsInStock;
-
-        return $this;
     }
 
     public function getUnitsOnOrder(): int
@@ -111,11 +106,9 @@ class Product implements CartInsertableInterface, StockManageableInterface
         return $this->unitsOnOrder;
     }
 
-    public function setUnitsOnOrder(int $unitsOnOrder): self
+    public function setUnitsOnOrder(int $unitsOnOrder): void
     {
         $this->unitsOnOrder = $unitsOnOrder;
-
-        return $this;
     }
 
     public function decreaseStock(int $quantity): void

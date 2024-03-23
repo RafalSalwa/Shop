@@ -16,7 +16,7 @@ interface CartItemInterface
     /**
      * Get identifier of the base entity that is added.
      */
-    public function getReferencedEntity(): CartInsertableInterface|StockManageableInterface;
+    public function getReferencedEntity(): StockManageableInterface;
 
     /**
      * Get the name or description of the cart item.
