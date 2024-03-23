@@ -26,7 +26,7 @@ final class AddressBookServiceTest extends TestCase
                 $this->assertEquals('Test Street 2', $address->getAddressLine2());
                 $this->assertEquals('Test City', $address->getCity());
                 $this->assertEquals('Test State', $address->getState());
-                $this->assertEquals('Test Zip', $address->getPostalCode());
+                $this->assertEquals('11-222', $address->getPostalCode());
                 $this->assertEquals('Test Country', $address->getCountry());
                 $this->assertTrue($address->isDefault());
             });
@@ -40,7 +40,9 @@ final class AddressBookServiceTest extends TestCase
         $address->setAddressLine2('Test Street 2');
         $address->setCity('Test City');
         $address->setState('Test State');
-        $address->setPostalCode('Test Zip');
+
+        $address->setPostalCode('11-222');
+
         $address->setCountry('Test Country');
         $address->setDefault(true);
         $addressService->save($address);
