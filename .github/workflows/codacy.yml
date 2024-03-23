@@ -46,7 +46,9 @@ jobs:
           coverage: pcov
           tools: composer
 
-      - uses: "ramsey/composer-install@v2"
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--quiet --no-interaction"
 
       # Execute Codacy Analysis CLI and generate a SARIF output with the security issues identified during the analysis
       - name: Run Codacy Analysis CLI
