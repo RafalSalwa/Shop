@@ -42,7 +42,7 @@ jobs:
             composer-
 
       - name: "Install dependencies with composer"
-        run: make composer-install
+        run: composer install
 
       - name: "Run deptrac"
-        run: make deptrac
+        run: vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
