@@ -69,6 +69,7 @@ jobs:
       - name: Run Codacy Coverage Reporter
         run: |
           make test_unit
+          export CODACY_PROJECT_TOKEN=${{ secrets.CODACY_PROJECT_TOKEN }}
           bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r var/reports/phpunit.clover.xml
 
       # Upload the SARIF file generated in the previous step
