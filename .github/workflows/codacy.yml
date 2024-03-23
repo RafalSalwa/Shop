@@ -47,8 +47,6 @@ jobs:
           tools: composer
 
       - uses: "ramsey/composer-install@v3"
-        with:
-          composer-options: "--quiet --no-interaction"
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master
