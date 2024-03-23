@@ -131,8 +131,11 @@ class Cart implements JsonSerializable
                     ->getId()
                     && $cartItem::class === $newItem::class,
             );
+        if (0 === count($filtered)) {
+            return null;
+        }
 
-        return $filtered->first();
+        return $filtered?->first();
     }
 
     /** @throws ItemNotFoundException */
@@ -234,9 +237,6 @@ class Cart implements JsonSerializable
     {
         if (null === $this->couponType) {
             return null;
-        }
-        if (null !== $this->coupon) {
-            return $this->coupon;
         }
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 

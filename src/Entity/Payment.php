@@ -86,19 +86,9 @@ class Payment
         return $this->id;
     }
 
-    public function setId(int $id): void
-    {
-        $this->id = $id;
-    }
-
     public function getOperationNumber(): string|null
     {
         return $this->operationNumber;
-    }
-
-    public function setOperationNumber(string|null $operationNumber): void
-    {
-        $this->operationNumber = $operationNumber;
     }
 
     public function getOperationType(): PaymentProvider

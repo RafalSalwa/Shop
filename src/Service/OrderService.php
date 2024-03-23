@@ -31,15 +31,16 @@ final readonly class OrderService
 
     public function createPending(Cart $cart): Order
     {
+        $summary = $this->calculatorService->calculateSummary($cart->getTotalAmount(), $cart->getCoupon());
+
         $order = new Order(
             netAmount: $cart->getTotalAmount(),
             userId: $this->getUser()->getId(),
+            shippingCost: $summary->getShipping()
         );
         $this->orderProcessingStateMachine->getMarking($order);
 
         $order->applyCoupon($cart->getCoupon());
-        $summary = $this->calculatorService->calculateSummary($cart->getTotalAmount(), $cart->getCoupon());
-        $order->calculatePrices($summary);
 
         foreach ($cart->getItems() as $cartItem) {
             $orderItem = OrderItemFactory::createFromCartItem($cartItem);

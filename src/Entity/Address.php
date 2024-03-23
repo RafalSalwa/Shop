@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Exception\InvalidArgumentException;
 use App\Repository\AddressRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -13,6 +14,7 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
+use function preg_match;
 
 #[Entity(repositoryClass: AddressRepository::class)]
 #[Table(name: 'address', schema: 'interview')]
@@ -148,8 +150,12 @@ class Address
         return $this->postalCode;
     }
 
+    /** @throws InvalidArgumentException */
     public function setPostalCode(string $postalCode): void
     {
+        if (false === (bool)preg_match('/^\d{2}-\d{3}$/', $postalCode)) {
+            throw new InvalidArgumentException();
+        }
         $this->postalCode = $postalCode;
     }
 
