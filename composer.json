@@ -46,7 +46,7 @@
     "php-http/httplug": "^2.4",
     "rybakit/twig-deferred-extension": "^3.0.4",
     "stripe/stripe-php": "^13.14",
-    "symfony/amqp-messenger": "~6.4.0",
+    "symfony/amqp-messenger": "~7.0.4",
     "symfony/asset": "~6.4.0",
     "symfony/console": "~6.4.0",
     "symfony/dotenv": "~6.4.0",
