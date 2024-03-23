@@ -10,6 +10,7 @@ use App\Enum\CartStatus;
 use App\Exception\ItemNotFoundException;
 use App\Tests\Helpers\CouponHelperTrait;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
+use App\Tests\Helpers\ProtectedPropertyHelper;
 use App\ValueObject\CouponCode;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -25,7 +26,8 @@ class CartTest extends TestCase
     private Cart $cart;
     use CouponHelperTrait;
     use ProductHelperCartItemTrait;
-
+    use ProtectedPropertyHelper;
+    
     protected function setUp(): void
     {
         $cart = new Cart();
@@ -89,6 +91,17 @@ class CartTest extends TestCase
         $this->assertEquals(0, $cart->getItems()->count());
         $cart->applyCoupon($this->getHelperCartCoupon());
         $this->assertInstanceOf(CouponCode::class, $cart->getCoupon());
+    }
+
+    public function testRemoveNonExistentItem()
+    {
+        $cart = $this->cart;
+        $product = $this->getHelperProductCartItem();
+        $cart->addItem($product);
+        $this->assertEquals(1, $cart->getItems()->count());
+
+        $this->expectException(ItemNotFoundException::class);
+        $cart->removeItem($this->getHelperProductCartItem(2));
     }
 
     public function testRemoveItem()
