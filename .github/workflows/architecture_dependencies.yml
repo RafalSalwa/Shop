@@ -28,7 +28,7 @@ jobs:
 
       - uses: "ramsey/composer-install@v3"
         with:
-          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}
 
       - name: "Run deptrac"
         run: vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions || true
