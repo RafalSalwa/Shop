@@ -10,7 +10,6 @@
     "ext-bcmath": "*",
     "ext-ctype": "*",
     "ext-dom": "*",
-    "ext-grpc": "*",
     "ext-iconv": "*",
     "ext-igbinary": "*",
     "ext-mbstring": "*",

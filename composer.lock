@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77f1ca700463e95c346d20a06eb29daf",
+    "content-hash": "c78b94d00cff37e6ff2948c383c86d66",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -22834,7 +22834,6 @@
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-dom": "*",
-        "ext-grpc": "*",
         "ext-iconv": "*",
         "ext-igbinary": "*",
         "ext-mbstring": "*",
