@@ -34,8 +34,9 @@ jobs:
           path: vendor
           key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
 
-      - name: "Install dependencies with composer"
-        run: composer install --quiet --no-interaction
+      - uses: "ramsey/composer-install@v3"
+        with:
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
 
       - name: "Run deptrac"
         run: vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions

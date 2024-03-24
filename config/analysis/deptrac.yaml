@@ -46,6 +46,7 @@ deptrac:
       - Repositories
       - Entities
     Repositories:
+      - Services
       - Entities
     Entities:
       - Repositories
