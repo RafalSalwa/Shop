@@ -44,6 +44,7 @@ deptrac:
       - Events
     Services:
       - Repositories
+      - Entities
     Repositories:
       - Entities
     Entities:
