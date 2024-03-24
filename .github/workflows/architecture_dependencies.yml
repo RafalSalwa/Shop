@@ -5,6 +5,7 @@ on:
       - main
       - develop
   push:
+
 jobs:
   deptrac:
     runs-on: ${{ matrix.os }}

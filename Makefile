@@ -108,7 +108,6 @@ github_actions_static_analysis:
 	-vendor/bin/phpinsights --no-interaction analyse src --config-path=config/analysis/phpinsights.php --composer=composer.json --format=github-action
 #	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 
-
 .PHONY: sonar_static_analysis
 sonar_static_analysis:
 	$(MAKE) test_unit

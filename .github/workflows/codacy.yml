@@ -45,6 +45,7 @@ jobs:
           extensions: amqp, ast, bcmath, ctype, iconv, mbstring, xml
           coverage: pcov
           tools: composer
+
       - name: Cache Vendor
         id: cache-vendor
         uses: actions/cache@v3
