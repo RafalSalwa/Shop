@@ -10,8 +10,12 @@ deptrac:
       - function_call
   paths:
     - ../../src
+    - ../../vendor/symfony/framework-bundle/Controller
+    - ../../vendor/symfony/serializer/
   exclude_files:
     - '#.*test.*#'
+    - '#.(Symfony\\Component).#'
+    - '#.*App\\Protobuf\\*.#'
   layers:
     - name: AbstractController
       collectors:
@@ -26,14 +30,14 @@ deptrac:
         - type: bool
           must:
             - type: classLike
-              value: .*Controller.*
+              value: .*App\\Controller.*
           must_not:
             - type: class
               value: .*AbstractShopController.*
     - name: Commands
       collectors:
         - type: classLike
-          value: .*Command.*
+          value: .*App\\Command.*
     - name: Repositories
       collectors:
         - type: bool
@@ -45,26 +49,28 @@ deptrac:
     - name: Services
       collectors:
         - type: classLike
-          value: .*Service.*
+          value: .*App\\Service.*
+    - name: Workflows
+      collectors:
+        - type: classLike
+          value: .*App\\Workflow.*
     - name: Entities
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
-    - name: SymfonySerializer
+    - name: SymfonyController
       collectors:
         - type: classLike
-          value: .*Symfony\Component\Serializer.*
-#    - name: SymfonyAbstractController
-#      collectors:
-#        - type: class
-#          value: .*Symfony\Bundle\FrameworkBundle\Controller\AbstractController.*
+          value: .*Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController.*
 
   ruleset:
     AbstractController:
-      - SymfonyAbstractController
+      - SymfonyController
     Controllers:
       - AbstractController
+      - SymfonyController
       - Services
+      - Workflows
       - Entities
       - Events
     Services:
@@ -79,6 +85,9 @@ deptrac:
     Commands:
       - Services
       - Repositories
+    Workflows:
+      - Services
+    SymfonyController: ~
   formatters:
     graphviz:
       point_to_groups: true

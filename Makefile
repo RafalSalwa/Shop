@@ -47,8 +47,8 @@ bench: ## Runs benchmarks with phpbench
 	composer bench
 
 deptrac:
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
 
 .PHONY: phpstan
 phpstan: lint
