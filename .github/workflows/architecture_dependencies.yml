@@ -27,13 +27,6 @@ jobs:
           coverage: pcov
           tools: composer
 
-      - name: Cache Vendor
-        id: cache-vendor
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
-
       - name: Cache composer dependencies
         uses: actions/cache@v2
         with:
