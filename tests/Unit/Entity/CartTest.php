@@ -10,7 +10,6 @@ use App\Enum\CartStatus;
 use App\Exception\ItemNotFoundException;
 use App\Tests\Helpers\CouponHelperTrait;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
-use App\Tests\Helpers\ProtectedPropertyHelper;
 use App\ValueObject\CouponCode;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -26,8 +25,7 @@ class CartTest extends TestCase
     private Cart $cart;
     use CouponHelperTrait;
     use ProductHelperCartItemTrait;
-    use ProtectedPropertyHelper;
-    
+
     protected function setUp(): void
     {
         $cart = new Cart();
