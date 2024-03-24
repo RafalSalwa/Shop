@@ -33,10 +33,6 @@ deptrac:
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
-    - name: Events
-      collectors:
-        - type: attribute
-          value: Doctrine\ORM\Mapping\Entity
     - name: Symfony
       collectors:
         - type: directory
@@ -50,6 +46,8 @@ deptrac:
       - Repositories
     Repositories:
       - Entities
+    Entities:
+      - Repositories
     Commands:
       - Services
       - Repositories
