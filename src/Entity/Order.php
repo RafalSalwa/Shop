@@ -20,6 +20,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
+
 use function is_null;
 
 #[Entity(repositoryClass: OrderRepository::class)]

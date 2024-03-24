@@ -19,10 +19,12 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
+
 use function array_key_exists;
 use function dd;
 use function json_decode;
 use function json_encode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClientInterface

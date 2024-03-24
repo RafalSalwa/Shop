@@ -8,6 +8,7 @@ use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
+
 use function count;
 
 final class EmailAddress

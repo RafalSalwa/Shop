@@ -30,13 +30,13 @@ cloc:
 	cloc . --vcs git --exclude-dir=vendor,public,node_modules
 .PHONY: ecs
 ecs:
-	vendor/bin/ecs check src --config reports/config/ecs.php
+	vendor/bin/ecs check src --config config/analysis/ecs.php
 
 phpcs:
-	vendor/bin/phpcs --standard=reports/config/phpcs.xml -s src tests
+	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 
 psalm:
-	vendor/bin/psalm --standard=reports/config/phpcs.xml -s src tests
+	vendor/bin/psalm --standard=config/analysis/phpcs.xml -s src tests
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
@@ -47,8 +47,8 @@ bench: ## Runs benchmarks with phpbench
 	composer bench
 
 deptrac:
-	-./vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
-	-./vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 
 .PHONY: phpstan
 phpstan: lint
@@ -63,20 +63,20 @@ phparkitect:
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 
 statistics:
-	vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml --report-html=var/results/phpmetrics src/
+	vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml --report-html=var/results/phpmetrics src/
 	vendor/bin/pdepend --summary-xml=var/reports/pdepend.summary.xml --jdepend-chart=var/reports/pdepend.chart.svg --overview-pyramid=var/reports/pdepend.pyramid.svg src/
-	vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --no-interaction --format=checkstyle > reports/results/phpinsights.xml
+	vendor/bin/phpinsights analyse src --config-path=config/analysis/phpinsights.php --no-interaction --format=checkstyle > reports/results/phpinsights.xml
 
 static_analysis: lint test_unit
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
-#	-vendor/bin/deptrac --config-file=reports/config/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+#	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=var/reports/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
-#	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
-#	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
-#	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
-#	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+#	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+#	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
+#	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
+#	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 #	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
 #   -vendor/bin/rector process --dry-run
 # pdepend!
@@ -100,13 +100,13 @@ github_actions_static_analysis:
 	$(MAKE) test_unit
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
-#	-vendor/bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+#	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=github --no-progress -n src || true
-	-vendor/bin/psalm --config=reports/config/psalm.xml --output-format=github || true
-#	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-vendor/bin/psalm --config=config/analysis/psalm.xml --output-format=github || true
+#	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 	-vendor/bin/phpmd src/ github config/analysis/phpmd.xml || true
 	-vendor/bin/phpinsights --no-interaction analyse src --config-path=config/analysis/phpinsights.php --composer=composer.json --format=github-action
-#	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
+#	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 
 
 .PHONY: sonar_static_analysis
@@ -119,7 +119,7 @@ sonar_static_analysis:
 .PHONY: test_unit phpmetrics
 phpmetrics:
 	$(MAKE) test_unit
-	${ROOT_DIR}/vendor/bin/phpmetrics --config=${ROOT_DIR}/reports/config/phpmetrics.yml ${ROOT_DIR}/src
+	${ROOT_DIR}/vendor/bin/phpmetrics --config=${ROOT_DIR}/config/analysis/phpmetrics.yml ${ROOT_DIR}/src
 	xdg-open ${ROOT_DIR}/reports/results/phpmetrics/html/index.html >/dev/null
 .PHONY: test_unit
 test_unit: ### run test
@@ -127,19 +127,19 @@ test_unit: ### run test
 
 .PHONY: test_integration
 test_integration: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=integration
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=integration
 
 .PHONY: test_api
 test_api: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=api
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=api
 
 .PHONY: test_functional
 test_functional: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=functional
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=functional
 
 .PHONY: test_e2e
 test_e2e: ### run test
-	./vendor/bin/phpunit --configuration ./reports/config/phpunit.xml --testsuite=e2e
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=e2e
 
 .PHONY: phpdoc
 phpdoc:

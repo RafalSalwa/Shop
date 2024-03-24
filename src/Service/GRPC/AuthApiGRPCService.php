@@ -13,6 +13,7 @@ use App\Protobuf\Message\UserDetails;
 use Grpc\UnaryCall;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+
 use function array_merge;
 
 final class AuthApiGRPCService

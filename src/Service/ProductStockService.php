@@ -12,6 +12,7 @@ use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function is_subclass_of;
 
 final readonly class ProductStockService

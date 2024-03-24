@@ -17,6 +17,7 @@
     <exclude-pattern>*/tests/*</exclude-pattern>
     <exclude-pattern>*/Protobuf/*</exclude-pattern>
 
+    <rule ref="PSR12"/>
     <rule ref="PEAR">
         <exclude name="PEAR.Commenting"/>
         <exclude name="PEAR.Functions.FunctionCallSignature.SpaceAfterCloseBracket"/>
@@ -55,6 +56,7 @@
         <exclude name="Generic.Commenting.DocComment.ContentAfterOpen"/>
         <exclude name="Generic.Commenting.DocComment.ContentBeforeClose"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
+        <exclude name="Generic.Files.LineLength.TooLong"/>
     </rule>
 
     <rule ref="Doctrine"/>
@@ -121,7 +123,6 @@
             <property name="tabIndent" value="false"/>
         </properties>
     </rule>
-
     <rule ref="Generic.WhiteSpace.DisallowTabIndent"/>
     <rule ref="Generic.PHP.ForbiddenFunctions">
         <properties>

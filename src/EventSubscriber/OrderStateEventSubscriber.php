@@ -8,6 +8,7 @@ use App\Entity\Payment;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\GuardEvent;
 use Symfony\Component\Workflow\TransitionBlocker;
+
 use function assert;
 
 final class OrderStateEventSubscriber implements EventSubscriberInterface
