@@ -46,7 +46,15 @@ jobs:
           coverage: pcov
           tools: composer
 
+      - name: Cache Vendor
+        id: cache-vendor
+        uses: actions/cache@v3
+        with:
+          path: vendor
+          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
       - uses: "ramsey/composer-install@v3"
+        with:
+          custom-cache-key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master

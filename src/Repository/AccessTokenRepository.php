@@ -17,7 +17,7 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
 
     /**
      * @param array<string> $scopes
-     * @param string $userIdentifier
+     * @param string        $userIdentifier
      */
     public function getNewToken(
         ClientEntityInterface $clientEntity,

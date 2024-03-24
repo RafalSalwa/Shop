@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\ValueObject\GRPC;
 
 use stdClass;
+
 use const Grpc\STATUS_OK;
 
 /**

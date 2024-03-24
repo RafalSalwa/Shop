@@ -20,8 +20,10 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
+
 use function json_decode;
 use function sprintf;
+
 use const JSON_THROW_ON_ERROR;
 
 #[asController]

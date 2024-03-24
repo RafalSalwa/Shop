@@ -13,18 +13,35 @@ deptrac:
   exclude_files:
     - '#.*test.*#'
   layers:
+    - name: AbstractController
+      collectors:
+        - type: bool
+          must:
+          - type: class
+            value: .*AbstractShopController.*
+          - type: extends
+            value: Symfony\Bundle\FrameworkBundle\Controller\AbstractController
     - name: Controllers
       collectors:
-        - type: classLike
-          value: .*Controller.*
+        - type: bool
+          must:
+            - type: classLike
+              value: .*Controller.*
+          must_not:
+            - type: class
+              value: .*AbstractShopController.*
     - name: Commands
       collectors:
         - type: classLike
           value: .*Command.*
     - name: Repositories
       collectors:
-        - type: classLike
-          value: .*Repository.*
+        - type: bool
+          must:
+            - type: classLike
+              value: .*Repository.*
+            - type: extends
+              value: Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
     - name: Services
       collectors:
         - type: classLike
@@ -33,23 +50,32 @@ deptrac:
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
-    - name: Events
+    - name: SymfonySerializer
       collectors:
-        - type: attribute
-          value: Doctrine\ORM\Mapping\Entity
-    - name: Symfony
-      collectors:
-        - type: directory
-          value: ../../vendor/symfony/.*
+        - type: classLike
+          value: .*Symfony\Component\Serializer.*
+#    - name: SymfonyAbstractController
+#      collectors:
+#        - type: class
+#          value: .*Symfony\Bundle\FrameworkBundle\Controller\AbstractController.*
+
   ruleset:
+    AbstractController:
+      - SymfonyAbstractController
     Controllers:
+      - AbstractController
       - Services
       - Entities
       - Events
     Services:
       - Repositories
-    Repositories:
       - Entities
+    Repositories:
+      - Services
+      - Entities
+    Entities:
+      - Repositories
+      - SymfonySerializer
     Commands:
       - Services
       - Repositories

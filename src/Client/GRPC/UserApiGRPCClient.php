@@ -13,6 +13,7 @@ use App\ValueObject\GRPC\StatusResponse;
 use Grpc\ChannelCredentials;
 use Grpc\UnaryCall;
 use stdClass;
+
 use function assert;
 use function count;
 

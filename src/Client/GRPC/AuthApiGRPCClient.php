@@ -22,6 +22,7 @@ use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use Grpc\UnaryCall;
 use stdClass;
+
 use function assert;
 use function count;
 

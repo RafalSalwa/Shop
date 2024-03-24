@@ -12,6 +12,7 @@ use App\Exception\ItemNotFoundException;
 use App\Service\ProductsService;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
 use function sprintf;
 
 final readonly class CartItemFactory

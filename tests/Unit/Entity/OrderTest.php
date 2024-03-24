@@ -10,7 +10,6 @@ use App\Entity\OrderItem;
 use App\Entity\Payment;
 use App\Entity\Product;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
-use App\Tests\Helpers\ProtectedPropertyHelper;
 use App\ValueObject\CouponCode;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +26,6 @@ class OrderTest extends TestCase
 {
     private Order $order;
     use ProductHelperCartItemTrait;
-    use ProtectedPropertyHelper;
 
     protected function setUp(): void
     {

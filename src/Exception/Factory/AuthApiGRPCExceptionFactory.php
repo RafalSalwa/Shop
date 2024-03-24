@@ -10,6 +10,7 @@ use App\Exception\BadRequestException;
 use App\Exception\InternalServerErrorException;
 use App\Exception\UserAlreadyExistsException;
 use App\Exception\UserNotFoundException;
+
 use const Grpc\STATUS_ALREADY_EXISTS;
 use const Grpc\STATUS_INTERNAL;
 use const Grpc\STATUS_INVALID_ARGUMENT;

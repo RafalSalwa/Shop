@@ -7,6 +7,7 @@ namespace App\ValueResolver;
 use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
 use InvalidArgumentException;
+
 use function array_key_exists;
 
 final class EntityNameResolver

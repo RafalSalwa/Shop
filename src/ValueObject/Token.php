@@ -10,6 +10,7 @@ use Lcobucci\JWT\Token\InvalidTokenStructure;
 use Lcobucci\JWT\Token\Parser;
 use Lcobucci\JWT\UnencryptedToken;
 use Stringable;
+
 use function assert;
 use function is_string;
 

@@ -57,9 +57,9 @@
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
     </rule>
 
-    <rule ref="Doctrine"/>
+    <rule ref="vendor/doctrine/coding-standard/lib/Doctrine/ruleset.xml"/>
 
-    <rule ref="SlevomatCodingStandard">
+    <rule ref="vendor/slevomat/coding-standard/SlevomatCodingStandard/ruleset.xml">
         <exclude name="SlevomatCodingStandard.Attributes.AttributesOrder"/>
         <exclude
             name="SlevomatCodingStandard.ControlStructures.BlockControlStructureSpacing.IncorrectLinesCountAfterControlStructure"/>
