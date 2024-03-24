@@ -60,7 +60,7 @@ phpinsights:
 
 .PHONY: phparkitect
 phparkitect:
-	vendor/bin/phparkitect check --config=reports/config/phparkitect.php
+	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 
 statistics:
 	vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml --report-html=var/results/phpmetrics src/
@@ -97,23 +97,23 @@ jenkins_static_analysis:
 
 .PHONY: github_actions_static_analysis
 github_actions_static_analysis:
-	#$(MAKE) test_unit
+	$(MAKE) test_unit
+	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
 #	-vendor/bin/phpcs --standard=reports/config/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
-#	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=checkstyle --no-progress -n src > reports/results/phpstan.checkstyle.xml || true
-#	-vendor/bin/psalm --config=reports/config/psalm.xml --report=reports/results/psalm.sonarqube.json --debug-by-line || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=github --no-progress -n src || true
+	-vendor/bin/psalm --config=reports/config/psalm.xml --output-format=github || true
 #	-vendor/bin/php-cs-fixer --config=reports/config/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
-	-vendor/bin/phpmd src/ html reports/config/phpmd.xml > reports/results/phpmd.html || true
-#	-vendor/bin/phpmd src/ xml reports/config/phpmd.xml > reports/results/phpmd.xml || true
-	-vendor/bin/phpinsights analyse src --config-path=reports/config/phpinsights.php --composer=composer.json --format=github-action
+	-vendor/bin/phpmd src/ github config/analysis/phpmd.xml || true
+	-vendor/bin/phpinsights --no-interaction analyse src --config-path=config/analysis/phpinsights.php --composer=composer.json --format=github-action
 #	-vendor/bin/phpmetrics --config=reports/config/phpmetrics.yml src/
 
 
 .PHONY: sonar_static_analysis
 sonar_static_analysis:
 	$(MAKE) test_unit
-	-vendor/bin/psalm --report=reports/results/psalm.sonarqube.json --config=psalm.xml
-	-vendor/bin/phpstan analyse --configuration=reports/config/phpstan.neon --error-format=json src > reports/results/phpstan.report.json || true
+	-vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json src > ./var/reports/phpstan.sonarqube.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}
 
 .PHONY: test_unit phpmetrics
