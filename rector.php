@@ -14,7 +14,6 @@ return RectorConfig::configure()
         [
             __DIR__ . '/config',
             __DIR__ . '/public',
-            __DIR__ . '/reports',
             __DIR__ . '/src',
             __DIR__ . '/tests',
         ],
