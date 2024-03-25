@@ -23,7 +23,7 @@ jobs:
       - uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
-          custom-cache-key: composer-${{ runner.os }}-${{ php-version }}-${{ hashFiles('composer.lock') }}
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
       - name: "Linters"
         run: |
           vendor/bin/parallel-lint src --exclude vendor --checkstyle | cs2pr
