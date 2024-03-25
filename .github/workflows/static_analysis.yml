@@ -3,6 +3,28 @@ on:
   - pull_request
 
 jobs:
+  build:
+    name: "build App"
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+      - name: "Setup PHP"
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, grpc
+          coverage: pcov
+          tools: composer
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ php-version }}
+  test:
+    name: "Tests"
+    needs: build
+    runs-on: ubuntu-latest
+
   phpinsights:
     runs-on: ubuntu-latest
     name: PHP Insights checks
