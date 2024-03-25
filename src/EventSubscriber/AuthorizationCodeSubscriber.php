@@ -28,7 +28,7 @@ final class AuthorizationCodeSubscriber implements EventSubscriberInterface
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly RequestStack $requestStack,
-        FirewallMapInterface $firewallMap,
+        private readonly FirewallMapInterface $firewallMap,
     ) {
         $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())->getName();
     }
@@ -45,6 +45,7 @@ final class AuthorizationCodeSubscriber implements EventSubscriberInterface
         if (false === is_null($request)) {
             throw new AccessDeniedHttpException();
         }
+
         $firewallName = $this->firewallMap->getFirewallConfig($request)->getName();
         $user = $this->security->getUser();
         $this->saveTargetPath($request->getSession(), $firewallName, $request->getUri());

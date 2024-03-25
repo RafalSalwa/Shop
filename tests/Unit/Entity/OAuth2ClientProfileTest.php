@@ -30,7 +30,7 @@ class OAuth2ClientProfileTest extends TestCase
     {
         parent::setUp();
         $this->client = new Client('test', 'test', 'test');
-        $user = new User(1, 'test@example.com', $this->generateTokenString(), $this->generateTokenString());
+        $user = new User(1, 'test@example.com');
         $consent = new OAuth2UserConsent($user->getId(), $this->client);
 
         $this->profile = new OAuth2ClientProfile();

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exception\Registration;
+namespace App\Exception\Contracts;
 
 interface RegistrationExceptionInterface
 {

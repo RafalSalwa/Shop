@@ -12,7 +12,7 @@ use App\Repository\SubscriptionRepository;
 use App\Security\EmailVerifier;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-final class UserRegistrationEventSubscriber implements EventSubscriberInterface
+final readonly class UserRegistrationEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private SubscriptionRepository $subscriptionRepository,

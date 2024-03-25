@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 interface ShopUserInterface extends UserInterface, OAuth2UserInterface
 {
-    public function getId(): ?int;
+    public function getId(): int;
 
     public function getEmail(): string;
 

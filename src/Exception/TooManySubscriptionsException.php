@@ -9,7 +9,7 @@ use Throwable;
 
 final class TooManySubscriptionsException extends Exception
 {
-    public function __construct(string $message = 'Too many subscriptions in the cart.', ?Throwable $throwable = null)
+    public function __construct(string $message, ?Throwable $throwable)
     {
         parent::__construct($message, 429, $throwable);
     }

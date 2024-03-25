@@ -40,6 +40,7 @@ final class SubscriptionController extends AbstractShopController
 
             return $this->redirectToRoute('subscriptions_index');
         }
+
         $subscriptionService->assignSubscription($plan, $this->getUserId());
         $this->addFlash('success', ' subscription ordered successfully');
 

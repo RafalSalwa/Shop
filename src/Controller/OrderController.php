@@ -33,8 +33,8 @@ final class OrderController extends AbstractShopController
     ): Response {
         try {
             $pendingOrder = $orderWorkflow->createPendingOrder($paymentType->getPaymentType());
-        } catch (OrderOperationExceptionInterface $exception) {
-            $this->addFlash('error', $exception->getMessage());
+        } catch (OrderOperationExceptionInterface $orderOperationException) {
+            $this->addFlash('error', $orderOperationException->getMessage());
 
             return $this->redirectToRoute('checkout_index');
         }

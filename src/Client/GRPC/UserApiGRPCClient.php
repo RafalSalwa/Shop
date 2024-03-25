@@ -15,11 +15,10 @@ use Grpc\UnaryCall;
 use stdClass;
 
 use function assert;
-use function count;
 
 final class UserApiGRPCClient
 {
-    private UserServiceClient $userServiceClient;
+    private readonly UserServiceClient $userServiceClient;
 
     /** @var array<string, UnaryCall> */
     private array $responses = [];
@@ -54,7 +53,7 @@ final class UserApiGRPCClient
     /** @return array<string, UnaryCall> */
     public function getResponses(): array
     {
-        if (0 === count($this->responses)) {
+        if ([] === $this->responses) {
             return [];
         }
 
@@ -63,10 +62,10 @@ final class UserApiGRPCClient
 
     public function getUser(string $token): ?UserDetails
     {
-        $userRequest = new GetUserRequest();
-        $userRequest->setToken($token);
+        $getUserRequest = new GetUserRequest();
+        $getUserRequest->setToken($token);
 
-        $arrResponse = $this->userServiceClient->GetUserByToken($userRequest)
+        $arrResponse = $this->userServiceClient->GetUserByToken($getUserRequest)
             ->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
 

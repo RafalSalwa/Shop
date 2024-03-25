@@ -94,6 +94,7 @@ class Cart implements JsonSerializable
         if (null === $currentItem) {
             throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $newItem->getName()));
         }
+
         $this->removeItem($currentItem);
         $currentItem->updateQuantity($newItem->getQuantity() + $currentItem->getQuantity());
         $this->getItems()->add($currentItem);
@@ -151,6 +152,7 @@ class Cart implements JsonSerializable
         if (null === $currentItem) {
             throw new ItemNotFoundException('Item does not exists in cart');
         }
+
         $currentItem->setCart(null);
 
         $this->getItems()->removeElement($currentItem);
@@ -240,6 +242,7 @@ class Cart implements JsonSerializable
         if (null === $this->couponType) {
             return null;
         }
+
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 
         return $this->coupon;

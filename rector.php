@@ -3,8 +3,15 @@
 declare(strict_types=1);
 
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
+use Rector\CodeQuality\Rector\Identical\FlipTypeControlToUseExclusiveTypeRector;
+use Rector\CodeQuality\Rector\Identical\SimplifyBoolIdenticalTrueRector;
 use Rector\Config\RectorConfig;
+use Rector\DeadCode\Rector\If_\RemoveAlwaysTrueIfConditionRector;
 use Rector\Doctrine\Set\DoctrineSetList;
+use Rector\Naming\Rector\Assign\RenameVariableToMatchMethodCallReturnTypeRector;
+use Rector\Naming\Rector\Class_\RenamePropertyToMatchTypeRector;
+use Rector\Naming\Rector\ClassMethod\RenameParamToMatchTypeRector;
+use Rector\Php80\Rector\Class_\ClassPropertyAssignToConstructorPromotionRector;
 use Rector\PHPUnit\Set\PHPUnitSetList;
 use Rector\Symfony\Set\SymfonySetList;
 use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRector;
@@ -12,15 +19,22 @@ use Rector\TypeDeclaration\Rector\ClassMethod\AddVoidReturnTypeWhereNoReturnRect
 return RectorConfig::configure()
     ->withPaths(
         [
-            __DIR__ . '/config',
-            __DIR__ . '/public',
+//            __DIR__ . '/config',
+//            __DIR__ . '/public',
             __DIR__ . '/src',
-            __DIR__ . '/tests',
+//            __DIR__ . '/tests',
         ],
     )
     ->withSkip(
         [
             __DIR__ . '/src/Protobuf',
+            ClassPropertyAssignToConstructorPromotionRector::class,
+            SimplifyBoolIdenticalTrueRector::class,
+            RenamePropertyToMatchTypeRector::class,
+            RenameParamToMatchTypeRector::class,
+            RemoveAlwaysTrueIfConditionRector::class,
+            RenameVariableToMatchMethodCallReturnTypeRector::class,
+            FlipTypeControlToUseExclusiveTypeRector::class,
         ],
     )
     ->withPhpSets(php83: true)

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Client\GRPC;
 
 use App\Client\AuthClientInterface;
-use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\AuthException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Exception\Factory\AuthApiGRPCExceptionFactory;
 use App\Model\TokenPair;
 use App\Protobuf\Message\SignInUserInput;
@@ -22,18 +22,16 @@ use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use Grpc\UnaryCall;
 use stdClass;
-
 use function assert;
-use function count;
 
 final class AuthApiGRPCClient implements AuthClientInterface
 {
-    private AuthServiceClient $authServiceClient;
+    private readonly AuthServiceClient $authServiceClient;
 
     /** @var array<string, UnaryCall> */
     private array $responses = [];
 
-    public function __construct(private string $authServiceDsn)
+    public function __construct(private readonly string $authServiceDsn)
     {
         $this->authServiceClient = new AuthServiceClient(
             $this->authServiceDsn,
@@ -49,6 +47,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         $signInUserInput = new SignInUserInput();
         $signInUserInput->setEmail($email);
         $signInUserInput->setPassword($password);
+
         $arrResponse = $this->authServiceClient->SignInUser($signInUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
         $arrStatus = $arrResponse[1];
@@ -57,6 +56,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         if (false === $statusResponse->isOk()) {
             throw new AuthException('missing verification code');
         }
+
         $userResponse = $arrResponse[0];
         assert($userResponse instanceof SignInUserResponse);
 
@@ -78,6 +78,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         if (false === $statusResponse->isOk()) {
             throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
         }
+
         $userResponse = $arrResponse[0];
         assert($userResponse instanceof SignUpUserResponse);
     }
@@ -87,6 +88,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
     {
         $verificationCodeRequest = new VerificationCodeRequest();
         $verificationCodeRequest->setEmail($email);
+
         $arrResponse = $this->authServiceClient->getVerificationKey($verificationCodeRequest)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
         $arrStatus = $arrResponse[1];
@@ -96,6 +98,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         if (false === $statusResponse->isOk()) {
             throw new AuthException('missing verification code');
         }
+
         $verificationCodeResponse = $arrResponse[0];
         assert($verificationCodeResponse instanceof VerificationCodeResponse);
 
@@ -123,7 +126,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
     /** @return array<string, UnaryCall> */
     public function getResponses(): array
     {
-        if (0 === count($this->responses)) {
+        if ([] === $this->responses) {
             return [];
         }
 

@@ -70,10 +70,13 @@ final readonly class CartWorkflow
             $this->cartService->removeItem($cartItem);
             $this->productStockService->restoreStock($cartItem);
             $this->cartService->save($this->cartService->getCurrentCart());
-        } catch (ItemNotFoundException $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (ItemNotFoundException $itemNotFoundException) {
+            $this->logger->error($itemNotFoundException->getMessage());
 
-            throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
+            throw new CartOperationException(
+                message: $itemNotFoundException->getMessage(),
+                previous: $itemNotFoundException,
+            );
         }
     }
 
@@ -84,10 +87,13 @@ final readonly class CartWorkflow
             $coupon = $this->couponService->getCouponType($couponCode);
             $this->cartService->applyCoupon($coupon);
             $this->cartService->save($this->cartService->getCurrentCart());
-        } catch (InvalidCouponCodeException $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (InvalidCouponCodeException $invalidCouponCodeException) {
+            $this->logger->error($invalidCouponCodeException->getMessage());
 
-            throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
+            throw new CartOperationException(
+                message: $invalidCouponCodeException->getMessage(),
+                previous: $invalidCouponCodeException,
+            );
         }
     }
 }

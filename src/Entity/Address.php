@@ -157,6 +157,7 @@ class Address
         if (false === (bool)preg_match('/^\d{2}-\d{3}$/', $postalCode)) {
             throw new InvalidArgumentException();
         }
+
         $this->postalCode = $postalCode;
     }
 

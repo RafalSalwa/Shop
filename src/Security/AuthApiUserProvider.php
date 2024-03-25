@@ -6,12 +6,11 @@ namespace App\Security;
 
 use App\Client\UsersApiClient;
 use App\Entity\Contracts\ShopUserInterface;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
-
 use function is_subclass_of;
 
 /**

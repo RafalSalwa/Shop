@@ -6,25 +6,24 @@ namespace App\Service\GRPC;
 
 use App\Client\AuthClientInterface;
 use App\Client\GRPC\UserApiGRPCClient;
-use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\AuthException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Model\GRPC\UserResponse;
 use App\Protobuf\Message\UserDetails;
 use Grpc\UnaryCall;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-
 use function array_merge;
 
-final class AuthApiGRPCService
+final readonly class AuthApiGRPCService
 {
     private const GRPC_USER_KEY = 'grpc_user';
 
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly AuthClientInterface $authApiGRPCClient,
-        private readonly UserApiGRPCClient $userApiGRPCClient,
-        private readonly LoggerInterface $logger,
+        private RequestStack $requestStack,
+        private AuthClientInterface $authApiGRPCClient,
+        private UserApiGRPCClient $userApiGRPCClient,
+        private LoggerInterface $logger,
     ) {}
 
     public function signInUser(string $email, string $password): void
@@ -53,8 +52,8 @@ final class AuthApiGRPCService
             );
 
             $this->setUserCredentialsFromLastSignUp($userResponse);
-        } catch (AuthenticationExceptionInterface $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (AuthenticationExceptionInterface $authenticationException) {
+            $this->logger->error($authenticationException->getMessage());
         }
     }
 
@@ -67,8 +66,8 @@ final class AuthApiGRPCService
             if (null !== $userResponse) {
                 $this->setUserCredentialsFromLastSignUp($userResponse->withIsVerified(true));
             }
-        } catch (AuthException $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (AuthException $authException) {
+            $this->logger->error($authException->getMessage());
         }
     }
 

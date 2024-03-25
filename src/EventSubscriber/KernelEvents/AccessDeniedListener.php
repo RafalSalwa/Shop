@@ -24,6 +24,7 @@ final class AccessDeniedListener implements EventSubscriberInterface
         if (false === $exception instanceof AccessDeniedException) {
             return;
         }
-        $event->setResponse(new Response(null, 403));
+
+        $event->setResponse(new Response(null, Response::HTTP_FORBIDDEN));
     }
 }

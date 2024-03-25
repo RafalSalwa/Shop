@@ -42,6 +42,7 @@ final readonly class CartService
             $cart->removeItem($item);
             $this->stockService->restoreStock($item);
         }
+
         $this->save($cart);
         $cart->getItems()->clear();
         $this->cartSessionStorage->removeCart();
@@ -106,6 +107,7 @@ final readonly class CartService
                 ),
             );
         }
+
         try {
             $lock = $this->cartLockFactory->createLock('cart_item_update');
             $lock->acquire(true);

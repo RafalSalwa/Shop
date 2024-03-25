@@ -70,8 +70,8 @@ final class CartController extends AbstractShopController
         try {
             $couponCode = $request->request->get('coupon');
             $cartWorkflow->applyCouponCode($couponCode);
-        } catch (CartOperationExceptionInterface $exception) {
-            $this->addFlash('info', $exception->getMessage());
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            $this->addFlash('info', $cartOperationException->getMessage());
         }
 
         return new RedirectResponse($this->generateUrl('cart_index'));

@@ -6,7 +6,7 @@ namespace App\Model\GRPC;
 
 final class VerificationCodeRequest
 {
-    private string $verificationCode;
+    private string $verificationCode = '';
 
     public function getVerificationCode(): string
     {

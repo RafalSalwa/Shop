@@ -201,6 +201,7 @@ class Order
         if (null === $this->couponType) {
             return null;
         }
+
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 
         return $this->coupon;

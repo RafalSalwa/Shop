@@ -62,6 +62,7 @@ final readonly class OrderService
         if (null === $address) {
             throw new ItemNotFoundException('There is no Address in AddressBook');
         }
+
         $order->setDeliveryAddress($address);
         $order->setBilingAddress($address);
     }
@@ -71,6 +72,7 @@ final readonly class OrderService
         if (true === $this->orderProcessingStateMachine->can($order, 'to_completed')) {
             $this->orderProcessingStateMachine->apply($order, 'to_completed');
         }
+
         $this->orderRepository->save($order);
 
         $orderConfirmedEvent = new OrderConfirmedEvent($order);

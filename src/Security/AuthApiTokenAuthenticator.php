@@ -36,7 +36,7 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
 
     public function authenticate(Request $request): Passport
     {
-        $verificationCode = $request->get('verificationCode');
+        $verificationCode = $request->request->getAlnum('verificationCode');
         $user = $this->authApiClient->getByVerificationCode($verificationCode);
         $tokenPair = $this->authApiClient->signInByCode($user->getEmail(), $verificationCode);
 

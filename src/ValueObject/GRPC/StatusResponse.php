@@ -13,9 +13,9 @@ use const Grpc\STATUS_OK;
  */
 final class StatusResponse
 {
-    private int $code;
+    private readonly int $code;
 
-    private string $details;
+    private readonly string $details;
 
     public function __construct(stdClass $class)
     {
@@ -35,6 +35,6 @@ final class StatusResponse
 
     public function isOk(): bool
     {
-        return STATUS_OK === $this->getCode();
+        return STATUS_OK === $this->code;
     }
 }

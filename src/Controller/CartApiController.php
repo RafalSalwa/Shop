@@ -121,8 +121,8 @@ final class CartApiController extends AbstractShopController
             $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
 
             return $this->json('ok');
-        } catch (CartOperationExceptionInterface $exception) {
-            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            return $this->json($cartOperationException->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

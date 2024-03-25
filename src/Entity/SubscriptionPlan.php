@@ -42,7 +42,7 @@ class SubscriptionPlan
     private bool $isActive = false;
 
     #[Column(name: 'is_visible', type: Types::BOOLEAN, options: ['default' => false])]
-    private bool $isVisible = false;
+    private bool $isVisible = true;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private int $price;
@@ -60,7 +60,6 @@ class SubscriptionPlan
     public function __construct()
     {
         $this->tier = SubscriptionTier::Freemium->value();
-        $this->isVisible = true;
         $this->createdAt = new DateTimeImmutable();
     }
 

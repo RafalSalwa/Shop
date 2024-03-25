@@ -16,7 +16,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 final class User implements UserInterface, ShopUserInterface, EquatableInterface
 {
-    private EmailAddress $email;
+    private readonly EmailAddress $email;
 
     private ?Token $token = null;
 
@@ -32,29 +32,18 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
     private array $roles;
 
     /** @var Collection<int, OAuth2UserConsent> */
-    private Collection $consents;
+    private readonly Collection $consents;
 
-    public function __construct(
-        private readonly int $id,
-        string $email,
-        ?string $token = null,
-        ?string $refreshToken = null,
-    ) {
+    public function __construct(private readonly int $id, string $email) {
         $this->email = new EmailAddress($email);
 
-        if (null !== $token) {
-            $this->setToken(new Token($token));
-        }
-        if (null !== $refreshToken) {
-            $this->setRefreshToken(new Token($refreshToken));
-        }
         $this->consents = new ArrayCollection();
         $this->setRoles(['ROLE_USER']);
     }
 
     public function getUserIdentifier(): string
     {
-        return $this->getToken()->value();
+        return $this->token->value();
     }
 
     public function getToken(): Token
@@ -105,7 +94,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
-        if ($this->getId() !== $user->getId()) {
+        if ($this->id !== $user->getId()) {
             return false;
         }
 

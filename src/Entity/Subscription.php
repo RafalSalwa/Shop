@@ -63,13 +63,11 @@ class Subscription
         $this->subscriptionPlan = $plan;
         $this->subscriptionTier = SubscriptionTier::from($plan->getTier());
 
-        $this->isActive = true;
+        $dateTimeImmutable = new DateTimeImmutable();
+        $this->createdAt = $dateTimeImmutable;
+        $this->startsAt = $dateTimeImmutable;
 
-        $now = new DateTimeImmutable();
-        $this->createdAt = $now;
-        $this->startsAt = $now;
-
-        $this->endsAt = $now->add(new DateInterval('P30D'));
+        $this->endsAt = $dateTimeImmutable->add(new DateInterval('P30D'));
     }
 
     public function getTier(): SubscriptionTier

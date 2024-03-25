@@ -7,7 +7,7 @@ namespace App\Client;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Model\TokenPair;
 use App\Model\User;
 use App\ValueObject\Token;
@@ -19,12 +19,10 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
-
 use function array_key_exists;
 use function dd;
 use function json_decode;
 use function json_encode;
-
 use const JSON_THROW_ON_ERROR;
 
 final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClientInterface

@@ -37,6 +37,7 @@ final class CartCheckoutController extends AbstractShopController
             $address->setUserId($this->getUserId());
             $addressBookService->save($address);
         }
+
         $cart = $cartService->getCurrentCart();
 
         return $this->render(

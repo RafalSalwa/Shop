@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 use function array_diff;
@@ -29,16 +30,22 @@ final readonly class OAuth2Service
     {
         $user = $this->getUser();
         $request = $this->requestStack->getCurrentRequest();
+        if (null === $request) {
+            throw new BadRequestException();
+        }
+
         $consent = new OAuth2UserConsent($user->getId(), $appClient);
         $userScopes = [];
 
         $userConsents = $user->getConsents();
-        if (null !== $userConsents) {
-            $consent = $userConsents->filter(
-                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
-            )->first();
-            $userScopes = ($consent ?? []);
-        }
+//        if (null !== $userConsents) {
+//            $consent = $userConsents->filter(
+//                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
+//            )->first();
+//            if (false !== $consent) {
+//                $userScopes = $consent;
+//            }
+//        }
 
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);

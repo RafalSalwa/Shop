@@ -10,9 +10,11 @@ use App\Entity\Subscription;
 use App\Entity\SubscriptionPlan;
 use App\Enum\SubscriptionTier;
 use App\Model\User;
+use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
 use DateTimeImmutable;
+use Doctrine\Common\Collections\Collection;
 use Lcobucci\JWT\JwtFacade;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -35,32 +37,21 @@ final class UserTest extends TestCase
 {
     private string $token;
 
-    protected function setUp(): void
-    {
-        $key = InMemory::base64Encoded(
-            'hiG8DlOKvtih6AxlZn5XKImZ06yu8I3mkOzaJrEuW8yAv8Jnkw330uMt8AEqQ5LB'
-        );
-
-        $token = (new JwtFacade())->issue(
-            new Sha256(),
-            $key,
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->issuedBy('https://api.my-awesome-app.io')
-                ->permittedFor('https://client-app.io')
-                ->relatedTo('1')
-                ->expiresAt($issuedAt->modify('+10 minutes'))
-        );
-        $this->token = $token->toString();
-    }
+    use TokenTestHelperTrait;
 
     public function testUserInitialization(): void
     {
         $email = 'test@example.com';
         $user = new User(1, $email, $this->token, $this->token);
-        $anotherUser = new User(2, $email, $this->token, $this->token);
+        $token = new Token($this->generateTokenString());
+        $user->setToken($token);
+        $user->setRefreshToken($token);
+
+        $anotherUser = new User(2, $email);
+        $token = new Token($this->generateTokenString());
+        $user->setToken($token);
+        $user->setRefreshToken($token);
+
         $this->assertInstanceOf(ShopUserInterface::class, $user);
         $this->assertInstanceOf(Token::class, $user->getToken());
         $this->assertInstanceOf(Token::class, $user->getRefreshToken());
@@ -82,14 +73,17 @@ final class UserTest extends TestCase
     public function testAddConsent(): void
     {
         $client = new Client('test', 'test', 'test');
-        $user = new User(1, 'test@example.com', $this->token, $this->token);
+        $user = new User(1, 'test@example.com');
+        $token = new Token($this->generateTokenString());
+        $user->setToken($token);
+        $user->setRefreshToken($token);
         $consent = new OAuth2UserConsent($user->getId(), $client);
 
         $user->addConsent($consent);
 
         $consents = $user->getConsents();
         $this->assertNotNull($consents);
-        $this->assertInstanceOf(\Doctrine\Common\Collections\Collection::class, $consents);
+        $this->assertInstanceOf(Collection::class, $consents);
         $this->assertCount(1, $consents);
         $this->assertInstanceOf(OAuth2UserConsent::class, $consents[0]);
     }

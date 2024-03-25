@@ -31,6 +31,7 @@ readonly final class PaymentService
         $payment->setUserId($this->getUser()->getId());
         $payment->setAmount($order->getTotal());
         $payment->setOperationType($paymentType);
+
         $order->addPayment($payment);
 
         $this->save($payment);
