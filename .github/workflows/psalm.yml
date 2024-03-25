@@ -39,7 +39,7 @@ jobs:
       - uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--no-interaction --no-progress --prefer-dist"
-          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Psalm Security Scan
         run: vendor/bin/psalm --config=config/analysis/psalm.xml --report=results.sarif
