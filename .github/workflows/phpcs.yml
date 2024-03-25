@@ -30,7 +30,7 @@ jobs:
       - uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
-          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}
+          custom-cache-key: composer-${{ runner.os }}-${{ php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: "PHPCS Standards Scan"
-        run: make phpcs
+        run: vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr

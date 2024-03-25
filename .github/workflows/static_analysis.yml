@@ -1,6 +1,9 @@
-name: CI
+name: "static_analysis"
 on:
-  - pull_request
+  pull_request:
+    branches:
+      - main
+      - develop
 
 jobs:
   build:
@@ -13,17 +16,32 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, grpc
+          extensions: cs2pr, mbstring, xml, ctype, iconv, grpc
           coverage: pcov
           tools: composer
       - uses: "ramsey/composer-install@v3"
         with:
-          composer-options: "--no-interaction --no-progress --prefer-dist"
-          custom-cache-key: composer-${{ runner.os }}-${{ php-version }}
-  test:
-    name: "Tests"
-    needs: build
-    runs-on: ubuntu-latest
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ php-version }}-${{ hashFiles('composer.lock') }}
+      - name: "Linters"
+        run: |
+          vendor/bin/parallel-lint src --exclude vendor --checkstyle | cs2pr
+          make twig_lint
+      - name: "PHPUnit Unit Tests"
+        run: make test_unit
+      - name: "PHPCS Standards Scan"
+        run: vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
+      - name: "PHPMD - Mess Detector"
+        run: vendor/bin/phpmd src/ github config/analysis/phpmd.xml
+        continue-on-error: true
+      - name: "Psalm Security Scan"
+        run: vendor/bin/psalm --config=config/analysis/psalm.xml --output-format=github
+      - name: "PHPStan Security Scan"
+        run: vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src
+      - name: "PHP-CS-Fixer Scan"
+        run: vendor/bin/php-cs-fixer fix --config=config/analysis/php-cs-fixer.php --dry-run --format=checkstyle | cs2pr
+      - name: "PHPInsights"
+        run: vendor/bin/phpinsights analyse src --config-path=config/analysis/phpinsights.php --no-interaction --composer=composer.json --format=github-action
 
   phpinsights:
     runs-on: ubuntu-latest
@@ -34,4 +52,4 @@ jobs:
         with:
           php-version: 8.0
       - run: composer install --prefer-dist --no-progress --no-suggest
-      - run: vendor/bin/phpinsights -n --ansi --format=github-action
+      - run: vendor/bin/phpinsights analyse src --config-path=config/analysis/phpinsights.php --no-interaction --composer=composer.json --format=github-action
