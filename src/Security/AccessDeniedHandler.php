@@ -13,6 +13,8 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
 
+use function assert;
+
 final readonly class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
     public function __construct(private UrlGeneratorInterface $urlGenerator, private LoggerInterface $logger)
@@ -24,10 +26,7 @@ final readonly class AccessDeniedHandler implements AccessDeniedHandlerInterface
         $this->logger->warning('Access denied', ['exception' => $accessDeniedException]);
         $flashBag = $request->getSession()->getFlashBag();
         assert($flashBag instanceof FlashBagInterface);
-        $flashBag->add(
-            'error',
-            'You can only view pending orders that have been placed by You.',
-        );
+        $flashBag->add('error', 'You can only view pending orders that have been placed by You.');
 
         return new RedirectResponse($this->urlGenerator->generate('products_index'));
     }

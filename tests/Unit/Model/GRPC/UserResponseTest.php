@@ -27,6 +27,7 @@ class UserResponseTest extends TestCase
         $tokenPair = $this->getTokenPair();
 
         $userResponse = new UserResponse($email, $password, $confirmationCode, true, $tokenPair);
+        $userResponse = $userResponse->withTokenPair($tokenPair);
 
         $this->assertEquals($email, $userResponse->getEmail());
         $this->assertEquals($password, $userResponse->getPassword());

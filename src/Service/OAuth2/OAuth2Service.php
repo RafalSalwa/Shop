@@ -37,16 +37,6 @@ final readonly class OAuth2Service
         $consent = new OAuth2UserConsent($user->getId(), $appClient);
         $userScopes = [];
 
-        $userConsents = $user->getConsents();
-//        if (null !== $userConsents) {
-//            $consent = $userConsents->filter(
-//                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
-//            )->first();
-//            if (false !== $consent) {
-//                $userScopes = $consent;
-//            }
-//        }
-
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);
 

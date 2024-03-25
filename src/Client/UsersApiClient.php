@@ -19,7 +19,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function json_decode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class UsersApiClient implements ShopUserProviderInterface
@@ -47,10 +49,7 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             );
             $arrContent = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
 
-            $user = new User(
-                id: $arrContent['user']['id'],
-                email: $arrContent['user']['email'],
-            );
+            $user = new User(id: $arrContent['user']['id'], email: $arrContent['user']['email']);
             $user->setToken(new Token($arrContent['user']['token']));
             $user->setRefreshToken(new Token($arrContent['user']['refresh_token']));
             $subscription = $this->subscriptionService->findForUser($user->getId());

@@ -78,6 +78,7 @@ class OAuth2UserConsent
         return $this->scopes;
     }
 
+    /** @param array<string> $scopes */
     public function setScopes(array $scopes): void
     {
         $this->scopes = $scopes;

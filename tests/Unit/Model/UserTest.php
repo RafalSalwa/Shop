@@ -42,7 +42,7 @@ final class UserTest extends TestCase
     public function testUserInitialization(): void
     {
         $email = 'test@example.com';
-        $user = new User(1, $email, $this->token, $this->token);
+        $user = new User(1, $email);
         $token = new Token($this->generateTokenString());
         $user->setToken($token);
         $user->setRefreshToken($token);

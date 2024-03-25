@@ -34,7 +34,8 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
     /** @var Collection<int, OAuth2UserConsent> */
     private readonly Collection $consents;
 
-    public function __construct(private readonly int $id, string $email) {
+    public function __construct(private readonly int $id, string $email)
+    {
         $this->email = new EmailAddress($email);
 
         $this->consents = new ArrayCollection();

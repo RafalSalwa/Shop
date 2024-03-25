@@ -15,8 +15,8 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
     public function __construct(
         private BaseAccessTokenRepository $baseAccessTokenRepository,
         private string $privateJWTKey,
-    )
-    {}
+    ) {
+    }
 
     /**
      * @param array<string> $scopes
