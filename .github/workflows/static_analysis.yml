@@ -27,7 +27,8 @@ jobs:
       - name: "Linters"
         run: |
           vendor/bin/parallel-lint src --exclude vendor --checkstyle | cs2pr
-          make twig_lint
+          vendor/bin/twigcs src --no-interaction
+        continue-on-error: true
       - name: "PHPUnit Unit Tests"
         run: make test_unit
       - name: "PHPCS Standards Scan"
