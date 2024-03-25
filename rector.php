@@ -25,6 +25,7 @@ return RectorConfig::configure()
         ],
     )
     ->withPhpSets(php83: true)
+    ->withAttributesSets(symfony: true, doctrine: true, phpunit: true, jms: true, sensiolabs: true)
     ->withSets(
         [
             PHPUnitSetList::PHPUNIT_100,
@@ -48,9 +49,6 @@ return RectorConfig::configure()
         earlyReturn: true,
         strictBooleans: true,
     )
-    // if typeDeclaration is too high use this
-    ->withTypeCoverageLevel(1)
-    ->withDeadCodeLevel(1)
     ->withSymfonyContainerXml(__DIR__ . '/var/cache/dev/App_KernelDevDebugContainer.xml')
     ->withSymfonyContainerPhp(__DIR__ . '/tests/symfony-container.php')
     ->withRules(
