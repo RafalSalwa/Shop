@@ -81,7 +81,7 @@ static_analysis: lint test_unit
 #	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
 #	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 #	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
-#   -vendor/bin/rector process --dry-run
+	-vendor/bin/rector process --dry-run
 # pdepend!
 
 .PHONY: lint test_unit
