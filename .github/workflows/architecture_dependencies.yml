@@ -6,7 +6,7 @@ on:
       - main
       - develop
 jobs:
-  deptrac:
+  deptrac_phparkitect:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
