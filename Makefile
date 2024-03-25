@@ -26,7 +26,7 @@ lint:
 	vendor/bin/parallel-lint src --no-progress
 
 twig_lint:
-	vendor/bin/twigcs src --no-progress --no-interaction
+	vendor/bin/twigcs src --no-interaction
 
 .PHONY: cloc
 cloc:

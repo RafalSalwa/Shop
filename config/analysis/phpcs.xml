@@ -190,10 +190,10 @@
         <exclude-pattern>src/Form/</exclude-pattern>
     </rule>
 
-    <file>config/</file>
-    <file>public/</file>
-    <file>src/</file>
-    <file>tests/</file>
+    <file>../../config/</file>
+    <file>../../public/</file>
+    <file>../../src/</file>
+    <file>../../tests/</file>
     <exclude-pattern type="relative">*.(js|css|proto)</exclude-pattern>
     <exclude-pattern>*/src/Protobuf/*</exclude-pattern>
     <exclude-pattern>*cli-config*</exclude-pattern>
