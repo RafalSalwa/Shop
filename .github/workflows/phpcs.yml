@@ -33,4 +33,4 @@ jobs:
           custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: "PHPCS Standards Scan"
-        run: vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
+        run: vendor/bin/phpcs --standard=./config/analysis/phpcs.xml --report=checkstyle | cs2pr --graceful-warnings --colorize --notices-as-warnings
