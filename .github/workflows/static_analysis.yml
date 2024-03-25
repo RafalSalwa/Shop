@@ -17,9 +17,9 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: cs2pr, mbstring, xml, ctype, iconv, grpc
+          extensions: mbstring, xml, ctype, iconv
           coverage: pcov
-          tools: composer
+          tools: cs2pr, composer
       - uses: "ramsey/composer-install@v3"
         with:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"

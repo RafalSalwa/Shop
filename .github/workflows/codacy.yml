@@ -42,7 +42,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, xml, ctype, iconv
           coverage: pcov
-          tools: cs2pr, composer
+          tools: cs2pr, composerr
 
       - uses: "ramsey/composer-install@v3"
         with:
