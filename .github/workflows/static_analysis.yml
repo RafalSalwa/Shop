@@ -39,7 +39,7 @@ jobs:
       - name: "Psalm Security Scan"
         run: vendor/bin/psalm --config=config/analysis/psalm.xml --output-format=github
       - name: "PHPStan Security Scan"
-        run: vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src
+        run: cat config/analysis/phpstan.neon; vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src
       - name: "PHP-CS-Fixer Scan"
         run: vendor/bin/php-cs-fixer fix --config=config/analysis/php-cs-fixer.php --dry-run --format=checkstyle | cs2pr
       - name: "PHPInsights"
