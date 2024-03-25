@@ -28,11 +28,13 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          coverage: none
-          tools: phpmd
+          php-version: '8.2'
+          extensions: cs2pr, mbstring, xml, ctype, iconv
+          coverage: pcov
+          tools: composer
 
       - name: Run PHPMD
-        run: phpmd src/ sarif config/analysis/phpmd.xml --reportfile phpmd-results.sarif
+        run: vendor/bin/phpmd src/ sarif config/analysis/phpmd.xml --reportfile phpmd-results.sarif
         continue-on-error: true
 
       - name: Upload analysis results to GitHub
