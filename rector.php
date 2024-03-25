@@ -58,4 +58,4 @@ return RectorConfig::configure()
             AddVoidReturnTypeWhereNoReturnRector::class,
         ],
     )
-    ->withCache(cacheClass: FileCacheStorage::class, cacheDirectory: '/tmp/rector');
+    ->withCache(cacheClass: FileCacheStorage::class, cacheDirectory: 'var/cache/dev/rector');

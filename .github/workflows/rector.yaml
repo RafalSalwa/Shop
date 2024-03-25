@@ -8,30 +8,23 @@ on:
     branches: [ "main" ]
 
 jobs:
-  setup:
+  Rector:
     name: Setting up CI environment
     runs-on: ubuntu-latest
     steps:
-    - uses: shivammathur/setup-php@v2
-      with:
-        php-version: '8.2'
-    - uses: actions/checkout@v3
-    - name: Install Dependencies
-      uses: ramsey/composer-install@v2
-        
-  rector:
-    name: Running dry-run of rector
-    runs-on: ubuntu-latest
-    needs: setup
-    steps:
-    - name: Rector Cache
-      uses: actions/cache@v3
-      with:
-        path: /tmp/rector
-        key: ${{ runner.os }}-rector-${{ github.run_id }}
-        restore-keys: ${{ runner.os }}-rector-
+      - name: "Checkout"
+        uses: actions/checkout@v4
 
-    - run: mkdir -p /tmp/rector
-
-    - name: Rector Dry Run
-      run: php vendor/bin/rector process --dry-run --config=rector.php
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv
+          coverage: pcov
+          tools: cs2pr, composer
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+      - name: Rector Dry Run
+        run: php vendor/bin/rector process --dry-run --config=rector.php
