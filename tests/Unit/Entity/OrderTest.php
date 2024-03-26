@@ -32,8 +32,11 @@ use Symfony\Component\Uid\Uuid;
 class OrderTest extends TestCase
 {
     public $product;
+
     public $payment;
+
     public $address;
+
     private Order $order;
 
     use ProductHelperCartItemTrait;

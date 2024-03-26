@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 class OAuth2UserConsentTest extends TestCase
 {
     public $client;
+
     private OAuth2UserConsent $userConsent;
 
     use ProtectedPropertyHelper;

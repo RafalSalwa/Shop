@@ -23,6 +23,7 @@ use PHPUnit\Framework\TestCase;
 class OAuth2ClientProfileTest extends TestCase
 {
     public $client;
+
     private OAuth2ClientProfile $profile;
 
     use TokenTestHelperTrait;
