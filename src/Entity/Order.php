@@ -54,7 +54,7 @@ class Order
     private int $total;
 
     #[Column(name: 'status', type: Types::STRING, length: 25)]
-    private string $status;
+    private string $status = self::PENDING;
 
     /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -73,25 +73,36 @@ class Order
     private ?CouponCode $coupon = null;
 
     #[ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
-    #[JoinColumn(name: 'delivery_address_id', referencedColumnName: 'address_id', unique: false)]
+    #[JoinColumn(name: 'delivery_address_id', referencedColumnName: 'address_id', unique: false, nullable: false)]
     private Address $deliveryAddress;
 
     #[ManyToOne(targetEntity: Address::class, cascade: ['persist'])]
-    #[JoinColumn(name: 'biling_address_id', referencedColumnName: 'address_id', unique: false)]
+    #[JoinColumn(name: 'biling_address_id', referencedColumnName: 'address_id', unique: false, nullable: false)]
     private Address $bilingAddress;
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     private DateTimeImmutable $createdAt;
 
-    public function __construct(int $netAmount, int $userId, int $shippingCost, int $total)
-    {
+    public function __construct(
+        int $netAmount,
+        int $userId,
+        int $shippingCost,
+        int $total,
+        Address $deliveryAddress,
+        Address $bilingAddress,
+    ) {
         $this->userId = $userId;
         $this->netAmount = $netAmount;
         $this->shippingCost = $shippingCost;
         $this->total = $total;
 
+        $this->deliveryAddress = $deliveryAddress;
+        $this->bilingAddress = $bilingAddress;
+
         $this->payments = new ArrayCollection();
         $this->items    = new ArrayCollection();
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
     public function applyCoupon(?CouponCode $coupon): void
@@ -134,7 +145,6 @@ class Order
 
     public function addItem(OrderItem $orderItem): void
     {
-        $orderItem->setOrder($this);
         $this->getItems()->add($orderItem);
     }
 
@@ -163,7 +173,7 @@ class Order
     public function addPayment(Payment $payment): void
     {
         $payment->setOrder($this);
-        $this->payments[] = $payment;
+        $this->payments->add($payment);
     }
 
     public function getLastPayment(): Payment|null
@@ -201,6 +211,7 @@ class Order
         if (null === $this->couponType) {
             return null;
         }
+
         $this->coupon = new CouponCode(type: $this->couponType, value: $this->couponDiscount);
 
         return $this->coupon;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\ProductCartItem;
+use App\Entity\Contracts\CartItemInterface;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Requests\CartAddJsonRequest;
@@ -53,7 +53,7 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
-    public function removeFromCart(ProductCartItem $cartItem, CartWorkflow $cartWorkflow): JsonResponse
+    public function removeFromCart(CartItemInterface $cartItem, CartWorkflow $cartWorkflow): JsonResponse
     {
         try {
             $cartWorkflow->remove($cartItem);
@@ -70,8 +70,8 @@ final class CartController extends AbstractShopController
         try {
             $couponCode = $request->request->get('coupon');
             $cartWorkflow->applyCouponCode($couponCode);
-        } catch (CartOperationExceptionInterface $exception) {
-            $this->addFlash('info', $exception->getMessage());
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            $this->addFlash('info', $cartOperationException->getMessage());
         }
 
         return new RedirectResponse($this->generateUrl('cart_index'));

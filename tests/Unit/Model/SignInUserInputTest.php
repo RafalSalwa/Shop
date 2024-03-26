@@ -13,29 +13,29 @@ class SignInUserInputTest extends TestCase
 {
     public function testGetSetEmail(): void
     {
-        $input = new SignInUserInput();
+        $signInUserInput = new SignInUserInput();
         $email = 'test@example.com';
 
-        $input->setEmail($email);
+        $signInUserInput->setEmail($email);
 
-        $this->assertEquals($email, $input->getEmail());
+        $this->assertSame($email, $signInUserInput->getEmail());
     }
 
     public function testGetSetPassword(): void
     {
-        $input = new SignInUserInput();
+        $signInUserInput = new SignInUserInput();
         $password = 'password123';
 
-        $input->setPassword($password);
+        $signInUserInput->setPassword($password);
 
-        $this->assertEquals($password, $input->getPassword());
+        $this->assertSame($password, $signInUserInput->getPassword());
     }
 
     public function testDefaultValues(): void
     {
-        $input = new SignInUserInput();
+        $signInUserInput = new SignInUserInput();
 
-        $this->assertEquals('', $input->getEmail());
-        $this->assertEquals('', $input->getPassword());
+        $this->assertSame('', $signInUserInput->getEmail());
+        $this->assertSame('', $signInUserInput->getPassword());
     }
 }

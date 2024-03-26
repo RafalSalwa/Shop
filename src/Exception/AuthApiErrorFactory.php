@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Exception;
 
 use App\Client\ApiResponseExtractor;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\HttpExceptionInterface;
 

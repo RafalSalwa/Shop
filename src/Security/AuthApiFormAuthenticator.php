@@ -6,7 +6,7 @@ namespace App\Security;
 
 use App\Client\AuthApiClient;
 use App\Client\UsersApiClient;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -46,11 +46,15 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
             return new SelfValidatingPassport(
                 userBadge: new UserBadge($user->getUserIdentifier()),
             );
-        } catch (AuthenticationExceptionInterface $authException) {
-            $this->logger->critical($authException->getMessage());
+        } catch (AuthenticationExceptionInterface $authenticationException) {
+            $this->logger->critical($authenticationException->getMessage());
             $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $request->request->get('email'));
 
-            throw new AuthenticationException($authException->getMessage(), $authException->getCode(), $authException);
+            throw new AuthenticationException(
+                message: $authenticationException->getMessage(),
+                code: $authenticationException->getCode(),
+                previous: $authenticationException,
+            );
         }
     }
 

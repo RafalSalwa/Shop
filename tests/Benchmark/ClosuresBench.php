@@ -7,6 +7,7 @@ namespace App\Tests\Benchmark;
 class ClosuresBench
 {
     private const TRIES= 2000;
+
     public function benchLargeObjectStatic(): void
     {
         $processors = [];

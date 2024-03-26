@@ -43,15 +43,22 @@ class OrderItem
     #[Column(name: 'cart_item_type', type: Types::STRING, length: 25)]
     private string $itemType;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_IMMUTABLE,
+        nullable: false,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
     private DateTimeImmutable $createdAt;
 
-    public function __construct(int $prodId, int $quantity, int $price, string $name)
+    public function __construct(int $prodId, int $quantity, int $price, string $name, string $itemType, Order $order)
     {
+        $this->order = $order;
         $this->prodId = $prodId;
         $this->quantity = $quantity;
         $this->price = $price;
         $this->name = $name;
+        $this->itemType = $itemType;
 
         $this->createdAt = new DateTimeImmutable();
     }
@@ -64,13 +71,6 @@ class OrderItem
     public function getItemType(): string
     {
         return $this->itemType;
-    }
-
-    public function setItemType(string $itemType): self
-    {
-        $this->itemType = $itemType;
-
-        return $this;
     }
 
     public function getId(): int

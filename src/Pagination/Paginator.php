@@ -28,24 +28,17 @@ use function min;
 /** @psalm-api */
 final class Paginator
 {
-    /**
-     * Use constants to define configuration options that rarely change instead
-     * of specifying them under parameters section in config/services.yaml file.
-     *
-     * See https://symfony.com/doc/current/best_practices.html#use-constants-to-define-options-that-rarely-change
-     */
-    public const PAGE_SIZE = 15;
-
     private int $currentPage = 1;
 
     private int $numResults = 0;
 
-    /** @var Traversable<int, object> */
-    private Traversable $traversable;
+    private int $pageSize = 15;
+
+    /** @var Traversable<mixed, mixed>|null */
+    private ?Traversable $traversable = null;
 
     public function __construct(
         private readonly DoctrineQueryBuilder $doctrineQueryBuilder,
-        private readonly int $pageSize = self::PAGE_SIZE,
     ) {}
 
     /** @throws Exception */

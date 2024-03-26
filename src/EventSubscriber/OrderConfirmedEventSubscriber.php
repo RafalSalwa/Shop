@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use App\Event\OrderConfirmedEvent;
 use App\Service\CalculatorService;
@@ -12,7 +12,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Mailer\MailerInterface;
 
-final readonly class OrderConfirmedListener implements EventSubscriberInterface
+final readonly class OrderConfirmedEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private MailerInterface $mailer,

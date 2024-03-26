@@ -16,7 +16,9 @@ use function is_null;
 final readonly class CalculatorService
 {
     public const FIRST_DISCOUNT_LIMIT = 50_00;
+
     public const FREE_DELIVERY_LIMIT = 150_00;
+
     private const TAX_RATE = '23';
 
     public function calculateSummary(int $netAmount, ?CouponCode $coupon): Summary
@@ -36,9 +38,11 @@ final readonly class CalculatorService
         if (null === $coupon) {
             return 0;
         }
+
         if (false === $coupon->isCartDiscount()) {
             return 0;
         }
+
         $discount = bcdiv($coupon->getValue(), '100', 2);
 
         return (int)bcmul((string)$netAmount, $discount, 2);

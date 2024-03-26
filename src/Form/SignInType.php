@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Form;
 
-use App\Form\Type\EmailType;
 use App\Model\SignInUserInput;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,7 +24,7 @@ final class SignInType extends AbstractType
             ->setDisabled($options['disabled'])
             ->add(
                 'email',
-                EmailType::class,
+                TextType::class,
                 ['label' => 'Email'],
             )
             ->add(

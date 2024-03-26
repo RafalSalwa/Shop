@@ -2,11 +2,13 @@
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\AbstractCartItem;
+use App\Entity\CartItem;
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
+use App\Entity\SubscriptionPlan;
 use App\Enum\CartStatus;
+use App\Enum\SubscriptionTier;
 use App\Exception\ItemNotFoundException;
 use App\Tests\Helpers\CouponHelperTrait;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
@@ -18,37 +20,40 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: Cart::class)]
 #[UsesClass(className: CartStatus::class)]
 #[UsesClass(className: CouponCode::class)]
-#[UsesClass(className: AbstractCartItem::class)]
+#[UsesClass(className: CartItem::class)]
 #[UsesClass(className: Product::class)]
+#[UsesClass(className: SubscriptionPlan::class)]
+#[UsesClass(className: SubscriptionTier::class)]
 class CartTest extends TestCase
 {
     private Cart $cart;
+
     use CouponHelperTrait;
     use ProductHelperCartItemTrait;
 
     protected function setUp(): void
     {
-        $cart = new Cart();
+        $cart = new Cart(1);
         $this->setProtectedProperty($cart, 'id', 1);
         $cart->setStatus(CartStatus::CREATED);
         $cart->setUserId(1);
         $this->cart = $cart;
     }
 
-    public function testCreateCart()
+    public function testCreateCart(): void
     {
         $this->assertInstanceOf(Cart::class, $this->cart);
-        $this->assertEquals(0, $this->cart->getItems()->count());
-        $this->assertEquals(1, $this->cart->getUserId());
+        $this->assertSame(0, $this->cart->getItems()->count());
+        $this->assertSame(1, $this->cart->getUserId());
     }
 
-    public function testGetTotalAmount()
+    public function testGetTotalAmount(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(0, $cart->getTotalAmount());
+        $this->assertSame(0, $cart->getTotalAmount());
     }
 
-    public function testJsonSerialize()
+    public function testJsonSerialize(): void
     {
         $cart = $this->cart;
         $this->assertIsArray($cart->jsonSerialize());
@@ -57,17 +62,17 @@ class CartTest extends TestCase
         $this->assertArrayHasKey('created_at', $cart->jsonSerialize());
     }
 
-    public function testGetUserId()
+    public function testGetUserId(): void
     {
-        $this->assertEquals(1, $this->cart->getUserId());
+        $this->assertSame(1, $this->cart->getUserId());
     }
 
-    public function testGetStatus()
+    public function testGetStatus(): void
     {
         $this->assertEquals(CartStatus::CREATED, $this->cart->getStatus());
     }
 
-    public function testGetCoupon()
+    public function testGetCoupon(): void
     {
         $cart = $this->cart;
         $this->assertNull($cart->getCoupon());
@@ -75,7 +80,7 @@ class CartTest extends TestCase
         $this->assertInstanceOf(CouponCode::class, $cart->getCoupon());
     }
 
-    public function testApplyCoupon()
+    public function testApplyCoupon(): void
     {
         $cart = $this->cart;
         $this->assertNull($cart->getCoupon());
@@ -83,92 +88,92 @@ class CartTest extends TestCase
         $this->assertInstanceOf(CouponCode::class, $cart->getCoupon());
     }
 
-    public function testGetItems()
+    public function testGetItems(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(0, $cart->getItems()->count());
+        $this->assertSame(0, $cart->getItems()->count());
         $cart->applyCoupon($this->getHelperCartCoupon());
         $this->assertInstanceOf(CouponCode::class, $cart->getCoupon());
     }
 
-    public function testRemoveNonExistentItem()
+    public function testRemoveNonExistentItem(): void
     {
         $cart = $this->cart;
         $product = $this->getHelperProductCartItem();
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
 
         $this->expectException(ItemNotFoundException::class);
         $cart->removeItem($this->getHelperProductCartItem(2));
     }
 
-    public function testRemoveItem()
+    public function testRemoveItem(): void
     {
         $cart = $this->cart;
         $product = $this->getHelperProductCartItem();
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
         $cart->removeItem($product);
-        $this->assertEquals(0, $cart->getItems()->count());
+        $this->assertSame(0, $cart->getItems()->count());
 
         $this->expectException(ItemNotFoundException::class);
         $cart->removeItem($product);
     }
 
-    public function testSetUserId()
+    public function testSetUserId(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(1, $cart->getUserId());
+        $this->assertSame(1, $cart->getUserId());
     }
 
-    public function testPreUpdate()
+    public function testPreUpdate(): void
     {
         $cart = $this->cart;
         $cart->preUpdate();
         $this->assertNotNull($cart);
     }
 
-    public function testGetTotalItemsCount()
+    public function testGetTotalItemsCount(): void
     {
         $cart = $this->cart;
         $product = $this->getHelperProductCartItem(id: 1);
 
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
         $product2 = $this->getHelperProductCartItem(id: 2);
         $cart->addItem($product2);
-        $this->assertEquals(2, $cart->getTotalItemsCount());
+        $this->assertSame(2, $cart->getTotalItemsCount());
         $product3 = $this->getHelperProductCartItem(id: 3);
         $cart->addItem($product3);
-        $this->assertEquals(3, $cart->getTotalItemsCount());
+        $this->assertSame(3, $cart->getTotalItemsCount());
         $cart->addItem($this->getHelperProductCartItem(id: 3));
-        $this->assertEquals(4, $cart->getTotalItemsCount());
+        $this->assertSame(4, $cart->getTotalItemsCount());
     }
 
-    public function testGetItemById()
+    public function testGetItemById(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(0, $cart->getItems()->count());
+        $this->assertSame(0, $cart->getItems()->count());
         $product = $this->getHelperProductCartItem();
         $cart->addItem($product);
         $this->assertNotNull($cart->getItemById($product->getId()));
     }
 
-    public function testItemExists()
+    public function testItemExists(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(0, $cart->getItems()->count());
+        $this->assertSame(0, $cart->getItems()->count());
         $product = $this->getHelperProductCartItem();
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
         $cartItem = $cart->getItemById($product->getId());
-        $this->assertTrue($cart->itemExists($cartItem));
+        $this->assertTrue($cart->hasItem($cartItem));
     }
 
-    public function testGetItem()
+    public function testGetItem(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(0, $cart->getItems()->count());
+        $this->assertSame(0, $cart->getItems()->count());
         $product = $this->getHelperProductCartItem();
         $cart->addItem($product);
         $this->assertNotNull($cart->getItemById($product->getId()));
@@ -176,38 +181,38 @@ class CartTest extends TestCase
         $this->assertInstanceOf(CartItemInterface::class, $cart->getItem($cartItem));
     }
 
-    public function testAddItem()
+    public function testAddItem(): void
     {
         $cart = $this->cart;
         $product = $this->getHelperProductCartItem(id: 1);
 
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
         $product2 = $this->getHelperProductCartItem(id: 2);
         $cart->addItem($product2);
-        $this->assertEquals(2, $cart->getTotalItemsCount());
+        $this->assertSame(2, $cart->getTotalItemsCount());
     }
 
-    public function testGetItemsPrice()
+    public function testGetItemsPrice(): void
     {
         $cart = $this->cart;
         $product = $this->getHelperProductCartItem(id: 1);
 
         $cart->addItem($product);
-        $this->assertEquals(1, $cart->getItems()->count());
+        $this->assertSame(1, $cart->getItems()->count());
         $product2 = $this->getHelperProductCartItem(id: 2);
         $cart->addItem($product2);
-        $this->assertEquals(2, $cart->getTotalItemsCount());
-        $this->assertEquals(200, $cart->getItemsPrice());
+        $this->assertSame(2, $cart->getTotalItemsCount());
+        $this->assertSame(200, $cart->getItemsPrice());
     }
 
-    public function testGetId()
+    public function testGetId(): void
     {
         $cart = $this->cart;
-        $this->assertEquals(1, $cart->getId());
+        $this->assertSame(1, $cart->getId());
     }
 
-    public function testSetStatus()
+    public function testSetStatus(): void
     {
         $cart = $this->cart;
         $this->assertInstanceOf(CartStatus::class, $cart->getStatus());

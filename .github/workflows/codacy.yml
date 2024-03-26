@@ -34,27 +34,19 @@ jobs:
     name: Codacy Security Scan
     runs-on: ubuntu-latest
     steps:
-      # Checkout the repository to the GitHub Actions runner
-      - name: Checkout code
+      - name: "Checkout"
         uses: actions/checkout@v4
-
-      - name: Setup PHP with fail-fast
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
-          extensions: amqp, ast, bcmath, ctype, iconv, mbstring, xml
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, xml, ctype, iconv, grpc
           coverage: pcov
-          tools: composer
+          tools: cs2pr, composerr
 
-      - name: Cache Vendor
-        id: cache-vendor
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
       - uses: "ramsey/composer-install@v3"
         with:
-          custom-cache-key: ${{ runner.os }}-vendor-${{ hashFiles('**/composer.lock') }}
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Run Codacy Analysis CLI
         uses: codacy/codacy-analysis-cli-action@master

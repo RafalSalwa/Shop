@@ -12,11 +12,11 @@ class VerificationCodeRequestTest extends TestCase
 {
     public function testGetSetVerificationCode(): void
     {
-        $request = new VerificationCodeRequest();
+        $verificationCodeRequest = new VerificationCodeRequest();
         $verificationCode = '123456';
 
-        $request->setVerificationCode($verificationCode);
+        $verificationCodeRequest->setVerificationCode($verificationCode);
 
-        $this->assertEquals($verificationCode, $request->getVerificationCode());
+        $this->assertSame($verificationCode, $verificationCodeRequest->getVerificationCode());
     }
 }

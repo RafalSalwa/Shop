@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Client;
 
+use App\Client\Contracts\ShopUserProviderInterface;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Model\User;
 use App\Service\SubscriptionService;
 use App\ValueObject\Token;
@@ -49,12 +50,9 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             );
             $arrContent = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
 
-            $user = new User(
-                id: $arrContent['user']['id'],
-                email: $arrContent['user']['email'],
-                token: $arrContent['user']['token'],
-                refreshToken: $arrContent['user']['refresh_token'],
-            );
+            $user = new User(id: $arrContent['user']['id'], email: $arrContent['user']['email']);
+            $user->setToken(new Token($arrContent['user']['token']));
+            $user->setRefreshToken(new Token($arrContent['user']['refresh_token']));
             $subscription = $this->subscriptionService->findForUser($user->getId());
 
             $user->setSubscription($subscription);

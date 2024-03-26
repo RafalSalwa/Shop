@@ -17,7 +17,7 @@ use function is_subclass_of;
 /** @extends Voter<string,Product> */
 final class AddToCartVoter extends Voter
 {
-    public function __construct(private SubscriptionService $service)
+    public function __construct(private readonly SubscriptionService $service)
     {
     }
 

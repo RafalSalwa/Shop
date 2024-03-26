@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\EntryPoint\AuthenticationEntryPointInterface
 
 use function assert;
 
-final class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
+final readonly class AuthenticationEntryPoint implements AuthenticationEntryPointInterface
 {
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
@@ -26,7 +26,9 @@ final class AuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     {
         $flashBag = $request->getSession()->getFlashBag();
         assert($flashBag instanceof FlashBagInterface);
-        $flashBag->add('info', 'You have to login in order to access this page.');
+        if (null !== $authException) {
+            $flashBag->add('info', 'You have to login in order to access this page.');
+        }
 
         return new RedirectResponse($this->urlGenerator->generate('login_index'));
     }

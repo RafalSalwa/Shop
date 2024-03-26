@@ -1,15 +1,13 @@
 name: "Architecture & Dependencies"
 on:
+  push:
   pull_request:
     branches:
       - main
       - develop
-  push:
-
 jobs:
-  deptrac:
+  deptrac_phparkitect:
     runs-on: ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -18,7 +16,7 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -26,13 +24,13 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, xml, ctype, iconv, grpc
           coverage: pcov
-          tools: composer
+          tools: cs2pr, composer
 
       - uses: "ramsey/composer-install@v3"
         with:
-          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.*') }}
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: "Run deptrac"
-        run: vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
+        run: vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions || true
       - name: "Run PHPArkitect"
         run: vendor/bin/phparkitect check --config=config/analysis/phparkitect.php

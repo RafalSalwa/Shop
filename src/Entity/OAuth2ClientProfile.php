@@ -21,11 +21,17 @@ class OAuth2ClientProfile
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
     private Client $client;
 
-    #[ORM\Column(length: 255)]
-    private string|null $name = null;
+    #[ORM\Column(length: 255, nullable: false)]
+    private string $name;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private string|null $description = null;
+    private ?string $description = null;
+
+    public function __construct(Client $client, string $name)
+    {
+        $this->name = $name;
+        $this->client = $client;
+    }
 
     public function getId(): int|null
     {
@@ -37,14 +43,12 @@ class OAuth2ClientProfile
         return $this->client;
     }
 
-    public function setClient(Client $client): self
+    public function setClient(Client $client): void
     {
         $this->client = $client;
-
-        return $this;
     }
 
-    public function getName(): string|null
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -54,7 +58,7 @@ class OAuth2ClientProfile
         $this->name = $name;
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }

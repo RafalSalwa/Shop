@@ -28,7 +28,7 @@ use const JSON_THROW_ON_ERROR;
 
 #[asController]
 #[Route(path: '/api/cart', name: 'api_cart_', methods: ['GET', 'POST', 'PUT'])]
-final class CartApiController extends AbstractShopController
+final class OAuthCartApiController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index', methods: ['GET'])]
     #[OA\Tag(name: 'Cart')]
@@ -92,11 +92,11 @@ final class CartApiController extends AbstractShopController
             }
 
             $cartService->add($product->toCartItem());
-        } catch (ProductStockDepletedException $e) {
+        } catch (ProductStockDepletedException $exception) {
             return $this->json(
                 [
                     'status' => 'something went wrong, please try again later',
-                    'message' => $e->getMessage(),
+                    'message' => $exception->getMessage(),
                 ],
                 Response::HTTP_NOT_FOUND,
             );

@@ -20,20 +20,20 @@ final class AddressBookServiceTest extends TestCase
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
         $addressRepositoryMock->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function (Address $address) {
-                $this->assertEquals(1, $address->getUserId());
-                $this->assertEquals('Test Street', $address->getAddressLine1());
-                $this->assertEquals('Test Street 2', $address->getAddressLine2());
-                $this->assertEquals('Test City', $address->getCity());
-                $this->assertEquals('Test State', $address->getState());
-                $this->assertEquals('11-222', $address->getPostalCode());
-                $this->assertEquals('Test Country', $address->getCountry());
+            ->willReturnCallback(function (Address $address): void {
+                $this->assertSame(1, $address->getUserId());
+                $this->assertSame('Test Street', $address->getAddressLine1());
+                $this->assertSame('Test Street 2', $address->getAddressLine2());
+                $this->assertSame('Test City', $address->getCity());
+                $this->assertSame('Test State', $address->getState());
+                $this->assertSame('11-222', $address->getPostalCode());
+                $this->assertSame('Test Country', $address->getCountry());
                 $this->assertTrue($address->isDefault());
             });
 
-        $addressService = new AddressBookService($addressRepositoryMock);
+        $addressBookService = new AddressBookService($addressRepositoryMock);
 
-        $address = new Address();
+        $address = new Address(1);
         $address->setId(1);
         $address->setUserId(1);
         $address->setAddressLine1('Test Street');
@@ -45,7 +45,8 @@ final class AddressBookServiceTest extends TestCase
 
         $address->setCountry('Test Country');
         $address->setDefault(true);
-        $addressService->save($address);
+
+        $addressBookService->save($address);
     }
 
     public function testSetDefaultAddress(): void
@@ -55,18 +56,18 @@ final class AddressBookServiceTest extends TestCase
             ->method('setDefaultAddress')
             ->with(123, 1);
 
-        $addressService = new AddressBookService($addressRepositoryMock);
+        $addressBookService = new AddressBookService($addressRepositoryMock);
 
-        $addressService->setDefaultAddress(123, 1);
+        $addressBookService->setDefaultAddress(123, 1);
     }
 
     public function testGetDeliveryAddresses(): void
     {
         $userId = 1;
         $addresses = [
-            new Address(),
-            new Address(),
-            new Address(),
+            new Address(1),
+            new Address(2),
+            new Address(3),
         ];
 
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
@@ -75,9 +76,9 @@ final class AddressBookServiceTest extends TestCase
             ->with(['userId' => $userId])
             ->willReturn($addresses);
 
-        $addressService = new AddressBookService($addressRepositoryMock);
+        $addressBookService = new AddressBookService($addressRepositoryMock);
 
-        $result = $addressService->getDeliveryAddresses($userId);
+        $result = $addressBookService->getDeliveryAddresses($userId);
 
         $this->assertEquals($addresses, $result);
     }
@@ -85,7 +86,7 @@ final class AddressBookServiceTest extends TestCase
     public function testGetDefaultDeliveryAddress(): void
     {
         $userId = 1;
-        $address = new Address();
+        $address = new Address(1);
 
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
         $addressRepositoryMock->expects($this->once())
@@ -93,9 +94,9 @@ final class AddressBookServiceTest extends TestCase
             ->with($userId)
             ->willReturn($address);
 
-        $addressService = new AddressBookService($addressRepositoryMock);
+        $addressBookService = new AddressBookService($addressRepositoryMock);
 
-        $result = $addressService->getDefaultDeliveryAddress($userId);
+        $result = $addressBookService->getDefaultDeliveryAddress($userId);
 
         $this->assertEquals($address, $result);
     }

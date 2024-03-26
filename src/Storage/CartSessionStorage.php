@@ -19,17 +19,17 @@ use function assert;
 use function is_a;
 use function is_subclass_of;
 
-final class CartSessionStorage
+final readonly class CartSessionStorage
 {
     public const CART_KEY_NAME = 'cart_id';
 
     public const ADDR_KEY_NAME = 'addr_id';
 
     public function __construct(
-        private readonly RequestStack $requestStack,
-        private readonly CartRepository $cartRepository,
-        private readonly Security $security,
-        private readonly ParameterBagInterface $parameterBag,
+        private RequestStack $requestStack,
+        private CartRepository $cartRepository,
+        private Security $security,
+        private ParameterBagInterface $parameterBag,
     ) {}
 
     /**

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Client;
+namespace App\Client\Contracts;
 
 use App\Entity\Contracts\ShopUserInterface;
 use App\Model\TokenPair;

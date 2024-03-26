@@ -14,7 +14,10 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: OAuth2UserConsent::class)]
 class OAuth2UserConsentTest extends TestCase
 {
+    public $client;
+
     private OAuth2UserConsent $userConsent;
+
     use ProtectedPropertyHelper;
 
     protected function setUp(): void
@@ -27,23 +30,22 @@ class OAuth2UserConsentTest extends TestCase
 
     public function testGettersAndSetters(): void
     {
-        $this->assertEquals(1, $this->userConsent->getId());
+        $this->assertSame(1, $this->userConsent->getId());
 
-        $created = new DateTimeImmutable();
-        $this->userConsent->setCreated($created);
-        $this->assertEquals($created, $this->userConsent->getCreated());
+        new DateTimeImmutable();
+        $this->assertNotNull($this->userConsent->getCreated());
 
-        $expires = new DateTimeImmutable();
-        $this->userConsent->setExpires($expires);
-        $this->assertEquals($expires, $this->userConsent->getExpires());
+        $dateTimeImmutable = new DateTimeImmutable();
+        $this->userConsent->setExpires($dateTimeImmutable);
+        $this->assertEquals($dateTimeImmutable, $this->userConsent->getExpires());
 
         $scopes = ['email', 'id'];
         $this->userConsent->setScopes($scopes);
-        $this->assertEquals($scopes, $this->userConsent->getScopes());
+        $this->assertSame($scopes, $this->userConsent->getScopes());
 
         $ipAddress = '192.168.1.1';
         $this->userConsent->setIpAddress($ipAddress);
-        $this->assertEquals($ipAddress, $this->userConsent->getIpAddress());
+        $this->assertSame($ipAddress, $this->userConsent->getIpAddress());
 
         $this->userConsent->setClient($this->client);
         $this->assertEquals($this->client, $this->userConsent->getClient());

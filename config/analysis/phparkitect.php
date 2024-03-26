@@ -52,6 +52,7 @@ return static function (Config $config): void {
 
     $rules[] = Rule::allClasses()
         ->that(new ResideInOneOfTheseNamespaces('App\Controller'))
+        ->andThat(new IsNotAbstract())
         ->should(new HaveAttribute(AsController::class))
         ->because('it configures the service container')
     ;

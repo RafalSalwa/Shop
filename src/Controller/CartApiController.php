@@ -94,11 +94,11 @@ final class CartApiController extends AbstractShopController
             }
 
             $cartService->add($product->toCartItem());
-        } catch (ProductStockDepletedException $e) {
+        } catch (ProductStockDepletedException $exception) {
             return $this->json(
                 [
                     'status' => 'something went wrong, please try again later',
-                    'message' => $e->getMessage(),
+                    'message' => $exception->getMessage(),
                 ],
                 Response::HTTP_NOT_FOUND,
             );
@@ -112,7 +112,7 @@ final class CartApiController extends AbstractShopController
     }
 
     #[Route(path: '/set/quantity', name: 'set_quantity', methods: ['PUT'])]
-    public function setQuantity(
+    public function updateQuantity(
         #[MapRequestPayload]
         CartSetQuantityRequest $cartSetQuantityRequest,
         CartService $cartService,
@@ -121,8 +121,8 @@ final class CartApiController extends AbstractShopController
             $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
 
             return $this->json('ok');
-        } catch (CartOperationExceptionInterface $exception) {
-            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            return $this->json($cartOperationException->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -34,14 +34,12 @@ final class AddressBookController extends AbstractShopController
     {
         $user = $this->getShopUser();
 
-        $address = new Address();
+        $address = new Address($this->getUserId());
         $form    = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
-            $address = $form->getData();
-            $user->addDeliveryAddress($address);
-            $address->setUser($user);
+            $address->setUserId($this->getUserId());
             $service->save($address);
 
             return $this->redirectToRoute('checkout_shipment');
