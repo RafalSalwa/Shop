@@ -41,7 +41,7 @@ final class TokenPairTest extends TestCase
         $this->token = $token->toString();
     }
 
-    public function testGetToken()
+    public function testGetToken(): void
     {
         $token = new Token($this->token);
         $tokenPair = new TokenPair($token, $token);
@@ -50,7 +50,7 @@ final class TokenPairTest extends TestCase
         $this->assertInstanceOf(Token::class, $tokenPair->getRefreshToken());
     }
 
-    public function testMappingFromJson()
+    public function testMappingFromJson(): void
     {
         $arr['user'] = [
             'token'=>$this->token,

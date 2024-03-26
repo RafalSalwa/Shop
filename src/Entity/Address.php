@@ -29,42 +29,47 @@ class Address
 
     #[Assert\NotBlank]
     #[Column(name: 'first_name', type: Types::STRING, length: 40)]
-    private string $firstName;
+    private string $firstName = '';
 
     #[Assert\NotBlank]
     #[Column(name: 'last_name', type: Types::STRING, length: 40)]
-    private string $lastName;
+    private string $lastName = '';
 
     #[Assert\NotBlank]
     #[Column(name: 'address_line_1', type: Types::STRING, length: 40)]
-    private string $addressLine1;
+    private string $addressLine1 = '';
 
     #[Column(name: 'address_line_2', type: Types::STRING, length: 40, nullable: true)]
-    private string|null $addressLine2 = null;
+    private ?string $addressLine2 = null;
 
-    #[Column(name: 'phone_no', type: Types::STRING, length: 12, nullable: true)]
-    private string $phoneNo;
+    #[Column(name: 'phone_no', type: Types::STRING, length: 12, nullable: false)]
+    private string $phoneNo = '';
 
     #[Assert\NotBlank]
     #[Column(name: 'city', type: Types::STRING, length: 40)]
-    private string $city;
+    private string $city = '';
 
     #[Assert\NotBlank]
     #[Column(name: 'state', type: Types::STRING, length: 40)]
-    private string $state;
+    private string $state = '';
 
     #[Assert\NotBlank]
     #[Column(name: 'postal_code', type: Types::STRING, length: 40)]
-    private string $postalCode;
+    private string $postalCode = '';
 
     #[Column(name: 'country', type: Types::STRING, length: 40)]
-    private string $country;
+    private string $country = '';
 
     #[Column(name: 'user_id', type: Types::INTEGER)]
     private int $userId;
 
     #[Column(name: 'isDefault', type: Types::BOOLEAN, nullable: false, options: ['default' => 0])]
     private bool $isDefault = false;
+
+    public function __construct(int $userId)
+    {
+        $this->userId = $userId;
+    }
 
     public function getFirstName(): string
     {
@@ -154,9 +159,11 @@ class Address
     /** @throws InvalidArgumentException */
     public function setPostalCode(string $postalCode): void
     {
-        if (false === (bool)preg_match('/^\d{2}-\d{3}$/', $postalCode)) {
+        $postalCodeRegex = '/^\d{2}-\d{3}$/';
+        if (false === (bool)preg_match($postalCodeRegex, $postalCode)) {
             throw new InvalidArgumentException();
         }
+
         $this->postalCode = $postalCode;
     }
 

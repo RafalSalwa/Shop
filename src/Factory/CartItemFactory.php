@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
+use App\Entity\CartItem;
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\ProductCartItem;
 use App\Enum\CartOperationEnum;
 use App\Exception\InsufficientStockException;
 use App\Exception\ItemNotFoundException;
@@ -34,13 +34,15 @@ final readonly class CartItemFactory
         if (null === $product) {
             throw new ItemNotFoundException(sprintf('Product #%s not found', $id));
         }
+
         if ($product->getUnitsInStock() < $quantity) {
             throw new InsufficientStockException(sprintf('Product #%s does not have sufficient stock', $id));
         }
+
         if (false === $this->addToCartVoter->isGranted(CartOperationEnum::addToCart(), $product)) {
             throw new AccessDeniedException('Higher subscription required');
         }
 
-        return new ProductCartItem(referencedEntity: $product, quantity: $quantity);
+        return new CartItem(referencedEntity: $product, quantity: $quantity);
     }
 }

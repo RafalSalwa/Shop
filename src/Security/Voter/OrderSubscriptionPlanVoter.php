@@ -31,6 +31,7 @@ final class OrderSubscriptionPlanVoter extends Voter
         if (self::ORDER_SUBSCRIPTION_PLAN !== $attribute) {
             return false;
         }
+
         $user = $token->getUser();
 
         if (null === $user && false === $user instanceof ShopUserInterface) {

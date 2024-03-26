@@ -14,12 +14,10 @@ use DateTimeInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\DiscriminatorColumn;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
-use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
@@ -30,9 +28,7 @@ use function bcmul;
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[Table(name: 'cart_item', schema: 'interview')]
 #[HasLifecycleCallbacks]
-#[InheritanceType(value: 'SINGLE_TABLE')]
-#[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30, enumType: CartItemTypeEnum::class)]
-abstract class AbstractCartItem implements CartItemInterface
+class CartItem implements CartItemInterface
 {
     #[Id]
     #[GeneratedValue]
@@ -53,14 +49,16 @@ abstract class AbstractCartItem implements CartItemInterface
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTimeInterface $updatedAt = null;
 
-    protected readonly string $itemType;
+    #[ManyToOne(targetEntity: CartInsertableInterface::class, fetch: 'EAGER')]
+    #[JoinColumn(referencedColumnName: 'product_id', nullable: false)]
+    private CartInsertableInterface $referencedEntity;
 
-    public function __construct(protected CartInsertableInterface $referencedEntity, int $quantity)
+    public function __construct(CartInsertableInterface $referencedEntity, int $quantity)
     {
-        $this->itemType = $referencedEntity::class;
-        $this->createdAt = new DateTimeImmutable();
-
+        $this->referencedEntity = $referencedEntity;
         $this->quantity = $quantity;
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
     final public function setCart(?Cart $cart): void
@@ -71,11 +69,6 @@ abstract class AbstractCartItem implements CartItemInterface
     final public function getName(): string
     {
         return $this->referencedEntity->getName();
-    }
-
-    public function getTypeName(): string
-    {
-        return 'cart_item';
     }
 
     final public function getType(): string

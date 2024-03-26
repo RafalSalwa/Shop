@@ -12,8 +12,11 @@ use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 readonly final class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
-    public function __construct(private BaseAccessTokenRepository $baseAccessTokenRepository)
-    {}
+    public function __construct(
+        private BaseAccessTokenRepository $baseAccessTokenRepository,
+        private string $privateJWTKey,
+    ) {
+    }
 
     /**
      * @param array<string> $scopes
@@ -24,7 +27,7 @@ readonly final class AccessTokenRepository implements AccessTokenRepositoryInter
         array $scopes,
         $userIdentifier = null,
     ): AccessTokenEntity {
-        $accessToken = new AccessTokenEntity();
+        $accessToken = new AccessTokenEntity($this->privateJWTKey);
         $accessToken->setClient($clientEntity);
         $accessToken->setUserIdentifier($userIdentifier);
 

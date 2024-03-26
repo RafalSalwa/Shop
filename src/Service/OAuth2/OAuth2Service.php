@@ -10,6 +10,7 @@ use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 use function array_diff;
@@ -29,27 +30,23 @@ final readonly class OAuth2Service
     {
         $user = $this->getUser();
         $request = $this->requestStack->getCurrentRequest();
-        $consent = new OAuth2UserConsent($user->getId(), $appClient);
-        $userScopes = [];
-
-        $userConsents = $user->getConsents();
-        if (null !== $userConsents) {
-            $consent = $userConsents->filter(
-                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
-            )->first();
-            $userScopes = ($consent ?? []);
+        if (null === $request) {
+            throw new BadRequestException();
         }
+
+        $oAuth2UserConsent = new OAuth2UserConsent($user->getId(), $appClient);
+        $userScopes = [];
 
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);
 
-        $consent->setScopes(array_merge($requestedScopes, $userScopes));
-        $consent->setClient($appClient);
-        $consent->setCreated(new DateTimeImmutable());
-        $consent->setExpires(new DateTimeImmutable('+30 days'));
-        $consent->setIpAddress($request->getClientIp());
+        $oAuth2UserConsent->setScopes(array_merge($requestedScopes, $userScopes));
+        $oAuth2UserConsent->setClient($appClient);
+        $oAuth2UserConsent->setCreated(new DateTimeImmutable());
+        $oAuth2UserConsent->setExpires(new DateTimeImmutable('+30 days'));
+        $oAuth2UserConsent->setIpAddress($request->getClientIp());
 
-        return $consent;
+        return $oAuth2UserConsent;
     }
 
     public function getClient(): Client|null

@@ -30,6 +30,7 @@ final readonly class ProductStockService
         if (false === is_subclass_of($referencedEntity, StockManageableInterface::class)) {
             return;
         }
+
         if (0 === $referencedEntity->getUnitsInStock()) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
         }

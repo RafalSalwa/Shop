@@ -23,7 +23,10 @@ phive_installation:
 	phive install churn # churn run src tests
 
 lint:
-	vendor/bin/parallel-lint src --blame --no-progress
+	vendor/bin/parallel-lint src --no-progress
+
+twig_lint:
+	vendor/bin/twigcs src --no-interaction
 
 .PHONY: cloc
 cloc:
@@ -47,8 +50,8 @@ bench: ## Runs benchmarks with phpbench
 	composer bench
 
 deptrac:
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=reports/results/deptrack.png
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
+	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
 
 .PHONY: phpstan
 phpstan: lint
@@ -73,15 +76,15 @@ static_analysis: lint test_unit
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=var/reports/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
-#	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
 #	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
 #	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 #	-vendor/bin/twigcs templates --reporter checkstyle > reports/results/twigcs.xml
-#   -vendor/bin/rector process --dry-run
+	-vendor/bin/rector process --dry-run
 # pdepend!
 
-.PHONY: test_unit
+.PHONY: lint test_unit
 jenkins_static_analysis:
 	$(MAKE) test_unit
 	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=./var/reports/deptrack.junit.xml
@@ -95,31 +98,28 @@ jenkins_static_analysis:
 	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 	-vendor/bin/twigcs templates --reporter checkstyle > ./var/reports/twigcs.xml
 
-.PHONY: github_actions_static_analysis
+.PHONY: lint test_unit
 github_actions_static_analysis:
-	$(MAKE) test_unit
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
-#	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle --report-file=reports/results/phpcs.checkstyle.xml src tests || true
+	vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=github --no-progress -n src || true
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --output-format=github || true
-#	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run | cs2pr || true
 	-vendor/bin/phpmd src/ github config/analysis/phpmd.xml || true
-	-vendor/bin/phpinsights --no-interaction analyse src --config-path=config/analysis/phpinsights.php --composer=composer.json --format=github-action
-#	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
+	-vendor/bin/phpinsights analyse src --config-path=config/analysis/phpinsights.php --no-interaction --composer=composer.json --format=github-action
 
-.PHONY: sonar_static_analysis
+.PHONY: lint test_unit
 sonar_static_analysis:
-	$(MAKE) test_unit
 	-vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json src > ./var/reports/phpstan.sonarqube.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}
 
-.PHONY: test_unit phpmetrics
+.PHONY: test_unit
 phpmetrics:
-	$(MAKE) test_unit
 	${ROOT_DIR}/vendor/bin/phpmetrics --config=${ROOT_DIR}/config/analysis/phpmetrics.yml ${ROOT_DIR}/src
 	xdg-open ${ROOT_DIR}/reports/results/phpmetrics/html/index.html >/dev/null
+
 .PHONY: test_unit
 test_unit: ### run test
 	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=unit --no-output

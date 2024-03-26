@@ -22,6 +22,8 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: Token::class)]
 class OAuth2ClientProfileTest extends TestCase
 {
+    public $client;
+
     private OAuth2ClientProfile $profile;
 
     use TokenTestHelperTrait;
@@ -30,10 +32,10 @@ class OAuth2ClientProfileTest extends TestCase
     {
         parent::setUp();
         $this->client = new Client('test', 'test', 'test');
-        $user = new User(1, 'test@example.com', $this->generateTokenString(), $this->generateTokenString());
-        $consent = new OAuth2UserConsent($user->getId(), $this->client);
+        $user = new User(1, 'test@example.com');
+        new OAuth2UserConsent($user->getId(), $this->client);
 
-        $this->profile = new OAuth2ClientProfile();
+        $this->profile = new OAuth2ClientProfile($this->client, 'test');
     }
 
     public function testGettersAndSetters(): void
@@ -45,10 +47,10 @@ class OAuth2ClientProfileTest extends TestCase
         $this->assertEquals($client, $profile->getClient());
 
         $profile->setName('Test Name');
-        $this->assertEquals('Test Name', $profile->getName());
+        $this->assertSame('Test Name', $profile->getName());
 
         $profile->setDescription('Test Description');
-        $this->assertEquals('Test Description', $profile->getDescription());
+        $this->assertSame('Test Description', $profile->getDescription());
 
         // Test nullable properties
         $this->assertNull($profile->getId());

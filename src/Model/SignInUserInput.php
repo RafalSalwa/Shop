@@ -7,9 +7,9 @@ namespace App\Model;
 /** @psalm-api */
 final class SignInUserInput
 {
-    protected string $email = '';
+    private string $email = '';
 
-    protected string $password = '';
+    private string $password = '';
 
     public function getEmail(): string
     {

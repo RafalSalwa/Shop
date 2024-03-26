@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Workflow;
 
-use App\Entity\ProductCartItem;
+use App\Entity\Contracts\CartItemInterface;
 use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;
@@ -64,16 +64,19 @@ final readonly class CartWorkflow
      * @throws CartOperationExceptionInterface
      * @throws StockOperationExceptionInterface
      */
-    public function remove(ProductCartItem $cartItem): void
+    public function remove(CartItemInterface $cartItem): void
     {
         try {
             $this->cartService->removeItem($cartItem);
             $this->productStockService->restoreStock($cartItem);
             $this->cartService->save($this->cartService->getCurrentCart());
-        } catch (ItemNotFoundException $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (ItemNotFoundException $itemNotFoundException) {
+            $this->logger->error($itemNotFoundException->getMessage());
 
-            throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
+            throw new CartOperationException(
+                message: $itemNotFoundException->getMessage(),
+                previous: $itemNotFoundException,
+            );
         }
     }
 
@@ -84,10 +87,13 @@ final readonly class CartWorkflow
             $coupon = $this->couponService->getCouponType($couponCode);
             $this->cartService->applyCoupon($coupon);
             $this->cartService->save($this->cartService->getCurrentCart());
-        } catch (InvalidCouponCodeException $exception) {
-            $this->logger->error($exception->getMessage());
+        } catch (InvalidCouponCodeException $invalidCouponCodeException) {
+            $this->logger->error($invalidCouponCodeException->getMessage());
 
-            throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
+            throw new CartOperationException(
+                message: $invalidCouponCodeException->getMessage(),
+                previous: $invalidCouponCodeException,
+            );
         }
     }
 }

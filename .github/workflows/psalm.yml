@@ -7,10 +7,10 @@ name: Psalm Security Scan
 
 on:
   push:
-    branches: [ "main" ]
   pull_request:
-    # The branches below must be a subset of the branches above
-    branches: [ "main" ]
+    branches:
+      - main
+      - develop
   schedule:
     - cron: '15 9 * * *'
 
@@ -26,13 +26,35 @@ jobs:
       actions: read # only required for a private repository by github/codeql-action/upload-sarif to get the Action run status
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: amqp, ast, bcmath, ctype, grpc, iconv, igbinary, mbstring, xml, yaml, zend-opcache
+          coverage: pcov
+          tools: cs2pr, composer
+
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Psalm Security Scan
-        uses: psalm/psalm-github-security-scan@f3e6fd9432bc3e44aec078572677ce9d2ef9c287
+        id: psalm_scan
+        run: vendor/bin/psalm --config=config/analysis/psalm.xml --report=psalm_results.sarif
+        continue-on-error: true
+
+      - name: "Check file existence"
+        id: check_files
+        uses: andstor/file-existence-action@v3
+        with:
+          files: "psalm_results.sarif"
 
       - name: Upload Security Analysis results to GitHub
-        uses: github/codeql-action/upload-sarif@v2
+        if: steps.check_files.outputs.files_exists == 'true'
+        uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: results.sarif

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Exception\Factory;
 
 use App\Exception\AuthApiRuntimeException;
-use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\BadRequestException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Exception\InternalServerErrorException;
 use App\Exception\UserAlreadyExistsException;
 use App\Exception\UserNotFoundException;

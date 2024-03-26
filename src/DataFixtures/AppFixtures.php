@@ -12,7 +12,13 @@ final class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-         $product = new Product();
+        $product = new Product(
+            name: 'test',
+            quantityPerUnit: '10 pcs',
+            price: 10_00,
+            unitsInStock: 100,
+            unitsOnOrder: 1,
+        );
          $manager->persist($product);
 
         $manager->flush();

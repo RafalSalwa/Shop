@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c78b94d00cff37e6ff2948c383c86d66",
+    "content-hash": "f9cb4f7f01b6f960ee68644471eeeeb6",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -3506,16 +3506,16 @@
         },
         {
             "name": "nelmio/api-doc-bundle",
-            "version": "v4.24.0",
+            "version": "v4.24.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nelmio/NelmioApiDocBundle.git",
-                "reference": "9fb5170b5f7a88d1aaade05e3eb399e697ac0941"
+                "reference": "196ef001c9d6a2df26df82b4e5a78fad7f4debba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/9fb5170b5f7a88d1aaade05e3eb399e697ac0941",
-                "reference": "9fb5170b5f7a88d1aaade05e3eb399e697ac0941",
+                "url": "https://api.github.com/repos/nelmio/NelmioApiDocBundle/zipball/196ef001c9d6a2df26df82b4e5a78fad7f4debba",
+                "reference": "196ef001c9d6a2df26df82b4e5a78fad7f4debba",
                 "shasum": ""
             },
             "require": {
@@ -3537,6 +3537,9 @@
                 "symfony/property-info": "^5.4.10|^6.0|^7.0",
                 "symfony/routing": "^5.4|^6.0|^7.0",
                 "zircote/swagger-php": "^4.6.1"
+            },
+            "conflict": {
+                "zircote/swagger-php": "4.8.7"
             },
             "require-dev": {
                 "api-platform/core": "^2.7.0|^3",
@@ -3608,9 +3611,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nelmio/NelmioApiDocBundle/issues",
-                "source": "https://github.com/nelmio/NelmioApiDocBundle/tree/v4.24.0"
+                "source": "https://github.com/nelmio/NelmioApiDocBundle/tree/v4.24.1"
             },
-            "time": "2024-03-14T15:14:05+00:00"
+            "time": "2024-03-25T13:06:46+00:00"
         },
         {
             "name": "nelmio/cors-bundle",
@@ -11646,16 +11649,16 @@
         },
         {
             "name": "zircote/swagger-php",
-            "version": "4.8.7",
+            "version": "4.8.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zircote/swagger-php.git",
-                "reference": "2357fafbb084be0f9eda7b5c1a659704fed65b28"
+                "reference": "fe45a0e98a156999ddafc31c9ad333fdcadbcb2d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/2357fafbb084be0f9eda7b5c1a659704fed65b28",
-                "reference": "2357fafbb084be0f9eda7b5c1a659704fed65b28",
+                "url": "https://api.github.com/repos/zircote/swagger-php/zipball/fe45a0e98a156999ddafc31c9ad333fdcadbcb2d",
+                "reference": "fe45a0e98a156999ddafc31c9ad333fdcadbcb2d",
                 "shasum": ""
             },
             "require": {
@@ -11721,9 +11724,9 @@
             ],
             "support": {
                 "issues": "https://github.com/zircote/swagger-php/issues",
-                "source": "https://github.com/zircote/swagger-php/tree/4.8.7"
+                "source": "https://github.com/zircote/swagger-php/tree/4.8.6"
             },
-            "time": "2024-03-23T06:35:46+00:00"
+            "time": "2024-03-15T01:13:55+00:00"
         }
     ],
     "packages-dev": [
@@ -18773,12 +18776,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "d2b53099f06a627006a0eb3c9dde665140390fc7"
+                "reference": "98cbbfa55bafb0368a60a5fd6206f07c9dd782eb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/d2b53099f06a627006a0eb3c9dde665140390fc7",
-                "reference": "d2b53099f06a627006a0eb3c9dde665140390fc7",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/98cbbfa55bafb0368a60a5fd6206f07c9dd782eb",
+                "reference": "98cbbfa55bafb0368a60a5fd6206f07c9dd782eb",
                 "shasum": ""
             },
             "conflict": {
@@ -18964,7 +18967,7 @@
                 "friendsofsymfony1/symfony1": ">=1.1,<1.5.19",
                 "friendsoftypo3/mediace": ">=7.6.2,<7.6.5",
                 "friendsoftypo3/openid": ">=4.5,<4.5.31|>=4.7,<4.7.16|>=6,<6.0.11|>=6.1,<6.1.6",
-                "froala/wysiwyg-editor": "<3.2.7|>=4.0.1,<=4.1.1",
+                "froala/wysiwyg-editor": "<3.2.7|>=4.0.1,<=4.1.3",
                 "froxlor/froxlor": "<=2.1.1",
                 "fuel/core": "<1.8.1",
                 "funadmin/funadmin": "<=3.2|>=3.3.2,<=3.3.3",
@@ -19025,6 +19028,7 @@
                 "james-heinrich/phpthumb": "<1.7.12",
                 "jasig/phpcas": "<1.3.3",
                 "jcbrand/converse.js": "<3.3.3",
+                "johnbillion/wp-crontrol": "<1.16.2",
                 "joomla/application": "<1.0.13",
                 "joomla/archive": "<1.1.12|>=2,<2.0.1",
                 "joomla/filesystem": "<1.6.2|>=2,<2.0.1",
@@ -19146,8 +19150,8 @@
                 "oro/commerce": ">=4.1,<5.0.11|>=5.1,<5.1.1",
                 "oro/crm": ">=1.7,<1.7.4|>=3.1,<4.1.17|>=4.2,<4.2.7",
                 "oro/crm-call-bundle": ">=4.2,<=4.2.5|>=5,<5.0.4|>=5.1,<5.1.1",
-                "oro/customer-portal": ">=4.2,<=4.2.8|>=5,<5.0.11|>=5.1,<5.1.1",
-                "oro/platform": ">=1.7,<1.7.4|>=3.1,<3.1.29|>=4.1,<4.1.17|>=4.2,<=4.2.10|>=5,<5.0.8",
+                "oro/customer-portal": ">=4.1,<=4.1.13|>=4.2,<=4.2.10|>=5,<=5.0.11|>=5.1,<=5.1.3",
+                "oro/platform": ">=1.7,<1.7.4|>=3.1,<3.1.29|>=4.1,<4.1.17|>=4.2,<=4.2.10|>=5,<=5.0.12|>=5.1,<=5.1.3",
                 "oxid-esales/oxideshop-ce": "<4.5",
                 "packbackbooks/lti-1-3-php-library": "<5",
                 "padraic/humbug_get_contents": "<1.1.2",
@@ -19171,7 +19175,7 @@
                 "phpmailer/phpmailer": "<6.5",
                 "phpmussel/phpmussel": ">=1,<1.6",
                 "phpmyadmin/phpmyadmin": "<5.2.1",
-                "phpmyfaq/phpmyfaq": "<3.2.5",
+                "phpmyfaq/phpmyfaq": "<3.2.5|==3.2.5",
                 "phpoffice/phpexcel": "<1.8",
                 "phpoffice/phpspreadsheet": "<1.16",
                 "phpseclib/phpseclib": "<2.0.47|>=3,<3.0.36",
@@ -19507,7 +19511,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-03-22T21:04:47+00:00"
+            "time": "2024-03-25T20:04:17+00:00"
         },
         {
             "name": "sabre/event",
@@ -21077,75 +21081,6 @@
                 }
             ],
             "time": "2024-02-16T15:06:51+00:00"
-        },
-        {
-            "name": "staabm/phpstan-dba",
-            "version": "0.2.79",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/staabm/phpstan-dba.git",
-                "reference": "14d9afd28413e9964a9a33d30bafa1683d044542"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/staabm/phpstan-dba/zipball/14d9afd28413e9964a9a33d30bafa1683d044542",
-                "reference": "14d9afd28413e9964a9a33d30bafa1683d044542",
-                "shasum": ""
-            },
-            "require": {
-                "composer-runtime-api": "^2.0",
-                "composer/semver": "^3.2",
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.9.4"
-            },
-            "conflict": {
-                "sqlftw/sqlftw": "<0.1.10"
-            },
-            "require-dev": {
-                "dibi/dibi": "^4.2",
-                "ext-mysqli": "*",
-                "ext-pdo": "*",
-                "php-parallel-lint/php-parallel-lint": "^1.3",
-                "phpstan/extension-installer": "^1.2",
-                "phpstan/phpstan-deprecation-rules": "^1.1",
-                "phpstan/phpstan-php-parser": "^1.1",
-                "phpstan/phpstan-phpunit": "^1.0",
-                "phpstan/phpstan-strict-rules": "^1.1",
-                "phpunit/phpunit": "^8.5|^9.5",
-                "symplify/easy-coding-standard": "^11.4",
-                "tomasvotruba/unused-public": "^0.3",
-                "vlucas/phpdotenv": "^5.4"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "config/dba.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "staabm\\PHPStanDba\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "keywords": [
-                "Database Access Layer",
-                "PHPStan",
-                "code quality",
-                "dev",
-                "phpstan-extension",
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/staabm/phpstan-dba/issues",
-                "source": "https://github.com/staabm/phpstan-dba/tree/0.2.79"
-            },
-            "time": "2023-10-12T07:23:58+00:00"
         },
         {
             "name": "symfony/browser-kit",
@@ -22834,6 +22769,7 @@
         "ext-bcmath": "*",
         "ext-ctype": "*",
         "ext-dom": "*",
+        "ext-grpc": "*",
         "ext-iconv": "*",
         "ext-igbinary": "*",
         "ext-mbstring": "*",

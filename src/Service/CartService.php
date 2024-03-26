@@ -6,6 +6,7 @@ namespace App\Service;
 
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
+use App\Entity\Contracts\ShopUserInterface;
 use App\Enum\CartStatus;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;
@@ -15,8 +16,10 @@ use App\Factory\CartFactory;
 use App\Storage\CartSessionStorage;
 use App\ValueObject\CouponCode;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Lock\LockFactory;
 
+use function assert;
 use function sprintf;
 
 final readonly class CartService
@@ -27,6 +30,7 @@ final readonly class CartService
         private EntityManagerInterface $entityManager,
         private ProductStockService $stockService,
         private LockFactory $cartLockFactory,
+        private Security $security,
         private int $cartItemMaxCapacity,
     ) {
     }
@@ -42,6 +46,7 @@ final readonly class CartService
             $cart->removeItem($item);
             $this->stockService->restoreStock($item);
         }
+
         $this->save($cart);
         $cart->getItems()->clear();
         $this->cartSessionStorage->removeCart();
@@ -49,9 +54,12 @@ final readonly class CartService
 
     public function getCurrentCart(): Cart
     {
+        $user = $this->security->getUser();
+        assert($user instanceof ShopUserInterface);
+
         $cart = $this->cartSessionStorage->getCart();
         if (null === $cart) {
-            $cart = $this->cartFactory->create();
+            $cart = $this->cartFactory->create($user->getId());
             $this->save($cart);
         }
 
@@ -73,7 +81,7 @@ final readonly class CartService
     public function removeItem(CartItemInterface $cartItem): void
     {
         $cart = $this->getCurrentCart();
-        if (false === $cart->itemExists($cartItem)) {
+        if (false === $cart->hasItem($cartItem)) {
             throw new ItemNotFoundException('Item already removed');
         }
 
@@ -106,6 +114,7 @@ final readonly class CartService
                 ),
             );
         }
+
         try {
             $lock = $this->cartLockFactory->createLock('cart_item_update');
             $lock->acquire(true);

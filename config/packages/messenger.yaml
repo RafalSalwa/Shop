@@ -6,7 +6,6 @@ framework:
     transports:
       async:
         dsn: '%env(RABBITMQ_URL)%'
-        serializer: App\Messenger\ExternalJsonMessageSerializer
         options:
           auto_setup: true
           exchange:
@@ -22,8 +21,6 @@ framework:
 
     routing:
       # Route your messages to the transports
-      'App\Messenger\Message\OrderMessage': async
-      'App\Messenger\Message\AMQPMessage': async
 # when@test:
 #    framework:
 #        messenger:

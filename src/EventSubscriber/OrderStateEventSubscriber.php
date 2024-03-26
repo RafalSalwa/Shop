@@ -28,6 +28,7 @@ final class OrderStateEventSubscriber implements EventSubscriberInterface
         if ($payment->getStatus() !== $transition->getFroms()) {
             $event->addTransitionBlocker(new TransitionBlocker('Wrong transition state', '0'));
         }
+
         if (null !== $payment->getAmount()) {
             return;
         }

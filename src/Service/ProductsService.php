@@ -8,9 +8,9 @@ use App\Entity\Product;
 use App\Pagination\Paginator;
 use App\Repository\ProductRepository;
 
-final class ProductsService
+final readonly class ProductsService
 {
-    public function __construct(private readonly ProductRepository $productRepository)
+    public function __construct(private ProductRepository $productRepository)
     {}
 
     public function byId(int $prodId): ?Product

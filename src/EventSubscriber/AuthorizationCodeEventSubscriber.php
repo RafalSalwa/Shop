@@ -6,19 +6,20 @@ namespace App\EventSubscriber;
 
 use League\Bundle\OAuth2ServerBundle\Event\AuthorizationRequestResolveEvent;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\FirewallMapInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
-use function is_null;
+use function assert;
 
-final class AuthorizationCodeSubscriber implements EventSubscriberInterface
+final class AuthorizationCodeEventSubscriber implements EventSubscriberInterface
 {
     use TargetPathTrait;
 
@@ -28,9 +29,11 @@ final class AuthorizationCodeSubscriber implements EventSubscriberInterface
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly RequestStack $requestStack,
-        FirewallMapInterface $firewallMap,
+        private readonly FirewallMapInterface $firewallMap,
     ) {
-        $this->firewallName = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest())->getName();
+        $firewallConfig = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest());
+        assert($firewallConfig instanceof FirewallConfig);
+        $this->firewallName = $firewallConfig->getName();
     }
 
     /** @return array<string, string> */
@@ -42,30 +45,31 @@ final class AuthorizationCodeSubscriber implements EventSubscriberInterface
     public function onEventAuthorizationRequest(AuthorizationRequestResolveEvent $event): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        if (false === is_null($request)) {
-            throw new AccessDeniedHttpException();
-        }
-        $firewallName = $this->firewallMap->getFirewallConfig($request)->getName();
+        assert($request instanceof Request);
+        $session = $request->getSession();
+
         $user = $this->security->getUser();
-        $this->saveTargetPath($request->getSession(), $firewallName, $request->getUri());
-        $response = new RedirectResponse($this->urlGenerator->generate('app_login'), Response::HTTP_TEMPORARY_REDIRECT);
+        $this->saveTargetPath($session, $this->firewallName, $request->getUri());
+        $response = new RedirectResponse(
+            $this->urlGenerator->generate('app_login'),
+            Response::HTTP_TEMPORARY_REDIRECT,
+        );
         if ($user instanceof UserInterface) {
-            if (null !== $request->getSession()->get('consent_granted')) {
-                $event->resolveAuthorization($request->getSession()->get('consent_granted'));
-                $request->getSession()
-                    ->remove('consent_granted')
-                ;
+            if (true === $session->has('consent_granted')) {
+                $event->resolveAuthorization($session->get('consent_granted'));
+                $session->remove('consent_granted');
 
                 return;
             }
 
-            $response = new RedirectResponse(
+            $consentResponse = new RedirectResponse(
                 $this->urlGenerator->generate(
-                    'app_consent',
+                    'oauth_app_consent',
                     $request->query->all(),
                 ),
                 Response::HTTP_TEMPORARY_REDIRECT,
             );
+            $event->setResponse($consentResponse);
         }
 
         $event->setResponse($response);

@@ -18,28 +18,28 @@ class AddressTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->address = new Address();
+        $this->address = new Address(1);
     }
 
     public function testGettersAndSetters(): void
     {
         $this->address->setFirstName('John');
-        $this->assertEquals('John', $this->address->getFirstName());
+        $this->assertSame('John', $this->address->getFirstName());
 
         $this->address->setLastName('Doe');
-        $this->assertEquals('Doe', $this->address->getLastName());
+        $this->assertSame('Doe', $this->address->getLastName());
 
         $this->address->setAddressLine1('Street 1');
-        $this->assertEquals('Street 1', $this->address->getAddressLine1());
+        $this->assertSame('Street 1', $this->address->getAddressLine1());
 
         $this->address->setPhoneNo('123456789');
-        $this->assertEquals('123456789', $this->address->getPhoneNo());
+        $this->assertSame('123456789', $this->address->getPhoneNo());
 
         $this->address->setState('test state');
-        $this->assertEquals('test state', $this->address->getState());
+        $this->assertSame('test state', $this->address->getState());
 
         $this->address->setCity('test city');
-        $this->assertEquals('test city', $this->address->getCity());
+        $this->assertSame('test city', $this->address->getCity());
 
         $this->address->setDefault(true);
         $this->assertTrue($this->address->isDefault());
@@ -47,16 +47,16 @@ class AddressTest extends TestCase
         $this->assertFalse($this->address->isDefault());
 
         $this->address->setPostalCode('12-312');
-        $this->assertEquals('12-312', $this->address->getPostalCode());
+        $this->assertSame('12-312', $this->address->getPostalCode());
 
         $this->address->setCountry('test country');
-        $this->assertEquals('test country', $this->address->getCountry());
+        $this->assertSame('test country', $this->address->getCountry());
 
         $this->address->setUserId(1);
-        $this->assertEquals('1', $this->address->getUserId());
+        $this->assertSame(1, $this->address->getUserId());
     }
 
-    public function testPostalCodeException()
+    public function testPostalCodeException(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->address->setPostalCode('123123');
@@ -66,7 +66,7 @@ class AddressTest extends TestCase
     public function testNotBlankConstraints(): void
     {
         $violations = $this->validateEntity($this->address);
-        $this->assertEquals(6, $violations->count());
+        $this->assertSame(6, $violations->count());
 
         // Set some properties to pass validation
         $this->address->setFirstName('John');
@@ -75,7 +75,7 @@ class AddressTest extends TestCase
         $this->address->setCity('New York');
 
         $violations = $this->validateEntity($this->address);
-        $this->assertEquals(2, $violations->count());
+        $this->assertSame(2, $violations->count());
     }
 
     public function testDefaultIsFalse(): void
@@ -87,7 +87,7 @@ class AddressTest extends TestCase
     {
         // Test setting nullable properties
         $this->address->setAddressLine2('Apt 101');
-        $this->assertEquals('Apt 101', $this->address->getAddressLine2());
+        $this->assertSame('Apt 101', $this->address->getAddressLine2());
 
         // Test setting null for nullable properties
         $this->address->setAddressLine2('');
@@ -97,7 +97,7 @@ class AddressTest extends TestCase
     public function testIdGetterAndSetter(): void
     {
         $this->address->setId(5);
-        $this->assertEquals(5, $this->address->getId());
+        $this->assertSame(5, $this->address->getId());
     }
 
     private function validateEntity(Address $address): \Symfony\Component\Validator\ConstraintViolationListInterface

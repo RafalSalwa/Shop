@@ -11,11 +11,11 @@ use Symfony\Component\Validator\Validation;
 
 use function count;
 
-final class EmailAddress
+final readonly class EmailAddress
 {
     private const INVALID_EMAIL = 'Invalid email address';
 
-    public function __construct(private readonly string $email)
+    public function __construct(private string $email)
     {
         $validator = Validation::createValidator();
         $emailConstraint = new Assert\Email(mode: Email::VALIDATION_MODE_STRICT);

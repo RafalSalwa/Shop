@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Exception\AuthenticationExceptionInterface;
-use App\Exception\Registration\RegistrationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
+use App\Exception\Contracts\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
 use App\Form\ResetPasswordRequestFormType;
@@ -125,6 +125,7 @@ final class RegistrationController extends AbstractShopController
     ): Response {
         $user = $authenticator->authenticateWithAuthCode($verificationCode);
         $user = $provider->loadUserByIdentifier($user->getUserIdentifier());
+
         $security->login(user: $user, authenticatorName: $authApiAuthenticator::class);
 
         return $this->render('registration/thank_you.html.twig');
