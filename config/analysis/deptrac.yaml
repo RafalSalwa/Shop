@@ -10,12 +10,8 @@ deptrac:
       - function_call
   paths:
     - ../../src
-    - ../../vendor/symfony/framework-bundle/Controller
-    - ../../vendor/symfony/serializer/
   exclude_files:
     - '#.*test.*#'
-    - '#.(Symfony\\Component).#'
-    - '#.*App\\Protobuf\\*.#'
   layers:
     - name: AbstractController
       collectors:
@@ -30,14 +26,14 @@ deptrac:
         - type: bool
           must:
             - type: classLike
-              value: .*App\\Controller.*
+              value: .*Controller.*
           must_not:
             - type: class
               value: .*AbstractShopController.*
     - name: Commands
       collectors:
         - type: classLike
-          value: .*App\\Command.*
+          value: .*Command.*
     - name: Repositories
       collectors:
         - type: bool
@@ -49,28 +45,19 @@ deptrac:
     - name: Services
       collectors:
         - type: classLike
-          value: .*App\\Service.*
-    - name: Workflows
-      collectors:
-        - type: classLike
-          value: .*App\\Workflow.*
+          value: .*Service.*
     - name: Entities
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
-    - name: SymfonyController
+    - name: SymfonySerializer
       collectors:
         - type: classLike
-          value: .*Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController.*
+          value: .*Symfony\Component\Serializer.*
 
   ruleset:
-    AbstractController:
-      - SymfonyController
     Controllers:
-      - AbstractController
-      - SymfonyController
       - Services
-      - Workflows
       - Entities
       - Events
     Services:
@@ -87,7 +74,6 @@ deptrac:
       - Repositories
     Workflows:
       - Services
-    SymfonyController: ~
   formatters:
     graphviz:
       point_to_groups: true
