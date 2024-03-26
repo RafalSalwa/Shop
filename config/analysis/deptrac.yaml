@@ -13,14 +13,6 @@ deptrac:
   exclude_files:
     - '#.*test.*#'
   layers:
-    - name: AbstractController
-      collectors:
-        - type: bool
-          must:
-          - type: class
-            value: .*AbstractShopController.*
-          - type: extends
-            value: Symfony\Bundle\FrameworkBundle\Controller\AbstractController
     - name: Controllers
       collectors:
         - type: bool
@@ -54,16 +46,9 @@ deptrac:
       collectors:
         - type: classLike
           value: .*Symfony\Component\Serializer.*
-#    - name: SymfonyAbstractController
-#      collectors:
-#        - type: class
-#          value: .*Symfony\Bundle\FrameworkBundle\Controller\AbstractController.*
 
   ruleset:
-    AbstractController:
-      - SymfonyAbstractController
     Controllers:
-      - AbstractController
       - Services
       - Entities
       - Events
