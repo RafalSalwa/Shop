@@ -34,19 +34,19 @@ final readonly class OAuth2Service
             throw new BadRequestException();
         }
 
-        $consent = new OAuth2UserConsent($user->getId(), $appClient);
+        $oAuth2UserConsent = new OAuth2UserConsent($user->getId(), $appClient);
         $userScopes = [];
 
         $requestedScopes = ['profile', 'email', 'cart'];
         $requestedScopes = array_diff($requestedScopes, $userScopes);
 
-        $consent->setScopes(array_merge($requestedScopes, $userScopes));
-        $consent->setClient($appClient);
-        $consent->setCreated(new DateTimeImmutable());
-        $consent->setExpires(new DateTimeImmutable('+30 days'));
-        $consent->setIpAddress($request->getClientIp());
+        $oAuth2UserConsent->setScopes(array_merge($requestedScopes, $userScopes));
+        $oAuth2UserConsent->setClient($appClient);
+        $oAuth2UserConsent->setCreated(new DateTimeImmutable());
+        $oAuth2UserConsent->setExpires(new DateTimeImmutable('+30 days'));
+        $oAuth2UserConsent->setIpAddress($request->getClientIp());
 
-        return $consent;
+        return $oAuth2UserConsent;
     }
 
     public function getClient(): Client|null

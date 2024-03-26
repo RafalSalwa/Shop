@@ -54,7 +54,7 @@ class Order
     private int $total;
 
     #[Column(name: 'status', type: Types::STRING, length: 25)]
-    private string $status;
+    private string $status = self::PENDING;
 
     /** @var Collection<int, OrderItem> */
     #[OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
@@ -95,7 +95,6 @@ class Order
         $this->netAmount = $netAmount;
         $this->shippingCost = $shippingCost;
         $this->total = $total;
-        $this->status = self::PENDING;
 
         $this->deliveryAddress = $deliveryAddress;
         $this->bilingAddress = $bilingAddress;

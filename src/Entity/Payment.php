@@ -45,7 +45,7 @@ class Payment
     private int $amount;
 
     #[Column(name: 'status', type: Types::STRING, length: 25)]
-    private string $status;
+    private string $status = self::PENDING;
 
     #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTime $paymentDate = null;
@@ -70,7 +70,6 @@ class Payment
         $this->amount = $amount;
         $this->operationType = $operationType->value;
         $this->operationNumber = $operationNumber;
-        $this->status = self::PENDING;
 
         $this->createdAt = new DateTime('now');
     }

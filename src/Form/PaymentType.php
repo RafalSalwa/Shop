@@ -80,6 +80,7 @@ final class PaymentType extends AbstractType implements DataMapperInterface
         if (null === $viewData) {
             return;
         }
+
         /** @var array<FormInterface> $arrForms */
         $arrForms = iterator_to_array(iterator: $forms, preserve_keys: true);
         $arrForms['amount']->setData($viewData->getAmount() / 100);
@@ -96,6 +97,7 @@ final class PaymentType extends AbstractType implements DataMapperInterface
         if (true !== is_float($viewData->getAmount())) {
             return;
         }
+
         /** @var array<FormInterface> $arrForms */
         $arrForms = iterator_to_array($forms);
         $viewData->setAmount($arrForms['amount']->getData() * 100);
