@@ -7,7 +7,7 @@ namespace App\Tests\Benchmark;
 use Closure;
 use function count;
 
-class ClosureObject
+final class ClosureObject
 {
     public function getItemProcessorStaticArrowFunction(): array
     {

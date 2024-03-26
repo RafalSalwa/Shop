@@ -8,6 +8,7 @@ use App\Entity\Subscription;
 use App\Entity\SubscriptionPlan;
 use App\Repository\PlanRepository;
 use App\Repository\SubscriptionRepository;
+
 use function array_key_exists;
 
 final class SubscriptionService
@@ -44,6 +45,7 @@ final class SubscriptionService
         if (true === array_key_exists($userId, $this->memCache)) {
             return $this->memCache[$userId];
         }
+
         $subscription = $this->subscriptionRepository->findOneBy(
             [
                 'userId' => $userId,
@@ -55,6 +57,7 @@ final class SubscriptionService
 
             return $subscription;
         }
+
         $this->assignFreemium($userId);
 
         return $this->findForUser($userId);

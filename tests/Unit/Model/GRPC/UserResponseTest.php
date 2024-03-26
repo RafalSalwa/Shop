@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: UserResponse::class)]
 #[UsesClass(className: TokenPair::class)]
 #[UsesClass(className: Token::class)]
-class UserResponseTest extends TestCase
+final class UserResponseTest extends TestCase
 {
     use TokenTestHelperTrait;
 
@@ -27,13 +27,14 @@ class UserResponseTest extends TestCase
         $tokenPair = $this->getTokenPair();
 
         $userResponse = new UserResponse($email, $password, $confirmationCode, true, $tokenPair);
+        $userResponse = $userResponse->withTokenPair($tokenPair);
 
-        $this->assertEquals($email, $userResponse->getEmail());
-        $this->assertEquals($password, $userResponse->getPassword());
-        $this->assertEquals($confirmationCode, $userResponse->getConfirmationCode());
+        $this->assertSame($email, $userResponse->getEmail());
+        $this->assertSame($password, $userResponse->getPassword());
+        $this->assertSame($confirmationCode, $userResponse->getConfirmationCode());
         $this->assertTrue($userResponse->isVerified());
         $this->assertInstanceOf(TokenPair::class, $userResponse->getTokenPair());
-        $this->assertEquals($tokenPair, $userResponse->getTokenPair());
+        $this->assertSame($tokenPair, $userResponse->getTokenPair());
     }
 
     public function testWithIsVerified(): void
@@ -53,6 +54,6 @@ class UserResponseTest extends TestCase
 
         $this->assertNull($userResponse->getTokenPair());
         $this->assertInstanceOf(TokenPair::class, $newUserResponse->getTokenPair());
-        $this->assertEquals($tokenPair, $newUserResponse->getTokenPair());
+        $this->assertSame($tokenPair, $newUserResponse->getTokenPair());
     }
 }

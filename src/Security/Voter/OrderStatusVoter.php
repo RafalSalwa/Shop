@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use function is_a;
+
+use function assert;
 
 /**
  * @template TAttribute of 'view'
@@ -18,14 +19,10 @@ use function is_a;
  */
 final class OrderStatusVoter extends Voter
 {
-    public function __construct(private LoggerInterface $logger)
-    {
-    }
-
     /** @param Order $subject */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return 'view' === $attribute && is_a($subject, Order::class) && Order::PENDING === $subject->getStatus();
+        return 'view' === $attribute && $subject instanceof Order && Order::PENDING === $subject->getStatus();
     }
 
     /** @param Order $subject */
@@ -34,9 +31,8 @@ final class OrderStatusVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (null === $user) {
-            return false;
-        }
+        assert($user instanceof ShopUserInterface);
+
         if ($user->getId() !== $subject->getUserId()) {
             throw new UnauthorizedHttpException('You cannot view this order.');
         }

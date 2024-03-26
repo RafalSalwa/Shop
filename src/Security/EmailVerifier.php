@@ -11,14 +11,13 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final class EmailVerifier
+final readonly class EmailVerifier
 {
     public function __construct(
-        private readonly MailerInterface $mailer,
-        private readonly UrlGeneratorInterface $urlGenerator,
-        private readonly LoggerInterface $logger,
-    ) {
-    }
+        private MailerInterface $mailer,
+        private UrlGeneratorInterface $urlGenerator,
+        private LoggerInterface $logger,
+    ) {}
 
     public function sendEmailConfirmation(string $email, string $verificationCode): void
     {

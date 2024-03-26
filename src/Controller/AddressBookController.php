@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/addressbook', name: 'addressbook_', methods: ['GET', 'POST'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class AddressBookController extends AbstractShopController
@@ -32,16 +32,12 @@ final class AddressBookController extends AbstractShopController
     #[Route(path: '/address/new', name: 'new')]
     public function add(Request $request, AddressBookService $service): Response
     {
-        $user = $this->getShopUser();
-
-        $address = new Address();
+        $address = new Address($this->getUserId());
         $form    = $this->createForm(AddressType::class, $address);
 
         $form->handleRequest($request);
         if (true === $form->isSubmitted() && true === $form->isValid()) {
-            $address = $form->getData();
-            $user->addDeliveryAddress($address);
-            $address->setUser($user);
+            $address->setUserId($this->getUserId());
             $service->save($address);
 
             return $this->redirectToRoute('checkout_shipment');
@@ -51,7 +47,7 @@ final class AddressBookController extends AbstractShopController
             'shipping/address_new.html.twig',
             [
                 'form'              => $form->createView(),
-                'deliveryAddresses' => $user->getDeliveryAddresses(),
+                'deliveryAddresses' => $service->getDeliveryAddresses($this->getUserId()),
             ],
         );
     }

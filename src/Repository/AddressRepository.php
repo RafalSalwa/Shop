@@ -37,7 +37,7 @@ final class AddressRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
 
         if (null === $defaultAddress) {
-            $defaultAddress = $this
+            return $this
                 ->createQueryBuilder('a')
                 ->where('a.userId = :id')
                 ->setParameter('id', $userId)

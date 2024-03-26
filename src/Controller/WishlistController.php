@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/wishlist', name: 'wishlist_')]
 final class WishlistController extends AbstractShopController
 {

@@ -6,26 +6,27 @@ namespace App\Security;
 
 use App\Client\UsersApiClient;
 use App\Entity\Contracts\ShopUserInterface;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Repository\SubscriptionRepository;
 use Symfony\Component\Security\Core\Exception\CredentialsExpiredException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
+
+use function assert;
 use function is_subclass_of;
 
 /**
  * @template            TUser of ShopUserInterface
  * @template-covariant  TUser of ShopUserInterface
- * @template-implements UserProviderInterface<ShopUserInterface>
- * @implements          UserProviderInterface
+ * @template-implements UserProviderInterface
+ * @implements          UserProviderInterface<TUser>
  */
 final readonly class AuthApiUserProvider implements UserProviderInterface
 {
     public function __construct(
         private UsersApiClient $apiClient,
         private SubscriptionRepository $subscriptionRepository,
-    ) {
-    }
+    ) {}
 
     public function supportsClass(string $class): bool
     {
@@ -35,7 +36,8 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
     /** @param ShopUserInterface $user */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        if (true === $user->getToken()->isExpired() && true === $user->getRefreshToken()->isExpired()) {
+        assert($user instanceof ShopUserInterface);
+        if (true === $user->getToken()?->isExpired() && true === $user->getRefreshToken()?->isExpired()) {
             throw new CredentialsExpiredException('Session Expired, please login again.');
         }
 

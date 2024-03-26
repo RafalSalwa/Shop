@@ -12,12 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
+
 use function array_diff;
 use function explode;
 use function http_build_query;
 use function urldecode;
 
-#[asController]
+#[AsController]
 #[Route(path: '/oauth', name: 'oauth_', methods: ['GET', 'POST'])]
 final class OAuthTokenController extends AbstractShopController
 {
@@ -31,7 +32,7 @@ final class OAuthTokenController extends AbstractShopController
     public function callback(Request $request, Session $session): Response
     {
         if (true === $request->query->has('code')) {
-            $session->set('oauth2_code', $request->get('code'));
+            $session->set('oauth2_code', $request->query->getAlnum('code'));
         }
 
         $params = [
@@ -39,7 +40,7 @@ final class OAuthTokenController extends AbstractShopController
             'client_id'     => 'testclient',
             'client_secret' => 'testpass',
             'redirect_uri'  => 'http://localhost:8080/callback',
-            'code'          => urldecode((string)$request->get('code')),
+            'code'          => urldecode($request->query->getAlnum('code')),
         ];
 
         return $this->render(

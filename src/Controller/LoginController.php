@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
-#[asController]
+#[AsController]
 #[Route(path: '/login', name: 'login_', methods: ['GET', 'POST'])]
 final class LoginController extends AbstractShopController
 {

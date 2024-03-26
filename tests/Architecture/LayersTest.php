@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Architecture;
 
 use PHPat\Selector\Selector;
@@ -13,7 +15,7 @@ final class LayersTest
         return PHPat::rule()
             ->classes(Selector::inNamespace('App'))
             ->shouldNotDependOn()
-            ->classes(Selector::inNamespace('Symfony\Bundle\SecurityBundle\Security'))
+            ->classes(Selector::inNamespace(\Symfony\Bundle\SecurityBundle\Security::class))
             ->because('We cannot rely on Security since we are using JWT Tokens. Use ShopSecurityProviderInterface');
     }
 }

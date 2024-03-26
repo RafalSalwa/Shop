@@ -6,16 +6,18 @@ namespace App\Service;
 
 use App\ValueObject\CouponCode;
 use App\ValueObject\Summary;
+
 use function bcadd;
 use function bcdiv;
 use function bcmul;
 use function bcsub;
-use function is_null;
 
 final readonly class CalculatorService
 {
     public const FIRST_DISCOUNT_LIMIT = 50_00;
+
     public const FREE_DELIVERY_LIMIT = 150_00;
+
     private const TAX_RATE = '23';
 
     public function calculateSummary(int $netAmount, ?CouponCode $coupon): Summary
@@ -35,9 +37,11 @@ final readonly class CalculatorService
         if (null === $coupon) {
             return 0;
         }
+
         if (false === $coupon->isCartDiscount()) {
             return 0;
         }
+
         $discount = bcdiv($coupon->getValue(), '100', 2);
 
         return (int)bcmul((string)$netAmount, $discount, 2);
@@ -62,13 +66,13 @@ final readonly class CalculatorService
 
     private function calculateShipping(int $amount, ?CouponCode $coupon): int
     {
-        if (false === is_null($coupon) && true === $coupon->isShippingDiscount()) {
+        if (null !== $coupon && true === $coupon->isShippingDiscount()) {
             return 0;
         }
 
         return match (true) {
             $amount >= self::FREE_DELIVERY_LIMIT => 0,
-            $amount >= self::FIRST_DISCOUNT_LIMIT =>10_00,
+            $amount >= self::FIRST_DISCOUNT_LIMIT => 10_00,
             default => 20_00,
         };
     }

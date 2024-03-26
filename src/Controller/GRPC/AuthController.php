@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/grpc', name: 'grpc_')]
 final class AuthController extends AbstractShopController
 {

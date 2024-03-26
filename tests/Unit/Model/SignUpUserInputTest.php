@@ -9,44 +9,44 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: SignUpUserInput::class)]
-class SignUpUserInputTest extends TestCase
+final class SignUpUserInputTest extends TestCase
 {
     public function testGetSetEmail(): void
     {
-        $input = new SignUpUserInput();
+        $signUpUserInput = new SignUpUserInput();
         $email = 'test@example.com';
 
-        $input->setEmail($email);
+        $signUpUserInput->setEmail($email);
 
-        $this->assertEquals($email, $input->getEmail());
+        $this->assertSame($email, $signUpUserInput->getEmail());
     }
 
     public function testGetSetPassword(): void
     {
-        $input = new SignUpUserInput();
+        $signUpUserInput = new SignUpUserInput();
         $password = 'password123';
 
-        $input->setPassword($password);
+        $signUpUserInput->setPassword($password);
 
-        $this->assertEquals($password, $input->getPassword());
+        $this->assertSame($password, $signUpUserInput->getPassword());
     }
 
     public function testGetSetPasswordConfirm(): void
     {
-        $input = new SignUpUserInput();
+        $signUpUserInput = new SignUpUserInput();
         $passwordConfirm = 'password123';
 
-        $input->setPasswordConfirm($passwordConfirm);
+        $signUpUserInput->setPasswordConfirm($passwordConfirm);
 
-        $this->assertEquals($passwordConfirm, $input->getPasswordConfirm());
+        $this->assertSame($passwordConfirm, $signUpUserInput->getPasswordConfirm());
     }
 
     public function testDefaultValues(): void
     {
-        $input = new SignUpUserInput();
+        $signUpUserInput = new SignUpUserInput();
 
-        $this->assertEquals('', $input->getEmail());
-        $this->assertEquals('', $input->getPassword());
-        $this->assertEquals('', $input->getPasswordConfirm());
+        $this->assertSame('', $signUpUserInput->getEmail());
+        $this->assertSame('', $signUpUserInput->getPassword());
+        $this->assertSame('', $signUpUserInput->getPasswordConfirm());
     }
 }

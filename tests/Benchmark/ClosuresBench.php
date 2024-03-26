@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Benchmark;
 
-class ClosuresBench
+final class ClosuresBench
 {
-    private const TRIES= 2000;
+    private const TRIES = 2000;
+
     public function benchLargeObjectStatic(): void
     {
         $processors = [];

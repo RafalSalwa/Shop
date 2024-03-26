@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\ValueObject\GRPC;
 
 use stdClass;
+
 use const Grpc\STATUS_OK;
 
 /**
- * Converts GRPC response array into more readable form
+ * Converts GRPC response array into more readable form.
  */
 final class StatusResponse
 {
-    private int $code;
+    private readonly int $code;
 
-    private string $details;
+    private readonly string $details;
 
     public function __construct(stdClass $class)
     {
@@ -34,6 +35,6 @@ final class StatusResponse
 
     public function isOk(): bool
     {
-        return STATUS_OK === $this->getCode();
+        return STATUS_OK === $this->code;
     }
 }

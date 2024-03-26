@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Client;
 
+use App\Client\Contracts\ShopUserProviderInterface;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
-use App\Exception\AuthenticationExceptionInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Model\User;
 use App\Service\SubscriptionService;
 use App\ValueObject\Token;
@@ -19,7 +20,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function json_decode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class UsersApiClient implements ShopUserProviderInterface
@@ -47,22 +50,19 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             );
             $arrContent = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
 
-            $user = new User(
-                id: $arrContent['user']['id'],
-                email: $arrContent['user']['email'],
-                token: $arrContent['user']['token'],
-                refreshToken: $arrContent['user']['refresh_token'],
-            );
+            $user = new User(id: $arrContent['user']['id'], email: $arrContent['user']['email']);
+            $user->setToken(new Token($arrContent['user']['token']));
+            $user->setRefreshToken(new Token($arrContent['user']['refresh_token']));
             $subscription = $this->subscriptionService->findForUser($user->getId());
 
             $user->setSubscription($subscription);
 
             return $user;
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (JsonException | TransportExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);

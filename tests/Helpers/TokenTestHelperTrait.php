@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Helpers;
 
 use App\Model\TokenPair;
@@ -33,7 +35,7 @@ trait TokenTestHelperTrait
         $token = (new JwtFacade())->issue(
             new Sha256(),
             $key,
-            static fn(
+            static fn (
                 Builder $builder,
                 DateTimeImmutable $issuedAt
             ): Builder => $builder
@@ -42,6 +44,7 @@ trait TokenTestHelperTrait
                 ->relatedTo('1')
                 ->expiresAt($issuedAt->modify('+10 minutes'))
         );
+
         return $token->toString();
     }
 }

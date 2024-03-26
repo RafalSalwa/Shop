@@ -18,33 +18,26 @@ use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 use Exception;
 use Traversable;
+
 use function ceil;
 use function count;
-use function is_null;
 use function max;
 use function min;
 
 /** @psalm-api */
 final class Paginator
 {
-    /**
-     * Use constants to define configuration options that rarely change instead
-     * of specifying them under parameters section in config/services.yaml file.
-     *
-     * See https://symfony.com/doc/current/best_practices.html#use-constants-to-define-options-that-rarely-change
-     */
-    public const PAGE_SIZE = 15;
-
     private int $currentPage = 1;
 
     private int $numResults = 0;
 
-    /** @var Traversable<int, object> */
-    private Traversable $traversable;
+    private int $pageSize = 15;
+
+    /** @var Traversable<mixed, mixed>|null */
+    private ?Traversable $traversable = null;
 
     public function __construct(
         private readonly DoctrineQueryBuilder $doctrineQueryBuilder,
-        private readonly int $pageSize = self::PAGE_SIZE,
     ) {}
 
     /** @throws Exception */
@@ -71,7 +64,7 @@ final class Paginator
         /** @var array<string, mixed> $havingDqlParts */
         $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
-        if (false === is_null($havingDqlParts) && count($havingDqlParts) > 0) {
+        if (null !== $havingDqlParts && count($havingDqlParts) > 0) {
             $paginator->setUseOutputWalkers(true);
         }
 
@@ -126,8 +119,8 @@ final class Paginator
         return $this->numResults;
     }
 
-    /** @return Traversable<int, object> */
-    public function getResults(): Traversable
+    /** @return Traversable<int, object>|null */
+    public function getResults(): ?Traversable
     {
         return $this->traversable;
     }

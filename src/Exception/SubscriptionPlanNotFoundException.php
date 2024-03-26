@@ -9,7 +9,7 @@ use Throwable;
 
 final class SubscriptionPlanNotFoundException extends Exception
 {
-    public function __construct(string $message = 'Subscription plan not found', ?Throwable $throwable = null)
+    public function __construct(string $message, ?Throwable $throwable)
     {
         parent::__construct($message, 404, $throwable);
     }

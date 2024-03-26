@@ -8,7 +8,8 @@ use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\SubscriptionPlan;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
-use function is_null;
+
+use function assert;
 
 /**
  * @template TAttribute of 'order'
@@ -30,16 +31,15 @@ final class OrderSubscriptionPlanVoter extends Voter
         if (self::ORDER_SUBSCRIPTION_PLAN !== $attribute) {
             return false;
         }
+
         $user = $token->getUser();
 
-        if (null === $user && false === $user instanceof ShopUserInterface) {
-            return false;
-        }
+        assert($user instanceof ShopUserInterface);
 
         $planSubscriptionTier = $subject->getTier();
-        $userSubscriptionTier = $user->getSubscription()->getTier();
+        $userSubscriptionTier = $user->getSubscription()?->getTier();
 
-        if (true === is_null($planSubscriptionTier) || true === is_null($userSubscriptionTier)) {
+        if (null === $userSubscriptionTier) {
             return false;
         }
 

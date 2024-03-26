@@ -11,7 +11,7 @@
     ensureArrayIntOffsetsExist="true"
     ensureArrayStringOffsetsExist="true"
     ensureOverrideAttribute="true"
-    errorLevel="8"
+    errorLevel="4"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
     findUnusedVariablesAndParams="true"
@@ -54,4 +54,8 @@
             <always/>
         </pluginClass>
     </plugins>
+    <issueHandlers>
+        <MoreSpecificImplementedParamType errorLevel="suppress"/>
+        <LessSpecificImplementedReturnType errorLevel="suppress"/>
+    </issueHandlers>
 </psalm>

@@ -15,7 +15,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
-use function is_float;
+
 use function iterator_to_array;
 
 /**
@@ -71,7 +71,7 @@ final class PaymentType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Payment $viewData
+     * @param Payment                         $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
@@ -79,22 +79,22 @@ final class PaymentType extends AbstractType implements DataMapperInterface
         if (null === $viewData) {
             return;
         }
-        $forms = iterator_to_array($forms);
-        $forms['amount']->setData($viewData->getAmount() / 100);
-        $forms['operationType']->setData($viewData->getOperationType());
-        $forms['operationNumber']->setData($viewData->getOperationNumber());
+
+        /** @var array<FormInterface> $arrForms */
+        $arrForms = iterator_to_array(iterator: $forms, preserve_keys: true);
+        $arrForms['amount']->setData($viewData->getAmount() / 100);
+        $arrForms['operationType']->setData($viewData->getOperationType());
+        $arrForms['operationNumber']->setData($viewData->getOperationNumber());
     }
 
     /**
-     * @param Payment $viewData
+     * @param Payment                         $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
-        if (true !== is_float($viewData->getAmount())) {
-            return;
-        }
-        $forms = iterator_to_array($forms);
-        $viewData->setAmount($forms['amount']->getData() * 100);
+        /** @var array<FormInterface> $arrForms */
+        $arrForms = iterator_to_array($forms, preserve_keys: true);
+        $viewData->setAmount($arrForms['amount']->getData() * 100);
     }
 }

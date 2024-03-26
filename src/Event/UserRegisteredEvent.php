@@ -9,8 +9,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class UserRegisteredEvent extends Event
 {
     public function __construct(protected readonly string $email, protected readonly string $confirmationCode)
-    {
-    }
+    {}
 
     public function getEmail(): string
     {

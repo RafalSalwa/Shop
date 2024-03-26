@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/api', name: 'api_')]
 final class ApiController extends AbstractShopController
 {

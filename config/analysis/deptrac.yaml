@@ -10,50 +10,144 @@ deptrac:
       - function_call
   paths:
     - ../../src
+    - ../../vendor/symfony/framework-bundle/Controller
+    - ../../vendor/symfony/serializer/
   exclude_files:
     - '#.*test.*#'
+    - '#.(Symfony\\Component).#'
+    - '#.*App\\Protobuf\\*.#'
+    - '#.*GRPC*.#'
+    - '#.*Doctrine*.#'
   layers:
+    - name: AbstractController
+      collectors:
+        - type: bool
+          must:
+          - type: class
+            value: .*AbstractShopController.*
+          - type: extends
+            value: Symfony\Bundle\FrameworkBundle\Controller\AbstractController
     - name: Controllers
       collectors:
-        - type: classLike
-          value: .*Controller.*
+        - type: bool
+          must:
+            - type: classLike
+              value: .*App\\Controller.*
+          must_not:
+            - type: class
+              value: .*AbstractShopController.*
     - name: Commands
       collectors:
         - type: classLike
-          value: .*Command.*
-    - name: Repositories
+          value: .*App\\Command.*
+    - name: Forms
       collectors:
         - type: classLike
-          value: .*Repository.*
+          value: .*App\\Form.*
+    - name: Repositories
+      collectors:
+        - type: bool
+          must:
+            - type: classLike
+              value: .*Repository.*
+            - type: extends
+              value: Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
     - name: Services
       collectors:
         - type: classLike
-          value: .*Service.*
+          value: .*App\\Service.*
+    - name: OrderWorkflow
+      collectors:
+        - type: classLike
+          value: .*App\\Workflow\\OrderWorkflow.*
+    - name: CartWorkflow
+      collectors:
+        - type: classLike
+          value: .*App\\Workflow\\CartWorkflow.*
+    - name: Factories
+      collectors:
+        - type: classLike
+          value: .*App\\Factory.*
     - name: Entities
       collectors:
         - type: attribute
           value: Doctrine\ORM\Mapping\Entity
-    - name: Events
+    - name: SymfonyController
       collectors:
-        - type: attribute
-          value: Doctrine\ORM\Mapping\Entity
-    - name: Symfony
+        - type: classLike
+          value: .*Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController.*
+    - name: DoctrineEntities
       collectors:
-        - type: directory
-          value: ../../vendor/symfony/.*
+        - type: classLike
+          value: .*Doctrine\\ORM\\Mapping\\Entity.*
+    - name: DoctrineRepositories
+      collectors:
+        - type: classLike
+          value: .*Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository.*
+
   ruleset:
+    AbstractController:
+      - SymfonyController
     Controllers:
+      - AbstractController
+      - SymfonyController
+      - Forms
       - Services
+      - CartWorkflow
+      - OrderWorkflow
       - Entities
       - Events
+    Workflows:
+      - Services
+      - Entities
     Services:
       - Repositories
-    Repositories:
       - Entities
+      - Factories
+    Repositories:
+      - DoctrineRepositories
+      - Services
+      - Entities
+    Entities:
+      - DoctrineEntities
+      - Repositories
+      - SymfonySerializer
+    Factories:
+      - Entities
+      - Services
     Commands:
       - Services
       - Repositories
+    OrderWorkflow:
+      - Services
+      - Entities
+    CartWorkflow:
+      - Services
+    Forms:
+      - Entities
+    SymfonyController: ~
   formatters:
     graphviz:
-      point_to_groups: true
-
+      pointToGroups: false
+      groups:
+        Controllers:
+          - AbstractController
+          - SymfonyController
+          - Controllers
+        Workflows:
+          - CartWorkflow
+          - OrderWorkflow
+        Entities:
+          - Entities
+          - DoctrineEntities
+        Repositories:
+          - Repositories
+          - DoctrineRepositories
+        Services:
+          - Services
+        Factories:
+          - Factories
+      hidden_layers:
+        - SymfonyController
+        - Commands
+        - Forms

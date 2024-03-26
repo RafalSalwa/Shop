@@ -14,11 +14,6 @@ final readonly class Summary
     {
     }
 
-    public function getNet(): int
-    {
-        return $this->net;
-    }
-
     public function getTax(): int
     {
         return $this->tax;

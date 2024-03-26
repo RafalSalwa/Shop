@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\ProductCartItem;
+use App\Entity\Contracts\CartItemInterface;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Requests\CartAddJsonRequest;
+use App\Requests\CartSetQuantityRequest;
 use App\Service\CalculatorService;
 use App\Service\CartService;
 use App\Workflow\CartWorkflow;
@@ -20,7 +21,7 @@ use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/cart', name: 'cart_', methods: ['GET', 'POST', 'DELETE'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class CartController extends AbstractShopController
@@ -53,7 +54,7 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
-    public function removeFromCart(ProductCartItem $cartItem, CartWorkflow $cartWorkflow): JsonResponse
+    public function removeFromCart(CartItemInterface $cartItem, CartWorkflow $cartWorkflow): JsonResponse
     {
         try {
             $cartWorkflow->remove($cartItem);
@@ -70,11 +71,26 @@ final class CartController extends AbstractShopController
         try {
             $couponCode = $request->request->get('coupon');
             $cartWorkflow->applyCouponCode($couponCode);
-        } catch (CartOperationExceptionInterface $exception) {
-            $this->addFlash('info', $exception->getMessage());
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            $this->addFlash('info', $cartOperationException->getMessage());
         }
 
         return new RedirectResponse($this->generateUrl('cart_index'));
+    }
+
+    #[Route(path: '/set/quantity', name: 'api_set_quantity', methods: ['PUT'])]
+    public function updateQuantity(
+        #[MapRequestPayload]
+        CartSetQuantityRequest $cartSetQuantityRequest,
+        CartService $cartService,
+    ): JsonResponse {
+        try {
+            $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
+
+            return $this->json('ok');
+        } catch (CartOperationExceptionInterface $cartOperationException) {
+            return $this->json($cartOperationException->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     #[Route(path: '/', name: 'index', methods: ['GET'])]

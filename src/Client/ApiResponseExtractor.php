@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Client;
 
 use Symfony\Contracts\HttpClient\ResponseInterface;
+
 use function json_decode;
 
 final class ApiResponseExtractor

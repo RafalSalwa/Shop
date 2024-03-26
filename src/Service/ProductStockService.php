@@ -12,6 +12,7 @@ use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function is_subclass_of;
 
 final readonly class ProductStockService
@@ -29,6 +30,7 @@ final readonly class ProductStockService
         if (false === is_subclass_of($referencedEntity, StockManageableInterface::class)) {
             return;
         }
+
         if (0 === $referencedEntity->getUnitsInStock()) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
         }

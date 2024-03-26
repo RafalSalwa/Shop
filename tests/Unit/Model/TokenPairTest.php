@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Model;
@@ -41,7 +42,7 @@ final class TokenPairTest extends TestCase
         $this->token = $token->toString();
     }
 
-    public function testGetToken()
+    public function testGetToken(): void
     {
         $token = new Token($this->token);
         $tokenPair = new TokenPair($token, $token);
@@ -50,11 +51,11 @@ final class TokenPairTest extends TestCase
         $this->assertInstanceOf(Token::class, $tokenPair->getRefreshToken());
     }
 
-    public function testMappingFromJson()
+    public function testMappingFromJson(): void
     {
         $arr['user'] = [
-            'token'=>$this->token,
-            'refresh_token'=>$this->token,
+            'token' => $this->token,
+            'refresh_token' => $this->token,
         ];
         $tokenPair = TokenPair::fromJson(json_encode($arr));
         $this->assertInstanceOf(TokenPair::class, $tokenPair);

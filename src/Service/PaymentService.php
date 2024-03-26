@@ -10,11 +10,13 @@ use App\Entity\Payment;
 use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Workflow\WorkflowInterface;
+
 use function assert;
 use function is_subclass_of;
 
-readonly final class PaymentService
+final readonly class PaymentService
 {
     public function __construct(
         private WorkflowInterface $paymentProcessing,
@@ -24,12 +26,12 @@ readonly final class PaymentService
 
     public function createPayment(Order $order, PaymentProvider $paymentType): void
     {
-        $payment = new Payment();
-        $this->paymentProcessing->getMarking($payment);
-
-        $payment->setUserId($this->getUser()->getId());
-        $payment->setAmount($order->getTotal());
-        $payment->setOperationType($paymentType);
+        $payment = new Payment(
+            userId: $this->getUser()->getId(),
+            amount: $order->getTotal(),
+            operationType: $paymentType,
+            operationNumber: Uuid::v7()->generate(),
+        );
         $order->addPayment($payment);
 
         $this->save($payment);

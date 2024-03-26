@@ -8,12 +8,13 @@ use App\Model\TokenPair;
 
 final class UserResponse
 {
+    private ?TokenPair $tokenPair = null;
+
     public function __construct(
         private readonly string $email,
         private readonly string $password,
         private readonly string $confirmationCode,
         private bool $isVerified,
-        private ?TokenPair $tokenPair = null,
     ) {
     }
 

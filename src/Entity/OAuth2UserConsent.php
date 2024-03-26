@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OAuth2UserConsentRepository;
+use DateInterval;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -16,27 +17,27 @@ class OAuth2UserConsent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int|null $id = null;
+    private int $id;
 
-    #[ORM\Column]
-    private DateTimeImmutable|null $created = null;
+    #[ORM\Column(nullable: false)]
+    private DateTimeImmutable $created;
 
-    #[ORM\Column(nullable: true)]
-    private DateTimeImmutable|null $expires = null;
+    #[ORM\Column(nullable: false)]
+    private DateTimeImmutable $expires;
 
     /**
      * @var list<string>
-     * $scopes = ['email', 'id']
+     *                   $scopes = ['email', 'id']
      */
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: false)]
     private array $scopes = ['email', 'id'];
 
     #[ORM\Column(length: 255, nullable: true)]
-    private string|null $ipAddress = null;
+    private ?string $ipAddress = null;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
-    private Client|null $client = null;
+    private Client $client;
 
     #[ORM\Column]
     private int $userId;
@@ -45,29 +46,33 @@ class OAuth2UserConsent
     {
         $this->userId = $userId;
         $this->client = $client;
+
+        $dateTimeImmutable = new DateTimeImmutable();
+        $this->created = $dateTimeImmutable;
+        $this->expires = $dateTimeImmutable->add(new DateInterval('P30D'));
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getCreated(): DateTimeImmutable|null
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function setCreated(DateTimeImmutable $created): void
-    {
-        $this->created = $created;
-    }
-
-    public function getExpires(): DateTimeImmutable|null
+    public function getExpires(): ?DateTimeImmutable
     {
         return $this->expires;
     }
 
-    public function setExpires(DateTimeImmutable|null $expires): void
+    public function setExpires(DateTimeImmutable $expires): void
     {
         $this->expires = $expires;
     }
@@ -78,22 +83,23 @@ class OAuth2UserConsent
         return $this->scopes;
     }
 
-    public function setScopes(array|null $scopes): void
+    /** @param array<string> $scopes */
+    public function setScopes(array $scopes): void
     {
         $this->scopes = $scopes;
     }
 
-    public function getIpAddress(): string|null
+    public function getIpAddress(): ?string
     {
         return $this->ipAddress;
     }
 
-    public function setIpAddress(string|null $ipAddress): void
+    public function setIpAddress(?string $ipAddress): void
     {
         $this->ipAddress = $ipAddress;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }

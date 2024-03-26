@@ -31,8 +31,10 @@ final readonly class OrderWorkflow
     {
         try {
             $paymentType = PaymentProvider::from($paymentOperator);
+
             $cart = $this->cartService->getCurrentCart();
             $order = $this->orderService->createPending($cart);
+
             $this->paymentService->createPayment($order, $paymentType);
             $this->cartService->clearCart();
 

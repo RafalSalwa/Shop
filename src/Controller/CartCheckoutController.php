@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/cart/checkout', name: 'checkout_', methods: ['GET', 'POST'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class CartCheckoutController extends AbstractShopController
@@ -28,7 +28,7 @@ final class CartCheckoutController extends AbstractShopController
         CalculatorService $cartCalculator,
         AddressBookService $addressBookService,
     ): Response {
-        $address = new Address();
+        $address = new Address($this->getUserId());
         $form = $this->createForm(AddressType::class, $address);
         $paymentForm = $this->createForm(PaymentType::class);
 
@@ -37,6 +37,7 @@ final class CartCheckoutController extends AbstractShopController
             $address->setUserId($this->getUserId());
             $addressBookService->save($address);
         }
+
         $cart = $cartService->getCurrentCart();
 
         return $this->render(

@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace App\Exception\Factory;
 
 use App\Exception\AuthApiRuntimeException;
-use App\Exception\AuthenticationExceptionInterface;
 use App\Exception\BadRequestException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Exception\InternalServerErrorException;
 use App\Exception\UserAlreadyExistsException;
 use App\Exception\UserNotFoundException;
+
 use const Grpc\STATUS_ALREADY_EXISTS;
 use const Grpc\STATUS_INTERNAL;
 use const Grpc\STATUS_INVALID_ARGUMENT;
@@ -26,7 +27,7 @@ final class AuthApiGRPCExceptionFactory
             ),
             STATUS_INTERNAL => new InternalServerErrorException(
                 'Unknown error has occured, please try again later',
-                $statusCode,
+                null,
             ),
             STATUS_NOT_FOUND => new UserNotFoundException('User not found', $statusCode),
             STATUS_INVALID_ARGUMENT => new BadRequestException('wrong argument provided', $statusCode),

@@ -11,12 +11,13 @@ use App\Enum\CartOperationEnum;
 use App\Service\SubscriptionService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
 use function is_subclass_of;
 
 /** @extends Voter<string,Product> */
 final class AddToCartVoter extends Voter
 {
-    public function __construct(private SubscriptionService $service)
+    public function __construct(private readonly SubscriptionService $service)
     {
     }
 

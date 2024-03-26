@@ -6,8 +6,10 @@ namespace App\Service;
 
 use App\Exception\InvalidCouponCodeException;
 use App\ValueObject\CouponCode;
+
 use function array_filter;
 use function array_key_exists;
+
 use const ARRAY_FILTER_USE_KEY;
 
 final class CouponService

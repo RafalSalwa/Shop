@@ -15,6 +15,7 @@ use App\Repository\OrderRepository;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+
 use function assert;
 use function is_subclass_of;
 
@@ -31,38 +32,33 @@ final readonly class OrderService
 
     public function createPending(Cart $cart): Order
     {
+        $user = $this->getUser();
         $summary = $this->calculatorService->calculateSummary($cart->getTotalAmount(), $cart->getCoupon());
+        $address = $this->addressBookService->getDefaultDeliveryAddress($user->getId());
+        if (null === $address) {
+            throw new ItemNotFoundException('There is no Address in AddressBook');
+        }
 
         $order = new Order(
             netAmount: $cart->getTotalAmount(),
-            userId: $this->getUser()->getId(),
+            userId: $user->getId(),
             shippingCost: $summary->getShipping(),
             total: $summary->getTotal(),
+            deliveryAddress: $address,
+            bilingAddress: $address,
         );
         $this->orderProcessingStateMachine->getMarking($order);
 
         $order->applyCoupon($cart->getCoupon());
 
         foreach ($cart->getItems() as $cartItem) {
-            $orderItem = OrderItemFactory::createFromCartItem($cartItem);
+            $orderItem = OrderItemFactory::createFromCartItem($cartItem, $order);
             $order->addItem($orderItem);
         }
 
-        $this->assignDeliveryAddress($order);
         $this->orderRepository->save($order);
 
         return $order;
-    }
-
-    /** @throws ItemNotFoundException */
-    private function assignDeliveryAddress(Order $order): void
-    {
-        $address = $this->addressBookService->getDefaultDeliveryAddress($order->getUserId());
-        if (null === $address) {
-            throw new ItemNotFoundException('There is no Address in AddressBook');
-        }
-        $order->setDeliveryAddress($address);
-        $order->setBilingAddress($address);
     }
 
     public function confirmOrder(Order $order): void
@@ -70,6 +66,7 @@ final readonly class OrderService
         if (true === $this->orderProcessingStateMachine->can($order, 'to_completed')) {
             $this->orderProcessingStateMachine->apply($order, 'to_completed');
         }
+
         $this->orderRepository->save($order);
 
         $orderConfirmedEvent = new OrderConfirmedEvent($order);
