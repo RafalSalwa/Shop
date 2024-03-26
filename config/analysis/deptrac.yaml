@@ -87,6 +87,7 @@ deptrac:
       - Repositories
     Workflows:
       - Services
+      - Entities
     SymfonyController: ~
   formatters:
     graphviz:
