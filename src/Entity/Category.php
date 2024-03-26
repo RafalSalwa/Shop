@@ -13,6 +13,9 @@ use Doctrine\ORM\Mapping\Id;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
+use function str_replace;
+use function strtolower;
+
 #[Entity(repositoryClass: CategoryRepository::class)]
 #[Table(name: 'categories', schema: 'interview')]
 class Category
@@ -29,8 +32,14 @@ class Category
     #[Column(name: 'description', type: Types::TEXT, nullable: true)]
     private string|null $description = null;
 
-    #[Column(name: 'slug', type: Types::STRING, length: 64, nullable: true)]
+    #[Column(name: 'slug', type: Types::STRING, length: 64, nullable: false)]
     private string $slug;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+        $this->slug = strtolower(str_replace(' ', '-', $name));
+    }
 
     public function getId(): int|null
     {

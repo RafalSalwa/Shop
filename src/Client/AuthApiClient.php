@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Client;
 
+use App\Client\Contracts\AuthClientInterface;
+use App\Client\Contracts\AuthCodeClientInterface;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiErrorFactory;
 use App\Exception\AuthApiRuntimeException;
@@ -18,13 +20,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
-
 use function array_key_exists;
-use function dd;
 use function json_decode;
 use function json_encode;
-
 use const JSON_THROW_ON_ERROR;
 
 final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClientInterface
@@ -82,7 +80,7 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
         } catch (TransportExceptionInterface | JsonException $exception) {
             $this->logger->error($exception->getMessage());
 
-            throw new AuthApiRuntimeException($exception->getMessage());
+            throw new AuthApiRuntimeException(message: $exception->getMessage(), previous: $exception);
         }
     }
 
@@ -105,11 +103,11 @@ final readonly class AuthApiClient implements AuthClientInterface, AuthCodeClien
             }
 
             throw new AuthApiRuntimeException('User not found or Api got problems');
-        } catch (Throwable $throwable) {
-            dd($throwable->getMessage(), $throwable->getCode(), $throwable->getTraceAsString(), $response ?? null);
-        }
+        } catch (TransportExceptionInterface | JsonException $exception) {
+            $this->logger->error($exception->getMessage());
 
-        return null;
+            throw new AuthApiRuntimeException(message: $exception->getMessage(), previous: $exception);
+        }
     }
 
     public function confirmAccount(string $verificationCode): void

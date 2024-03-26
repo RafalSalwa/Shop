@@ -31,12 +31,12 @@ class SubscriptionPlan
     private int $id;
 
     #[Column(name: 'plan_name', type: Types::STRING, length: 255)]
-    private string $name;
+    private string $name = 'freemium';
 
     #[Column(name: 'description', type: Types::TEXT, nullable: false)]
     #[Assert\NotBlank(message: 'Description cannot be empty')]
     #[Assert\Length(min: 10, minMessage: 'You need to add any')]
-    private string $description;
+    private string $description = 'Basic plan for all users, that allows platform usage';
 
     #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => false])]
     private bool $isActive = false;
@@ -45,7 +45,7 @@ class SubscriptionPlan
     private bool $isVisible = true;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
-    private int $price;
+    private int $price = 0;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: false)]
     private int $tier;
@@ -71,6 +71,11 @@ class SubscriptionPlan
     public function isActive(): bool
     {
         return $this->isActive;
+    }
+
+    public function isVisible(): bool
+    {
+        return $this->isVisible;
     }
 
     public function getPrice(): int

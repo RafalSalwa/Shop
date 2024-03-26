@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Workflow;
 
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\ProductCartItem;
 use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
@@ -64,7 +65,7 @@ final readonly class CartWorkflow
      * @throws CartOperationExceptionInterface
      * @throws StockOperationExceptionInterface
      */
-    public function remove(ProductCartItem $cartItem): void
+    public function remove(CartItemInterface $cartItem): void
     {
         try {
             $this->cartService->removeItem($cartItem);

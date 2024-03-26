@@ -29,26 +29,36 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[GeneratedValue(strategy: 'SEQUENCE')]
     #[Column(name: 'product_id', type: Types::INTEGER, unique: true, nullable: false)]
     #[SequenceGenerator(sequenceName: 'products_ProductID_seq', allocationSize: 1, initialValue: 80)]
-    private readonly int $id;
+    private int $id;
 
-    #[Column(name: 'product_name', type: Types::STRING, length: 40)]
-    private readonly string $name;
+    #[Column(name: 'product_name', type: Types::STRING, length: 40, nullable: false)]
+    private string $name;
 
-    #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: true)]
+    #[Column(name: 'quantity_per_unit', type: Types::STRING, length: 20, nullable: false)]
     private string $quantityPerUnit;
 
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private int $price;
 
-    #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: true)]
+    #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: false)]
     private int $unitsInStock;
 
-    #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: true)]
+    #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: false)]
     private int $unitsOnOrder;
 
     #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(referencedColumnName: 'plan_id', nullable: false)]
     private SubscriptionPlan $subscriptionPlan;
+
+    public function __construct(string $name, string $quantityPerUnit, int $price, int $unitsInStock, int $unitsOnOrder)
+    {
+        $this->name = $name;
+        $this->quantityPerUnit = $quantityPerUnit;
+        $this->price = $price;
+        $this->unitsInStock = $unitsInStock;
+        $this->unitsOnOrder = $unitsOnOrder;
+        $this->subscriptionPlan = new SubscriptionPlan();
+    }
 
     public function getRequiredSubscription(): SubscriptionPlan
     {

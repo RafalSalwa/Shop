@@ -141,7 +141,6 @@
     "slevomat/coding-standard": "^8.15",
     "spaze/phpstan-disallowed-calls": "^3.1.2",
     "squizlabs/php_codesniffer": "^3.9",
-    "staabm/phpstan-dba": "^0.2.79",
     "symfony/browser-kit": "~6.0.19",
     "symfony/css-selector": "~6.0.19",
     "symfony/debug-bundle": "~6.4.3",

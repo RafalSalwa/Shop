@@ -33,7 +33,7 @@ class OAuth2ClientProfileTest extends TestCase
         $user = new User(1, 'test@example.com');
         $consent = new OAuth2UserConsent($user->getId(), $this->client);
 
-        $this->profile = new OAuth2ClientProfile();
+        $this->profile = new OAuth2ClientProfile($this->client, 'test');
     }
 
     public function testGettersAndSetters(): void

@@ -33,7 +33,7 @@ final class AddressBookServiceTest extends TestCase
 
         $addressService = new AddressBookService($addressRepositoryMock);
 
-        $address = new Address();
+        $address = new Address(1);
         $address->setId(1);
         $address->setUserId(1);
         $address->setAddressLine1('Test Street');
@@ -64,9 +64,9 @@ final class AddressBookServiceTest extends TestCase
     {
         $userId = 1;
         $addresses = [
-            new Address(),
-            new Address(),
-            new Address(),
+            new Address(1),
+            new Address(2),
+            new Address(3),
         ];
 
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
@@ -85,7 +85,7 @@ final class AddressBookServiceTest extends TestCase
     public function testGetDefaultDeliveryAddress(): void
     {
         $userId = 1;
-        $address = new Address();
+        $address = new Address(1);
 
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
         $addressRepositoryMock->expects($this->once())

@@ -14,7 +14,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[asController]
 #[Route(path: '/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
-#[IsGranted('IS_AUTHENTICATED')]
+#[IsGranted(attribute: 'IS_AUTHENTICATED')]
 final class SubscriptionController extends AbstractShopController
 {
     #[Route(path: '/', name: 'index')]

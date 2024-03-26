@@ -28,7 +28,7 @@ final class CartCheckoutController extends AbstractShopController
         CalculatorService $cartCalculator,
         AddressBookService $addressBookService,
     ): Response {
-        $address = new Address();
+        $address = new Address($this->getUserId());
         $form = $this->createForm(AddressType::class, $address);
         $paymentForm = $this->createForm(PaymentType::class);
 

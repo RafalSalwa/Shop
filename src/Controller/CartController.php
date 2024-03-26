@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\ProductCartItem;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
@@ -53,7 +54,7 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
-    public function removeFromCart(ProductCartItem $cartItem, CartWorkflow $cartWorkflow): JsonResponse
+    public function removeFromCart(CartItemInterface $cartItem, CartWorkflow $cartWorkflow): JsonResponse
     {
         try {
             $cartWorkflow->remove($cartItem);

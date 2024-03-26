@@ -22,7 +22,6 @@ use Doctrine\ORM\Mapping\Table;
 
 #[Entity(repositoryClass: SubscriptionRepository::class)]
 #[Table(name: 'subscription', schema: 'interview')]
-#[HasLifecycleCallbacks]
 class Subscription
 {
     #[Id]
@@ -31,31 +30,36 @@ class Subscription
     private int $id;
 
     #[ManyToOne(targetEntity: 'SubscriptionPlan')]
-    #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: true)]
-    private SubscriptionPlan|null $subscriptionPlan = null;
+    #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: false)]
+    private SubscriptionPlan $subscriptionPlan;
 
-    #[Column(name: 'user_id', type: Types::INTEGER, nullable: true)]
-    private int|null $userId = null;
+    #[Column(name: 'user_id', type: Types::INTEGER, nullable: false)]
+    private int $userId;
 
     #[Column(name: 'tier', type: Types::SMALLINT, nullable: false, enumType: SubscriptionTier::class)]
-    private SubscriptionTier $subscriptionTier = SubscriptionTier::Freemium;
+    private SubscriptionTier $subscriptionTier;
 
-    #[Column(name: 'is_active', type: Types::BOOLEAN, options: ['default' => true])]
+    #[Column(name: 'is_active', type: Types::BOOLEAN, nullable: false, options: ['default' => true])]
     private bool $isActive = true;
 
-    #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
+    #[Column(
+        name: 'created_at',
+        type: Types::DATETIME_IMMUTABLE,
+        nullable: false,
+        options: ['default' => 'CURRENT_TIMESTAMP'],
+    )]
     private DateTimeImmutable $createdAt;
 
     #[Column(
         name: 'starts_at',
         type: Types::DATETIME_IMMUTABLE,
-        nullable: true,
+        nullable: false,
         options: ['default' => 'CURRENT_TIMESTAMP'],
     )]
     private DateTimeImmutable $startsAt;
 
-    #[Column(name: 'ends_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
-    private DateTimeImmutable|null $endsAt = null;
+    #[Column(name: 'ends_at', type: Types::DATETIME_IMMUTABLE, nullable: false)]
+    private DateTimeImmutable $endsAt;
 
     public function __construct(int $userId, SubscriptionPlan $plan)
     {
@@ -78,18 +82,6 @@ class Subscription
     public function getPlan(): SubscriptionPlan|null
     {
         return $this->subscriptionPlan;
-    }
-
-    public function setPlan(SubscriptionPlan $subscriptionPlan): void
-    {
-        $this->subscriptionPlan = $subscriptionPlan;
-    }
-
-    public function setTier(int $tier): self
-    {
-        $this->subscriptionTier = $tier;
-
-        return $this;
     }
 
     public function isActive(): bool
@@ -117,19 +109,9 @@ class Subscription
         return $this->startsAt;
     }
 
-    public function setStartsAt(DateTime|null $startsAt): void
-    {
-        $this->startsAt = $startsAt;
-    }
-
     public function getEndsAt(): DateTime|null
     {
         return $this->endsAt;
-    }
-
-    public function setEndsAt(DateTime|null $endsAt): void
-    {
-        $this->endsAt = $endsAt;
     }
 
     public function getRequiredLevel(): int
@@ -147,19 +129,8 @@ class Subscription
         $this->id = $id;
     }
 
-    #[PrePersist]
-    public function prePersist(): void
-    {
-        $this->createdAt = new DateTimeImmutable();
-    }
-
     public function getUserId(): int
     {
         return $this->userId;
-    }
-
-    public function setUserId(int $userId): void
-    {
-        $this->userId = $userId;
     }
 }

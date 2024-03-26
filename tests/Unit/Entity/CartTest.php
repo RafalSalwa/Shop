@@ -2,7 +2,7 @@
 
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\AbstractCartItem;
+use App\Entity\CartItem;
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: Cart::class)]
 #[UsesClass(className: CartStatus::class)]
 #[UsesClass(className: CouponCode::class)]
-#[UsesClass(className: AbstractCartItem::class)]
+#[UsesClass(className: CartItem::class)]
 #[UsesClass(className: Product::class)]
 class CartTest extends TestCase
 {
@@ -162,7 +162,7 @@ class CartTest extends TestCase
         $cart->addItem($product);
         $this->assertEquals(1, $cart->getItems()->count());
         $cartItem = $cart->getItemById($product->getId());
-        $this->assertTrue($cart->itemExists($cartItem));
+        $this->assertTrue($cart->hasItem($cartItem));
     }
 
     public function testGetItem()

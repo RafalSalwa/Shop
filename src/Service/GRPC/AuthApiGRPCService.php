@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\GRPC;
 
-use App\Client\AuthClientInterface;
+use App\Client\Contracts\AuthClientInterface;
 use App\Client\GRPC\UserApiGRPCClient;
 use App\Exception\AuthException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
@@ -13,7 +13,6 @@ use App\Protobuf\Message\UserDetails;
 use Grpc\UnaryCall;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
-
 use function array_merge;
 
 final readonly class AuthApiGRPCService

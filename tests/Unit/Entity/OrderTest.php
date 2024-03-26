@@ -36,7 +36,7 @@ class OrderTest extends TestCase
         $this->payment = new Payment();
         $this->payment->setAmount(100);
         $this->setProtectedProperty($this->payment, 'id',1);
-        $this->address = new Address();
+        $this->address = new Address(1);
 
     }
 

@@ -9,6 +9,7 @@ use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
+use DateInterval;
 
 #[ORM\Entity(repositoryClass: OAuth2UserConsentRepository::class)]
 class OAuth2UserConsent
@@ -16,19 +17,19 @@ class OAuth2UserConsent
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int|null $id = null;
+    private int $id;
 
-    #[ORM\Column]
-    private DateTimeImmutable|null $created = null;
+    #[ORM\Column(nullable: false)]
+    private DateTimeImmutable $created;
 
-    #[ORM\Column(nullable: true)]
-    private DateTimeImmutable|null $expires = null;
+    #[ORM\Column(nullable: false)]
+    private DateTimeImmutable $expires;
 
     /**
      * @var list<string>
      * $scopes = ['email', 'id']
      */
-    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: true)]
+    #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: false)]
     private array $scopes = ['email', 'id'];
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -36,7 +37,7 @@ class OAuth2UserConsent
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
-    private Client|null $client = null;
+    private Client $client;
 
     #[ORM\Column]
     private int $userId;
@@ -45,6 +46,10 @@ class OAuth2UserConsent
     {
         $this->userId = $userId;
         $this->client = $client;
+
+        $dateTimeImmutable = new DateTimeImmutable();
+        $this->created = $dateTimeImmutable;
+        $this->expires = $dateTimeImmutable->add(new DateInterval('P30D'));;
     }
 
     public function getId(): int|null
@@ -52,14 +57,14 @@ class OAuth2UserConsent
         return $this->id;
     }
 
+    public function getUserId(): int
+    {
+        return $this->userId;
+    }
+
     public function getCreated(): DateTimeImmutable|null
     {
         return $this->created;
-    }
-
-    public function setCreated(DateTimeImmutable $created): void
-    {
-        $this->created = $created;
     }
 
     public function getExpires(): DateTimeImmutable|null
@@ -67,7 +72,7 @@ class OAuth2UserConsent
         return $this->expires;
     }
 
-    public function setExpires(DateTimeImmutable|null $expires): void
+    public function setExpires(DateTimeImmutable $expires): void
     {
         $this->expires = $expires;
     }

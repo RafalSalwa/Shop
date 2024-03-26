@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
+use App\Entity\CartItem;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\ProductCartItem;
 use App\Enum\CartOperationEnum;
@@ -43,6 +44,6 @@ final readonly class CartItemFactory
             throw new AccessDeniedException('Higher subscription required');
         }
 
-        return new ProductCartItem(referencedEntity: $product, quantity: $quantity);
+        return new CartItem(referencedEntity: $product, quantity: $quantity);
     }
 }

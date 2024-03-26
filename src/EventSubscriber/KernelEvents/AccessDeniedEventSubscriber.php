@@ -10,10 +10,10 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
-final class AccessDeniedListener implements EventSubscriberInterface
+final class AccessDeniedEventSubscriber implements EventSubscriberInterface
 {
-    /** @inheritDoc */
-    public static function getSubscribedEvents()
+    /** @return array<string, array{0: string, 1: int}> */
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::EXCEPTION => ['onKernelException', 2]];
     }

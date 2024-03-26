@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\EventListener;
+namespace App\EventSubscriber;
 
 use App\Event\StockDepletedEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Email;
 
-final readonly class StockDepletedListener implements EventSubscriberInterface
+final readonly class StockDepletedEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(private MailerInterface $mailer)
     {}

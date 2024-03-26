@@ -11,14 +11,14 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-final readonly class HttpExceptionListener implements EventSubscriberInterface
+final readonly class HttpExceptionEventSubscriber implements EventSubscriberInterface
 {
     public function __construct(private UrlGeneratorInterface $urlGenerator)
     {
     }
 
-    /** @inheritDoc */
-    public static function getSubscribedEvents()
+    /** @return array<string, array{0: string, 1: int}> */
+    public static function getSubscribedEvents(): array
     {
         return [KernelEvents::EXCEPTION => ['onKernelException', 2]];
     }

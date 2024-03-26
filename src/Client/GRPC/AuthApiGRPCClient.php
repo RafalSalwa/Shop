@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Client\GRPC;
 
-use App\Client\AuthClientInterface;
+use App\Client\Contracts\AuthClientInterface;
 use App\Exception\AuthException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Exception\Factory\AuthApiGRPCExceptionFactory;
@@ -22,7 +22,6 @@ use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use Grpc\UnaryCall;
 use stdClass;
-
 use function assert;
 
 final class AuthApiGRPCClient implements AuthClientInterface
@@ -109,19 +108,6 @@ final class AuthApiGRPCClient implements AuthClientInterface
     /** @throws AuthException */
     public function confirmAccount(string $verificationCode): void
     {
-        $verifyUserRequest = new VerifyUserRequest();
-        $verifyUserRequest->setCode($verificationCode);
-
-        $arrResponse = $this->getUserClient()->VerifyUser($verifyUserRequest)
-            ->wait();
-        $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-
-        assert($arrStatus instanceof stdClass);
-        $statusResponse = new StatusResponse($arrStatus);
-        if (false === $statusResponse->isOk()) {
-            throw new AuthException('missing verification code');
-        }
     }
 
     /** @return array<string, UnaryCall> */

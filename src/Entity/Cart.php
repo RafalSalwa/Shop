@@ -41,16 +41,16 @@ class Cart implements JsonSerializable
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /** @var Collection<int, AbstractCartItem> */
+    /** @var Collection<int, CartItem> */
     #[OneToMany(
         mappedBy: 'cart',
-        targetEntity: AbstractCartItem::class,
+        targetEntity: CartItem::class,
         cascade: ['persist', 'remove'],
         fetch: 'EAGER',
         orphanRemoval: true,
     )
     ]
-    #[Groups('cart')]
+    #[Groups(groups: 'cart')]
     private Collection $items;
 
     #[Column(name: 'user_id', type: Types::INTEGER)]
@@ -74,8 +74,9 @@ class Cart implements JsonSerializable
     #[Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?DateTimeImmutable $updatedAt = null;
 
-    public function __construct()
+    public function __construct(int $userId)
     {
+        $this->userId = $userId;
         $this->createdAt = new DateTimeImmutable();
         $this->items = new ArrayCollection();
     }
@@ -83,7 +84,7 @@ class Cart implements JsonSerializable
     /** @throws ItemNotFoundException */
     public function addItem(CartItemInterface $newItem): void
     {
-        if (false === $this->itemExists($newItem)) {
+        if (false === $this->hasItem($newItem)) {
             $this->getItems()->add($newItem);
             $newItem->setCart($this);
 
@@ -101,7 +102,7 @@ class Cart implements JsonSerializable
         $newItem->setCart($this);
     }
 
-    public function itemExists(CartItemInterface $search): bool
+    public function hasItem(CartItemInterface $search): bool
     {
         if (0 === $this->getItems()->count()) {
             return false;

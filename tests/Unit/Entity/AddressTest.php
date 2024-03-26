@@ -18,7 +18,7 @@ class AddressTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->address = new Address();
+        $this->address = new Address(1);
     }
 
     public function testGettersAndSetters(): void

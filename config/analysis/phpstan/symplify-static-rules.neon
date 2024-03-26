@@ -1,0 +1,36 @@
+rules:
+    - Symplify\PHPStanRules\Rules\ForbiddenExtendOfNonAbstractClassRule
+    - Symplify\PHPStanRules\Rules\Complexity\ForbiddenSameNamedNewInstanceRule
+
+    # domain
+    - Symplify\PHPStanRules\Rules\Domain\RequireExceptionNamespaceRule
+    - Symplify\PHPStanRules\Rules\Domain\RequireAttributeNamespaceRule
+    - Symplify\PHPStanRules\Rules\Enum\RequireUniqueEnumConstantRule
+    - Symplify\PHPStanRules\Rules\ForbiddenParamTypeRemovalRule
+    - Symplify\PHPStanRules\Rules\PreventParentMethodVisibilityOverrideRule
+
+    # paths
+    - Symplify\PHPStanRules\Rules\NoMissingDirPathRule
+    - Symplify\PHPStanRules\Rules\NoAbstractMethodRule
+    - Symplify\PHPStanRules\Rules\NoReferenceRule
+    - Symplify\PHPStanRules\Rules\NoArrayAccessOnObjectRule
+
+    - Symplify\PHPStanRules\Rules\NoNullableArrayPropertyRule
+    - Symplify\PHPStanRules\Rules\BoolishClassMethodPrefixRule
+
+    # dead-code
+    - Symplify\PHPStanRules\Rules\NoIssetOnObjectRule
+
+    # explicit naming
+    - Symplify\PHPStanRules\Rules\ForbiddenMultipleClassLikeInOneFileRule
+
+    # comlexity
+    - Symplify\PHPStanRules\Rules\Complexity\ForbiddenSameNamedNewInstanceRule
+    - Symplify\PHPStanRules\Rules\NarrowType\NoReturnFalseInNonBoolClassMethodRule
+
+    - Symplify\PHPStanRules\Rules\Complexity\ForbiddenArrayMethodCallRule
+    - Symplify\PHPStanRules\Rules\CheckRequiredInterfaceInContractNamespaceRule
+    - Symplify\PHPStanRules\Rules\NoEmptyClassRule
+
+    # naming
+    - Symplify\PHPStanRules\Rules\RequireAttributeNameRule

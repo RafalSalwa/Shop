@@ -10,7 +10,7 @@ use function Termwind\render;
 
 abstract class AbstractSymfonyCommand extends Command
 {
-    public function render(string $html): void
+    public final function render(string $html): void
     {
         render($html);
     }

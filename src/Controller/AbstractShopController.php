@@ -12,12 +12,12 @@ use function assert;
 
 abstract class AbstractShopController extends AbstractController
 {
-    protected function getUserId(): int
+    protected final function getUserId(): int
     {
         return $this->getShopUser()->getId();
     }
 
-    protected function getShopUser(): ShopUserInterface
+    protected final function getShopUser(): ShopUserInterface
     {
         $user = $this->getUser();
         assert($user instanceof ShopUserInterface);
