@@ -25,7 +25,6 @@ use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 use function bcadd;
-use function count;
 use function is_int;
 use function sprintf;
 
@@ -41,10 +40,10 @@ class Cart implements JsonSerializable
     #[Column(name: 'cart_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    /** @var Collection<int, CartItem> */
+    /** @var Collection<int, CartItemInterface> */
     #[OneToMany(
         mappedBy: 'cart',
-        targetEntity: CartItem::class,
+        targetEntity: CartItemInterface::class,
         cascade: ['persist', 'remove'],
         fetch: 'EAGER',
         orphanRemoval: true,
@@ -110,8 +109,8 @@ class Cart implements JsonSerializable
 
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $item): bool => is_int($key) &&
-                        $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
+                static fn (int $key, CartItemInterface $item): bool => is_int($key)
+                    && $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
             );
     }
 
@@ -121,25 +120,25 @@ class Cart implements JsonSerializable
         return $this->items;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
     public function getItem(CartItemInterface $newItem): ?CartItemInterface
     {
-        $filtered = $this->getItems()
+        $item = $this->getItems()
             ->filter(
                 static fn (CartItemInterface $cartItem): bool => $cartItem->getReferencedEntity()
                     ->getId() === $newItem->getReferencedEntity()
                     ->getId()
                     && $cartItem::class === $newItem::class,
-            );
-        if (0 === count($filtered)) {
+            )->first();
+        if (false === $item) {
             return null;
         }
 
-        return $filtered?->first();
+        return $item ?? null;
     }
 
     /** @throws ItemNotFoundException */
@@ -161,10 +160,15 @@ class Cart implements JsonSerializable
 
     public function getItemById(int $id): ?CartItemInterface
     {
-        $filtered = $this->getItems()
-            ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id);
+        $item = $this->getItems()
+            ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id)
+            ->first();
 
-        return $filtered->first();
+        if (false === $item) {
+            return null;
+        }
+
+        return $item ?? null;
     }
 
     public function getTotalItemsCount(): int
@@ -191,7 +195,7 @@ class Cart implements JsonSerializable
     {
         $total = '0';
         foreach ($this->getItems() as $item) {
-            $total = bcadd($total, $item->getTotalPrice());
+            $total = bcadd($total, (string)$item->getTotalPrice());
         }
 
         return (int)$total;

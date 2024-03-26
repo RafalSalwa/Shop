@@ -11,7 +11,6 @@ use App\Protobuf\Message\VerifyUserRequest;
 use App\Protobuf\Service\UserServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use Grpc\ChannelCredentials;
-use Grpc\UnaryCall;
 use stdClass;
 
 use function assert;
@@ -20,7 +19,7 @@ final class UserApiGRPCClient
 {
     private readonly UserServiceClient $userServiceClient;
 
-    /** @var array<string, UnaryCall> */
+    /** @var array<string, array<string, array<array-key, mixed>>> */
     private array $responses = [];
 
     public function __construct(private readonly string $userServiceDsn)
@@ -50,7 +49,7 @@ final class UserApiGRPCClient
         }
     }
 
-    /** @return array<string, UnaryCall> */
+    /** @return array<string, array<string, array<array-key, mixed>>> */
     public function getResponses(): array
     {
         if ([] === $this->responses) {

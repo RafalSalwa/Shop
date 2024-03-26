@@ -63,7 +63,7 @@ class SubscriptionPlan
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function getDescription(): string|null
+    public function getDescription(): ?string
     {
         return $this->description;
     }

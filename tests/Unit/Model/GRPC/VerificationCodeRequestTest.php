@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Model\GRPC;
@@ -8,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: VerificationCodeRequest::class)]
-class VerificationCodeRequestTest extends TestCase
+final class VerificationCodeRequestTest extends TestCase
 {
     public function testGetSetVerificationCode(): void
     {

@@ -9,7 +9,7 @@ use stdClass;
 use const Grpc\STATUS_OK;
 
 /**
- * Converts GRPC response array into more readable form
+ * Converts GRPC response array into more readable form.
  */
 final class StatusResponse
 {

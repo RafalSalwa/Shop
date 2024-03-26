@@ -13,7 +13,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/user', name: 'user_', methods: ['GET'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class ProfileController extends AbstractShopController

@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Security\Core\User\EquatableInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use function assert;
+
 final class User implements UserInterface, ShopUserInterface, EquatableInterface
 {
     private readonly EmailAddress $email;
@@ -47,7 +49,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         return $this->token->value();
     }
 
-    public function getToken(): Token
+    public function getToken(): ?Token
     {
         return $this->token;
     }
@@ -63,7 +65,8 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         return $this->roles;
     }
 
-    public function setRoles(?array $roles): void
+    /** @param array<string> $roles */
+    public function setRoles(array $roles): void
     {
         $this->roles = $roles;
     }
@@ -73,7 +76,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         // We are not storing any sensitive data so there no need to erase anything
     }
 
-    public function getRefreshToken(): Token
+    public function getRefreshToken(): ?Token
     {
         return $this->refreshToken;
     }
@@ -83,7 +86,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         $this->refreshToken = $refreshToken;
     }
 
-    public function getSubscription(): Subscription
+    public function getSubscription(): ?Subscription
     {
         return $this->subscription;
     }
@@ -95,6 +98,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
 
     public function isEqualTo(UserInterface $user): bool
     {
+        assert($user instanceof ShopUserInterface);
         if ($this->id !== $user->getId()) {
             return false;
         }
@@ -112,8 +116,8 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         return $this->email->toString();
     }
 
-    /** @return array<int, OAuth2UserConsent>|null */
-    public function getConsents(): ?Collection
+    /** @return Collection<int, OAuth2UserConsent> */
+    public function getConsents(): Collection
     {
         return $this->consents;
     }

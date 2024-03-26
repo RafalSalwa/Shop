@@ -32,8 +32,7 @@ final readonly class CartService
         private LockFactory $cartLockFactory,
         private Security $security,
         private int $cartItemMaxCapacity,
-    ) {
-    }
+    ) {}
 
     /**
      * @throws ItemNotFoundException
@@ -133,7 +132,7 @@ final readonly class CartService
         }
     }
 
-    /** @throws ProductStockDepletedException|ItemNotFoundException */
+    /** @throws ItemNotFoundException|ProductStockDepletedException */
     public function add(CartItemInterface $cartItem): void
     {
         $lock = $this->cartLockFactory->createLock('cart_item_add');

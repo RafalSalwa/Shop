@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: SignInUserInput::class)]
-class SignInUserInputTest extends TestCase
+final class SignInUserInputTest extends TestCase
 {
     public function testGetSetEmail(): void
     {

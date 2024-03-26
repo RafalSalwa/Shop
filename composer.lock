@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f9cb4f7f01b6f960ee68644471eeeeb6",
+    "content-hash": "5259eef6248b27d557543b22868852ee",
     "packages": [
         {
             "name": "beberlei/assert",
@@ -22395,63 +22395,6 @@
                 }
             ],
             "time": "2024-03-16T10:07:54+00:00"
-        },
-        {
-            "name": "tomasvotruba/unused-public",
-            "version": "0.3.6",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/TomasVotruba/unused-public.git",
-                "reference": "995a1425abc319306ff490bda82d88d11375906d"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/TomasVotruba/unused-public/zipball/995a1425abc319306ff490bda82d88d11375906d",
-                "reference": "995a1425abc319306ff490bda82d88d11375906d",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ^8.0",
-                "phpstan/phpstan": "^1.10.19",
-                "webmozart/assert": "^1.11"
-            },
-            "type": "phpstan-extension",
-            "extra": {
-                "phpstan": {
-                    "includes": [
-                        "config/extension.neon"
-                    ]
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "TomasVotruba\\UnusedPublic\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Detect unused public properties, constants and methods in your code",
-            "keywords": [
-                "phpstan-extension",
-                "static analysis"
-            ],
-            "support": {
-                "issues": "https://github.com/TomasVotruba/unused-public/issues",
-                "source": "https://github.com/TomasVotruba/unused-public/tree/0.3.6"
-            },
-            "funding": [
-                {
-                    "url": "https://www.paypal.me/rectorphp",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/tomasvotruba",
-                    "type": "github"
-                }
-            ],
-            "time": "2024-03-23T10:09:11+00:00"
         },
         {
             "name": "tysonandre/var_representation_polyfill",

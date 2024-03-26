@@ -7,6 +7,7 @@ namespace App\Entity;
 use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use DateTime;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
@@ -62,7 +63,7 @@ class Payment
 
     #[ManyToOne(targetEntity: Order::class, inversedBy: 'payments')]
     #[JoinColumn(name: 'order_id', referencedColumnName: 'order_id', nullable: true)]
-    private Order|null $order = null;
+    private ?Order $order = null;
 
     public function __construct(int $userId, int $amount, PaymentProvider $operationType, string $operationNumber)
     {
@@ -72,6 +73,11 @@ class Payment
         $this->operationNumber = $operationNumber;
 
         $this->createdAt = new DateTime('now');
+    }
+
+    public function setAmount(int $amount): void
+    {
+        $this->amount = $amount;
     }
 
     public function getAmount(): int
@@ -84,7 +90,7 @@ class Payment
         return $this->id;
     }
 
-    public function getOperationNumber(): string|null
+    public function getOperationNumber(): ?string
     {
         return $this->operationNumber;
     }
@@ -104,7 +110,7 @@ class Payment
         $this->status = $status;
     }
 
-    public function getPaymentDate(): DateTime
+    public function getPaymentDate(): ?DateTimeInterface
     {
         return $this->paymentDate;
     }
@@ -129,7 +135,7 @@ class Payment
         return $this->userId;
     }
 
-    public function getOrder(): Order|null
+    public function getOrder(): ?Order
     {
         return $this->order;
     }

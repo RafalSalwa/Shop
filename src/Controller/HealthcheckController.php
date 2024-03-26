@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/healthcheck', name: 'healthcheck_', methods: ['GET'])]
 final class HealthcheckController extends AbstractShopController
 {

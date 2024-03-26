@@ -17,8 +17,7 @@ final readonly class EmailVerifier
         private MailerInterface $mailer,
         private UrlGeneratorInterface $urlGenerator,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
     public function sendEmailConfirmation(string $email, string $verificationCode): void
     {

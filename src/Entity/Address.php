@@ -101,7 +101,7 @@ class Address
         $this->addressLine1 = $addressLine1;
     }
 
-    public function getAddressLine2(): string|null
+    public function getAddressLine2(): ?string
     {
         return $this->addressLine2;
     }

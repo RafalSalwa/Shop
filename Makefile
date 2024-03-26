@@ -52,7 +52,7 @@ bench: ## Runs benchmarks with phpbench
 deptrac:
 	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
 	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
-
+	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml
 .PHONY: phpstan
 phpstan: lint
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon src
@@ -74,9 +74,9 @@ static_analysis: lint test_unit
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 #	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
-	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=var/reports/psalm.sonarqube.json --no-cache --no-file-cache --no-reflection-cache || true
+	-vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
-	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > reports/results/php-cs-fixer.checkstyle.xml || true
+	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php check --diff --verbose || true
 #	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
 #	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/

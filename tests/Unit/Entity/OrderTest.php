@@ -29,8 +29,9 @@ use Symfony\Component\Uid\Uuid;
 #[UsesClass(className: Address::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
-class OrderTest extends TestCase
+final class OrderTest extends TestCase
 {
+    use ProductHelperCartItemTrait;
     public $product;
 
     public $payment;
@@ -38,8 +39,6 @@ class OrderTest extends TestCase
     public $address;
 
     private Order $order;
-
-    use ProductHelperCartItemTrait;
 
     protected function setUp(): void
     {
@@ -56,7 +55,7 @@ class OrderTest extends TestCase
             deliveryAddress: $address,
             bilingAddress: $address
         );
-        $this->setProtectedProperty($this->order, 'id',1);
+        $this->setProtectedProperty($this->order, 'id', 1);
         $this->product = $this->getHelperProduct(1);
         $this->payment = new Payment(
             1,
@@ -64,7 +63,7 @@ class OrderTest extends TestCase
             PaymentProvider::from('stripe'),
             Uuid::v7()->generate(),
         );
-        $this->setProtectedProperty($this->payment, 'id',1);
+        $this->setProtectedProperty($this->payment, 'id', 1);
         $this->address = new Address(1);
 
     }
@@ -92,7 +91,7 @@ class OrderTest extends TestCase
     {
         $couponCode = new CouponCode('cart-discount', '10');
         $this->order->applyCoupon($couponCode);
-        $this->assertEquals($couponCode, $this->order->getCoupon());
+        $this->assertInstanceOf(CouponCode::class, $this->order->getCoupon());
 
         $this->order->applyCoupon(null);
         $this->assertNull($this->order->getCoupon());

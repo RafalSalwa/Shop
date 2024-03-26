@@ -38,7 +38,7 @@ class CartItem implements CartItemInterface
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
     #[Groups(groups: 'cart_item')]
-    protected Cart|null $cart = null;
+    protected ?Cart $cart = null;
 
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
     protected int $quantity;
@@ -86,9 +86,9 @@ class CartItem implements CartItemInterface
         return $this->id;
     }
 
-    final public function getTotalPrice(): string
+    final public function getTotalPrice(): int
     {
-        return bcmul((string)$this->getQuantity(), $this->getPrice(), 0);
+        return (int)bcmul((string)$this->getQuantity(), (string)$this->getPrice(), 0);
     }
 
     final public function getQuantity(): int
@@ -96,9 +96,9 @@ class CartItem implements CartItemInterface
         return $this->quantity;
     }
 
-    final public function getPrice(): string
+    final public function getPrice(): int
     {
-        return (string)$this->getReferencedEntity()->getPrice();
+        return $this->getReferencedEntity()->getPrice();
     }
 
     public function updateQuantity(int $quantity): void

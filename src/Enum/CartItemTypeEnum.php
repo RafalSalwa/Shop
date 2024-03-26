@@ -13,7 +13,7 @@ enum CartItemTypeEnum: string
     case product = Product::class;
     case subscription = SubscriptionPlan::class;
 
-    public static function tryFromName(string $name): string|null
+    public static function tryFromName(string $name): ?string
     {
         try {
             return self::fromName($name);

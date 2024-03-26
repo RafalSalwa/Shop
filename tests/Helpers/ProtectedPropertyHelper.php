@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Helpers;
 
 use ReflectionClass;
 
-trait ProtectedPropertyHelper {
-
+trait ProtectedPropertyHelper
+{
     private function setProtectedProperty($object, $property, $value): void
     {
         $reflectionClass = new ReflectionClass($object);
@@ -13,5 +15,4 @@ trait ProtectedPropertyHelper {
         $reflection_property->setAccessible(true);
         $reflection_property->setValue($object, $value);
     }
-
 }

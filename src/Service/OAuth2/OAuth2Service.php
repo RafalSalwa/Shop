@@ -29,6 +29,8 @@ final readonly class OAuth2Service
     public function createConsent(Client $appClient): OAuth2UserConsent
     {
         $user = $this->getUser();
+        assert($user instanceof OAuth2UserInterface);
+
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
             throw new BadRequestException();
@@ -42,14 +44,13 @@ final readonly class OAuth2Service
 
         $oAuth2UserConsent->setScopes(array_merge($requestedScopes, $userScopes));
         $oAuth2UserConsent->setClient($appClient);
-        $oAuth2UserConsent->setCreated(new DateTimeImmutable());
         $oAuth2UserConsent->setExpires(new DateTimeImmutable('+30 days'));
         $oAuth2UserConsent->setIpAddress($request->getClientIp());
 
         return $oAuth2UserConsent;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         $clientId = 'testclient';
 

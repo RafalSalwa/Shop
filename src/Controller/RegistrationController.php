@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Exception\AuthApiRuntimeException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
-use App\Exception\Contracts\RegistrationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
 use App\Form\RegistrationFormType;
 use App\Form\ResetPasswordRequestFormType;
@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/register', name: 'register_', methods: ['GET', 'POST'])]
 final class RegistrationController extends AbstractShopController
 {
@@ -37,7 +37,7 @@ final class RegistrationController extends AbstractShopController
                 $authApiUserRegistrar->register($email, $password);
 
                 return $this->redirectToRoute('register_confirm_email');
-            } catch (RegistrationExceptionInterface $exception) {
+            } catch (AuthApiRuntimeException $exception) {
                 $form->addError(new FormError($exception->getMessage()));
             }
         }

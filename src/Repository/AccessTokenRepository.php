@@ -10,13 +10,12 @@ use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
-readonly final class AccessTokenRepository implements AccessTokenRepositoryInterface
+final readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
 {
     public function __construct(
         private BaseAccessTokenRepository $baseAccessTokenRepository,
         private string $privateJWTKey,
-    ) {
-    }
+    ) {}
 
     /**
      * @param array<string> $scopes

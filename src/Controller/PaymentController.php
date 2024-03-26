@@ -7,7 +7,7 @@ namespace App\Controller;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[asController]
+#[AsController]
 #[Route(path: '/payment', name: 'payment_')]
 final class PaymentController extends AbstractShopController
 {

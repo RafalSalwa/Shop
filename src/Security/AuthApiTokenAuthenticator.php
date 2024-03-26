@@ -29,9 +29,9 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
 
     public function supports(Request $request): ?bool
     {
-        return Request::METHOD_GET === $request->getMethod() &&
-            'register_thank_you' === $request->attributes->get('_route') &&
-            $request->request->has('verificationCode');
+        return Request::METHOD_GET === $request->getMethod()
+            && 'register_thank_you' === $request->attributes->get('_route')
+            && $request->request->has('verificationCode');
     }
 
     public function authenticate(Request $request): Passport

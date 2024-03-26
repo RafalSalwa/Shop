@@ -21,7 +21,6 @@ use Traversable;
 
 use function ceil;
 use function count;
-use function is_null;
 use function max;
 use function min;
 
@@ -65,7 +64,7 @@ final class Paginator
         /** @var array<string, mixed> $havingDqlParts */
         $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
-        if (false === is_null($havingDqlParts) && count($havingDqlParts) > 0) {
+        if (null !== $havingDqlParts && count($havingDqlParts) > 0) {
             $paginator->setUseOutputWalkers(true);
         }
 
@@ -120,8 +119,8 @@ final class Paginator
         return $this->numResults;
     }
 
-    /** @return Traversable<int, object> */
-    public function getResults(): Traversable
+    /** @return Traversable<int, object>|null */
+    public function getResults(): ?Traversable
     {
         return $this->traversable;
     }

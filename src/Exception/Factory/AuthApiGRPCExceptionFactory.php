@@ -27,7 +27,7 @@ final class AuthApiGRPCExceptionFactory
             ),
             STATUS_INTERNAL => new InternalServerErrorException(
                 'Unknown error has occured, please try again later',
-                $statusCode,
+                null,
             ),
             STATUS_NOT_FOUND => new UserNotFoundException('User not found', $statusCode),
             STATUS_INVALID_ARGUMENT => new BadRequestException('wrong argument provided', $statusCode),

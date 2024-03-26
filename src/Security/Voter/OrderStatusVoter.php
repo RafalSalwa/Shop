@@ -4,10 +4,13 @@ declare(strict_types=1);
 
 namespace App\Security\Voter;
 
+use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
 use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
+
+use function assert;
 
 /**
  * @template TAttribute of 'view'
@@ -28,9 +31,7 @@ final class OrderStatusVoter extends Voter
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
         $user = $token->getUser();
-        if (null === $user) {
-            return false;
-        }
+        assert($user instanceof ShopUserInterface);
 
         if ($user->getId() !== $subject->getUserId()) {
             throw new UnauthorizedHttpException('You cannot view this order.');

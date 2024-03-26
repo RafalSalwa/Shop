@@ -26,12 +26,12 @@ interface CartItemInterface
     /**
      * Get the price of one unit of the cart item.
      */
-    public function getPrice(): string;
+    public function getPrice(): int;
 
     /**
      * Calculate the total price for the cart item based on quantity.
      */
-    public function getTotalPrice(): string;
+    public function getTotalPrice(): int;
 
     /**
      * Get the quantity of the cart item.
@@ -40,14 +40,14 @@ interface CartItemInterface
 
     /**
      * @return string
-     * Determines which Entity was used For this item (i.e. Product,subscription)
+     *                Determines which Entity was used For this item (i.e. Product,subscription)
      */
     public function getType(): string;
 
     /**
-     * Assign cart for Item
+     * Assign cart for Item.
      */
-    public function setCart(Cart $cart): void;
+    public function setCart(?Cart $cart): void;
 
     /**
      * Instead of add/substract qty, we will update property with new value.

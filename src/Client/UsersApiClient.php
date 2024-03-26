@@ -58,11 +58,11 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
             $user->setSubscription($subscription);
 
             return $user;
-        } catch (ClientExceptionInterface | ServerExceptionInterface | RedirectionExceptionInterface $exception) {
+        } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw AuthApiErrorFactory::create($exception);
-        } catch (TransportExceptionInterface | JsonException $exception) {
+        } catch (JsonException | TransportExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException($exception->getMessage(), $exception->getCode(), $exception);

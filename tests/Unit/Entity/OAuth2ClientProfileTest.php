@@ -20,13 +20,12 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: User::class)]
 #[UsesClass(className: EmailAddress::class)]
 #[UsesClass(className: Token::class)]
-class OAuth2ClientProfileTest extends TestCase
+final class OAuth2ClientProfileTest extends TestCase
 {
+    use TokenTestHelperTrait;
     public $client;
 
     private OAuth2ClientProfile $profile;
-
-    use TokenTestHelperTrait;
 
     protected function setUp(): void
     {
@@ -44,7 +43,7 @@ class OAuth2ClientProfileTest extends TestCase
         $profile = $this->profile;
 
         $profile->setClient($client);
-        $this->assertEquals($client, $profile->getClient());
+        $this->assertSame($client, $profile->getClient());
 
         $profile->setName('Test Name');
         $this->assertSame('Test Name', $profile->getName());

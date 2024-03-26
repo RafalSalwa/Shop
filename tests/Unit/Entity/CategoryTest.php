@@ -10,7 +10,7 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: Category::class)]
-class CategoryTest extends TestCase
+final class CategoryTest extends TestCase
 {
     use ProtectedPropertyHelper;
 

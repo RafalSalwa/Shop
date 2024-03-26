@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\OAuth2Api;
 
 use App\Controller\AbstractShopController;
-use App\Exception\ItemNotFoundException;
+use App\Exception\Contracts\CartOperationExceptionInterface;
+use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Exception\ProductStockDepletedException;
-use App\Exception\TooManySubscriptionsException;
 use App\Service\CartService;
-use App\Service\ProductsService;
-use Doctrine\DBAL\Exception;
+use App\Workflow\CartWorkflow;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Attributes as OA;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -22,11 +21,10 @@ use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Serializer\SerializerInterface;
 
 use function json_decode;
-use function sprintf;
 
 use const JSON_THROW_ON_ERROR;
 
-#[asController]
+#[AsController]
 #[Route(path: '/api/cart', name: 'api_cart_', methods: ['GET', 'POST', 'PUT'])]
 final class OAuthCartApiController extends AbstractShopController
 {
@@ -70,7 +68,7 @@ final class OAuthCartApiController extends AbstractShopController
         ],
         methods: ['POST'],
     )]
-    public function add(Request $request, ProductsService $productsService, CartService $cartService): Response
+    public function add(Request $request, CartWorkflow $cartWorkflow): Response
     {
         $params = json_decode($request->getContent(), true, 512, JSON_THROW_ON_ERROR);
         if (null === $params['id']) {
@@ -80,18 +78,7 @@ final class OAuthCartApiController extends AbstractShopController
         try {
             $prodId = (int)$params['id'];
 
-            $product = $productsService->byId($prodId);
-            if (null === $product) {
-                return $this->json(
-                    [
-                        'status' => 'product not found',
-                        'message' => sprintf('There is no such product with prvided ID #%s', $prodId),
-                    ],
-                    Response::HTTP_NOT_FOUND,
-                );
-            }
-
-            $cartService->add($product->toCartItem());
+            $cartWorkflow->add($prodId, 1);
         } catch (ProductStockDepletedException $exception) {
             return $this->json(
                 [
@@ -100,11 +87,8 @@ final class OAuthCartApiController extends AbstractShopController
                 ],
                 Response::HTTP_NOT_FOUND,
             );
-        } catch (Exception | ItemNotFoundException | TooManySubscriptionsException $exception) {
-            return $this->json(
-                ['message' => $exception->getMessage()],
-                Response::HTTP_INTERNAL_SERVER_ERROR,
-            );
+        } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
+            return $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
         return $this->json(

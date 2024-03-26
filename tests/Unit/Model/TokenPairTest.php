@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Model;
@@ -53,8 +54,8 @@ final class TokenPairTest extends TestCase
     public function testMappingFromJson(): void
     {
         $arr['user'] = [
-            'token'=>$this->token,
-            'refresh_token'=>$this->token,
+            'token' => $this->token,
+            'refresh_token' => $this->token,
         ];
         $tokenPair = TokenPair::fromJson(json_encode($arr));
         $this->assertInstanceOf(TokenPair::class, $tokenPair);

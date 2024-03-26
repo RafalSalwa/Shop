@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\Validation;
 
 #[CoversClass(className: Address::class)]
-class AddressTest extends TestCase
+final class AddressTest extends TestCase
 {
     private Address $address;
 
@@ -60,7 +60,7 @@ class AddressTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
         $this->address->setPostalCode('123123');
-        $this->assertEquals(null, $this->address->getPostalCode());
+        $this->assertNull($this->address->getPostalCode());
     }
 
     public function testNotBlankConstraints(): void

@@ -27,13 +27,13 @@ class OAuth2UserConsent
 
     /**
      * @var list<string>
-     * $scopes = ['email', 'id']
+     *                   $scopes = ['email', 'id']
      */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: false)]
     private array $scopes = ['email', 'id'];
 
     #[ORM\Column(length: 255, nullable: true)]
-    private string|null $ipAddress = null;
+    private ?string $ipAddress = null;
 
     #[ORM\ManyToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
@@ -52,7 +52,7 @@ class OAuth2UserConsent
         $this->expires = $dateTimeImmutable->add(new DateInterval('P30D'));
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -62,12 +62,12 @@ class OAuth2UserConsent
         return $this->userId;
     }
 
-    public function getCreated(): DateTimeImmutable|null
+    public function getCreated(): ?DateTimeImmutable
     {
         return $this->created;
     }
 
-    public function getExpires(): DateTimeImmutable|null
+    public function getExpires(): ?DateTimeImmutable
     {
         return $this->expires;
     }
@@ -89,17 +89,17 @@ class OAuth2UserConsent
         $this->scopes = $scopes;
     }
 
-    public function getIpAddress(): string|null
+    public function getIpAddress(): ?string
     {
         return $this->ipAddress;
     }
 
-    public function setIpAddress(string|null $ipAddress): void
+    public function setIpAddress(?string $ipAddress): void
     {
         $this->ipAddress = $ipAddress;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }

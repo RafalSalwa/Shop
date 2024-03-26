@@ -6,6 +6,7 @@ namespace App\Model;
 
 use DateTimeImmutable;
 use Lcobucci\JWT\UnencryptedToken;
+use League\OAuth2\Server\CryptKey;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\Traits\AccessTokenTrait;
 use League\OAuth2\Server\Entities\Traits\EntityTrait;
@@ -19,7 +20,8 @@ final class AccessToken implements AccessTokenEntityInterface
 
     public function __construct(string $privateJWTKey)
     {
-        $this->privateKey = $privateJWTKey;
+        $cryptKey = new CryptKey($privateJWTKey, 'rsinterview');
+        $this->setPrivateKey($cryptKey);
     }
 
     public function convert(): UnencryptedToken

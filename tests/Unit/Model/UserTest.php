@@ -13,12 +13,7 @@ use App\Model\User;
 use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\Collection;
-use Lcobucci\JWT\JwtFacade;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Token\Builder;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -35,9 +30,8 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: SubscriptionTier::class)]
 final class UserTest extends TestCase
 {
-    private string $token;
-
     use TokenTestHelperTrait;
+    private string $token;
 
     public function testUserInitialization(): void
     {

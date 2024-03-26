@@ -19,7 +19,6 @@ use App\Protobuf\Service\AuthServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
-use Grpc\UnaryCall;
 use Psr\Log\LoggerInterface;
 use stdClass;
 
@@ -29,7 +28,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
 {
     private readonly AuthServiceClient $authServiceClient;
 
-    /** @var array<string, UnaryCall> */
+    /** @var array<string, array<array-key, mixed>> */
     private array $responses = [];
 
     public function __construct(
@@ -113,7 +112,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         $this->logger->critical('Confirm Account should not be called in GRPC flow', ['code' => $verificationCode]);
     }
 
-    /** @return array<string, UnaryCall> */
+    /** @return array<string, array<string, array<array-key, mixed>>> */
     public function getResponses(): array
     {
         if ([] === $this->responses) {

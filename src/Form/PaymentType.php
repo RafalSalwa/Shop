@@ -16,7 +16,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 
-use function is_float;
 use function iterator_to_array;
 
 /**
@@ -72,7 +71,7 @@ final class PaymentType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Payment $viewData
+     * @param Payment                         $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void
@@ -89,17 +88,13 @@ final class PaymentType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Payment $viewData
+     * @param Payment                         $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
-        if (true !== is_float($viewData->getAmount())) {
-            return;
-        }
-
         /** @var array<FormInterface> $arrForms */
-        $arrForms = iterator_to_array($forms);
+        $arrForms = iterator_to_array($forms, preserve_keys: true);
         $viewData->setAmount($arrForms['amount']->getData() * 100);
     }
 }

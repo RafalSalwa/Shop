@@ -6,7 +6,7 @@ namespace App\Requests;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly final class CartSetQuantityRequest
+final readonly class CartSetQuantityRequest
 {
     public function __construct(
         #[Assert\Type(type: 'integer')]

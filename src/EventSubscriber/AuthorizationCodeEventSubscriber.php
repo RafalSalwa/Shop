@@ -6,7 +6,6 @@ namespace App\EventSubscriber;
 
 use League\Bundle\OAuth2ServerBundle\Event\AuthorizationRequestResolveEvent;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Bundle\SecurityBundle\Security\FirewallConfig;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,7 +13,6 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Security\Http\FirewallMapInterface;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
 
 use function assert;
@@ -29,11 +27,11 @@ final class AuthorizationCodeEventSubscriber implements EventSubscriberInterface
         private readonly Security $security,
         private readonly UrlGeneratorInterface $urlGenerator,
         private readonly RequestStack $requestStack,
-        private readonly FirewallMapInterface $firewallMap,
     ) {
-        $firewallConfig = $firewallMap->getFirewallConfig($requestStack->getCurrentRequest());
-        assert($firewallConfig instanceof FirewallConfig);
-        $this->firewallName = $firewallConfig->getName();
+        $request = $this->requestStack->getCurrentRequest();
+        assert($request instanceof Request);
+
+        $this->firewallName = $this->security->getFirewallConfig($request)?->getName() ?? 'main';
     }
 
     /** @return array<string, string> */

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Tests\Unit\Service;
@@ -80,7 +81,7 @@ final class AddressBookServiceTest extends TestCase
 
         $result = $addressBookService->getDeliveryAddresses($userId);
 
-        $this->assertEquals($addresses, $result);
+        $this->assertSame($addresses, $result);
     }
 
     public function testGetDefaultDeliveryAddress(): void
@@ -98,6 +99,6 @@ final class AddressBookServiceTest extends TestCase
 
         $result = $addressBookService->getDefaultDeliveryAddress($userId);
 
-        $this->assertEquals($address, $result);
+        $this->assertSame($address, $result);
     }
 }

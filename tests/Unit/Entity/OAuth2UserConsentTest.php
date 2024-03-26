@@ -12,13 +12,12 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: OAuth2UserConsent::class)]
-class OAuth2UserConsentTest extends TestCase
+final class OAuth2UserConsentTest extends TestCase
 {
+    use ProtectedPropertyHelper;
     public $client;
 
     private OAuth2UserConsent $userConsent;
-
-    use ProtectedPropertyHelper;
 
     protected function setUp(): void
     {
@@ -37,7 +36,7 @@ class OAuth2UserConsentTest extends TestCase
 
         $dateTimeImmutable = new DateTimeImmutable();
         $this->userConsent->setExpires($dateTimeImmutable);
-        $this->assertEquals($dateTimeImmutable, $this->userConsent->getExpires());
+        $this->assertSame($dateTimeImmutable, $this->userConsent->getExpires());
 
         $scopes = ['email', 'id'];
         $this->userConsent->setScopes($scopes);
@@ -48,6 +47,6 @@ class OAuth2UserConsentTest extends TestCase
         $this->assertSame($ipAddress, $this->userConsent->getIpAddress());
 
         $this->userConsent->setClient($this->client);
-        $this->assertEquals($this->client, $this->userConsent->getClient());
+        $this->assertSame($this->client, $this->userConsent->getClient());
     }
 }

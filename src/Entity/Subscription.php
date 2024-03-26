@@ -7,7 +7,6 @@ namespace App\Entity;
 use App\Enum\SubscriptionTier;
 use App\Repository\SubscriptionRepository;
 use DateInterval;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -77,7 +76,7 @@ class Subscription
         return $this->subscriptionTier;
     }
 
-    public function getPlan(): SubscriptionPlan|null
+    public function getPlan(): ?SubscriptionPlan
     {
         return $this->subscriptionPlan;
     }
@@ -102,12 +101,12 @@ class Subscription
         $this->createdAt = $createdAt;
     }
 
-    public function getStartsAt(): DateTime|null
+    public function getStartsAt(): ?DateTimeImmutable
     {
         return $this->startsAt;
     }
 
-    public function getEndsAt(): DateTime|null
+    public function getEndsAt(): DateTimeImmutable
     {
         return $this->endsAt;
     }

@@ -19,7 +19,7 @@ final class AppFixtures extends Fixture
             unitsInStock: 100,
             unitsOnOrder: 1,
         );
-         $manager->persist($product);
+        $manager->persist($product);
 
         $manager->flush();
     }

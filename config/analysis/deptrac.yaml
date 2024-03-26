@@ -16,6 +16,8 @@ deptrac:
     - '#.*test.*#'
     - '#.(Symfony\\Component).#'
     - '#.*App\\Protobuf\\*.#'
+    - '#.*GRPC*.#'
+    - '#.*Doctrine*.#'
   layers:
     - name: AbstractController
       collectors:
@@ -38,6 +40,10 @@ deptrac:
       collectors:
         - type: classLike
           value: .*App\\Command.*
+    - name: Forms
+      collectors:
+        - type: classLike
+          value: .*App\\Form.*
     - name: Repositories
       collectors:
         - type: bool
@@ -50,10 +56,18 @@ deptrac:
       collectors:
         - type: classLike
           value: .*App\\Service.*
-    - name: Workflows
+    - name: OrderWorkflow
       collectors:
         - type: classLike
-          value: .*App\\Workflow.*
+          value: .*App\\Workflow\\OrderWorkflow.*
+    - name: CartWorkflow
+      collectors:
+        - type: classLike
+          value: .*App\\Workflow\\CartWorkflow.*
+    - name: Factories
+      collectors:
+        - type: classLike
+          value: .*App\\Factory.*
     - name: Entities
       collectors:
         - type: attribute
@@ -62,6 +76,14 @@ deptrac:
       collectors:
         - type: classLike
           value: .*Symfony\\Bundle\\FrameworkBundle\\Controller\\AbstractController.*
+    - name: DoctrineEntities
+      collectors:
+        - type: classLike
+          value: .*Doctrine\\ORM\\Mapping\\Entity.*
+    - name: DoctrineRepositories
+      collectors:
+        - type: classLike
+          value: .*Doctrine\\Bundle\\DoctrineBundle\\Repository\\ServiceEntityRepository.*
 
   ruleset:
     AbstractController:
@@ -69,27 +91,63 @@ deptrac:
     Controllers:
       - AbstractController
       - SymfonyController
+      - Forms
       - Services
-      - Workflows
+      - CartWorkflow
+      - OrderWorkflow
       - Entities
       - Events
+    Workflows:
+      - Services
+      - Entities
     Services:
       - Repositories
       - Entities
+      - Factories
     Repositories:
+      - DoctrineRepositories
       - Services
       - Entities
     Entities:
+      - DoctrineEntities
       - Repositories
       - SymfonySerializer
+    Factories:
+      - Entities
+      - Services
     Commands:
       - Services
       - Repositories
-    Workflows:
+    OrderWorkflow:
       - Services
+      - Entities
+    CartWorkflow:
+      - Services
+    Forms:
       - Entities
     SymfonyController: ~
   formatters:
     graphviz:
-      point_to_groups: true
-
+      pointToGroups: false
+      groups:
+        Controllers:
+          - AbstractController
+          - SymfonyController
+          - Controllers
+        Workflows:
+          - CartWorkflow
+          - OrderWorkflow
+        Entities:
+          - Entities
+          - DoctrineEntities
+        Repositories:
+          - Repositories
+          - DoctrineRepositories
+        Services:
+          - Services
+        Factories:
+          - Factories
+      hidden_layers:
+        - SymfonyController
+        - Commands
+        - Forms

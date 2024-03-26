@@ -10,7 +10,6 @@ use App\Exception\AuthException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Model\GRPC\UserResponse;
 use App\Protobuf\Message\UserDetails;
-use Grpc\UnaryCall;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -82,7 +81,7 @@ final readonly class AuthApiGRPCService
         $this->requestStack->getSession()->set(self::GRPC_USER_KEY, $arrUser);
     }
 
-    /** @return array<string,UnaryCall> */
+    /** @return array<string, array<string, array<array-key, mixed>>> */
     public function getResponses(): array
     {
         return array_merge($this->authApiGRPCClient->getResponses(), $this->userApiGRPCClient->getResponses());

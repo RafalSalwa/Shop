@@ -11,7 +11,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 
 /** @see AddToCartVoter */
-#[asController]
+#[AsController]
 #[Route(path: '/products', name: 'products_', methods: ['GET', 'POST'])]
 final class ProductController extends AbstractShopController
 {

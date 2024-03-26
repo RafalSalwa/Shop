@@ -16,7 +16,7 @@ use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/cart/checkout', name: 'checkout_', methods: ['GET', 'POST'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class CartCheckoutController extends AbstractShopController

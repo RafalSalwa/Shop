@@ -16,7 +16,7 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use function assert;
 use function is_subclass_of;
 
-readonly final class PaymentService
+final readonly class PaymentService
 {
     public function __construct(
         private WorkflowInterface $paymentProcessing,

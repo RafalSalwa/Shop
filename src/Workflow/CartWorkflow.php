@@ -14,7 +14,7 @@ use App\Exception\InvalidCouponCodeException;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
 use App\Exception\StockOperationException;
-use App\Factory\CartItemFactory;
+use App\Service\CartItemService;
 use App\Service\CartService;
 use App\Service\CouponService;
 use App\Service\ProductStockService;
@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 final readonly class CartWorkflow
 {
     public function __construct(
-        private CartItemFactory $factory,
+        private CartItemService $cartItemService,
         private CartService $cartService,
         private ProductStockService $productStockService,
         private CouponService $couponService,
@@ -36,24 +36,24 @@ final readonly class CartWorkflow
      * @throws CartOperationExceptionInterface
      * @throws StockOperationExceptionInterface
      */
-    public function add(int $itemId, int $quantity): void
+    public function add(int $prodId, int $quantity): void
     {
         try {
-            $cartItem = $this->factory->create($itemId, $quantity);
+            $cartItem = $this->cartItemService->create($prodId, $quantity);
             $this->cartService->add($cartItem);
             $this->productStockService->changeStock(
                 $cartItem->getReferencedEntity(),
                 StockOperation::Decrease,
                 $quantity,
             );
-        } catch (ItemNotFoundException | AccessDeniedException  $exception) {
+        } catch (AccessDeniedException | ItemNotFoundException  $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new CartOperationException(message: $exception->getMessage(), previous: $exception);
         } catch (InsufficientStockException | ProductStockDepletedException $exception) {
             $this->logger->error(
-                $exception->getMessage(),
-                ['operation' => StockOperation::decrease(), 'item_id' => $itemId, 'quantity' => $quantity],
+                message: $exception->getMessage(),
+                context: ['operation' => StockOperation::decrease(), 'item_id' => $prodId, 'quantity' => $quantity],
             );
 
             throw new StockOperationException(message: $exception->getMessage(), previous: $exception);

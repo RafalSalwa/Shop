@@ -21,8 +21,6 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
 
-use function is_null;
-
 #[Entity(repositoryClass: OrderRepository::class)]
 #[Table(name: 'orders', schema: 'interview')]
 #[HasLifecycleCallbacks]
@@ -107,7 +105,7 @@ class Order
 
     public function applyCoupon(?CouponCode $coupon): void
     {
-        if (true === is_null($coupon)) {
+        if (null === $coupon) {
             $this->couponType = null;
             $this->couponDiscount = null;
 
@@ -176,9 +174,14 @@ class Order
         $this->payments->add($payment);
     }
 
-    public function getLastPayment(): Payment|null
+    public function getLastPayment(): ?Payment
     {
-        return $this->payments?->last();
+        $payment = $this->payments->last();
+        if (false === $payment) {
+            return null;
+        }
+
+        return $payment ?? null;
     }
 
     public function getCreatedAt(): DateTimeImmutable

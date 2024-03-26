@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\ValueObject;
 
 use InvalidArgumentException;
-use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Validator\Validation;
 
@@ -18,7 +17,7 @@ final readonly class EmailAddress
     public function __construct(private string $email)
     {
         $validator = Validation::createValidator();
-        $emailConstraint = new Assert\Email(mode: Email::VALIDATION_MODE_STRICT);
+        $emailConstraint = new Email(mode: Email::VALIDATION_MODE_STRICT);
         $emailConstraint->message = self::INVALID_EMAIL;
 
         $errors = $validator->validate($email, $emailConstraint);

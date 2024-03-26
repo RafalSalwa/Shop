@@ -12,6 +12,7 @@ use App\Requests\PaymentTypeRequest;
 use App\Service\CalculatorService;
 use App\Service\OrderService;
 use App\Workflow\OrderWorkflow;
+use Symfony\Component\Form\ClickableInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
@@ -20,7 +21,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+use function assert;
+
+#[AsController]
 #[Route(path: '/order', name: 'order_', methods: ['GET', 'POST'])]
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 401)]
 final class OrderController extends AbstractShopController
@@ -56,8 +59,12 @@ final class OrderController extends AbstractShopController
         $form    = $this->createForm(PaymentType::class, $payment);
 
         $form->handleRequest($request);
-        if (true === $form->isSubmitted() && true === $form->isValid() && true === $form->get('yes')->isClicked()) {
-            $orderWorkflow->confirmOrder($order);
+        if (true === $form->isSubmitted() && true === $form->isValid()) {
+            $button = $form->get('yes');
+            assert($button instanceof ClickableInterface);
+            if (true === $button->isClicked()) {
+                $orderWorkflow->confirmOrder($order);
+            }
 
             return $this->redirectToRoute('order_summary', ['id' => $order->getId()]);
         }
@@ -103,12 +110,9 @@ final class OrderController extends AbstractShopController
     #[Route(path: '/{id<\d+>}', name: 'details')]
     public function show(int $id, OrderService $orderService): Response
     {
-        $order = $orderService->fetchOrderDetails($id);
-        $orderService->deserializeOrderItems($order);
-
         return $this->render(
             'order/details.html.twig',
-            ['order' => $order],
+            ['order' => $orderService->fetchOrderDetails($id)],
         );
     }
 }

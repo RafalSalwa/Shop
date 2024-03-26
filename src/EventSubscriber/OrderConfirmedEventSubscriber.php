@@ -19,10 +19,9 @@ final readonly class OrderConfirmedEventSubscriber implements EventSubscriberInt
         private string $fromEmail,
         private CalculatorService $calculatorService,
         private LoggerInterface $logger,
-    ) {
-    }
+    ) {}
 
-    /** @return array<string, string|array{0: string, 1: int}|list<array{0: string, 1?: int}>> */
+    /** @return array<string, array{0: string, 1: int}|list<array{0: string, 1?: int}>|string> */
     public static function getSubscribedEvents(): array
     {
         return [OrderConfirmedEvent::class => 'onOrderConfirmed'];

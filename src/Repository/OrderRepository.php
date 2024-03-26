@@ -19,12 +19,8 @@ final class OrderRepository extends ServiceEntityRepository
 
     public function save(Order $order): void
     {
-        $this->getEntityManager()
-            ->persist($order)
-        ;
-        $this->getEntityManager()
-            ->flush()
-        ;
+        $this->getEntityManager()->persist($order);
+        $this->getEntityManager()->flush();
     }
 
     /** @throws NonUniqueResultException */
@@ -41,8 +37,7 @@ final class OrderRepository extends ServiceEntityRepository
             ->setParameter('id', $id)
         ;
 
-        return $queryBuilder->getQuery()->getOneOrNullResult()
-        ;
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /** @param array<string> $status */

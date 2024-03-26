@@ -15,7 +15,7 @@ class OAuth2ClientProfile
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private int|null $id = null;
+    private ?int $id = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(referencedColumnName: 'identifier', nullable: false)]
@@ -33,12 +33,12 @@ class OAuth2ClientProfile
         $this->client = $client;
     }
 
-    public function getId(): int|null
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getClient(): Client|null
+    public function getClient(): ?Client
     {
         return $this->client;
     }
@@ -63,7 +63,7 @@ class OAuth2ClientProfile
         return $this->description;
     }
 
-    public function setDescription(string|null $description): void
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }

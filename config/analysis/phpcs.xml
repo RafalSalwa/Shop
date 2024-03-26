@@ -57,6 +57,7 @@
         <exclude name="Generic.Commenting.DocComment.ContentBeforeClose"/>
         <exclude name="Generic.Commenting.DocComment.MissingShort"/>
         <exclude name="Generic.Files.LineLength.TooLong"/>
+        <exclude name="Generic.Commenting.DocComment.TagValueIndent"/>
     </rule>
 
     <rule ref="Doctrine"/>
@@ -103,6 +104,7 @@
             name="SlevomatCodingStandard.ControlStructures.DisallowNullSafeObjectOperator.DisallowedNullSafeObjectOperator"/>
         <exclude name="SlevomatCodingStandard.Numbers.DisallowNumericLiteralSeparator.DisallowedNumericLiteralSeparator"/>
         <exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature"/>
+        <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup"/>
     </rule>
 
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">

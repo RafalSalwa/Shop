@@ -9,6 +9,8 @@ use Doctrine\Common\Collections\Collection;
 
 interface OAuth2UserInterface
 {
+    public function getId(): int;
+
     /** @return Collection<int, OAuth2UserConsent>|null */
     public function getConsents(): ?Collection;
 

@@ -10,8 +10,7 @@ use Symfony\Contracts\EventDispatcher\Event;
 final class StockDepletedEvent extends Event
 {
     public function __construct(private readonly StockManageableInterface $item)
-    {
-    }
+    {}
 
     public function getItem(): StockManageableInterface
     {

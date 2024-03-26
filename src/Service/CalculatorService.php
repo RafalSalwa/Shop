@@ -11,7 +11,6 @@ use function bcadd;
 use function bcdiv;
 use function bcmul;
 use function bcsub;
-use function is_null;
 
 final readonly class CalculatorService
 {
@@ -67,13 +66,13 @@ final readonly class CalculatorService
 
     private function calculateShipping(int $amount, ?CouponCode $coupon): int
     {
-        if (false === is_null($coupon) && true === $coupon->isShippingDiscount()) {
+        if (null !== $coupon && true === $coupon->isShippingDiscount()) {
             return 0;
         }
 
         return match (true) {
             $amount >= self::FREE_DELIVERY_LIMIT => 0,
-            $amount >= self::FIRST_DISCOUNT_LIMIT =>10_00,
+            $amount >= self::FIRST_DISCOUNT_LIMIT => 10_00,
             default => 20_00,
         };
     }

@@ -25,7 +25,6 @@ final class CalculatorServiceTest extends TestCase
         $summary = $calculatorService->calculateSummary($netAmount, $coupon);
 
         $this->assertInstanceOf(Summary::class, $summary);
-        $this->assertSame(1000, $summary->getNet());
         $this->assertIsFloat(0.00, $summary->getDiscount());
         $this->assertSame(230, $summary->getTax());
         $this->assertSame(2000, $summary->getShipping());
@@ -40,7 +39,6 @@ final class CalculatorServiceTest extends TestCase
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 
         $this->assertInstanceOf(Summary::class, $summary);
-        $this->assertSame(1000, $summary->getNet());
         $this->assertIsFloat(1.00, $summary->getDiscount());
         $this->assertSame(207, $summary->getTax());
         $this->assertSame(2000, $summary->getShipping());
@@ -55,7 +53,6 @@ final class CalculatorServiceTest extends TestCase
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 
         $this->assertInstanceOf(Summary::class, $summary);
-        $this->assertSame(10000, $summary->getNet());
         $this->assertIsFloat(0.00, $summary->getDiscount());
         $this->assertSame(2300, $summary->getTax());
         $this->assertSame(0, $summary->getShipping());

@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Entity;
 
-use App\Entity\CartItem;
 use App\Entity\Cart;
+use App\Entity\CartItem;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\SubscriptionPlan;
@@ -24,12 +26,11 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: Product::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
-class CartTest extends TestCase
+final class CartTest extends TestCase
 {
-    private Cart $cart;
-
     use CouponHelperTrait;
     use ProductHelperCartItemTrait;
+    private Cart $cart;
 
     protected function setUp(): void
     {
@@ -69,7 +70,7 @@ class CartTest extends TestCase
 
     public function testGetStatus(): void
     {
-        $this->assertEquals(CartStatus::CREATED, $this->cart->getStatus());
+        $this->assertSame(CartStatus::CREATED, $this->cart->getStatus());
     }
 
     public function testGetCoupon(): void
@@ -216,6 +217,6 @@ class CartTest extends TestCase
     {
         $cart = $this->cart;
         $this->assertInstanceOf(CartStatus::class, $cart->getStatus());
-        $this->assertEquals(CartStatus::CREATED, $cart->getStatus());
+        $this->assertSame(CartStatus::CREATED, $cart->getStatus());
     }
 }

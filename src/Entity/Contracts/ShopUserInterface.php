@@ -14,13 +14,13 @@ interface ShopUserInterface extends UserInterface, OAuth2UserInterface
 
     public function getEmail(): string;
 
-    public function getSubscription(): Subscription;
+    public function getSubscription(): ?Subscription;
 
     public function setSubscription(Subscription $subscription): void;
 
-    public function getToken(): Token;
+    public function getToken(): ?Token;
 
-    public function getRefreshToken(): Token;
+    public function getRefreshToken(): ?Token;
 
     public function setToken(Token $token): void;
 

@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Routing\Requirement\Requirement;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[asController]
+#[AsController]
 #[Route(path: '/subscriptions', name: 'subscriptions_', defaults: ['_format' => 'html'], methods: ['GET'])]
 #[IsGranted(attribute: 'IS_AUTHENTICATED')]
 final class SubscriptionController extends AbstractShopController
