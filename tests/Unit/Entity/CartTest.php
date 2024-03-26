@@ -6,7 +6,9 @@ use App\Entity\CartItem;
 use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
+use App\Entity\SubscriptionPlan;
 use App\Enum\CartStatus;
+use App\Enum\SubscriptionTier;
 use App\Exception\ItemNotFoundException;
 use App\Tests\Helpers\CouponHelperTrait;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
@@ -20,6 +22,8 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: CouponCode::class)]
 #[UsesClass(className: CartItem::class)]
 #[UsesClass(className: Product::class)]
+#[UsesClass(className: SubscriptionPlan::class)]
+#[UsesClass(className: SubscriptionTier::class)]
 class CartTest extends TestCase
 {
     private Cart $cart;
@@ -28,7 +32,7 @@ class CartTest extends TestCase
 
     protected function setUp(): void
     {
-        $cart = new Cart();
+        $cart = new Cart(1);
         $this->setProtectedProperty($cart, 'id', 1);
         $cart->setStatus(CartStatus::CREATED);
         $cart->setUserId(1);

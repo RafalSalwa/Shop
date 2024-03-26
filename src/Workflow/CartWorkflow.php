@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Workflow;
 
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\ProductCartItem;
 use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;

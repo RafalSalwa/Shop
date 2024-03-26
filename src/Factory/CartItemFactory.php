@@ -6,7 +6,6 @@ namespace App\Factory;
 
 use App\Entity\CartItem;
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\ProductCartItem;
 use App\Enum\CartOperationEnum;
 use App\Exception\InsufficientStockException;
 use App\Exception\ItemNotFoundException;

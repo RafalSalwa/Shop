@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\OAuth2UserConsentRepository;
+use DateInterval;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
-use DateInterval;
 
 #[ORM\Entity(repositoryClass: OAuth2UserConsentRepository::class)]
 class OAuth2UserConsent
@@ -49,7 +49,7 @@ class OAuth2UserConsent
 
         $dateTimeImmutable = new DateTimeImmutable();
         $this->created = $dateTimeImmutable;
-        $this->expires = $dateTimeImmutable->add(new DateInterval('P30D'));;
+        $this->expires = $dateTimeImmutable->add(new DateInterval('P30D'));
     }
 
     public function getId(): int|null

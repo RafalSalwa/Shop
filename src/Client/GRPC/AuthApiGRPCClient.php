@@ -15,13 +15,14 @@ use App\Protobuf\Message\SignUpUserInput;
 use App\Protobuf\Message\SignUpUserResponse;
 use App\Protobuf\Message\VerificationCodeRequest;
 use App\Protobuf\Message\VerificationCodeResponse;
-use App\Protobuf\Message\VerifyUserRequest;
 use App\Protobuf\Service\AuthServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use Grpc\UnaryCall;
+use Psr\Log\LoggerInterface;
 use stdClass;
+
 use function assert;
 
 final class AuthApiGRPCClient implements AuthClientInterface
@@ -31,8 +32,10 @@ final class AuthApiGRPCClient implements AuthClientInterface
     /** @var array<string, UnaryCall> */
     private array $responses = [];
 
-    public function __construct(private readonly string $authServiceDsn)
-    {
+    public function __construct(
+        private readonly string $authServiceDsn,
+        private readonly LoggerInterface $logger,
+    ) {
         $this->authServiceClient = new AuthServiceClient(
             $this->authServiceDsn,
             [
@@ -105,9 +108,9 @@ final class AuthApiGRPCClient implements AuthClientInterface
         return $verificationCodeResponse->getCode();
     }
 
-    /** @throws AuthException */
     public function confirmAccount(string $verificationCode): void
     {
+        $this->logger->critical('Confirm Account should not be called in GRPC flow', ['code' => $verificationCode]);
     }
 
     /** @return array<string, UnaryCall> */

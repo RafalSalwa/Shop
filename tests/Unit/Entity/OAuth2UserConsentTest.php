@@ -30,8 +30,7 @@ class OAuth2UserConsentTest extends TestCase
         $this->assertEquals(1, $this->userConsent->getId());
 
         $created = new DateTimeImmutable();
-        $this->userConsent->setCreated($created);
-        $this->assertEquals($created, $this->userConsent->getCreated());
+        $this->assertNotNull($this->userConsent->getCreated());
 
         $expires = new DateTimeImmutable();
         $this->userConsent->setExpires($expires);

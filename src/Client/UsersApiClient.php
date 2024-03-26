@@ -20,7 +20,9 @@ use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+
 use function json_decode;
+
 use const JSON_THROW_ON_ERROR;
 
 final readonly class UsersApiClient implements ShopUserProviderInterface

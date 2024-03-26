@@ -2,6 +2,8 @@
 
 namespace App\Tests\Helpers;
 
+use App\Entity\CartItem;
+use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 
@@ -11,7 +13,13 @@ trait ProductHelperCartItemTrait {
 
     public function getHelperProduct(int $id): Product
     {
-        $product = new Product();
+        $product = new Product(
+            name: 'Product '. $id,
+            quantityPerUnit: '10 pcs',
+            unitsOnOrder: 100,
+            unitsInStock: 10,
+            price: 100_00,
+        );
         $this->setProtectedProperty($product, 'id', $id);
         $this->setProtectedProperty($product, 'name', 'Product '. $id);
         $this->setProtectedProperty($product, 'quantityPerUnit', 1);
@@ -21,10 +29,10 @@ trait ProductHelperCartItemTrait {
         return $product;
     }
 
-    public function getHelperProductCartItem(int $id = 1): ProductCartItem
+    public function getHelperProductCartItem(int $id = 1): CartItemInterface
     {
         $product = $this->getHelperProduct($id);
-        $productCartItem = new ProductCartItem($product,1);
+        $productCartItem = new CartItem($product,1);
         $this->setProtectedProperty($productCartItem, 'id', $id);
         return $productCartItem;
     }

@@ -9,6 +9,9 @@ use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Entity\Payment;
 use App\Entity\Product;
+use App\Entity\SubscriptionPlan;
+use App\Enum\PaymentProvider;
+use App\Enum\SubscriptionTier;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
 use App\ValueObject\CouponCode;
 use DateTimeImmutable;
@@ -16,12 +19,16 @@ use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(className: Order::class)]
 #[UsesClass(className: CouponCode::class)]
 #[UsesClass(className: OrderItem::class)]
 #[UsesClass(className: Product::class)]
 #[UsesClass(className: Payment::class)]
+#[UsesClass(className: Address::class)]
+#[UsesClass(className: SubscriptionPlan::class)]
+#[UsesClass(className: SubscriptionTier::class)]
 class OrderTest extends TestCase
 {
     private Order $order;
@@ -30,11 +37,26 @@ class OrderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->order = new Order(100_00, 1, 20_00, 120_00);
+        $address = new Address(1);
+        $address->setFirstName('John');
+        $address->setLastName('Doe');
+
+        $this->order = new Order(
+            netAmount: 100_00,
+            userId: 1,
+            shippingCost: 20_00,
+            total: 120_00,
+            deliveryAddress: $address,
+            bilingAddress: $address
+        );
         $this->setProtectedProperty($this->order, 'id',1);
         $this->product = $this->getHelperProduct(1);
-        $this->payment = new Payment();
-        $this->payment->setAmount(100);
+        $this->payment = new Payment(
+            1,
+            100_00,
+            PaymentProvider::from('stripe'),
+            Uuid::v7()->generate(),
+        );
         $this->setProtectedProperty($this->payment, 'id',1);
         $this->address = new Address(1);
 
@@ -71,7 +93,14 @@ class OrderTest extends TestCase
 
     public function testAddItem(): void
     {
-        $orderItem = new OrderItem($this->product->getId(), 1, 100, $this->product->getName());
+        $orderItem = new OrderItem(
+            $this->product->getId(),
+            1,
+            100,
+            $this->product->getName(),
+            'product',
+            $this->order,
+        );
         $this->order->addItem($orderItem);
         $this->assertTrue($this->order->getItems()->contains($orderItem));
     }

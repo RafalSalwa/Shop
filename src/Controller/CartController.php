@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\ProductCartItem;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Requests\CartAddJsonRequest;
