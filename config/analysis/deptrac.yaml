@@ -13,14 +13,6 @@ deptrac:
   exclude_files:
     - '#.*test.*#'
   layers:
-    - name: AbstractController
-      collectors:
-        - type: bool
-          must:
-          - type: class
-            value: .*AbstractShopController.*
-          - type: extends
-            value: Symfony\Bundle\FrameworkBundle\Controller\AbstractController
     - name: Controllers
       collectors:
         - type: bool
