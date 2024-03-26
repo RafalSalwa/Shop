@@ -58,8 +58,8 @@ final class UserTest extends TestCase
 
         $this->assertNotNull($user->getUserIdentifier());
         $this->assertSame($email, $user->getEmail());
-        $this->assertEquals(0, count($user->getConsents()));
-        $this->assertEquals(['ROLE_USER'], $user->getRoles());
+        $this->assertCount(0, $user->getConsents());
+        $this->assertSame(['ROLE_USER'], $user->getRoles());
 
         $subscription = new Subscription($user->getId(), new SubscriptionPlan());
         $user->setSubscription($subscription);
@@ -77,9 +77,10 @@ final class UserTest extends TestCase
         $token = new Token($this->generateTokenString());
         $user->setToken($token);
         $user->setRefreshToken($token);
-        $consent = new OAuth2UserConsent($user->getId(), $client);
 
-        $user->addConsent($consent);
+        $oAuth2UserConsent = new OAuth2UserConsent($user->getId(), $client);
+
+        $user->addConsent($oAuth2UserConsent);
 
         $consents = $user->getConsents();
         $this->assertNotNull($consents);

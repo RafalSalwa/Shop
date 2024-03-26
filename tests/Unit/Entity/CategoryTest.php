@@ -25,13 +25,13 @@ class CategoryTest extends TestCase
     public function testGettersAndSetters(): void
     {
         $this->category->setName('Test Category');
-        $this->assertEquals('Test Category', $this->category->getName());
+        $this->assertSame('Test Category', $this->category->getName());
 
         $this->category->setDescription('Test Description');
-        $this->assertEquals('Test Description', $this->category->getDescription());
+        $this->assertSame('Test Description', $this->category->getDescription());
 
         $this->category->setSlug('test-category');
-        $this->assertEquals('test-category', $this->category->getSlug());
+        $this->assertSame('test-category', $this->category->getSlug());
 
         // Test nullable properties
         $this->assertNull($this->category->getId());
@@ -40,6 +40,6 @@ class CategoryTest extends TestCase
     public function testIdGetterAndSetter(): void
     {
         $this->setProtectedProperty($this->category, 'id', 5);
-        $this->assertEquals(5, $this->category->getId());
+        $this->assertSame(5, $this->category->getId());
     }
 }

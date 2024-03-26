@@ -31,7 +31,11 @@ use Symfony\Component\Uid\Uuid;
 #[UsesClass(className: SubscriptionTier::class)]
 class OrderTest extends TestCase
 {
+    public $product;
+    public $payment;
+    public $address;
     private Order $order;
+
     use ProductHelperCartItemTrait;
 
     protected function setUp(): void
@@ -64,28 +68,28 @@ class OrderTest extends TestCase
 
     public function testGettersAndSetters(): void
     {
-        $this->assertEquals(1, $this->order->getId());
+        $this->assertSame(1, $this->order->getId());
 
         $status = Order::PENDING;
         $this->order->setStatus($status);
-        $this->assertEquals($status, $this->order->getStatus());
+        $this->assertSame($status, $this->order->getStatus());
 
         $userId = 2;
         $this->order->setUserId($userId);
-        $this->assertEquals($userId, $this->order->getUserId());
+        $this->assertSame($userId, $this->order->getUserId());
 
-        $this->assertEquals(100_00, $this->order->getNetAmount());
+        $this->assertSame(100_00, $this->order->getNetAmount());
 
         $this->assertInstanceOf(ArrayCollection::class, $this->order->getItems());
 
-        $this->assertEquals(20_00, $this->order->getShippingCost());
+        $this->assertSame(20_00, $this->order->getShippingCost());
     }
 
     public function testCouponMethods(): void
     {
-        $coupon = new CouponCode('cart-discount', '10');
-        $this->order->applyCoupon($coupon);
-        $this->assertEquals($coupon, $this->order->getCoupon());
+        $couponCode = new CouponCode('cart-discount', '10');
+        $this->order->applyCoupon($couponCode);
+        $this->assertEquals($couponCode, $this->order->getCoupon());
 
         $this->order->applyCoupon(null);
         $this->assertNull($this->order->getCoupon());
@@ -120,7 +124,7 @@ class OrderTest extends TestCase
         $this->assertNotNull($order->getLastPayment());
     }
 
-    public function testDeliveryAddress()
+    public function testDeliveryAddress(): void
     {
         $order = $this->order;
         $address = $this->address;

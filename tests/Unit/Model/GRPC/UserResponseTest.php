@@ -29,9 +29,9 @@ class UserResponseTest extends TestCase
         $userResponse = new UserResponse($email, $password, $confirmationCode, true, $tokenPair);
         $userResponse = $userResponse->withTokenPair($tokenPair);
 
-        $this->assertEquals($email, $userResponse->getEmail());
-        $this->assertEquals($password, $userResponse->getPassword());
-        $this->assertEquals($confirmationCode, $userResponse->getConfirmationCode());
+        $this->assertSame($email, $userResponse->getEmail());
+        $this->assertSame($password, $userResponse->getPassword());
+        $this->assertSame($confirmationCode, $userResponse->getConfirmationCode());
         $this->assertTrue($userResponse->isVerified());
         $this->assertInstanceOf(TokenPair::class, $userResponse->getTokenPair());
         $this->assertEquals($tokenPair, $userResponse->getTokenPair());
