@@ -18,7 +18,7 @@ use function is_subclass_of;
 /**
  * @template            TUser of ShopUserInterface
  * @template-covariant  TUser of ShopUserInterface
- * @template-implements UserProviderInterface
+ * @template-implements UserProviderInterface<TUser>
  * @implements          UserProviderInterface<TUser>
  */
 final readonly class AuthApiUserProvider implements UserProviderInterface
