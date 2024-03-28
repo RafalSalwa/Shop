@@ -20,8 +20,8 @@ use App\ValueObject\GRPC\StatusResponse;
 use App\ValueObject\Token;
 use Grpc\ChannelCredentials;
 use Psr\Log\LoggerInterface;
-use stdClass;
 
+use function array_key_exists;
 use function assert;
 
 final class AuthApiGRPCClient implements AuthClientInterface
@@ -43,7 +43,7 @@ final class AuthApiGRPCClient implements AuthClientInterface
         );
     }
 
-    /** @throws AuthException */
+    /** @throws AuthenticationExceptionInterface */
     public function signIn(string $email, string $password): TokenPair
     {
         $signInUserInput = new SignInUserInput();
@@ -52,17 +52,26 @@ final class AuthApiGRPCClient implements AuthClientInterface
 
         $arrResponse = $this->authServiceClient->SignInUser($signInUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
-        assert($arrStatus instanceof stdClass);
-        $statusResponse = new StatusResponse($arrStatus);
-        if (false === $statusResponse->isOk()) {
-            throw new AuthException('missing verification code');
+
+        if (true === array_key_exists(1, $arrResponse)) {
+            $status = $arrResponse[1];
+            $statusResponse = new StatusResponse($status);
+            if (false === $statusResponse->isOk()) {
+                throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+            }
         }
 
-        $userResponse = $arrResponse[0];
-        assert($userResponse instanceof SignInUserResponse);
+        if (true === array_key_exists(0, $arrResponse)) {
+            $signInUserResponse = $arrResponse[0];
+            assert($signInUserResponse instanceof SignInUserResponse);
 
-        return new TokenPair(new Token($userResponse->getAccessToken()), new Token($userResponse->getRefreshToken()));
+            return new TokenPair(
+                new Token($signInUserResponse->getAccessToken()),
+                new Token($signInUserResponse->getRefreshToken()),
+            );
+        }
+
+        throw new AuthException('Unknown Authentication exception');
     }
 
     /** @throws AuthenticationExceptionInterface */
@@ -76,16 +85,23 @@ final class AuthApiGRPCClient implements AuthClientInterface
         $arrResponse = $this->authServiceClient->SignUpUser($signUpUserInput)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
 
-        $statusResponse = new StatusResponse($arrResponse[1]);
-        if (false === $statusResponse->isOk()) {
-            throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+        if (true === array_key_exists(1, $arrResponse)) {
+            $status = $arrResponse[1];
+            $statusResponse = new StatusResponse($status);
+            if (false === $statusResponse->isOk()) {
+                throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+            }
+        }
+
+        if (true !== array_key_exists(0, $arrResponse)) {
+            return;
         }
 
         $userResponse = $arrResponse[0];
         assert($userResponse instanceof SignUpUserResponse);
     }
 
-    /** @throws AuthException */
+    /** @throws AuthenticationExceptionInterface */
     public function getVerificationCode(string $email): string
     {
         $verificationCodeRequest = new VerificationCodeRequest();
@@ -93,18 +109,23 @@ final class AuthApiGRPCClient implements AuthClientInterface
 
         $arrResponse = $this->authServiceClient->getVerificationKey($verificationCodeRequest)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
-        $arrStatus = $arrResponse[1];
 
-        assert($arrStatus instanceof stdClass);
-        $statusResponse = new StatusResponse($arrStatus);
-        if (false === $statusResponse->isOk()) {
-            throw new AuthException('missing verification code');
+        if (true === array_key_exists(1, $arrResponse)) {
+            $status = $arrResponse[1];
+            $statusResponse = new StatusResponse($status);
+            if (false === $statusResponse->isOk()) {
+                throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+            }
         }
 
-        $verificationCodeResponse = $arrResponse[0];
-        assert($verificationCodeResponse instanceof VerificationCodeResponse);
+        if (true === array_key_exists(0, $arrResponse)) {
+            $verificationCodeResponse = $arrResponse[0];
+            assert($verificationCodeResponse instanceof VerificationCodeResponse);
 
-        return $verificationCodeResponse->getCode();
+            return $verificationCodeResponse->getCode();
+        }
+
+        throw new AuthException('Unknown Authentication exception');
     }
 
     public function confirmAccount(string $verificationCode): void
@@ -115,10 +136,6 @@ final class AuthApiGRPCClient implements AuthClientInterface
     /** @return array<string, array<string, array<array-key, mixed>>> */
     public function getResponses(): array
     {
-        if ([] === $this->responses) {
-            return [];
-        }
-
         return $this->responses;
     }
 }

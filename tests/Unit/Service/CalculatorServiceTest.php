@@ -34,7 +34,7 @@ final class CalculatorServiceTest extends TestCase
     {
         $calculatorService = new CalculatorService();
         $netAmount = 1000; // 10.00
-        $couponCode = new CouponCode('cart-discount', '10');
+        $couponCode = new CouponCode('cart-discount', 10);
 
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 
@@ -48,7 +48,7 @@ final class CalculatorServiceTest extends TestCase
     {
         $calculatorService = new CalculatorService();
         $netAmount = 10000; // 100.00
-        $couponCode = new CouponCode('shipping-discount', '100');
+        $couponCode = new CouponCode('shipping-discount', 100);
 
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 

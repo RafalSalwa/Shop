@@ -6,7 +6,6 @@ namespace App\Entity;
 
 use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
-use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\CartItemTypeEnum;
 use App\Repository\CartItemRepository;
 use DateTimeImmutable;
@@ -76,7 +75,7 @@ class CartItem implements CartItemInterface
         return CartItemTypeEnum::from(ClassUtils::getClass($this->getReferencedEntity()))->value;
     }
 
-    final public function getReferencedEntity(): StockManageableInterface
+    final public function getReferencedEntity(): CartInsertableInterface
     {
         return $this->referencedEntity;
     }

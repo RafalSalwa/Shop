@@ -36,12 +36,12 @@ final class UserTest extends TestCase
     public function testUserInitialization(): void
     {
         $email = 'test@example.com';
-        $user = new User(1, $email);
+        $user = new User($email);
         $token = new Token($this->generateTokenString());
         $user->setToken($token);
         $user->setRefreshToken($token);
 
-        $anotherUser = new User(2, $email);
+        $anotherUser = new User($email);
         $token = new Token($this->generateTokenString());
         $user->setToken($token);
         $user->setRefreshToken($token);
@@ -67,7 +67,7 @@ final class UserTest extends TestCase
     public function testAddConsent(): void
     {
         $client = new Client('test', 'test', 'test');
-        $user = new User(1, 'test@example.com');
+        $user = new User('test@example.com');
         $token = new Token($this->generateTokenString());
         $user->setToken($token);
         $user->setRefreshToken($token);

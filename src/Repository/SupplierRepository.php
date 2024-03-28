@@ -8,7 +8,14 @@ use App\Entity\Supplier;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-/** @extends ServiceEntityRepository */
+/**
+ * @extends ServiceEntityRepository<Supplier>
+ *
+ * @method Supplier|null   find($id, $lockMode = null, $lockVersion = null)
+ * @method Supplier|null   findOneBy(array $criteria, array $orderBy = null)
+ * @method array<Supplier> findAll()
+ * @method array<Supplier> findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 final class SupplierRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)

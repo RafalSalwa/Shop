@@ -17,7 +17,6 @@ use Symfony\Component\Workflow\WorkflowInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
 use function assert;
-use function is_subclass_of;
 
 final readonly class OrderService
 {
@@ -90,7 +89,7 @@ final readonly class OrderService
     private function getUser(): ShopUserInterface
     {
         $user = $this->security->getUser();
-        assert(is_subclass_of($user, ShopUserInterface::class));
+        assert($user instanceof ShopUserInterface);
 
         return $user;
     }

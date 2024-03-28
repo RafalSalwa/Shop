@@ -10,11 +10,11 @@ trait CouponHelperTrait
 {
     protected function getHelperCartCoupon(): CouponCode
     {
-        return new CouponCode('cart-discount', '10');
+        return new CouponCode('cart-discount', 10);
     }
 
     protected function getHelperShipmentCoupon(): CouponCode
     {
-        return new CouponCode('shipment-discount', '100');
+        return new CouponCode('shipment-discount', 100);
     }
 }

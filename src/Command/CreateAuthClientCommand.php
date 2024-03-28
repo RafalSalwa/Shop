@@ -37,7 +37,7 @@ final class CreateAuthClientCommand extends AbstractSymfonyCommand
     {
         $symfonyStyle = new SymfonyStyle($input, $output);
 
-        $user = new User(id: 1, email: 'test@test.com');
+        $user = new User(email: 'test@test.com');
         $user->setRoles(['ROLE_SUPER_ADMIN']);
 
         $conn = $this->entityManager->getConnection();

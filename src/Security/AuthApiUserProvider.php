@@ -33,7 +33,11 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
         return is_subclass_of($class, ShopUserInterface::class);
     }
 
-    /** @param ShopUserInterface $user */
+    /**
+     * @param ShopUserInterface $user
+     *
+     * @throws AuthenticationExceptionInterface
+     */
     public function refreshUser(UserInterface $user): UserInterface
     {
         assert($user instanceof ShopUserInterface);
@@ -49,7 +53,7 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
     }
 
     /**
-     * @psalm-return TUser
+     * @param string $identifier Token string
      *
      * @throws AuthenticationExceptionInterface
      */

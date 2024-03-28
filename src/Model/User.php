@@ -7,6 +7,7 @@ namespace App\Model;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\OAuth2UserConsent;
 use App\Entity\Subscription;
+use App\Exception\AuthException;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +28,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
     private ?Subscription $subscription = null;
 
     /**
-     * Roles property to meet User requirements.
+     * Roles property to meet UserInterface requirements.
      *
      * @var array<int,string>
      */
@@ -36,7 +37,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
     /** @var Collection<int, OAuth2UserConsent> */
     private readonly Collection $consents;
 
-    public function __construct(private readonly int $id, string $email)
+    public function __construct(string $email)
     {
         $this->email = new EmailAddress($email);
 
@@ -44,8 +45,13 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
         $this->setRoles(['ROLE_USER']);
     }
 
+    /** @throws AuthException */
     public function getUserIdentifier(): string
     {
+        if (null === $this->token) {
+            throw new AuthException('Token not provided.');
+        }
+
         return $this->token->value();
     }
 
@@ -99,7 +105,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
     public function isEqualTo(UserInterface $user): bool
     {
         assert($user instanceof ShopUserInterface);
-        if ($this->id !== $user->getId()) {
+        if ($this->getId() !== $user->getId()) {
             return false;
         }
 
@@ -108,7 +114,7 @@ final class User implements UserInterface, ShopUserInterface, EquatableInterface
 
     public function getId(): int
     {
-        return $this->id;
+        return (int)$this->token?->getSub();
     }
 
     public function getEmail(): string

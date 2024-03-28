@@ -89,7 +89,7 @@ final class OrderTest extends TestCase
 
     public function testCouponMethods(): void
     {
-        $couponCode = new CouponCode('cart-discount', '10');
+        $couponCode = new CouponCode('cart-discount', 10);
         $this->order->applyCoupon($couponCode);
         $this->assertInstanceOf(CouponCode::class, $this->order->getCoupon());
 

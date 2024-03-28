@@ -42,7 +42,7 @@ final readonly class CalculatorService
             return 0;
         }
 
-        $discount = bcdiv($coupon->getValue(), '100', 2);
+        $discount = bcdiv((string)$coupon->getValue(), '100', 2);
 
         return (int)bcmul((string)$netAmount, $discount, 2);
     }

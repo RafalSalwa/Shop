@@ -26,7 +26,7 @@ class Subscription
     #[Column(name: 'subscription_id', type: Types::INTEGER, unique: true, nullable: false)]
     private int $id;
 
-    #[ManyToOne(targetEntity: 'SubscriptionPlan')]
+    #[ManyToOne(targetEntity: SubscriptionPlan::class)]
     #[JoinColumn(name: 'subscription_plan_id', referencedColumnName: 'plan_id', nullable: false)]
     private SubscriptionPlan $subscriptionPlan;
 

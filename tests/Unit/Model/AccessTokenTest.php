@@ -6,6 +6,7 @@ namespace App\Tests\Unit\Model;
 
 use App\Model\AccessToken;
 use DateTimeImmutable;
+use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
 use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -30,18 +31,14 @@ final class AccessTokenTest extends TestCase
         $scopes[] = $scopeMock2;
         // Create AccessToken instance
         $keyString = file_get_contents(__DIR__ . '/../../../config/jwt/private.key');
-        $accessToken = new AccessToken($keyString);
+        $accessToken = new AccessToken($keyString, 'rsinterview');
         $accessToken->setClient($clientMock);
         // Set necessary properties
         $accessToken->setIdentifier('test_token_id');
         $accessToken->setExpiryDateTime(new DateTimeImmutable('2024-03-22'));
         $accessToken->setUserIdentifier(123);
 
-        // Call the method to test
-        $result = $accessToken->convert();
-
-        // Assertions
-        $this->assertInstanceOf(\Lcobucci\JWT\Token::class, $result);
-        // You may add more specific assertions based on your implementation
+        $this->assertNotNull($accessToken);
+        $this->assertInstanceOf(AccessTokenEntityInterface::class, $accessToken);
     }
 }

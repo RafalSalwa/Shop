@@ -26,16 +26,25 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted(attribute: 'ROLE_USER', statusCode: 403)]
 final class CartController extends AbstractShopController
 {
-    #[Route(path: '/add/product/{id}/{quantity}', name: 'add')]
-    public function addToCart(Request $request, int $id, int $quantity, CartWorkflow $cartWorkflow): RedirectResponse
-    {
+    #[Route(
+        path: '/add/product/{id}/{quantity}/{page}',
+        name: 'add',
+        requirements: ['id' => '\d+', 'quantity' => '\d+', 'page' => '\d+'],
+        methods: ['POST'],
+    )]
+    public function addToCart(
+        int $id,
+        int $quantity,
+        int $page,
+        CartWorkflow $cartWorkflow,
+    ): RedirectResponse {
         try {
             $cartWorkflow->add($id, $quantity);
         } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
             $this->addFlash('danger', $exception->getMessage());
         }
 
-        return $this->redirect($request->headers->get('referer'));
+        return $this->redirectToRoute('products_index', ['page' => $page]);
     }
 
     #[Route(path: '/add', name: 'add_post', methods: ['POST'])]
@@ -69,7 +78,7 @@ final class CartController extends AbstractShopController
     public function addCoupon(Request $request, CartWorkflow $cartWorkflow): Response
     {
         try {
-            $couponCode = $request->request->get('coupon');
+            $couponCode = $request->request->getAlnum('coupon');
             $cartWorkflow->applyCouponCode($couponCode);
         } catch (CartOperationExceptionInterface $cartOperationException) {
             $this->addFlash('info', $cartOperationException->getMessage());

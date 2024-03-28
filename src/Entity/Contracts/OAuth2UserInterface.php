@@ -11,8 +11,8 @@ interface OAuth2UserInterface
 {
     public function getId(): int;
 
-    /** @return Collection<int, OAuth2UserConsent>|null */
-    public function getConsents(): ?Collection;
+    /** @return Collection<int, OAuth2UserConsent> */
+    public function getConsents(): Collection;
 
     public function addConsent(OAuth2UserConsent $consent): void;
 }

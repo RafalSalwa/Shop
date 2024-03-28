@@ -56,7 +56,7 @@ final class CartCheckoutController extends AbstractShopController
     #[Route(path: '/set_delivery_address', name: 'delivery_address_set', methods: ['PUT'])]
     public function deliveryAddress(Request $request, AddressBookService $addressBookService): Response
     {
-        $deliveryAddressId = $request->request->get('addrId');
+        $deliveryAddressId = $request->request->getInt('addrId');
         $addressBookService->setDefaultAddress($deliveryAddressId, $this->getUserId());
 
         return $this->render(

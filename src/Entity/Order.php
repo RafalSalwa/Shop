@@ -65,8 +65,8 @@ class Order
     #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
     private ?string $couponType = null;
 
-    #[Column(name: 'coupon_discount', type: Types::STRING, nullable: true)]
-    private ?string $couponDiscount = null;
+    #[Column(name: 'coupon_discount', type: Types::INTEGER, nullable: true)]
+    private ?int $couponDiscount = null;
 
     private ?CouponCode $coupon = null;
 
@@ -211,7 +211,7 @@ class Order
 
     public function getCoupon(): ?CouponCode
     {
-        if (null === $this->couponType) {
+        if (null === $this->couponType || null === $this->couponDiscount) {
             return null;
         }
 

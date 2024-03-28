@@ -29,17 +29,20 @@ final class CouponService
         return array_key_exists($couponCode, $this->getAvailableCodes());
     }
 
-    /** @return array<string, array<string,string>> */
+    /** @return array{
+     *     discount10: array{type: 'cart-discount', value: 10},
+     *     freeshipping: array{type: 'shipping-discount', value: 100}}
+     */
     private function getAvailableCodes(): array
     {
         return [
             'discount10' => [
                 'type' => 'cart-discount',
-                'value' => '10',
+                'value' => 10,
             ],
             'freeshipping' => [
                 'type' => 'shipping-discount',
-                'value' => '100',
+                'value' => 100,
             ],
         ];
     }

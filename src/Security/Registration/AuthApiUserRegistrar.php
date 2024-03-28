@@ -7,7 +7,7 @@ namespace App\Security\Registration;
 use App\Client\AuthApiClient;
 use App\Event\UserConfirmedEvent;
 use App\Event\UserVerificationCodeRequestEvent;
-use App\Exception\AuthApiRuntimeException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Security\Contracts\UserRegistrarInterface;
 use App\Security\EmailVerifier;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
@@ -20,7 +20,7 @@ final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
         private EmailVerifier $emailVerifier,
     ) {}
 
-    /** @throws AuthApiRuntimeException */
+    /** @throws AuthenticationExceptionInterface */
     public function register(string $email, string $password): void
     {
         $this->authApiClient->signUp($email, $password);
@@ -28,6 +28,7 @@ final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
         $this->eventDispatcher->dispatch(new UserVerificationCodeRequestEvent($email, $verificationCode));
     }
 
+    /** @throws AuthenticationExceptionInterface */
     public function sendVerificationCode(string $email): void
     {
         $verificationCode = $this->authApiClient->getVerificationCode($email);
@@ -35,6 +36,7 @@ final readonly class AuthApiUserRegistrar implements UserRegistrarInterface
         $this->emailVerifier->sendEmailConfirmation($email, $verificationCode);
     }
 
+    /** @throws AuthenticationExceptionInterface */
     public function confirm(string $verificationCode): void
     {
         $this->authApiClient->confirmAccount($verificationCode);
