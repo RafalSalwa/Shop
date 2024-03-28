@@ -1,3 +1,5 @@
+require("newrelic");
+
 import './bootstrap.js';
 import { startStimulusApp } from '@symfony/stimulus-bridge';
 

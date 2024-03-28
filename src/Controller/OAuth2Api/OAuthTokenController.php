@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller\OAuth2Api;
 
 use App\Controller\AbstractShopController;
-use App\Entity\OAuth2UserConsent;
 use App\Service\OAuth2\OAuth2Service;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,16 +54,9 @@ final class OAuthTokenController extends AbstractShopController
     #[Route(path: '/consent', name: 'app_consent', methods: ['GET', 'POST'])]
     public function consent(Request $request, OAuth2Service $oAuth2Service): Response
     {
-        $appClient    = $oAuth2Service->getClient();
-        $user         = $this->getShopUser();
-        $userConsents = $user->getConsents()
-            ->filter(
-                static fn (OAuth2UserConsent $consent): bool => $consent->getClient() === $appClient,
-            )
-            ->first();
+        $userScopes = $oAuth2Service->getUserScopes($this->getUserId());
 
-        $userScopes      = $userConsents->getScopes();
-        $requestedScopes = explode(' ', $request->query->get('scope'));
+        $requestedScopes = explode(' ', $request->query->getAlnum('scope'));
         if ([] === array_diff($requestedScopes, $userScopes)) {
             $request->getSession()->set('consent_granted', true);
 
@@ -72,9 +64,7 @@ final class OAuthTokenController extends AbstractShopController
         }
 
         if (true === $request->isMethod(Request::METHOD_POST)) {
-            $consents = $oAuth2Service->createConsent($appClient);
-            $user->addConsent($consents);
-            $oAuth2Service->save($consents);
+            $oAuth2Service->createConsent();
 
             return $this->redirectToRoute('oauth2_authorize', $request->query->all(), 307);
         }

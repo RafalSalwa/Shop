@@ -15,6 +15,7 @@ final readonly class AccessTokenRepository implements AccessTokenRepositoryInter
     public function __construct(
         private BaseAccessTokenRepository $baseAccessTokenRepository,
         private string $privateJWTKey,
+        private string $privateJWTKeyPassphrase,
     ) {}
 
     /**
@@ -26,7 +27,7 @@ final readonly class AccessTokenRepository implements AccessTokenRepositoryInter
         array $scopes,
         $userIdentifier = null,
     ): AccessTokenEntity {
-        $accessToken = new AccessTokenEntity($this->privateJWTKey);
+        $accessToken = new AccessTokenEntity($this->privateJWTKey, $this->privateJWTKeyPassphrase);
         $accessToken->setClient($clientEntity);
         $accessToken->setUserIdentifier($userIdentifier);
 

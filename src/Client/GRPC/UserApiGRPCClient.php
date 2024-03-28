@@ -5,14 +5,16 @@ declare(strict_types=1);
 namespace App\Client\GRPC;
 
 use App\Exception\AuthException;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
+use App\Exception\Factory\AuthApiGRPCExceptionFactory;
 use App\Protobuf\Message\GetUserRequest;
 use App\Protobuf\Message\UserDetails;
 use App\Protobuf\Message\VerifyUserRequest;
 use App\Protobuf\Service\UserServiceClient;
 use App\ValueObject\GRPC\StatusResponse;
 use Grpc\ChannelCredentials;
-use stdClass;
 
+use function array_key_exists;
 use function assert;
 
 final class UserApiGRPCClient
@@ -32,7 +34,7 @@ final class UserApiGRPCClient
         );
     }
 
-    /** @throws AuthException */
+    /** @throws AuthenticationExceptionInterface */
     public function confirmAccount(string $verificationCode): void
     {
         $verifyUserRequest = new VerifyUserRequest();
@@ -41,44 +43,48 @@ final class UserApiGRPCClient
         $arrResponse = $this->userServiceClient->VerifyUser($verifyUserRequest)
             ->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
+
+        if (false === array_key_exists(1, $arrResponse)) {
+            return;
+        }
+
         $status = $arrResponse[1];
-        assert($status instanceof stdClass);
         $statusResponse = new StatusResponse($status);
         if (false === $statusResponse->isOk()) {
-            throw new AuthException('missing verification code');
+            throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
         }
     }
 
-    /** @return array<string, array<string, array<array-key, mixed>>> */
-    public function getResponses(): array
-    {
-        if ([] === $this->responses) {
-            return [];
-        }
-
-        return $this->responses;
-    }
-
+    /** @throws AuthenticationExceptionInterface */
     public function getUser(string $token): ?UserDetails
     {
         $getUserRequest = new GetUserRequest();
         $getUserRequest->setToken($token);
 
-        $arrResponse = $this->userServiceClient->GetUserByToken($getUserRequest)
-            ->wait();
+        $arrResponse = $this->userServiceClient->GetUserByToken($getUserRequest)->wait();
         $this->responses[__FUNCTION__] = $arrResponse;
 
-        $status = $arrResponse[1];
-        assert($status instanceof stdClass);
-
-        $statusResponse = new StatusResponse($status);
-        if (false === $statusResponse->isOk()) {
-            return null;
+        if (true === array_key_exists(1, $arrResponse)) {
+            $status = $arrResponse[1];
+            $statusResponse = new StatusResponse($status);
+            if (false === $statusResponse->isOk()) {
+                throw AuthApiGRPCExceptionFactory::create($statusResponse->getCode());
+            }
         }
 
-        $userResponse = $arrResponse[0];
-        assert($userResponse instanceof UserDetails);
+        if (true === array_key_exists(0, $arrResponse)) {
+            $userResponse = $arrResponse[0];
+            assert($userResponse instanceof UserDetails);
 
-        return $userResponse;
+            return $userResponse;
+        }
+
+        throw new AuthException('Unknown Authentication exception');
+    }
+
+    /** @return array<string, array<string, array<array-key, mixed>>> */
+    public function getResponses(): array
+    {
+        return $this->responses;
     }
 }

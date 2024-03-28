@@ -9,6 +9,14 @@ use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Subscription>
+ *
+ * @method Subscription|null   find($id, $lockMode = null, $lockVersion = null)
+ * @method Subscription|null   findOneBy(array $criteria, array $orderBy = null)
+ * @method array<Subscription> findAll()
+ * @method array<Subscription> findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 final class SubscriptionRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)

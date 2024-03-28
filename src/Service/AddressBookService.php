@@ -19,12 +19,12 @@ final readonly class AddressBookService
         $this->setDefaultAddress($address->getId(), $address->getUserId());
     }
 
-    public function setDefaultAddress(int|string $addressId, int $userId): void
+    public function setDefaultAddress(int $addressId, int $userId): void
     {
         $this->addressRepository->setDefaultAddress($addressId, $userId);
     }
 
-    /** @return list<Address> */
+    /** @return array<array-key, Address> */
     public function getDeliveryAddresses(int $userId): array
     {
         return $this->addressRepository->findBy(['userId' => $userId]);

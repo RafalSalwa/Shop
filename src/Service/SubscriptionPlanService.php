@@ -6,7 +6,6 @@ namespace App\Service;
 
 use App\Entity\SubscriptionPlan;
 use App\Repository\PlanRepository;
-use Doctrine\ORM\NonUniqueResultException;
 
 final readonly class SubscriptionPlanService
 {
@@ -20,9 +19,8 @@ final readonly class SubscriptionPlanService
         return $this->planRepository->fetchAvailablePlans();
     }
 
-    /** @throws NonUniqueResultException */
     public function findPlanById(int $id): ?SubscriptionPlan
     {
-        return $this->planRepository->findById($id);
+        return $this->planRepository->find($id);
     }
 }

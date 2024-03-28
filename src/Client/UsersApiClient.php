@@ -14,13 +14,13 @@ use App\Service\SubscriptionService;
 use App\ValueObject\Token;
 use JsonException;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
+use function assert;
 use function json_decode;
 
 use const JSON_THROW_ON_ERROR;
@@ -35,12 +35,16 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
     }
 
     /** @throws AuthenticationExceptionInterface */
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): ShopUserInterface
     {
-        return $this->getUser(new Token($identifier));
+        $user = $this->getUser(new Token($identifier));
+        assert($user instanceof ShopUserInterface);
+
+        return $user;
     }
 
-    private function getUser(Token $token): ShopUserInterface
+    /** @throws AuthenticationExceptionInterface */
+    private function getUser(Token $token): User
     {
         try {
             $response = $this->usersApi->request(
@@ -48,9 +52,14 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
                 '/user',
                 ['auth_bearer' => $token->value()],
             );
-            $arrContent = json_decode($response->getContent(), true, JSON_THROW_ON_ERROR);
+            $arrContent = json_decode(
+                json: $response->getContent(),
+                associative: true,
+                depth: 512,
+                flags: JSON_THROW_ON_ERROR,
+            );
 
-            $user = new User(id: $arrContent['user']['id'], email: $arrContent['user']['email']);
+            $user = new User(email: $arrContent['user']['email']);
             $user->setToken(new Token($arrContent['user']['token']));
             $user->setRefreshToken(new Token($arrContent['user']['refresh_token']));
             $subscription = $this->subscriptionService->findForUser($user->getId());
@@ -74,12 +83,16 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
         return $this->getUser($token);
     }
 
+    /** @throws AuthenticationExceptionInterface */
     public function refreshUser(ShopUserInterface $user): ShopUserInterface
     {
-        if (true === $user->getToken()->isExpired()) {
-            $user = $this->getUser($user->getRefreshToken());
+        assert($user->getToken() instanceof Token);
+        if (false === $user->getToken()->isExpired()) {
+            return $this->getUser($user->getToken());
         }
 
-        return $this->getUser($user->getToken());
+        assert($user->getRefreshToken() instanceof Token);
+
+        return $this->getUser($user->getRefreshToken());
     }
 }

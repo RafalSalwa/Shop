@@ -8,7 +8,7 @@ use App\Enum\CouponType;
 
 final readonly class CouponCode
 {
-    public function __construct(private string $type, private string $value)
+    public function __construct(private string $type, private int $value)
     {
     }
 
@@ -17,7 +17,7 @@ final readonly class CouponCode
         return $this->type;
     }
 
-    public function getValue(): string
+    public function getValue(): int
     {
         return $this->value;
     }

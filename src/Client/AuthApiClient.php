@@ -16,6 +16,7 @@ use App\ValueObject\Token;
 use JsonException;
 use Psr\Log\LoggerInterface;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
+use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
@@ -93,8 +94,8 @@ final class AuthApiClient implements AuthClientInterface, AuthCodeClientInterfac
         }
     }
 
-    /** @throws AuthApiRuntimeException */
-    public function getVerificationCode(string $email): ?string
+    /** @throws AuthenticationExceptionInterface */
+    public function getVerificationCode(string $email): string
     {
         try {
             $response = $this->authApi->request(
@@ -109,13 +110,13 @@ final class AuthApiClient implements AuthClientInterface, AuthCodeClientInterfac
             );
             $content = $response->getContent();
             $this->responses[__FUNCTION__] = $response->toArray(false);
-            $arrResponse = json_decode($content, true, JSON_THROW_ON_ERROR);
+            $arrResponse = json_decode(json: $content, associative: true, depth: 512, flags: JSON_THROW_ON_ERROR);
             if (true === array_key_exists('user', $arrResponse)) {
                 return $arrResponse['user']['verification_token'];
             }
 
             throw new AuthApiRuntimeException('User not found or Api got problems');
-        } catch (JsonException | TransportExceptionInterface $exception) {
+        } catch (DecodingExceptionInterface | JsonException | TransportExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 
             throw new AuthApiRuntimeException(message: $exception->getMessage(), previous: $exception);
@@ -151,7 +152,7 @@ final class AuthApiClient implements AuthClientInterface, AuthCodeClientInterfac
             $response = $this->authApi->request('GET', '/auth/code/' . $verificationCode);
             $arrResponse = json_decode($response->getContent(throw: true), true, JSON_THROW_ON_ERROR);
 
-            return new User(id: $arrResponse['user']['id'], email: $arrResponse['user']['email']);
+            return new User(email: $arrResponse['user']['email']);
         } catch (ClientExceptionInterface | RedirectionExceptionInterface | ServerExceptionInterface $exception) {
             $this->logger->error($exception->getMessage());
 

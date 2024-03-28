@@ -7,6 +7,7 @@ namespace App\Storage;
 use App\Entity\Cart;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Repository\CartRepository;
+use App\ValueObject\Token;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +18,6 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 use function assert;
 use function is_a;
-use function is_subclass_of;
 
 final readonly class CartSessionStorage
 {
@@ -37,9 +37,12 @@ final readonly class CartSessionStorage
      */
     public function getCart(): ?Cart
     {
+        $token = $this->getUser()->getToken();
+        assert($token instanceof Token);
+
         return $this->cartRepository->findOneBy(
             [
-                'userId' => $this->getUser()->getToken()->getSub(),
+                'userId' => $token->getSub(),
                 'status' => Cart::STATUS_CREATED,
             ],
             ['createdAt' => 'DESC'],
@@ -49,7 +52,7 @@ final readonly class CartSessionStorage
     private function getUser(): ShopUserInterface
     {
         $user = $this->security->getUser();
-        assert(is_subclass_of($user, ShopUserInterface::class));
+        assert($user instanceof ShopUserInterface);
 
         return $user;
     }
