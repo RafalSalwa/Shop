@@ -18,6 +18,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\SequenceGenerator;
 use Doctrine\ORM\Mapping\Table;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: PaymentRepository::class)]
 #[Table(name: 'payment', schema: 'interview')]
 class Payment

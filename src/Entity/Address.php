@@ -17,6 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 use function preg_match;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: AddressRepository::class)]
 #[Table(name: 'address', schema: 'interview')]
 class Address

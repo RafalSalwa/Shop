@@ -6,7 +6,6 @@ namespace App\Controller;
 
 use App\Entity\Contracts\ShopUserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Exception\UserNotFoundException;
 
 use function assert;
 
@@ -21,10 +20,6 @@ abstract class AbstractShopController extends AbstractController
     {
         $user = $this->getUser();
         assert($user instanceof ShopUserInterface);
-
-        if (null === $user) {
-            throw new UserNotFoundException();
-        }
 
         return $user;
     }

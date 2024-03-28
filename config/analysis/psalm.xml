@@ -11,7 +11,7 @@
     ensureArrayIntOffsetsExist="true"
     ensureArrayStringOffsetsExist="true"
     ensureOverrideAttribute="true"
-    errorLevel="3"
+    errorLevel="2"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
     findUnusedVariablesAndParams="true"

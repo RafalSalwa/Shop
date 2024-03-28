@@ -24,6 +24,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 use function bcmul;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[Table(name: 'cart_item', schema: 'interview')]
 #[HasLifecycleCallbacks]

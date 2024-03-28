@@ -24,10 +24,12 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use Symfony\Contracts\Cache\ItemInterface;
 use function bcadd;
 use function is_int;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
@@ -109,8 +111,8 @@ class Cart implements JsonSerializable
 
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $item): bool => is_int($key)
-                    && $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
+                static fn (int $key, CartItemInterface $item): bool =>
+                    $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
             );
     }
 
@@ -138,7 +140,7 @@ class Cart implements JsonSerializable
             return null;
         }
 
-        return $item ?? null;
+        return $item;
     }
 
     /** @throws ItemNotFoundException */
@@ -165,7 +167,7 @@ class Cart implements JsonSerializable
             ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id)
             ->first();
 
-        if (false === $item || null === $item) {
+        if (false === $item instanceof CartItemInterface) {
             throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $id));
         }
 
