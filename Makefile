@@ -39,7 +39,7 @@ phpcs:
 	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 
 psalm:
-	vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache
+	vendor/bin/psalm --config=config/analysis/psalm.xml
 
 .PHONY: php-cs-fixer
 php-cs-fixer:

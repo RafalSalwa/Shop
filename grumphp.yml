@@ -21,7 +21,7 @@ grumphp:
     enabled: true
     max_workers: 16
   fixer:
-    enabled: true
+    enabled: false
     fix_by_default: false
   environment:
     files: [ ]
@@ -146,22 +146,22 @@ grumphp:
       tab_width: ~
       report: full
       report_width: ~
-      whitelist_patterns: [ ]
+      whitelist_patterns: ["/^src/", "/^tests/" ]
       encoding: ~
-      ignore_patterns: [ ]
+      ignore_patterns: [ "/^migrations/" ]
       sniffs: [ ]
       triggered_by: [ php ]
       exclude: [ ]
       show_sniffs_error_path: true
     phpcsfixer:
       allow_risky: true
-      cache_file: var/cache/dev/
-      config: reports/config/php-cs-fixer.php
+      cache_file: var/cache/dev/.php-cs-fixer.cache
+      config: config/analysis/php-cs-fixer.php
       rules: [ ]
       using_cache: true
       config_contains_finder: true
       verbose: true
-      diff: false
+      diff: true
       triggered_by: [ 'php' ]
     phplint:
       exclude: [ ]
@@ -191,13 +191,13 @@ grumphp:
       triggered_by: [ 'php' ]
     phpstan:
       autoload_file: ~
-      configuration: reports/config/phpstan.neon
+      configuration: config/analysis/phpstan.neon
       level: null
       force_patterns: [ ]
       ignore_patterns: [ ]
       triggered_by: [ 'php' ]
       memory_limit: "-1"
-      use_grumphp_paths: true
+      use_grumphp_paths: false
     phpunit:
       config_file: config/analysis/phpunit.xml
       testsuite: unit
@@ -206,7 +206,7 @@ grumphp:
       always_execute: true
       order: null
     psalm:
-      config: reports/config/psalm.xml
+      config: config/analysis/psalm.xml
       ignore_patterns: [ ]
       no_cache: false
       report: ~
@@ -215,7 +215,7 @@ grumphp:
       triggered_by: [ 'php' ]
       show_info: false
     rector:
-      config: reports/config/rector.php
+      config: rector.php
       triggered_by: [ 'php' ]
       ignore_patterns: [ ]
       clear_cache: true
@@ -266,9 +266,12 @@ grumphp:
         - jsonlint
         - phparkitect
         - phpcs
+        - phpcsfixer
         - phplint
         - phpmnd
         - phpunit
+        - psalm
+        - rector
         - securitychecker_composeraudit
         - securitychecker_enlightn
         - securitychecker_local

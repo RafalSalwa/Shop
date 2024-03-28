@@ -30,7 +30,7 @@ final class ClosureObject
         $list = array_fill(0, 2000, 17);
 
         // Try with and without 'static' here
-        return static function ($list): void {
+        return static function (array $list): void {
             count($list);
         };
     }
@@ -38,8 +38,8 @@ final class ClosureObject
     public function getItemProcessor(): array
     {
         $list = array_fill(0, 2000, 17);
-        $multipier = 10;
+        $multiplier = 10;
 
-        return array_map(static fn ($item): int => $item * $multipier, $list);
+        return array_map(static fn ($item): int => $item * $multiplier, $list);
     }
 }

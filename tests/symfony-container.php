@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Kernel;
+namespace App\Tests;
 
 require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
+require_once 'functions.php';
 
-return static fn (array $context): \App\Kernel => new Kernel($context['APP_ENV'], (bool)$context['APP_DEBUG']);
+return getAppKernel();

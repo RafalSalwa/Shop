@@ -10,6 +10,7 @@
     <arg name="tab-width" value="4"/>
     <arg name="cache" value="../../var/cache/.phpcs-cache"/>
     <arg name="colors"/>
+    <arg value="sn"/>
     <arg name="extensions" value="php"/>
 
     <autoload>../../vendor/autoload.php</autoload>

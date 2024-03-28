@@ -10,7 +10,7 @@ use App\Entity\Payment;
 use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV7;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 use function assert;
@@ -29,7 +29,7 @@ final readonly class PaymentService
             userId: $this->getUser()->getId(),
             amount: $order->getTotal(),
             operationType: $paymentType,
-            operationNumber: Uuid::v7()->generate(),
+            operationNumber: UuidV7::generate(),
         );
         $order->addPayment($payment);
 

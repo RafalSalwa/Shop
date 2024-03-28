@@ -24,9 +24,7 @@ use Doctrine\ORM\Mapping\Table;
 use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
-use Symfony\Contracts\Cache\ItemInterface;
 use function bcadd;
-use function is_int;
 use function sprintf;
 
 /** @psalm-suppress PropertyNotSetInConstructor */
@@ -103,16 +101,19 @@ class Cart implements JsonSerializable
         $newItem->setCart($this);
     }
 
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    // phpcs:disable SlevomatCodingStandard.Functions.ArrowFunctionDeclaration.IncorrectSpacesAfterArrow
     public function hasItem(CartItemInterface $search): bool
     {
         if (0 === $this->getItems()->count()) {
             return false;
         }
 
+        $searchEntity = $search->getReferencedEntity();
+
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $item): bool =>
-                    $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
+                static fn (int $_key, CartItemInterface $item): bool => $item->getReferencedEntity() === $searchEntity,
             );
     }
 
