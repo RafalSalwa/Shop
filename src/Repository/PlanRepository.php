@@ -8,26 +8,23 @@ use App\Config\Cache as ConfigCache;
 use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
-use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 use function mb_strtolower;
 
+/**
+ * @extends ServiceEntityRepository<SubscriptionPlan>
+ *
+ * @method SubscriptionPlan|null   find($id, $lockMode = null, $lockVersion = null)
+ * @method SubscriptionPlan|null   findOneBy(array $criteria, array $orderBy = null)
+ * @method array<SubscriptionPlan> findAll()
+ * @method array<SubscriptionPlan> findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 final class PlanRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, SubscriptionPlan::class);
-    }
-
-    /** @throws NonUniqueResultException */
-    public function findById(int $id): ?SubscriptionPlan
-    {
-        $queryBuilder = $this->createQueryBuilder('p')
-            ->where('p.id = :id')
-            ->setParameter('id', $id);
-
-        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
     /** @return array<SubscriptionPlan>|null */

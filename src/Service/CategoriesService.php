@@ -12,7 +12,7 @@ final readonly class CategoriesService
     public function __construct(private CategoryRepository $categoryRepository)
     {}
 
-    /** @return list<Category> */
+    /** @return array<array-key, Category> */
     public function list(): array
     {
         return $this->categoryRepository->findAll();

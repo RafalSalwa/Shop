@@ -11,7 +11,7 @@
     ensureArrayIntOffsetsExist="true"
     ensureArrayStringOffsetsExist="true"
     ensureOverrideAttribute="true"
-    errorLevel="4"
+    errorLevel="3"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
     findUnusedVariablesAndParams="true"
@@ -57,5 +57,11 @@
     <issueHandlers>
         <MoreSpecificImplementedParamType errorLevel="suppress"/>
         <LessSpecificImplementedReturnType errorLevel="suppress"/>
+        <PossiblyUndefinedStringArrayOffset>
+            <errorLevel type="suppress">
+                <directory name="../../src/Form"/>
+            </errorLevel>
+        </PossiblyUndefinedStringArrayOffset>
     </issueHandlers>
+
 </psalm>

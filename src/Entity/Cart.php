@@ -65,8 +65,8 @@ class Cart implements JsonSerializable
     #[Column(name: 'coupon_type', type: Types::STRING, length: 25, nullable: true)]
     private ?string $couponType = null;
 
-    #[Column(name: 'coupon_discount', type: Types::STRING, nullable: true)]
-    private ?string $couponDiscount = null;
+    #[Column(name: 'coupon_discount', type: Types::INTEGER, nullable: true)]
+    private ?int $couponDiscount = null;
 
     private ?CouponCode $coupon = null;
 
@@ -158,17 +158,18 @@ class Cart implements JsonSerializable
         $this->getItems()->removeElement($currentItem);
     }
 
-    public function getItemById(int $id): ?CartItemInterface
+    /** @throws ItemNotFoundException */
+    public function getItemById(int $id): CartItemInterface
     {
         $item = $this->getItems()
             ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id)
             ->first();
 
-        if (false === $item) {
-            return null;
+        if (false === $item || null === $item) {
+            throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $id));
         }
 
-        return $item ?? null;
+        return $item;
     }
 
     public function getTotalItemsCount(): int
@@ -244,7 +245,7 @@ class Cart implements JsonSerializable
 
     public function getCoupon(): ?CouponCode
     {
-        if (null === $this->couponType) {
+        if (null === $this->couponType || null === $this->couponDiscount) {
             return null;
         }
 

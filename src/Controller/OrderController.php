@@ -86,6 +86,7 @@ final class OrderController extends AbstractShopController
         CalculatorService $cartCalculatorService,
     ): Response {
         $order = $orderService->fetchOrderDetails($id);
+        assert($order instanceof Order);
 
         return $this->render(
             'order/summary.html.twig',

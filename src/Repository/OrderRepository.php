@@ -10,6 +10,14 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
+/**
+ * @extends ServiceEntityRepository<Order>
+ *
+ * @method Order|null   find($id, $lockMode = null, $lockVersion = null)
+ * @method Order|null   findOneBy(array $criteria, array $orderBy = null)
+ * @method array<Order> findAll()
+ * @method array<Order> findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ */
 final class OrderRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $managerRegistry)

@@ -21,8 +21,11 @@ final readonly class Token implements Stringable
     /** @throws InvalidTokenStructure */
     public function __construct(private string $token)
     {
-        $parser = new Parser(new JoseEncoder());
-        $this->parsedToken = $parser->parse($token);
+        assert('' !== $this->token);
+        $parsedToken = (new Parser(new JoseEncoder()))->parse($this->token);
+
+        assert($parsedToken instanceof UnencryptedToken);
+        $this->parsedToken = $parsedToken;
     }
 
     public function value(): string
@@ -37,10 +40,14 @@ final readonly class Token implements Stringable
 
     public function getSub(): string
     {
-        $sub = $this->parsedToken->claims()->get('sub');
-        assert(is_string($sub));
+        if (true === $this->parsedToken->claims()->has('sub')) {
+            $sub = $this->parsedToken->claims()->get('sub');
+            assert(is_string($sub));
 
-        return $sub;
+            return $sub;
+        }
+
+        throw InvalidTokenStructure::missingClaimsPart();
     }
 
     public function __toString(): string

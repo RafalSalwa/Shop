@@ -14,7 +14,7 @@ interface AuthClientInterface
 
     public function confirmAccount(string $verificationCode): void;
 
-    public function getVerificationCode(string $email): ?string;
+    public function getVerificationCode(string $email): string;
 
     /** @return array<string, array<string, array<array-key, mixed>>> */
     public function getResponses(): array;

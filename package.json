@@ -36,6 +36,7 @@
     "@fortawesome/fontawesome-svg-core": "^6.5.1",
     "@popperjs/core": "^2.11.8",
     "jquery.easing": "^1.4.1",
+    "newrelic": "^11.14.0",
     "owl.carousel": "^2.3.4",
     "sass": "^1.71.0",
     "sass-loader": "^13.0.0"

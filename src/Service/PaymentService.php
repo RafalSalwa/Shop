@@ -14,7 +14,6 @@ use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 use function assert;
-use function is_subclass_of;
 
 final readonly class PaymentService
 {
@@ -45,6 +44,8 @@ final readonly class PaymentService
     public function confirmPayment(Order $order): void
     {
         $payment = $order->getLastPayment();
+        assert($payment instanceof Payment);
+
         if (true === $this->paymentProcessing->can($payment, 'to_confirm')) {
             $this->paymentProcessing->apply($payment, 'to_confirm');
         }
@@ -55,7 +56,7 @@ final readonly class PaymentService
     private function getUser(): ShopUserInterface
     {
         $user = $this->security->getUser();
-        assert(is_subclass_of($user, ShopUserInterface::class));
+        assert($user instanceof ShopUserInterface);
 
         return $user;
     }

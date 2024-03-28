@@ -26,8 +26,8 @@ class OAuth2UserConsent
     private DateTimeImmutable $expires;
 
     /**
-     * @var list<string>
-     *                   $scopes = ['email', 'id']
+     * @var array<string>
+     *                    $scopes = ['email', 'id']
      */
     #[ORM\Column(type: Types::SIMPLE_ARRAY, nullable: false)]
     private array $scopes = ['email', 'id'];

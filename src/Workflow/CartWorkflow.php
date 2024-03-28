@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Workflow;
 
 use App\Entity\Contracts\CartItemInterface;
+use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
 use App\Exception\Contracts\CartOperationExceptionInterface;
@@ -20,6 +21,8 @@ use App\Service\CouponService;
 use App\Service\ProductStockService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+
+use function assert;
 
 final readonly class CartWorkflow
 {
@@ -41,11 +44,10 @@ final readonly class CartWorkflow
         try {
             $cartItem = $this->cartItemService->create($prodId, $quantity);
             $this->cartService->add($cartItem);
-            $this->productStockService->changeStock(
-                $cartItem->getReferencedEntity(),
-                StockOperation::Decrease,
-                $quantity,
-            );
+            $entity = $cartItem->getReferencedEntity();
+            assert($entity instanceof StockManageableInterface);
+
+            $this->productStockService->changeStock($entity, StockOperation::Decrease, $quantity);
         } catch (AccessDeniedException | ItemNotFoundException  $exception) {
             $this->logger->error($exception->getMessage());
 
