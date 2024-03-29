@@ -69,7 +69,7 @@
     "symfony/templating": "~6.4.3",
     "symfony/translation": "~6.4.4",
     "symfony/twig-bundle": "~6.4.4",
-    "symfony/uid": "~6.4.3",
+    "symfony/uid": "~7.0.3",
     "symfony/ux-autocomplete": "^2.16",
     "symfony/ux-live-component": "^2.16",
     "symfony/validator": "~6.4.4",
