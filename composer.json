@@ -57,7 +57,7 @@
     "symfony/html-sanitizer": "~6.4.4",
     "symfony/http-client": "~6.4.5",
     "symfony/lock": "~6.4.3",
-    "symfony/mailer": "~6.4.4",
+    "symfony/mailer": "~7.0.4",
     "symfony/messenger": "~6.4.4",
     "symfony/monolog-bundle": "^3.10",
     "symfony/rate-limiter": "~6.4.3",
