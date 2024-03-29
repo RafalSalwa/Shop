@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use App\Kernel;
-use Doctrine\Bundle\DoctrineBundle\Registry;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\KernelInterface;
+use function array_key_exists;
+use function assert;
+use function function_exists;
 
 if (!function_exists('getAppEntityManager')) {
     function getAppEntityManager(): EntityManagerInterface
@@ -24,10 +26,11 @@ if (!function_exists('getAppEntityManager')) {
 
         $kernel = new Kernel($env, $debug);
         $kernel->boot();
+
         $doctrineRegistry = $kernel->getContainer()->get('doctrine');
-        assert($doctrineRegistry instanceof Registry);
         $manager = $doctrineRegistry->getManager();
         assert($manager instanceof EntityManagerInterface);
+
         return $manager;
     }
 }

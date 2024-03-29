@@ -55,7 +55,7 @@ deptrac:
 	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml
 .PHONY: phpstan
 phpstan: lint
-	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon src
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress
 
 .PHONY: phpinsights
 phpinsights:
@@ -75,7 +75,7 @@ static_analysis: lint test_unit
 #	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=reports/results/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache || true
-	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress -n src || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php check --diff --verbose || true
 #	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
 #	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
@@ -89,7 +89,7 @@ jenkins_static_analysis:
 	$(MAKE) test_unit
 	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=./var/reports/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle --report-file=./var/reports/phpcs.checkstyle.xml src tests || true
-	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=checkstyle --no-progress -n src > ./var/reports/phpstan.checkstyle.xml || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=checkstyle > ./var/reports/phpstan.checkstyle.xml || true
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=./var/reports/psalm.sonarqube.json || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > ./var/reports/php-cs-fixer.checkstyle.xml || true
 	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > ./var/reports/phpmd.html || true
@@ -103,7 +103,7 @@ github_actions_static_analysis:
 	vendor/bin/phparkitect check --config=config/analysis/phparkitect.php
 	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=github-actions
 	vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
-	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=github --no-progress -n src || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=github --no-progress || true
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --output-format=github || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run | cs2pr || true
 	-vendor/bin/phpmd src/ github config/analysis/phpmd.xml || true
@@ -112,7 +112,7 @@ github_actions_static_analysis:
 .PHONY: lint test_unit
 sonar_static_analysis:
 	-vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml
-	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json src > ./var/reports/phpstan.sonarqube.report.json || true
+	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json > ./var/reports/phpstan.sonarqube.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}
 
 .PHONY: test_unit

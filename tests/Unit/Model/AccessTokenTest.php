@@ -21,14 +21,11 @@ final class AccessTokenTest extends TestCase
         $clientMock = $this->createMock(ClientEntityInterface::class);
         $clientMock->method('getIdentifier')->willReturn('test_client_id');
 
-        $scopes = [];
         $scopeMock1 = $this->createMock(ScopeEntityInterface::class);
         $scopeMock1->method('getIdentifier')->willReturn('scope1');
-        $scopes[] = $scopeMock1;
 
         $scopeMock2 = $this->createMock(ScopeEntityInterface::class);
         $scopeMock2->method('getIdentifier')->willReturn('scope2');
-        $scopes[] = $scopeMock2;
         // Create AccessToken instance
         $keyString = file_get_contents(__DIR__ . '/../../../config/jwt/private.key');
         $accessToken = new AccessToken($keyString, 'rsinterview');

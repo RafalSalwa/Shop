@@ -58,6 +58,7 @@
     <issueHandlers>
         <MoreSpecificImplementedParamType errorLevel="suppress"/>
         <LessSpecificImplementedReturnType errorLevel="suppress"/>
+        <RedundantIdentityWithTrue errorLevel="suppress"/>
         <PossiblyUndefinedStringArrayOffset>
             <errorLevel type="suppress">
                 <directory name="src/Form"/>

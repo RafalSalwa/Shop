@@ -7,6 +7,7 @@ namespace App\Tests\Unit\Model;
 use App\Model\TokenPair;
 use App\ValueObject\Token;
 use DateTimeImmutable;
+use JsonException;
 use Lcobucci\JWT\JwtFacade;
 use Lcobucci\JWT\Signer\Hmac\Sha256;
 use Lcobucci\JWT\Signer\Key\InMemory;
@@ -57,7 +58,11 @@ final class TokenPairTest extends TestCase
             'token' => $this->token,
             'refresh_token' => $this->token,
         ];
+        $this->expectException(JsonException::class);
+        $tokenPair = TokenPair::fromJson('wrong json string');
+
         $tokenPair = TokenPair::fromJson(json_encode($arr));
+
         $this->assertInstanceOf(TokenPair::class, $tokenPair);
     }
 }

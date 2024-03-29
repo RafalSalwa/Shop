@@ -13,7 +13,6 @@ use App\Model\User;
 use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
-use Doctrine\Common\Collections\Collection;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -31,7 +30,6 @@ use PHPUnit\Framework\TestCase;
 final class UserTest extends TestCase
 {
     use TokenTestHelperTrait;
-    private string $token;
 
     public function testUserInitialization(): void
     {
@@ -77,8 +75,6 @@ final class UserTest extends TestCase
         $user->addConsent($oAuth2UserConsent);
 
         $consents = $user->getConsents();
-        $this->assertNotNull($consents);
-        $this->assertInstanceOf(Collection::class, $consents);
         $this->assertCount(1, $consents);
         $this->assertInstanceOf(OAuth2UserConsent::class, $consents[0]);
     }

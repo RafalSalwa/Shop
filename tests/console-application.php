@@ -7,6 +7,7 @@ namespace App\Tests;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
 require __DIR__ . '/../vendor/autoload.php';
-require_once 'functions.php';
+
+require_once __DIR__ . '/functions.php';
 
 return new Application(getAppKernel());

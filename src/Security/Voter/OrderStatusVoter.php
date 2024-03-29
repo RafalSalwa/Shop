@@ -15,7 +15,7 @@ use function assert;
 /**
  * @template TAttribute of 'view'
  * @template TSubject of Order
- * @extends  Voter<'view', Order>
+ * @extends  Voter<'view', Order|null>
  */
 final class OrderStatusVoter extends Voter
 {

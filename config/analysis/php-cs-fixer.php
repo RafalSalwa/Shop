@@ -98,6 +98,6 @@ try {
         )
         ->setFinder($finder)
         ->setCacheFile(__DIR__ . '/../../var/cache/dev/.php-cs-fixer.cache');
-} catch (DirectoryNotFoundException $exception) {
-    echo $exception->getMessage();
+} catch (DirectoryNotFoundException $directoryNotFoundException) {
+    echo $directoryNotFoundException->getMessage();
 }
