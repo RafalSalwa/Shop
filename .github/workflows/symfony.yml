@@ -46,7 +46,7 @@ jobs:
         run: vendor/bin/phpunit --configuration ${GITHUB_WORKSPACE}/phpunit.xml --testsuite unit
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4-beta
+        uses: codecov/codecov-action@v4.1.1
         env:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
