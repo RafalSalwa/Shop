@@ -54,7 +54,7 @@
     "symfony/flex": "^2.4.5",
     "symfony/form": "~6.4.4",
     "symfony/framework-bundle": "~6.4.4",
-    "symfony/html-sanitizer": "~6.4.4",
+    "symfony/html-sanitizer": "~7.0.4",
     "symfony/http-client": "~6.4.5",
     "symfony/lock": "~6.4.3",
     "symfony/mailer": "~6.4.4",
