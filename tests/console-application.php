@@ -2,14 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Kernel;
+namespace App\Tests;
+
 use Symfony\Bundle\FrameworkBundle\Console\Application;
-use Symfony\Component\Dotenv\Dotenv;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-(new Dotenv())->bootEnv(__DIR__ . '/../.env');
+require_once __DIR__ . '/functions.php';
 
-$kernel = new Kernel($_SERVER['APP_ENV'], (bool)$_SERVER['APP_DEBUG']);
-
-return new Application($kernel);
+return new Application(getAppKernel());

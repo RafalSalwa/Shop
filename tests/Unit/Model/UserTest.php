@@ -9,11 +9,12 @@ use App\Entity\OAuth2UserConsent;
 use App\Entity\Subscription;
 use App\Entity\SubscriptionPlan;
 use App\Enum\SubscriptionTier;
+use App\Exception\AuthException;
 use App\Model\User;
+use App\Tests\Helpers\ProtectedPropertyHelper;
 use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
-use Doctrine\Common\Collections\Collection;
 use League\Bundle\OAuth2ServerBundle\Model\Client;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
@@ -30,38 +31,61 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: SubscriptionTier::class)]
 final class UserTest extends TestCase
 {
+    use ProtectedPropertyHelper;
+
     use TokenTestHelperTrait;
-    private string $token;
+
+    private User $goodUser;
+
+    private User $badUser;
+
+    private Token $token;
+
+    protected function setUp(): void
+    {
+        $token = new Token($this->generateTokenString());
+        $this->token = $token;
+
+        $user = new User('test@example.com');
+        $user->setToken($token);
+        $user->setRefreshToken($token);
+
+        $this->goodUser = $user;
+
+        $user = new User('test2@example.com');
+        $this->badUser = $user;
+    }
 
     public function testUserInitialization(): void
     {
-        $email = 'test@example.com';
-        $user = new User($email);
-        $token = new Token($this->generateTokenString());
-        $user->setToken($token);
-        $user->setRefreshToken($token);
+        $goodUser = $this->goodUser;
 
-        $anotherUser = new User($email);
-        $token = new Token($this->generateTokenString());
-        $user->setToken($token);
-        $user->setRefreshToken($token);
+        $badUser = $this->badUser;
+        $anotherUser = new User('test@example.com');
 
-        $this->assertInstanceOf(ShopUserInterface::class, $user);
-        $this->assertInstanceOf(Token::class, $user->getToken());
-        $this->assertInstanceOf(Token::class, $user->getRefreshToken());
+        $this->assertInstanceOf(ShopUserInterface::class, $goodUser);
+        $this->assertInstanceOf(Token::class, $goodUser->getToken());
+        $this->assertInstanceOf(Token::class, $goodUser->getRefreshToken());
 
-        $this->assertNotNull($user->getUserIdentifier());
-        $this->assertSame($email, $user->getEmail());
-        $this->assertCount(0, $user->getConsents());
-        $this->assertSame(['ROLE_USER'], $user->getRoles());
+        $this->assertSame($this->token->value(), $goodUser->getUserIdentifier());
+        $this->assertSame('test@example.com', $goodUser->getEmail());
+        $this->assertCount(0, $goodUser->getConsents());
+        $this->assertSame(['ROLE_USER'], $goodUser->getRoles());
 
-        $subscription = new Subscription($user->getId(), new SubscriptionPlan());
-        $user->setSubscription($subscription);
-        $this->assertInstanceOf(Subscription::class, $user->getSubscription());
-        $this->assertSame($user->getSubscription(), $subscription);
-        $this->assertTrue($user->isEqualTo($user));
-        $this->assertFalse($user->isEqualTo($anotherUser));
-        $user->eraseCredentials();
+        $subscription = new Subscription($goodUser->getId(), new SubscriptionPlan());
+        $goodUser->setSubscription($subscription);
+        $this->assertInstanceOf(Subscription::class, $goodUser->getSubscription());
+        $this->assertSame($goodUser->getSubscription(), $subscription);
+        $this->assertTrue($goodUser->isEqualTo($anotherUser));
+        $this->assertFalse($goodUser->isEqualTo($badUser));
+        $goodUser->eraseCredentials();
+    }
+
+    public function testGettersSetters(): void
+    {
+        $badUser = $this->badUser;
+        $this->expectException(AuthException::class);
+        $badUser->getUserIdentifier();
     }
 
     public function testAddConsent(): void
@@ -77,8 +101,6 @@ final class UserTest extends TestCase
         $user->addConsent($oAuth2UserConsent);
 
         $consents = $user->getConsents();
-        $this->assertNotNull($consents);
-        $this->assertInstanceOf(Collection::class, $consents);
         $this->assertCount(1, $consents);
         $this->assertInstanceOf(OAuth2UserConsent::class, $consents[0]);
     }

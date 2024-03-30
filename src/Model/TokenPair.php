@@ -20,7 +20,7 @@ final class TokenPair
     /** @throws JsonException */
     public static function fromJson(string $jsonResponse): self
     {
-        $arrTokens = json_decode($jsonResponse, true, 4, JSON_THROW_ON_ERROR);
+        $arrTokens = json_decode(json: $jsonResponse, associative: true, depth: 4, flags: JSON_THROW_ON_ERROR);
         $accessToken = new Token($arrTokens['user']['token']);
         $refreshToken = new Token($arrTokens['user']['refresh_token']);
 

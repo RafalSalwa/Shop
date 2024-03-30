@@ -21,6 +21,7 @@ use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\PrePersist;
 use Doctrine\ORM\Mapping\Table;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: OrderRepository::class)]
 #[Table(name: 'orders', schema: 'interview')]
 #[HasLifecycleCallbacks]
@@ -181,7 +182,7 @@ class Order
             return null;
         }
 
-        return $payment ?? null;
+        return $payment;
     }
 
     public function getCreatedAt(): DateTimeImmutable

@@ -2,8 +2,12 @@
 
 declare(strict_types=1);
 
-use App\Kernel;
+namespace App\Tests;
+
+use function dirname;
 
 require_once dirname(__DIR__) . '/vendor/autoload_runtime.php';
 
-return static fn (array $context): \App\Kernel => new Kernel($context['APP_ENV'], (bool)$context['APP_DEBUG']);
+require_once __DIR__ . '/functions.php';
+
+return getAppKernel();

@@ -3,6 +3,8 @@
 
 namespace App\Protobuf\Service;
 
+use App\Protobuf\Message\VerificationCodeRequest;
+
 /**
  */
 class AuthServiceClient extends \Grpc\BaseStub {
@@ -59,12 +61,13 @@ class AuthServiceClient extends \Grpc\BaseStub {
     }
 
     /**
-     * @param \App\Protobuf\Message\VerificationCodeRequest $argument input argument
+     * @param VerificationCodeRequest $argument input argument
      * @param array $metadata metadata
      * @param array $options call options
      * @return \Grpc\UnaryCall
      */
-    public function GetVerificationKey(\App\Protobuf\Message\VerificationCodeRequest $argument,
+    public function getVerificationKey(
+        VerificationCodeRequest $argument,
       $metadata = [], $options = []) {
         return $this->_simpleRequest('/intrvproto.AuthService/GetVerificationKey',
         $argument,

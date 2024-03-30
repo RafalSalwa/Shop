@@ -2,16 +2,16 @@
 <psalm
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config ../../vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config vendor/vimeo/psalm/config.xsd"
 
     allowStringToStandInForClass="true"
-    cacheDirectory="../../var/cache/dev/"
+    cacheDirectory="var/cache/dev/"
     disableVarParsing="false"
     checkForThrowsInGlobalScope="true"
     ensureArrayIntOffsetsExist="true"
     ensureArrayStringOffsetsExist="true"
     ensureOverrideAttribute="true"
-    errorLevel="3"
+    errorLevel="2"
     findUnusedBaselineEntry="true"
     findUnusedCode="false"
     findUnusedVariablesAndParams="true"
@@ -19,7 +19,7 @@
     memoizeMethodCallResults="true"
     rememberPropertyAssignmentsAfterCall="true"
     reportMixedIssues="true"
-    resolveFromConfigFile="true"
+    resolveFromConfigFile="false"
     restrictReturnTypes="true"
     strictBinaryOperands="true"
     useDocblockPropertyTypes="true"
@@ -27,39 +27,40 @@
 >
     <!--    Remember: Level 1 is the most strict, level 8 is the most lenient. https://psalm.dev/docs/running_psalm/error_levels/ -->
     <projectFiles>
-        <directory name="../../src"/>
+        <directory name="src"/>
+        <directory name="tests"/>
         <ignoreFiles>
-            <directory name="../../vendor"/>
-            <directory name="../../src/Protobuf"/>
-            <directory name="../../src/Repository"/>
+            <directory name="vendor"/>
+            <directory name="src/Protobuf"/>
         </ignoreFiles>
     </projectFiles>
 
     <fileExtensions>
         <extension name=".php"/>
-        <extension name=".twig" checker="../../vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
+        <extension name=".twig" checker="vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php"/>
     </fileExtensions>
     <plugins>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\MockeryPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\SymfonyPsalmPlugin\Plugin">
-            <containerXml>../../var/cache/dev/App_KernelDevDebugContainer.xml</containerXml>
-            <twigCachePath>../../var/cache/dev/twig</twigCachePath>
+            <containerXml>var/cache/dev/App_KernelDevDebugContainer.xml</containerXml>
+            <twigCachePath>var/cache/dev/twig</twigCachePath>
         </pluginClass>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psalm\PhpUnitPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Weirdan\DoctrinePsalmPlugin\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Psl\Psalm\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="Orklah\PsalmInsaneComparison\Plugin"/>
         <pluginClass xmlns="https://getpsalm.org/schema/config" class="DQ5Studios\PsalmJunit\Plugin">
-            <filepath>../../var/reports/psalm_junit_report.xml</filepath>
+            <filepath>var/reports/psalm_junit_report.xml</filepath>
             <always/>
         </pluginClass>
     </plugins>
     <issueHandlers>
         <MoreSpecificImplementedParamType errorLevel="suppress"/>
         <LessSpecificImplementedReturnType errorLevel="suppress"/>
+        <RedundantIdentityWithTrue errorLevel="suppress"/>
         <PossiblyUndefinedStringArrayOffset>
             <errorLevel type="suppress">
-                <directory name="../../src/Form"/>
+                <directory name="src/Form"/>
             </errorLevel>
         </PossiblyUndefinedStringArrayOffset>
     </issueHandlers>
