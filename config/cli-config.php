@@ -12,30 +12,10 @@ use Symfony\Component\Dotenv\Dotenv;
 
 // replace with path to your own project bootstrap file
 require_once __DIR__ . '/../vendor/autoload.php';
-
-// replace with mechanism to retrieve EntityManager in your app
-function getEntityManager(): EntityManagerInterface
-{
-    (new Dotenv())->bootEnv(__DIR__ . '/../.env');
-
-    assert(array_key_exists('APP_ENV', $_SERVER));
-    assert(array_key_exists('APP_DEBUG', $_SERVER));
-
-    $env = $_SERVER['APP_ENV'];
-    assert('' !== $env);
-    $debug = (bool)$_SERVER['APP_DEBUG'];
-
-    $kernel = new Kernel($env, $debug);
-    $kernel->boot();
-
-    return $kernel->getContainer()->get('doctrine')?->getManager();
-}
-
-$entityManager = getEntityManager();
-
+require_once __DIR__ . '/../tests/functions.php';
 $commands = [];
 
 ConsoleRunner::run(
-    new SingleManagerProvider($entityManager),
+    new SingleManagerProvider(getAppEntityManager()),
     $commands,
 );

@@ -35,7 +35,6 @@ final class AccessTokenTest extends TestCase
         $accessToken->setExpiryDateTime(new DateTimeImmutable('2024-03-22'));
         $accessToken->setUserIdentifier(123);
 
-        $this->assertNotNull($accessToken);
         $this->assertInstanceOf(AccessTokenEntityInterface::class, $accessToken);
     }
 }

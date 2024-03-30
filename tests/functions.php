@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-namespace App\Tests;
-
 use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Dotenv\Dotenv;

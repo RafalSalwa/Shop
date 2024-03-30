@@ -5,13 +5,9 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Model;
 
 use App\Model\TokenPair;
+use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\Token;
-use DateTimeImmutable;
 use JsonException;
-use Lcobucci\JWT\JwtFacade;
-use Lcobucci\JWT\Signer\Hmac\Sha256;
-use Lcobucci\JWT\Signer\Key\InMemory;
-use Lcobucci\JWT\Token\Builder;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
@@ -20,27 +16,13 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: Token::class)]
 final class TokenPairTest extends TestCase
 {
+    use TokenTestHelperTrait;
+
     private string $token;
 
     protected function setUp(): void
     {
-        $key = InMemory::base64Encoded(
-            'hiG8DlOKvtih6AxlZn5XKImZ06yu8I3mkOzaJrEuW8yAv8Jnkw330uMt8AEqQ5LB'
-        );
-
-        $token = (new JwtFacade())->issue(
-            new Sha256(),
-            $key,
-            static fn (
-                Builder $builder,
-                DateTimeImmutable $issuedAt
-            ): Builder => $builder
-                ->issuedBy('https://api.my-awesome-app.io')
-                ->permittedFor('https://client-app.io')
-                ->relatedTo('1')
-                ->expiresAt($issuedAt->modify('+10 minutes'))
-        );
-        $this->token = $token->toString();
+        $this->token = $this->generateTokenString();
     }
 
     public function testGetToken(): void
@@ -54,15 +36,17 @@ final class TokenPairTest extends TestCase
 
     public function testMappingFromJson(): void
     {
-        $arr['user'] = [
+        $arrJson = [];
+        $arrJson['user'] = [
             'token' => $this->token,
             'refresh_token' => $this->token,
         ];
-        $this->expectException(JsonException::class);
-        $tokenPair = TokenPair::fromJson('wrong json string');
-
-        $tokenPair = TokenPair::fromJson(json_encode($arr));
+        $tokenPair = TokenPair::fromJson(json_encode($arrJson));
 
         $this->assertInstanceOf(TokenPair::class, $tokenPair);
+
+        $this->expectException(JsonException::class);
+        TokenPair::fromJson('wrong json string');
+
     }
 }

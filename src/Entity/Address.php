@@ -152,7 +152,7 @@ class Address
         $this->isDefault = $default;
     }
 
-    public function getPostalCode(): string
+    public function getPostalCode(): ?string
     {
         return $this->postalCode;
     }

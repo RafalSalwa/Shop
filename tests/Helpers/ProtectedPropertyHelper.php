@@ -8,11 +8,11 @@ use ReflectionClass;
 
 trait ProtectedPropertyHelper
 {
-    private function setProtectedProperty($object, $property, $value): void
+    /** @param int|string $value */
+    private function setProtectedProperty(object $object, string $property, mixed $value): void
     {
         $reflectionClass = new ReflectionClass($object);
-        $reflection_property = $reflectionClass->getProperty($property);
-        $reflection_property->setAccessible(true);
-        $reflection_property->setValue($object, $value);
+        $reflectionProperty = $reflectionClass->getProperty($property);
+        $reflectionProperty->setValue($object, $value);
     }
 }

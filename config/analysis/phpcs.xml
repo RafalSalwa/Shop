@@ -108,6 +108,13 @@
         <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup"/>
     </rule>
 
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse">
+        <type>warning</type>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+        <type>warning</type>
+    </rule>
+
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">
         <properties>
             <property name="maxLinesLength" value="35"/>

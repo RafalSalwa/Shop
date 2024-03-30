@@ -32,7 +32,6 @@
         <ignoreFiles>
             <directory name="vendor"/>
             <directory name="src/Protobuf"/>
-            <directory name="src/Repository"/>
         </ignoreFiles>
     </projectFiles>
 

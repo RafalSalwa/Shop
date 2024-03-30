@@ -14,17 +14,18 @@ trait ProductHelperCartItemTrait
 
     public function getHelperProduct(int $id): Product
     {
+        $name = sprintf('Product %s', $id);
         $product = new Product(
-            name: 'Product ' . $id,
+            name: $name,
             quantityPerUnit: '10 pcs',
-            unitsOnOrder: 100,
-            unitsInStock: 10,
             price: 100_00,
+            unitsInStock: 10,
+            unitsOnOrder: 100,
         );
         $this->setProtectedProperty($product, 'id', $id);
-        $this->setProtectedProperty($product, 'name', 'Product ' . $id);
+        $this->setProtectedProperty($product, 'name', $name);
         $this->setProtectedProperty($product, 'quantityPerUnit', 1);
-        $this->setProtectedProperty($product, 'name', 'unitsInStock ' . 10);
+        $this->setProtectedProperty($product, 'unitsInStock', 10);
         $this->setProtectedProperty($product, 'price', 100);
 
         return $product;
