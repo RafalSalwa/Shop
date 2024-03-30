@@ -3,7 +3,7 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Psalm Security Scan
+name: Psalm lvl 2
 
 on:
   push:
