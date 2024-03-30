@@ -61,7 +61,7 @@ final class Paginator
 
         $paginator = new DoctrinePaginator($query, true);
 
-        /** @var array<string, mixed> $havingDqlParts */
+        /** @var array<string, mixed>|null $havingDqlParts */
         $havingDqlParts = $this->doctrineQueryBuilder->getDQLPart('having');
 
         if (null !== $havingDqlParts && count($havingDqlParts) > 0) {

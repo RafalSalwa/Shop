@@ -21,6 +21,7 @@ use function bcdiv;
 use function bcmul;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: ProductRepository::class)]
 #[Table(name: 'products', schema: 'interview')]
 class Product implements CartInsertableInterface, StockManageableInterface

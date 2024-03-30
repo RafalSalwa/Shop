@@ -32,11 +32,12 @@ use Symfony\Component\Uid\Uuid;
 final class OrderTest extends TestCase
 {
     use ProductHelperCartItemTrait;
-    public $product;
 
-    public $payment;
+    private Product $product;
 
-    public $address;
+    private Payment $payment;
+
+    private Address $address;
 
     private Order $order;
 
@@ -131,8 +132,8 @@ final class OrderTest extends TestCase
         $order = $this->order;
         $address = $this->address;
         $order->setDeliveryAddress($address);
-        $this->assertNotNull($order->getDeliveryAddress());
+        $this->assertInstanceOf(Address::class, $order->getDeliveryAddress());
         $order->setBilingAddress($address);
-        $this->assertNotNull($order->getBilingAddress());
+        $this->assertInstanceOf(Address::class, $order->getBilingAddress());
     }
 }

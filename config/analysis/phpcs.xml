@@ -10,6 +10,7 @@
     <arg name="tab-width" value="4"/>
     <arg name="cache" value="../../var/cache/.phpcs-cache"/>
     <arg name="colors"/>
+    <arg value="sn"/>
     <arg name="extensions" value="php"/>
 
     <autoload>../../vendor/autoload.php</autoload>
@@ -105,6 +106,13 @@
         <exclude name="SlevomatCodingStandard.Numbers.DisallowNumericLiteralSeparator.DisallowedNumericLiteralSeparator"/>
         <exclude name="SlevomatCodingStandard.Classes.RequireSingleLineMethodSignature.RequiredSingleLineSignature"/>
         <exclude name="SlevomatCodingStandard.Commenting.DocCommentSpacing.IncorrectAnnotationsGroup"/>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses.UnusedUse">
+        <type>warning</type>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter">
+        <type>warning</type>
     </rule>
 
     <rule ref="SlevomatCodingStandard.Functions.FunctionLength">

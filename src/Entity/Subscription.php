@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: SubscriptionRepository::class)]
 #[Table(name: 'subscription', schema: 'interview')]
 class Subscription

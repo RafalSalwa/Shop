@@ -26,7 +26,7 @@ final class UserResponseTest extends TestCase
         $confirmationCode = '123456';
         $tokenPair = $this->getTokenPair();
 
-        $userResponse = new UserResponse($email, $password, $confirmationCode, true, $tokenPair);
+        $userResponse = new UserResponse($email, $password, $confirmationCode, true);
         $userResponse = $userResponse->withTokenPair($tokenPair);
 
         $this->assertSame($email, $userResponse->getEmail());

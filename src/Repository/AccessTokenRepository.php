@@ -31,10 +31,6 @@ final readonly class AccessTokenRepository implements AccessTokenRepositoryInter
         $accessToken->setClient($clientEntity);
         $accessToken->setUserIdentifier($userIdentifier);
 
-        foreach ($scopes as $scope) {
-            $accessToken->addScope($scope);
-        }
-
         return $accessToken;
     }
 

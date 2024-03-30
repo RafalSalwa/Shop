@@ -73,7 +73,7 @@ final class PaymentType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Payment                         $viewData
+     * @param ?Payment                        $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapDataToForms(mixed $viewData, Traversable $forms): void

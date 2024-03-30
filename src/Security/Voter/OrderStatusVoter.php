@@ -15,11 +15,11 @@ use function assert;
 /**
  * @template TAttribute of 'view'
  * @template TSubject of Order
- * @extends  Voter<'view', Order>
+ * @extends  Voter<'view', Order|null>
  */
 final class OrderStatusVoter extends Voter
 {
-    /** @param Order $subject */
+    /** @param Order|null $subject */
     protected function supports(string $attribute, mixed $subject): bool
     {
         return 'view' === $attribute && $subject instanceof Order && Order::PENDING === $subject->getStatus();

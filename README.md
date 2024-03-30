@@ -1,5 +1,7 @@
 # interview-client-php
 
+[![Psalm lvl 2](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml)
+
 simple REST Server with REST and gRPC clients to communicate with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)
 # Build
 At first create docker network if You did not do so for server

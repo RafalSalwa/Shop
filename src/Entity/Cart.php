@@ -25,9 +25,9 @@ use JsonSerializable;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 use function bcadd;
-use function is_int;
 use function sprintf;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: CartRepository::class)]
 #[Table(name: 'cart', schema: 'interview')]
 #[HasLifecycleCallbacks]
@@ -101,16 +101,19 @@ class Cart implements JsonSerializable
         $newItem->setCart($this);
     }
 
+    // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
+    // phpcs:disable SlevomatCodingStandard.Functions.ArrowFunctionDeclaration.IncorrectSpacesAfterArrow
     public function hasItem(CartItemInterface $search): bool
     {
         if (0 === $this->getItems()->count()) {
             return false;
         }
 
+        $searchEntity = $search->getReferencedEntity();
+
         return $this->getItems()
             ->exists(
-                static fn (int $key, CartItemInterface $item): bool => is_int($key)
-                    && $item->getReferencedEntity()->getId() === $search->getReferencedEntity()->getId(),
+                static fn (int $_key, CartItemInterface $item): bool => $item->getReferencedEntity() === $searchEntity,
             );
     }
 
@@ -138,7 +141,7 @@ class Cart implements JsonSerializable
             return null;
         }
 
-        return $item ?? null;
+        return $item;
     }
 
     /** @throws ItemNotFoundException */
@@ -165,7 +168,7 @@ class Cart implements JsonSerializable
             ->filter(static fn (CartItemInterface $cartItem): bool => $cartItem->getId() === $id)
             ->first();
 
-        if (false === $item || null === $item) {
+        if (false === $item instanceof CartItemInterface) {
             throw new ItemNotFoundException(sprintf('Item %s not found in cart.', $id));
         }
 
