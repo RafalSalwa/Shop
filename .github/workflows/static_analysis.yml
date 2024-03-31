@@ -1,6 +1,5 @@
 name: "static_analysis"
 on:
-  push:
   pull_request:
     branches:
       - main

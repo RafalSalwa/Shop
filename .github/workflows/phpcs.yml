@@ -1,6 +1,5 @@
 name: "PHPCS - Code Sniffer"
 on:
-  push:
   pull_request:
     branches:
       - main
