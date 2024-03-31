@@ -1,6 +1,5 @@
-name: PHPStan Scan
+name: PHPStan lvl 4
 on:
-  push:
   pull_request:
     branches:
       - main
@@ -10,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  php-security:
+  php-stan:
     runs-on: ubuntu-latest
     permissions:
       contents: read # for actions/checkout to fetch code
@@ -34,7 +33,12 @@ jobs:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
           custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
-      - name: PHPStan Scan
+      - name: PHPStan Scan cs2pr
         id: phpstan_scan
         run: vendor/bin/phpstan --configuration=config/analysis/phpstan.neon --error-format=checkstyle | cs2pr
+        continue-on-error: true
+
+      - name: PHPStan Scan githubactions
+        id: phpstan_scan
+        run: vendor/bin/phpstan --configuration=config/analysis/phpstan.neon
         continue-on-error: true

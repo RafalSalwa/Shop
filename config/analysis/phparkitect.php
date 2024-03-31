@@ -24,7 +24,7 @@ use Arkitect\Rules\Rule;
 use Doctrine\ORM\Mapping\Entity;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 return static function (Config $config): void {
     $classSet = ClassSet::fromDir(__DIR__ . '/../../src');

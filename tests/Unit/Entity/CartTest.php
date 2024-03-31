@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests\Unit\Entity;
 
+use App\Entity\AbstractCartItem;
 use App\Entity\Cart;
-use App\Entity\CartItem;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
+use App\Entity\ProductCartItem;
 use App\Entity\SubscriptionPlan;
 use App\Enum\CartStatus;
 use App\Enum\SubscriptionTier;
@@ -22,7 +23,8 @@ use PHPUnit\Framework\TestCase;
 #[CoversClass(className: Cart::class)]
 #[UsesClass(className: CartStatus::class)]
 #[UsesClass(className: CouponCode::class)]
-#[UsesClass(className: CartItem::class)]
+#[UsesClass(className: AbstractCartItem::class)]
+#[UsesClass(className: ProductCartItem::class)]
 #[UsesClass(className: Product::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]

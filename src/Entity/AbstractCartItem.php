@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
-use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
 use App\Enum\CartItemTypeEnum;
 use App\Repository\CartItemRepository;
@@ -13,10 +12,13 @@ use DateTimeInterface;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\DiscriminatorColumn;
+use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\HasLifecycleCallbacks;
 use Doctrine\ORM\Mapping\Id;
+use Doctrine\ORM\Mapping\InheritanceType;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
@@ -28,20 +30,23 @@ use function bcmul;
 #[Entity(repositoryClass: CartItemRepository::class)]
 #[Table(name: 'cart_item', schema: 'interview')]
 #[HasLifecycleCallbacks]
-class CartItem implements CartItemInterface
+#[InheritanceType(value: 'SINGLE_TABLE')]
+#[DiscriminatorColumn(name: 'item_type', type: Types::STRING, length: 30)]
+#[DiscriminatorMap(value: ['product' => ProductCartItem::class])]
+abstract class AbstractCartItem implements CartItemInterface
 {
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
-    protected int $id;
+    protected int $id = 0;
 
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
-    #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id')]
+    #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id', nullable: false)]
     #[Groups(groups: 'cart_item')]
-    protected ?Cart $cart = null;
+    protected Cart $cart;
 
     #[Column(name: 'quantity', type: Types::INTEGER, nullable: false, options: ['default' => '1'])]
-    protected int $quantity;
+    protected int $quantity = 1;
 
     #[Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE, options: ['default' => 'CURRENT_TIMESTAMP'])]
     protected readonly DateTimeImmutable $createdAt;
@@ -49,36 +54,21 @@ class CartItem implements CartItemInterface
     #[Column(name: 'updated_at', type: Types::DATETIME_MUTABLE, nullable: true)]
     protected ?DateTimeInterface $updatedAt = null;
 
-    #[ManyToOne(targetEntity: CartInsertableInterface::class, fetch: 'EAGER')]
-    #[JoinColumn(referencedColumnName: 'product_id', nullable: false)]
-    private CartInsertableInterface $referencedEntity;
-
-    public function __construct(CartInsertableInterface $referencedEntity, int $quantity)
+    public function __construct(Cart $cart)
     {
-        $this->referencedEntity = $referencedEntity;
-        $this->quantity = $quantity;
+        $this->cart = $cart;
 
         $this->createdAt = new DateTimeImmutable();
     }
 
-    final public function setCart(?Cart $cart): void
+    final public function setCart(Cart $cart): void
     {
         $this->cart = $cart;
-    }
-
-    final public function getName(): string
-    {
-        return $this->referencedEntity->getName();
     }
 
     final public function getType(): string
     {
         return CartItemTypeEnum::from(ClassUtils::getClass($this->getReferencedEntity()))->value;
-    }
-
-    final public function getReferencedEntity(): CartInsertableInterface
-    {
-        return $this->referencedEntity;
     }
 
     final public function getId(): int
@@ -101,7 +91,7 @@ class CartItem implements CartItemInterface
         return $this->getReferencedEntity()->getPrice();
     }
 
-    public function updateQuantity(int $quantity): void
+    final public function updateQuantity(int $quantity): void
     {
         $this->quantity = $quantity;
         $this->updatedAt = new DateTimeImmutable();
@@ -110,5 +100,10 @@ class CartItem implements CartItemInterface
     final public function getItemType(): string
     {
         return self::class;
+    }
+
+    final public function getCart(): Cart
+    {
+        return $this->cart;
     }
 }

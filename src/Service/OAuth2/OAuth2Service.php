@@ -14,7 +14,6 @@ use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 use function array_diff;
 use function array_merge;
@@ -36,7 +35,6 @@ final readonly class OAuth2Service
         assert($appClient instanceof Client);
 
         $user = $this->getUser();
-        assert($user instanceof OAuth2UserInterface);
 
         $request = $this->requestStack->getCurrentRequest();
         if (null === $request) {
@@ -104,7 +102,6 @@ final readonly class OAuth2Service
         $requestedScopes = explode(' ', $request->query->getAlnum('scope'));
         if ([] === array_diff($requestedScopes, $userScopes)) {
             $session = $request->getSession();
-            assert($session instanceof SessionInterface);
             $session->set('consent_granted', true);
         }
 

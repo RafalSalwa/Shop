@@ -37,10 +37,7 @@ final readonly class UsersApiClient implements ShopUserProviderInterface
     /** @throws AuthenticationExceptionInterface */
     public function loadUserByIdentifier(string $identifier): ShopUserInterface
     {
-        $user = $this->getUser(new Token($identifier));
-        assert($user instanceof ShopUserInterface);
-
-        return $user;
+        return $this->getUser(new Token($identifier));
     }
 
     /** @throws AuthenticationExceptionInterface */

@@ -90,11 +90,15 @@ final class PaymentType extends AbstractType implements DataMapperInterface
     }
 
     /**
-     * @param Payment                         $viewData
+     * @param ?Payment                        $viewData
      * @param Traversable<int, FormInterface> $forms
      */
     public function mapFormsToData(Traversable $forms, mixed &$viewData): void
     {
+        if (null === $viewData) {
+            return;
+        }
+
         /** @var array<FormInterface> $arrForms */
         $arrForms = iterator_to_array($forms, preserve_keys: true);
         $amount = $arrForms['amount']->getData();

@@ -42,7 +42,7 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
     {
         assert($user instanceof ShopUserInterface);
         if (true === $user->getToken()?->isExpired() && true === $user->getRefreshToken()?->isExpired()) {
-            throw new CredentialsExpiredException('Session Expired, please login again.');
+            throw new CredentialsExpiredException('SessionStorage Expired, please login again.');
         }
 
         $user = $this->apiClient->refreshUser($user);

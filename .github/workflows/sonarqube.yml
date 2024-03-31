@@ -27,7 +27,6 @@
 name: SonarQube analysis
 
 on:
-  push:
   pull_request:
     branches:
       - main

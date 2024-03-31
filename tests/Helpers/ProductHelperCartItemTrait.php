@@ -4,9 +4,10 @@ declare(strict_types=1);
 
 namespace App\Tests\Helpers;
 
-use App\Entity\CartItem;
+use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
+use App\Entity\ProductCartItem;
 
 trait ProductHelperCartItemTrait
 {
@@ -34,7 +35,8 @@ trait ProductHelperCartItemTrait
     public function getHelperProductCartItem(int $id = 1): CartItemInterface
     {
         $product = $this->getHelperProduct($id);
-        $productCartItem = new CartItem($product, 1);
+        $cart = new Cart(userId: $id);
+        $productCartItem = new ProductCartItem($cart, $product, 1);
         $this->setProtectedProperty($productCartItem, 'id', $id);
 
         return $productCartItem;

@@ -27,7 +27,7 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
         private readonly UrlGeneratorInterface $urlGenerator,
     ) {}
 
-    public function supports(Request $request): ?bool
+    public function supports(Request $request): bool
     {
         return Request::METHOD_GET === $request->getMethod()
             && 'register_thank_you' === $request->attributes->get('_route')
@@ -51,14 +51,14 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
     {
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
     }
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): ?Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
     {
         if (true === $request->hasSession()) {
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);

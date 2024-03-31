@@ -6,9 +6,6 @@ use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\KernelInterface;
-use function array_key_exists;
-use function assert;
-use function function_exists;
 
 if (!function_exists('getAppEntityManager')) {
     function getAppEntityManager(): EntityManagerInterface

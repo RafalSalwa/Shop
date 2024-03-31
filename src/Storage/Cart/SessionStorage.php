@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Storage;
+namespace App\Storage\Cart;
 
 use App\Entity\Cart;
-use App\Entity\Contracts\ShopUserInterface;
-use App\Repository\CartRepository;
-use App\ValueObject\Token;
+use App\Enum\CartStatus;
+use App\Storage\Cart\Contracts\CartStorageInterface;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,7 +18,7 @@ use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use function assert;
 use function is_a;
 
-final readonly class CartSessionStorage
+final readonly class SessionStorage implements CartStorageInterface
 {
     public const CART_KEY_NAME = 'cart_id';
 
@@ -27,7 +26,6 @@ final readonly class CartSessionStorage
 
     public function __construct(
         private RequestStack $requestStack,
-        private CartRepository $cartRepository,
         private Security $security,
         private ParameterBagInterface $parameterBag,
     ) {}
@@ -35,26 +33,9 @@ final readonly class CartSessionStorage
     /**
      * Gets the cart in session.
      */
-    public function getCart(): ?Cart
+    public function getCart(int $cartId): Cart
     {
-        $token = $this->getUser()->getToken();
-        assert($token instanceof Token);
-
-        return $this->cartRepository->findOneBy(
-            [
-                'userId' => $token->getSub(),
-                'status' => Cart::STATUS_CREATED,
-            ],
-            ['createdAt' => 'DESC'],
-        );
-    }
-
-    private function getUser(): ShopUserInterface
-    {
-        $user = $this->security->getUser();
-        assert($user instanceof ShopUserInterface);
-
-        return $user;
+        return $this->getSession()->get(self::CART_KEY_NAME);
     }
 
     public function setCart(Cart $cart): void
@@ -88,6 +69,27 @@ final readonly class CartSessionStorage
     }
 
     public function removeCart(): void
+    {
+        $this->getSession()->remove(self::CART_KEY_NAME);
+    }
+
+    public function getCurrentCart(int $userId): Cart
+    {
+        return $this->getSession()->get(self::CART_KEY_NAME);
+    }
+
+    public function save(Cart $cart): void
+    {
+        $this->getSession()->set(self::CART_KEY_NAME, $cart);
+    }
+
+    public function confirm(Cart $cart): void
+    {
+        $cart->setStatus(CartStatus::CONFIRMED);
+        $this->save($cart);
+    }
+
+    public function purge(Cart $cart): void
     {
         $this->getSession()->remove(self::CART_KEY_NAME);
     }

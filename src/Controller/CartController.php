@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Entity\Contracts\CartItemInterface;
 use App\Exception\Contracts\CartOperationExceptionInterface;
 use App\Exception\Contracts\StockOperationExceptionInterface;
 use App\Requests\CartAddJsonRequest;
@@ -18,7 +17,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[AsController]
@@ -63,10 +62,10 @@ final class CartController extends AbstractShopController
     }
 
     #[Route(path: '/remove/{id}', name: 'remove', methods: ['DELETE'])]
-    public function removeFromCart(CartItemInterface $cartItem, CartWorkflow $cartWorkflow): JsonResponse
+    public function removeFromCart(int $id, CartWorkflow $cartWorkflow): JsonResponse
     {
         try {
-            $cartWorkflow->remove($cartItem);
+            $cartWorkflow->remove($id);
         } catch (CartOperationExceptionInterface | StockOperationExceptionInterface $exception) {
             $this->json($exception->getMessage(), Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -90,11 +89,11 @@ final class CartController extends AbstractShopController
     #[Route(path: '/set/quantity', name: 'api_set_quantity', methods: ['PUT'])]
     public function updateQuantity(
         #[MapRequestPayload]
-        CartSetQuantityRequest $cartSetQuantityRequest,
-        CartService $cartService,
+        CartSetQuantityRequest $itemUpdateRequest,
+        CartWorkflow $cartWorkflow,
     ): JsonResponse {
         try {
-            $cartService->updateQuantity($cartSetQuantityRequest->getId(), $cartSetQuantityRequest->getQuantity());
+            $cartWorkflow->updateItem($itemUpdateRequest->getId(), $itemUpdateRequest->getQuantity());
 
             return $this->json('ok');
         } catch (CartOperationExceptionInterface $cartOperationException) {

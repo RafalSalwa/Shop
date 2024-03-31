@@ -22,4 +22,10 @@ final class CartRepository extends ServiceEntityRepository
     {
         parent::__construct($managerRegistry, Cart::class);
     }
+
+    public function save(Cart $cart): void
+    {
+        $this->getEntityManager()->persist($cart);
+        $this->getEntityManager()->flush();
+    }
 }

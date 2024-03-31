@@ -14,7 +14,6 @@
 name: "Codacy Security Scan"
 
 on:
-  push:
   pull_request:
     branches:
       - main
@@ -42,7 +41,7 @@ jobs:
           php-version: ${{ matrix.php-version }}
           extensions: mbstring, xml, ctype, iconv, grpc
           coverage: pcov
-          tools: cs2pr, composerr
+          tools: cs2pr, composer
 
       - uses: "ramsey/composer-install@v3"
         with:

@@ -1,0 +1,105 @@
+parameters:
+    # (0 is the loosest and 9 is the strictest) https://phpstan.org/user-guide/rule-levels
+    level: 4
+    paths:
+        - ../../bin/
+        - ../../config/
+        - ../../public/
+        - ../../src/
+    errorFormat: table
+    editorUrl: '%%file%%:%%line%%'
+    editorUrlTitle: '%%file%%:%%line%%'
+    checkUninitializedProperties: true
+    checkTooWideReturnTypesInProtectedAndPublicMethods: true
+    checkBenevolentUnionTypes: true
+    treatPhpDocTypesAsCertain: false
+    reportAlwaysTrueInLastCondition: false
+    excludePaths:
+        - ../../src/Protobuf/*
+        - ../../migrations/*
+
+    # https://github.com/phpstan/phpstan-strict-rules
+    strictRules:
+        allRules: true
+    # https://github.com/phpstan/phpstan-symfony
+    symfony:
+        containerXmlPath: ../../var/cache/dev/App_KernelDevDebugContainer.xml
+        consoleApplicationLoader: ../../tests/console-application.php
+        # https://github.com/phpstan/phpstan-doctrine
+    doctrine:
+        objectManagerLoader: ../../tests/doctrine-object-manager.php
+        reportDynamicQueryBuilders: false
+    # https://github.com/carlosas/phpat
+    phpat:
+        ignore_built_in_classes: true
+        show_rule_names: true
+    # https://github.com/TomasVotruba/type-coverage
+    type_coverage:
+        return_type: 50
+        param_type: 30
+        property_type: 70
+    # https://github.com/shipmonk-rnd/phpstan-rules
+    shipmonkRules:
+        allowNamedArgumentOnlyInAttributes:
+            enabled: false
+        forbidUselessNullableReturn:
+            enabled: false
+    # https://github.com/ergebnis/phpstan-rules
+    ergebnis:
+        noConstructorParameterWithDefaultValue:
+            enabled: false
+        noNullableReturnTypeDeclaration:
+            enabled: false
+        noParameterWithNullableTypeDeclaration:
+            enabled: false
+        noParameterWithNullDefaultValue:
+            enabled: false
+        noExtends:
+            classesAllowedToBeExtended:
+                - Symfony\Bundle\FrameworkBundle\Controller\AbstractController
+                - Symfony\Component\Console\Command\Command
+                - Symfony\Component\HttpKernel\Kernel
+                - Symfony\Component\HttpKernel\Exception\HttpException
+                - App\Command\AbstractSymfonyCommand
+                - App\Controller\AbstractShopController
+                - App\Entity\AbstractCartItem
+                - Symfony\Component\Form\AbstractType
+                - Symfony\Contracts\EventDispatcher\Event
+                - Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository
+                - Doctrine\Bundle\FixturesBundle\Fixture
+                - Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator
+                - Symfony\Component\Security\Core\Authorization\Voter\Voter
+                - Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator
+                - Exception
+                - AbstractCartItem
+                - RuntimeException
+    ignoreErrors:
+        - '#.*should be contravariant with parameter .*#'
+        - '#.*type mapping mismatch: property can contain.*#'
+#        - '#Dynamic call to static method PHPUnit\\Framework\\.*#'
+#        - '#Dynamic call to static method Symfony\\Component\\Uid\\.*#'
+includes:
+    # https://github.com/symplify/phpstan-rules
+    - phpstan/symplify-static-rules.neon
+    - phpstan/symplify-complexity-rules.neon
+    - ../../vendor/symplify/phpstan-rules/config/naming-rules.neon
+    - ../../vendor/symplify/phpstan-rules/config/regex-rules.neon
+    - ../../vendor/symplify/phpstan-rules/config/configurable-rules.neon
+    # https://phpstan.org/blog/what-is-bleeding-edge
+#    - ../../vendor/phpstan/phpstan/conf/bleedingEdge.neon
+    # https://github.com/spaze/phpstan-disallowed-calls
+    - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-dangerous-calls.neon
+    - ../../vendor/spaze/phpstan-disallowed-calls/disallowed-execution-calls.neon
+services:
+    -
+        class: App\Tests\Architecture\LayersTest
+        tags:
+            - phpat.test
+
+#Additional extensions:
+# https://github.com/phpstan/phpstan-phpunit
+# https://github.com/phpstan/phpstan-beberlei-assert
+# https://github.com/symplify/phpstan-extensions
+# https://github.com/ergebnis/phpstan-rules
+# https://github.com/shipmonk-rnd/phpstan-rules
+# https://github.com/phpstan/phpstan-deprecation-rules

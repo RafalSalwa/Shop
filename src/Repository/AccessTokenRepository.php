@@ -8,6 +8,7 @@ use App\Model\AccessToken as AccessTokenEntity;
 use League\Bundle\OAuth2ServerBundle\Repository\AccessTokenRepository as BaseAccessTokenRepository;
 use League\OAuth2\Server\Entities\AccessTokenEntityInterface;
 use League\OAuth2\Server\Entities\ClientEntityInterface;
+use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use League\OAuth2\Server\Repositories\AccessTokenRepositoryInterface;
 
 final readonly class AccessTokenRepository implements AccessTokenRepositoryInterface
@@ -19,8 +20,8 @@ final readonly class AccessTokenRepository implements AccessTokenRepositoryInter
     ) {}
 
     /**
-     * @param array<string> $scopes
-     * @param string        $userIdentifier
+     * @param array<ScopeEntityInterface> $scopes
+     * @param mixed                       $userIdentifier
      */
     public function getNewToken(
         ClientEntityInterface $clientEntity,

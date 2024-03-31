@@ -60,7 +60,7 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
     {
         $this->logger->debug(
             'AuthenticationSuccess',

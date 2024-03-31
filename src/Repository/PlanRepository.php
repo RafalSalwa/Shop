@@ -6,6 +6,7 @@ namespace App\Repository;
 
 use App\Config\Cache as ConfigCache;
 use App\Entity\SubscriptionPlan;
+use App\Exception\ItemNotFoundException;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
 use Doctrine\Persistence\ManagerRegistry;
@@ -27,8 +28,11 @@ final class PlanRepository extends ServiceEntityRepository
         parent::__construct($managerRegistry, SubscriptionPlan::class);
     }
 
-    /** @return array<SubscriptionPlan>|null */
-    public function fetchAvailablePlans(): ?array
+    /**
+     * @throws ItemNotFoundException
+     * @return array<SubscriptionPlan>
+     */
+    public function fetchAvailablePlans(): array
     {
         $query = $this->createQueryBuilder('p')
             ->where('p.isVisible = true')
@@ -39,7 +43,12 @@ final class PlanRepository extends ServiceEntityRepository
         ;
         $query->enableResultCache(ConfigCache::DEFAULT_TTL, 'subscription_plans');
 
-        return $query->getResult();
+        $plans = $query->getResult();
+        if ([] === $plans) {
+            throw new ItemNotFoundException(' There is no active subscription plan.');
+        }
+
+        return $plans;
     }
 
     public function createFreemiumPlan(): SubscriptionPlan

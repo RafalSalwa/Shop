@@ -56,7 +56,7 @@ final class UserApiGRPCClient
     }
 
     /** @throws AuthenticationExceptionInterface */
-    public function getUser(string $token): ?UserDetails
+    public function getUser(string $token): UserDetails
     {
         $getUserRequest = new GetUserRequest();
         $getUserRequest->setToken($token);

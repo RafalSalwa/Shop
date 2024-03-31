@@ -28,10 +28,6 @@ final class OrderSubscriptionPlanVoter extends Voter
     /** @param SubscriptionPlan $subject */
     protected function voteOnAttribute(string $attribute, mixed $subject, TokenInterface $token): bool
     {
-        if (self::ORDER_SUBSCRIPTION_PLAN !== $attribute) {
-            return false;
-        }
-
         $user = $token->getUser();
 
         assert($user instanceof ShopUserInterface);
