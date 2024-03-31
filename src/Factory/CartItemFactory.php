@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Factory;
 
-use App\Entity\CartItem;
+use App\Entity\Cart;
 use App\Entity\Contracts\CartItemInterface;
+use App\Entity\ProductCartItem;
 use App\Enum\CartOperationEnum;
 use App\Exception\InsufficientStockException;
 use App\Exception\ItemNotFoundException;
@@ -28,21 +29,21 @@ final readonly class CartItemFactory
      * @throws InsufficientStockException
      * @throws AccessDeniedException
      */
-    public function create(int $id, int $quantity): CartItemInterface
+    public function create(Cart $cart, int $itemId, int $quantity): CartItemInterface
     {
-        $product = $this->service->byId($id);
+        $product = $this->service->byId($itemId);
         if (null === $product) {
-            throw new ItemNotFoundException(sprintf('Product #%s not found', $id));
+            throw new ItemNotFoundException(sprintf('Product #%s not found', $itemId));
         }
 
         if ($product->getUnitsInStock() < $quantity) {
-            throw new InsufficientStockException(sprintf('Product #%s does not have sufficient stock', $id));
+            throw new InsufficientStockException(sprintf('Product #%s does not have sufficient stock', $itemId));
         }
 
         if (false === $this->addToCartVoter->isGranted(CartOperationEnum::addToCart(), $product)) {
             throw new AccessDeniedException('Higher subscription required');
         }
 
-        return new CartItem(referencedEntity: $product, quantity: $quantity);
+        return new ProductCartItem(cart: $cart, referencedEntity: $product, quantity: $quantity);
     }
 }

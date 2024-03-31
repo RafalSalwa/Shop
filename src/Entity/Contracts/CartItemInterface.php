@@ -45,9 +45,14 @@ interface CartItemInterface
     public function getType(): string;
 
     /**
+     * Get Assigned cart.
+     */
+    public function getCart(): Cart;
+
+    /**
      * Assign cart for Item.
      */
-    public function setCart(?Cart $cart): void;
+    public function setCart(Cart $cart): void;
 
     /**
      * Instead of add/substract qty, we will update property with new value.

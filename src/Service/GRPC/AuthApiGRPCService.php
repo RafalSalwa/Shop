@@ -87,7 +87,8 @@ final readonly class AuthApiGRPCService
         return array_merge($this->authApiGRPCClient->getResponses(), $this->userApiGRPCClient->getResponses());
     }
 
-    public function getUserDetails(string $token): ?UserDetails
+    /** @throws AuthenticationExceptionInterface */
+    public function getUserDetails(string $token): UserDetails
     {
         return $this->userApiGRPCClient->getUser($token);
     }

@@ -8,7 +8,7 @@ use App\Security\Voter\AddToCartVoter;
 use App\Service\ProductsService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\AsController;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 /** @see AddToCartVoter */
 #[AsController]

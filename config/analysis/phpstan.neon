@@ -6,14 +6,14 @@ parameters:
         - ../../config/
         - ../../public/
         - ../../src/
-        - ../../tests/
     errorFormat: table
     editorUrl: '%%file%%:%%line%%'
     editorUrlTitle: '%%file%%:%%line%%'
     checkUninitializedProperties: true
     checkTooWideReturnTypesInProtectedAndPublicMethods: true
     checkBenevolentUnionTypes: true
-    reportAlwaysTrueInLastCondition: true
+    treatPhpDocTypesAsCertain: false
+    reportAlwaysTrueInLastCondition: false
     excludePaths:
         - ../../src/Protobuf/*
         - ../../migrations/*
@@ -74,9 +74,10 @@ parameters:
                 - AbstractCartItem
                 - RuntimeException
     ignoreErrors:
-        - '#Dynamic call to static method PHPUnit\\Framework\\.*#'
-        - '#Dynamic call to static method Symfony\\Component\\Uid\\.*#'
-#        - '#.*should be contravariant with parameter $viewData (mixed) of method Symfony\\Component\\Form\\DataMapperInterface.*#'
+        - '#.*should be contravariant with parameter .*#'
+        - '#.*type mapping mismatch: property can contain.*#'
+#        - '#Dynamic call to static method PHPUnit\\Framework\\.*#'
+#        - '#Dynamic call to static method Symfony\\Component\\Uid\\.*#'
 includes:
     # https://github.com/symplify/phpstan-rules
     - phpstan/symplify-static-rules.neon

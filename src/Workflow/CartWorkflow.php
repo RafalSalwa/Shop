@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Workflow;
 
-use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\StockOperation;
 use App\Exception\CartOperationException;
@@ -20,16 +19,19 @@ use App\Service\CartService;
 use App\Service\CouponService;
 use App\Service\ProductStockService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Lock\LockFactory;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use function assert;
+use function sprintf;
 
 final readonly class CartWorkflow
 {
     public function __construct(
         private CartItemService $cartItemService,
         private CartService $cartService,
-        private ProductStockService $productStockService,
+        private LockFactory $cartLockFactory,
+        private ProductStockService $stockService,
         private CouponService $couponService,
         private LoggerInterface $logger,
     ) {
@@ -42,12 +44,19 @@ final readonly class CartWorkflow
     public function add(int $prodId, int $quantity): void
     {
         try {
-            $cartItem = $this->cartItemService->create($prodId, $quantity);
+            $lock = $this->cartLockFactory->createLock(sprintf('cart_item_add_%d', $prodId));
+            $lock->acquire(true);
+
+            $this->stockService->checkStockIsAvailable($prodId, $quantity);
+            $cart = $this->cartService->getCurrentCart();
+            $cartItem = $this->cartItemService->create($cart, $prodId, $quantity);
             $this->cartService->add($cartItem);
+
             $entity = $cartItem->getReferencedEntity();
             assert($entity instanceof StockManageableInterface);
+            $this->stockService->changeStock($entity, StockOperation::Decrease, $quantity);
 
-            $this->productStockService->changeStock($entity, StockOperation::Decrease, $quantity);
+            $lock->release();
         } catch (AccessDeniedException | ItemNotFoundException  $exception) {
             $this->logger->error($exception->getMessage());
 
@@ -62,16 +71,42 @@ final readonly class CartWorkflow
         }
     }
 
+    public function updateItem(int $itemId, int $quantity): void
+    {
+        try {
+            $lock = $this->cartLockFactory->createLock(sprintf('cart_item_update_%d', $itemId));
+            $lock->acquire(true);
+
+            $this->cartService->updateQuantity($itemId, $quantity);
+
+            $lock->release();
+        } catch (
+            CartOperationExceptionInterface | ItemNotFoundException | StockOperationExceptionInterface $exception
+        ) {
+            $this->logger->error(
+                message: $exception->getMessage(),
+                context: ['operation' => 'update Item qty', 'item_id' => $itemId, 'quantity' => $quantity],
+            );
+        }
+    }
+
     /**
      * @throws CartOperationExceptionInterface
      * @throws StockOperationExceptionInterface
      */
-    public function remove(CartItemInterface $cartItem): void
+    public function remove(int $itemId): void
     {
         try {
-            $this->cartService->removeItem($cartItem);
-            $this->productStockService->restoreStock($cartItem);
+            $lock = $this->cartLockFactory->createLock(sprintf('cart_item_update_%d', $itemId));
+            $lock->acquire(true);
+
+            $item = $this->cartItemService->getItem($itemId);
+            $this->cartService->removeItem($item);
+
+            $this->stockService->restoreStock($item);
             $this->cartService->save($this->cartService->getCurrentCart());
+
+            $lock->release();
         } catch (ItemNotFoundException $itemNotFoundException) {
             $this->logger->error($itemNotFoundException->getMessage());
 

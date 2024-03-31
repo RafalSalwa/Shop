@@ -8,10 +8,14 @@ use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\StockManageableInterface;
 use App\Enum\StockOperation;
 use App\Event\StockDepletedEvent;
+use App\Exception\Contracts\StockOperationExceptionInterface;
+use App\Exception\InsufficientStockException;
 use App\Exception\ProductStockDepletedException;
 use App\Repository\ProductRepository;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Lock\LockFactory;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use UnhandledMatchError;
 
 use function is_subclass_of;
 
@@ -21,18 +25,27 @@ final readonly class ProductStockService
         private LockFactory $productLockFactory,
         private ProductRepository $productRepository,
         private EventDispatcherInterface $eventDispatcher,
+        private LoggerInterface $logger,
     ) {}
 
-    /** @throws ProductStockDepletedException */
-    public function checkStockIsAvailable(CartItemInterface $cartItem): void
+    /** @throws StockOperationExceptionInterface */
+    public function checkStockIsAvailable(int $prodId, int $quantity): void
     {
-        $referencedEntity = $cartItem->getReferencedEntity();
-        if (false === is_subclass_of($referencedEntity, StockManageableInterface::class)) {
+        $product = $this->productRepository->find($prodId);
+        if (null === $product) {
             return;
         }
 
-        if (0 === $referencedEntity->getUnitsInStock()) {
+        if (false === is_subclass_of($product, StockManageableInterface::class)) {
+            return;
+        }
+
+        if (0 === $product->getUnitsInStock()) {
             throw new ProductStockDepletedException('For this product stock is depleted.');
+        }
+
+        if ($quantity >= $product->getUnitsInStock()) {
+            throw new InsufficientStockException('There is no available stock units for this product.');
         }
     }
 
@@ -50,10 +63,17 @@ final readonly class ProductStockService
     /** @throws ProductStockDepletedException */
     public function changeStock(StockManageableInterface $entity, StockOperation $operation, int $quantity): void
     {
-        match ($operation) {
-            StockOperation::Decrease => $this->decrease($entity, $quantity),
-            StockOperation::Increase => $this->increase($entity, $quantity),
-        };
+        try {
+            match ($operation) {
+                StockOperation::Decrease => $this->decrease($entity, $quantity),
+                StockOperation::Increase => $this->increase($entity, $quantity),
+            };
+        } catch (UnhandledMatchError $unhandledMatchError) {
+            $this->logger->error(
+                'Unhandled stock operation ' . $operation->value,
+                [$unhandledMatchError->getMessage()],
+            );
+        }
     }
 
     /** @throws ProductStockDepletedException */

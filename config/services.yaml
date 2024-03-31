@@ -11,6 +11,7 @@ services:
       $cartItemMaxCapacity: '%env(CART_ITEM_MAX_CAPACITY)%'
       $privateJWTKey: '%env(JWT_ACCESS_TOKEN_PRIVATE_KEY)%'
       $privateJWTKeyPassphrase: '%env(JWT_ACCESS_TOKEN_PRIVATE_KEY_PASSPHRASE)%'
+
   Redis:
     class: Redis
     calls:
@@ -43,3 +44,4 @@ services:
 
   App\Security\Contracts\UserRegistrarInterface: '@App\Security\Registration\AuthApiUserRegistrar'
   App\Client\AuthClientInterface $authApiGRPCClient: '@App\Client\GRPC\AuthApiGRPCClient'
+  App\Storage\Cart\Contracts\CartStorageInterface: '@App\Storage\Cart\DatabaseStorage'

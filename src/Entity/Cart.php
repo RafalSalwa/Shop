@@ -43,7 +43,7 @@ class Cart implements JsonSerializable
     /** @var Collection<int, CartItemInterface> */
     #[OneToMany(
         mappedBy: 'cart',
-        targetEntity: CartItemInterface::class,
+        targetEntity: AbstractCartItem::class,
         cascade: ['persist', 'remove'],
         fetch: 'EAGER',
         orphanRemoval: true,
@@ -76,8 +76,9 @@ class Cart implements JsonSerializable
     public function __construct(int $userId)
     {
         $this->userId = $userId;
-        $this->createdAt = new DateTimeImmutable();
         $this->items = new ArrayCollection();
+
+        $this->createdAt = new DateTimeImmutable();
     }
 
     /** @throws ItemNotFoundException */
@@ -98,7 +99,7 @@ class Cart implements JsonSerializable
         $this->removeItem($currentItem);
         $currentItem->updateQuantity($newItem->getQuantity() + $currentItem->getQuantity());
         $this->getItems()->add($currentItem);
-        $newItem->setCart($this);
+        $currentItem->setCart($this);
     }
 
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
@@ -155,8 +156,6 @@ class Cart implements JsonSerializable
         if (null === $currentItem) {
             throw new ItemNotFoundException('Item does not exists in cart');
         }
-
-        $currentItem->setCart(null);
 
         $this->getItems()->removeElement($currentItem);
     }
