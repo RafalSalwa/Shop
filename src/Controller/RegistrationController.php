@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Entity\Contracts\ShopUserInterface;
 use App\Exception\AuthApiRuntimeException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Form\RegistrationConfirmationFormType;
@@ -115,6 +116,7 @@ final class RegistrationController extends AbstractShopController
         );
     }
 
+    /** @param AuthApiUserProvider<ShopUserInterface> $provider */
     #[Route(path: '/thank_you/{verificationCode}', name: 'thank_you')]
     public function thankYouPage(
         string $verificationCode,
@@ -123,11 +125,17 @@ final class RegistrationController extends AbstractShopController
         AuthApiUserProvider $provider,
         Security $security,
     ): Response {
-        $user = $authenticator->authenticateWithAuthCode($verificationCode);
-        $user = $provider->loadUserByIdentifier($user->getUserIdentifier());
+        try {
+            $user = $authenticator->authenticateWithAuthCode($verificationCode);
+            $user = $provider->loadUserByIdentifier($user->getUserIdentifier());
 
-        $security->login(user: $user, authenticatorName: $authApiAuthenticator::class);
+            $security->login(user: $user, authenticatorName: $authApiAuthenticator::class);
 
-        return $this->render('registration/thank_you.html.twig');
+            return $this->render('registration/thank_you.html.twig');
+        } catch (AuthenticationExceptionInterface $authenticationException) {
+            $this->addFlash('error', $authenticationException->getMessage());
+
+            return $this->redirectToRoute('register_verify_email', ['verificationCode' => $verificationCode]);
+        }
     }
 }

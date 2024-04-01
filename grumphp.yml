@@ -211,7 +211,7 @@ grumphp:
       no_cache: false
       report: ~
       output_format: null
-      threads: 1
+      threads: 10
       triggered_by: [ 'php' ]
       show_info: false
     rector:

@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 
 use function assert;
-use function is_a;
 
 final readonly class SessionStorage implements CartStorageInterface
 {
@@ -41,7 +40,7 @@ final readonly class SessionStorage implements CartStorageInterface
     public function setCart(Cart $cart): void
     {
         $request = $this->requestStack->getCurrentRequest();
-        assert(is_a($request, Request::class));
+        assert($request instanceof Request);
         if (true === $this->security->getFirewallConfig($request)?->isStateless()) {
             return;
         }

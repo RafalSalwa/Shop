@@ -7,10 +7,7 @@ namespace App\Service;
 use App\Exception\InvalidCouponCodeException;
 use App\ValueObject\CouponCode;
 
-use function array_filter;
 use function array_key_exists;
-
-use const ARRAY_FILTER_USE_KEY;
 
 final class CouponService
 {
@@ -21,7 +18,10 @@ final class CouponService
             throw new InvalidCouponCodeException('This code cannot be applied');
         }
 
-        return $this->getCode($couponCode);
+        $codes = $this->getAvailableCodes();
+        $code = $codes[$couponCode];
+
+        return new CouponCode(type: $code['type'], value: $code['value']);
     }
 
     private function isCodeValid(string $couponCode): bool
@@ -45,16 +45,5 @@ final class CouponService
                 'value' => 100,
             ],
         ];
-    }
-
-    private function getCode(string $name): CouponCode
-    {
-        $coupon = array_filter(
-            $this->getAvailableCodes(),
-            static fn (string $code): bool => $code === $name,
-            ARRAY_FILTER_USE_KEY,
-        );
-
-        return new CouponCode(type: $coupon[$name]['type'], value: $coupon[$name]['value']);
     }
 }

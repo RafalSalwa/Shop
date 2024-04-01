@@ -9,6 +9,8 @@ use App\Entity\SubscriptionPlan;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+use function assert;
+
 /**
  * @extends ServiceEntityRepository<Subscription>
  *
@@ -32,12 +34,15 @@ final class SubscriptionRepository extends ServiceEntityRepository
 
     public function findForUser(int $userId): Subscription
     {
-        return $this->findOneBy(
+        $subscription = $this->findOneBy(
             [
                 'userId' => $userId,
                 'isActive' => true,
             ],
         );
+        assert($subscription instanceof Subscription);
+
+        return $subscription;
     }
 
     public function assignSubscription(int $userId, SubscriptionPlan $plan): void

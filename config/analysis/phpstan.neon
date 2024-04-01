@@ -1,6 +1,6 @@
 parameters:
     # (0 is the loosest and 9 is the strictest) https://phpstan.org/user-guide/rule-levels
-    level: 4
+    level: 8
     paths:
         - ../../bin/
         - ../../config/

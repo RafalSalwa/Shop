@@ -2,15 +2,8 @@
 
 declare(strict_types=1);
 
-use NunoMaduro\PhpInsights\Domain\Insights\ForbiddenNormalClasses;
-use NunoMaduro\PhpInsights\Domain\Sniffs\ForbiddenSetterSniff;
-use PhpCsFixer\Fixer\Operator\BinaryOperatorSpacesFixer;
-use SlevomatCodingStandard\Sniffs\Classes\DisallowLateStaticBindingForConstantsSniff;
-use SlevomatCodingStandard\Sniffs\Classes\ForbiddenPublicPropertySniff;
-use SlevomatCodingStandard\Sniffs\Commenting\DocCommentSpacingSniff;
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Files\LineLengthSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\DeclareStrictTypesSniff;
-use SlevomatCodingStandard\Sniffs\TypeHints\PropertyTypeHintSniff;
 
 return [
     /*
@@ -59,44 +52,17 @@ return [
     |
     */
 
-    'exclude' => ['src/Protobuf'],
+    'exclude' => [
+        'src/Protobuf/*',
+        'migrations/*',
+    ],
 
     'add' => [],
 
-    'remove' => [],
+    'remove' => [
+    ],
 
     'config' => [
-        PropertyTypeHintSniff::class => [
-            'enableNativeTypeHint' => false,
-            'exclude' => ['src/Search/Engine/Query/AggregationQuery.php'],
-        ],
-        ForbiddenNormalClasses::class => [
-            'exclude' => [],
-        ],
-        ForbiddenSetterSniff::class => [
-            'exclude' => [
-                'src/Search/Dto/In/CommonSearchData.php',
-                'src/Search/Dto/In/ProductSearchData.php',
-            ],
-        ],
-        ForbiddenPublicPropertySniff::class => [
-            'exclude' => [],
-        ],
-        DisallowLateStaticBindingForConstantsSniff::class => [
-            'exclude' => [],
-        ],
-        DeclareStrictTypesSniff::class => ['newlinesCountBetweenOpenTagAndDeclare' => 0],
-        BinaryOperatorSpacesFixer::class => [],
-        DocCommentSpacingSniff::class => [
-            'linesCountBetweenAnnotationsGroups' => 0,
-            'annotationsGroups' => [
-                ['@package', '@author', '@copyright'],
-            ],
-        ],
-        LineLengthSniff::class => [
-            'lineLimit' => 80,
-            'absoluteLineLimit' => 120,
-        ],
     ],
 
     /*
