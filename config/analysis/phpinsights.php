@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff;
 use SlevomatCodingStandard\Sniffs\Files\LineLengthSniff;
 
 return [
@@ -54,19 +55,14 @@ return [
     'exclude' => [
         'src/Protobuf/*',
         'migrations/*',
-        ],
+    ],
 
     'add' => [],
 
     'remove' => [
-        SlevomatCodingStandard\Sniffs\ControlStructures\DisallowYodaComparisonSniff::class,
     ],
 
     'config' => [
-        LineLengthSniff::class => [
-            'lineLimit' => 80,
-            'absoluteLineLimit' => 120,
-        ],
     ],
 
     /*
