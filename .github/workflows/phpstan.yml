@@ -1,4 +1,4 @@
-name: PHPStan lvl 6
+name: PHPStan lvl 8
 on:
   pull_request:
     branches:
