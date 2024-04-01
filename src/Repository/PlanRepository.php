@@ -11,6 +11,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Cache;
 use Doctrine\Persistence\ManagerRegistry;
 
+use function assert;
 use function mb_strtolower;
 
 /**
@@ -56,12 +57,15 @@ final class PlanRepository extends ServiceEntityRepository
         return $this->getByName('freemium');
     }
 
-    public function getByName(string $type): ?SubscriptionPlan
+    public function getByName(string $type): SubscriptionPlan
     {
-        return $this->findOneBy(
+        $plan = $this->findOneBy(
             [
                 'name' => mb_strtolower($type),
             ],
         );
+        assert($plan instanceof SubscriptionPlan);
+
+        return $plan;
     }
 }

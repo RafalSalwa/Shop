@@ -16,10 +16,8 @@ use function assert;
 use function is_subclass_of;
 
 /**
- * @template            TUser of ShopUserInterface
- * @template-covariant  TUser of ShopUserInterface
- * @template-implements UserProviderInterface<TUser>
- * @implements          UserProviderInterface<TUser>
+ * @template-covariant TUser of ShopUserInterface
+ * @template-implements UserProviderInterface<ShopUserInterface>
  */
 final readonly class AuthApiUserProvider implements UserProviderInterface
 {
@@ -33,12 +31,8 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
         return is_subclass_of($class, ShopUserInterface::class);
     }
 
-    /**
-     * @param ShopUserInterface $user
-     *
-     * @throws AuthenticationExceptionInterface
-     */
-    public function refreshUser(UserInterface $user): UserInterface
+    /** @throws AuthenticationExceptionInterface */
+    public function refreshUser(UserInterface $user): ShopUserInterface
     {
         assert($user instanceof ShopUserInterface);
         if (true === $user->getToken()?->isExpired() && true === $user->getRefreshToken()?->isExpired()) {
@@ -53,11 +47,11 @@ final readonly class AuthApiUserProvider implements UserProviderInterface
     }
 
     /**
-     * @param string $identifier Token string
+     * @param string $identifier JWTToken string
      *
      * @throws AuthenticationExceptionInterface
      */
-    public function loadUserByIdentifier(string $identifier): UserInterface
+    public function loadUserByIdentifier(string $identifier): ShopUserInterface
     {
         return $this->apiClient->loadUserByIdentifier($identifier);
     }

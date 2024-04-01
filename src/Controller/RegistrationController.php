@@ -116,11 +116,7 @@ final class RegistrationController extends AbstractShopController
         );
     }
 
-    /**
-     * @param AuthApiUserProvider<TUser> $provider
-     *
-     * @template TUser of ShopUserInterface
-     */
+    /** @param AuthApiUserProvider<ShopUserInterface> $provider */
     #[Route(path: '/thank_you/{verificationCode}', name: 'thank_you')]
     public function thankYouPage(
         string $verificationCode,
