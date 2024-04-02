@@ -1,7 +1,12 @@
 {
   "name": "interview/client",
   "description": "Feature rich app with doctrine,postgress, grpc, amqp",
-  "license": "proprietary",
+  "license": [
+    "MIT",
+    "BSD-3-Clause",
+    "GPL-2.0",
+    "GPL-3.0"
+  ],
   "type": "project",
   "require": {
     "php": ">=8.2",
