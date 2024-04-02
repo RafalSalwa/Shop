@@ -8,6 +8,7 @@ use App\Entity\Address;
 use App\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 #[CoversClass(className: Address::class)]
@@ -18,6 +19,7 @@ final class AddressTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->address = new Address(1);
     }
 
@@ -100,7 +102,7 @@ final class AddressTest extends TestCase
         $this->assertSame(5, $this->address->getId());
     }
 
-    private function validateEntity(Address $address): \Symfony\Component\Validator\ConstraintViolationListInterface
+    private function validateEntity(Address $address): ConstraintViolationListInterface
     {
         $validator = Validation::createValidatorBuilder()->enableAttributeMapping()->getValidator();
 

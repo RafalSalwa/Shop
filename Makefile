@@ -39,7 +39,7 @@ ecs:
 	vendor/bin/ecs check src --config config/analysis/ecs.php
 
 phpcs:
-	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
+	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s
 
 psalm:
 	vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache

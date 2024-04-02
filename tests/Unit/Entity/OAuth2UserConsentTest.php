@@ -15,13 +15,15 @@ use PHPUnit\Framework\TestCase;
 final class OAuth2UserConsentTest extends TestCase
 {
     use ProtectedPropertyHelper;
-    public Client $client;
+
+    private Client $client;
 
     private OAuth2UserConsent $userConsent;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->client = new Client('test', 'test', 'test');
         $this->userConsent = new OAuth2UserConsent(1, $this->client);
         $this->setProtectedProperty($this->userConsent, 'id', 1);

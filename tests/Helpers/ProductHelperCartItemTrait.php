@@ -9,6 +9,8 @@ use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 
+use function sprintf;
+
 trait ProductHelperCartItemTrait
 {
     use ProtectedPropertyHelper;

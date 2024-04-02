@@ -32,7 +32,6 @@ use PHPUnit\Framework\TestCase;
 final class UserTest extends TestCase
 {
     use ProtectedPropertyHelper;
-
     use TokenTestHelperTrait;
 
     private User $goodUser;

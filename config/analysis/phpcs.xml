@@ -15,7 +15,13 @@
 
     <autoload>../../vendor/autoload.php</autoload>
 
-    <exclude-pattern>*/tests/*</exclude-pattern>
+    <file>../../config/</file>
+    <file>../../public/</file>
+    <file>../../src/</file>
+    <file>../../tests/</file>
+    <exclude-pattern type="relative">*.(js|css|proto)</exclude-pattern>
+    <exclude-pattern>*/src/Protobuf/*</exclude-pattern>
+    <exclude-pattern>*cli-config*</exclude-pattern>
     <exclude-pattern>*/Protobuf/*</exclude-pattern>
 
     <rule ref="PSR12"/>
@@ -200,12 +206,4 @@
     <rule ref="SlevomatCodingStandard.PHP.DisallowReference.DisallowedPassingByReference">
         <exclude-pattern>src/Form/</exclude-pattern>
     </rule>
-
-    <file>../../config/</file>
-    <file>../../public/</file>
-    <file>../../src/</file>
-    <file>../../tests/</file>
-    <exclude-pattern type="relative">*.(js|css|proto)</exclude-pattern>
-    <exclude-pattern>*/src/Protobuf/*</exclude-pattern>
-    <exclude-pattern>*cli-config*</exclude-pattern>
 </ruleset>
