@@ -51,7 +51,7 @@ grumphp:
       indent_size: 2
       indent_style: space
       no_check_lock: false
-      no_update_lock: true
+      no_update_lock: false
       verbose: false
     composer_require_checker:
       composer_file: 'composer.json'
@@ -243,7 +243,7 @@ grumphp:
       format: ~
       run_always: false
     twigcs:
-      path: '.'
+      path: 'templates/'
       severity: 'warning'
       display: 'all'
       ruleset: 'FriendsOfTwig\Twigcs\Ruleset\Official'

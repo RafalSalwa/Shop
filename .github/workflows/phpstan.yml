@@ -39,6 +39,6 @@ jobs:
         continue-on-error: true
 
       - name: PHPStan Scan githubactions
-        id: phpstan_scan
+        id: phpstan_scan_gh_actions
         run: vendor/bin/phpstan --configuration=config/analysis/phpstan.neon
         continue-on-error: true
