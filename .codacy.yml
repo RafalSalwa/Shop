@@ -15,3 +15,4 @@ exclude_paths:
   - "migrations/**"
   - "src/Protobuf/**/*"
   - "**/tests/**"
+  - "templates/**"
