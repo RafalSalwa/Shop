@@ -23,13 +23,15 @@ use PHPUnit\Framework\TestCase;
 final class OAuth2ClientProfileTest extends TestCase
 {
     use TokenTestHelperTrait;
-    public Client $client;
+
+    private Client $client;
 
     private OAuth2ClientProfile $profile;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->client = new Client('test', 'test', 'test');
         $user = new User('test@example.com');
         new OAuth2UserConsent($user->getId(), $this->client);

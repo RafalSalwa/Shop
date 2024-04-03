@@ -31,9 +31,7 @@ trait TokenTestHelperTrait
     {
         $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
         $sha256    = new Sha256();
-        $signingKey = InMemory::base64Encoded(
-            'hiG8DlOKvtih6AxlZn5XKImZ06yu8I3mkOzaJrEuW8yAv8Jnkw330uMt8AEqQ5LB'
-        );
+        $signingKey = InMemory::base64Encoded('hiG8DlOKvtih6AxlZn5XKImZ06yu8I3mkOzaJrEuW8yAv8Jnkw330uMt8AEqQ5LB');
         $dateTimeImmutable   = new DateTimeImmutable();
         $token = $tokenBuilder
             ->issuedBy('http://example.com')

@@ -7,6 +7,10 @@ namespace App\Tests\Helpers;
 use PHPUnit\Framework\Assert;
 use Symfony\Component\DomCrawler\Crawler;
 
+use function preg_replace;
+use function sprintf;
+use function trim;
+
 trait CartAssertionsTrait
 {
     public static function assertCartItemsCountEquals(Crawler $crawler, int $expectedCount): void
@@ -19,7 +23,7 @@ trait CartAssertionsTrait
         Assert::assertEquals(
             $expectedCount,
             $actualCount,
-            sprintf('The cart should contain %d item(s). Actual: %d item(s).', $expectedCount, $actualCount)
+            sprintf('The cart should contain %d item(s). Actual: %d item(s).', $expectedCount, $actualCount),
         );
     }
 
@@ -45,14 +49,14 @@ trait CartAssertionsTrait
         Assert::assertEquals(
             $expectedTotal,
             $actualTotal,
-            sprintf('The cart total should be equal to %d €". Actual: %d.', $expectedTotal, $actualTotal)
+            sprintf('The cart total should be equal to %d €". Actual: %d.', $expectedTotal, $actualTotal),
         );
     }
 
     public static function assertCartContainsProductWithQuantity(
         Crawler $crawler,
         string $productName,
-        int $expectedQuantity
+        int $expectedQuantity,
     ): void {
         $actualQuantity = (int)self::getItemByProductName($crawler, $productName)
             ->filter('.cart-item-qty')
@@ -63,7 +67,7 @@ trait CartAssertionsTrait
         Assert::assertEquals(
             $expectedQuantity,
             $actualQuantity,
-            sprintf('The quantity should be equal to %d. Actual: %d.', $expectedQuantity, $actualQuantity)
+            sprintf('The quantity should be equal to %d. Actual: %d.', $expectedQuantity, $actualQuantity),
         );
     }
 
@@ -71,7 +75,7 @@ trait CartAssertionsTrait
     {
         Assert::assertEmpty(
             self::getItemByProductName($crawler, $productName),
-            sprintf('The cart should not contain the product %s.', $productName)
+            sprintf('The cart should not contain the product %s.', $productName),
         );
     }
 
@@ -84,13 +88,13 @@ trait CartAssertionsTrait
     {
         $items = $crawler->filter('.cart-item')
             ->reduce(
-                static function (Crawler $crawler) use ($productName): \Symfony\Component\DomCrawler\Crawler|false {
+                static function (Crawler $crawler) use ($productName): Crawler|false {
                     if ($crawler->filter('.cart-item-name')->getNode(0)->textContent === $productName) {
                         return $crawler;
                     }
 
                     return false;
-                }
+                },
             )
         ;
 

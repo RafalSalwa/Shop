@@ -9,30 +9,31 @@ plugins:
           mass_threshold: 80
   editorconfig:
     enabled: true
+    channel: beta
+    config:
+      editorconfig: .editorconfig
   fixme:
     enabled: true
   phpmd:
     enabled: true
     config:
       file_extensions: "php"
-      rulesets: "reports/config/phpmd.xml"
+      rulesets: "config/analysis/phpmd.xml"
   git-legal:
     enabled: true
   markdownlint:
     enabled: true
   phpcodesniffer:
     enabled: true
+    channel: beta
     config:
+      ignore_warnings: true
       file_extensions: "php"
-      standard: "reports/config/phpcs.xml"
+      standard: "config/analysis/phpcs.xml"
   sonar-php:
     enabled: true
     config:
       minimum_severity: critical
-  checkstyle:
-    enabled: true
-    config:
-      file: "reports/results.phpstan.checkstyle.xml"
 checks:
   argument-count:
     config:

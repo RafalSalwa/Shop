@@ -10,6 +10,7 @@
 !/var/reports/.gitkeep
 /vendor/
 
+data/
 reports/results/*
 !reports/results/.gitkeep
 bin/
@@ -49,7 +50,3 @@ yarn-error.log
 ###> sonarqube ###
 /.scannerwork
 ###< sonarqube ###
-
-###> qossmic/deptrac-shim ###
-/.deptrac.cache
-###< qossmic/deptrac-shim ###

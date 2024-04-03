@@ -12,6 +12,8 @@ use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
+use function json_encode;
+
 #[CoversClass(className: TokenPair::class)]
 #[UsesClass(className: Token::class)]
 final class TokenPairTest extends TestCase
@@ -47,6 +49,5 @@ final class TokenPairTest extends TestCase
 
         $this->expectException(JsonException::class);
         TokenPair::fromJson('wrong json string');
-
     }
 }

@@ -6,7 +6,7 @@ namespace App\Tests\Helpers;
 
 use ReflectionClass;
 
-trait ProtectedPropertyHelper
+trait ProtectedPropertyTrait
 {
     /** @param int|string $value */
     private function setProtectedProperty(object $object, string $property, mixed $value): void

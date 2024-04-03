@@ -44,6 +44,7 @@ final class OrderTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+
         $address = new Address(1);
         $address->setFirstName('John');
         $address->setLastName('Doe');
@@ -54,7 +55,7 @@ final class OrderTest extends TestCase
             shippingCost: 20_00,
             total: 120_00,
             deliveryAddress: $address,
-            bilingAddress: $address
+            bilingAddress: $address,
         );
         $this->setProtectedProperty($this->order, 'id', 1);
         $this->product = $this->getHelperProduct(1);
@@ -66,7 +67,6 @@ final class OrderTest extends TestCase
         );
         $this->setProtectedProperty($this->payment, 'id', 1);
         $this->address = new Address(1);
-
     }
 
     public function testGettersAndSetters(): void

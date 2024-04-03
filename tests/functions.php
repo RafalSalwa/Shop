@@ -7,7 +7,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Dotenv\Dotenv;
 use Symfony\Component\HttpKernel\KernelInterface;
 
-if (!function_exists('getAppEntityManager')) {
+// phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
+if (false === function_exists('getAppEntityManager')) {
     function getAppEntityManager(): EntityManagerInterface
     {
         (new Dotenv())->bootEnv(__DIR__ . '/../.env');
@@ -30,7 +31,7 @@ if (!function_exists('getAppEntityManager')) {
     }
 }
 
-if (!function_exists('getAppKernel')) {
+if (false === function_exists('getAppKernel')) {
     function getAppKernel(): KernelInterface
     {
         (new Dotenv())->bootEnv(__DIR__ . '/../.env');
