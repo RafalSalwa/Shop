@@ -67,8 +67,6 @@
         <exclude name="Generic.Commenting.DocComment.TagValueIndent"/>
     </rule>
 
-    <rule ref="Doctrine"/>
-
     <rule ref="SlevomatCodingStandard">
         <exclude name="SlevomatCodingStandard.Attributes.AttributesOrder"/>
         <exclude

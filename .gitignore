@@ -10,6 +10,7 @@
 !/var/reports/.gitkeep
 /vendor/
 
+data/
 reports/results/*
 !reports/results/.gitkeep
 bin/
