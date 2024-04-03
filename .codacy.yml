@@ -14,6 +14,6 @@ languages:
 exclude_paths:
   - "migrations/**"
   - "src/Protobuf/**/*"
-  - "tests/**"
+  - "**/tests/**"
   - "templates/**"
   - "**/*.twig"
