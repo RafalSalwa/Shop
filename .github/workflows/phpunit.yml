@@ -3,9 +3,10 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Symfony
+name: PHPUnit & CodeCov
 
 on:
+  push:
   pull_request:
     branches:
       - main
@@ -15,8 +16,8 @@ permissions:
   contents: read
 
 jobs:
-  symfony:
-    runs-on: ubuntu-20.04
+  tests:
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
@@ -34,29 +35,14 @@ jobs:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
           custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
-      - name: Docker Compose Action
-        uses: hoverkraft-tech/compose-action@v2.0.0
-        with:
-          up-flags: '-d'
-
-      - name: Cache Composer packages
-        id: composer-cache
-        uses: actions/cache@v3
-        with:
-          path: vendor
-          key: docker-compose-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
-          restore-keys: |
-            docker-compose-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
-
       - name: Execute tests (Unit and Feature tests) via PHPUnit
         run: make test_unit
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4-beta
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        uses: codecov/codecov-action@v4.0.1
         with:
-          token: "${{ secrets.CODECOV_TOKEN }}"
-          files: var/reports/phpunit.clover.xml
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: RafalSalwa/interview-client-php
+          files: var/reports/phpunit.cobertura.xml
           flags: unittests
           fail_ci_if_error: true
