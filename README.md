@@ -1,13 +1,18 @@
 # interview-client-php
 
 [![Psalm lvl 2](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml)
+[![PHPStan lvl 8](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml)
+[![PHPMD - Mess Detector](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml)
+[![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
 
-simple REST Server with REST and gRPC clients to communicate with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)
+[![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
+[![Build Status](https://jenkins.salwa.com.pl/buildStatus/icon?job=Shop)](https://jenkins.salwa.com.pl/job/Shop/)
+
+simple REST Server with REST and gRPC clients to communicate
+with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)
 # Build
 At first create docker network if You did not do so for server
-```bash
-docker network create --driver=bridge --subnet=172.28.1.0/24 --ip-range=172.28.1.0/24 --gateway=172.28.5.254 external-interview-net
-```
+
 next steps are to build docker
 ```bash
 make compose-up
