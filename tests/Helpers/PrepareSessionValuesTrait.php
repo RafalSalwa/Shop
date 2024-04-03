@@ -12,6 +12,7 @@ use function assert;
 
 trait PrepareSessionValuesTrait
 {
+    /** @param array<array-key, string> $values */
     public function prepareSessionValues(array $values): void
     {
         static::getContainer()->get('event_dispatcher')->addListener(

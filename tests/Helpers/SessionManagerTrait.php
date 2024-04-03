@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\Storage\MockFileSessionStorage;
 use Symfony\Component\Security\Csrf\TokenStorage\SessionTokenStorage;
 
-trait SessionHelper
+trait SessionManagerTrait
 {
     public function generateCsrfToken(KernelBrowser $kernelBrowser, string $tokenId): string
     {

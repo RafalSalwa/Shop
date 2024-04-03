@@ -13,7 +13,7 @@ use function sprintf;
 
 trait ProductHelperCartItemTrait
 {
-    use ProtectedPropertyHelper;
+    use ProtectedPropertyTrait;
 
     public function getHelperProduct(int $id): Product
     {
