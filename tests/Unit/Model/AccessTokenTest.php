@@ -12,6 +12,8 @@ use League\OAuth2\Server\Entities\ScopeEntityInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
+use function file_get_contents;
+
 #[CoversClass(className: AccessToken::class)]
 final class AccessTokenTest extends TestCase
 {

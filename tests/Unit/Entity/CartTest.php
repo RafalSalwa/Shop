@@ -32,6 +32,7 @@ final class CartTest extends TestCase
 {
     use CouponHelperTrait;
     use ProductHelperCartItemTrait;
+
     private Cart $cart;
 
     protected function setUp(): void

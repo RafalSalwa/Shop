@@ -21,16 +21,18 @@ final class AddressBookServiceTest extends TestCase
         $addressRepositoryMock = $this->createMock(AddressRepository::class);
         $addressRepositoryMock->expects($this->once())
             ->method('save')
-            ->willReturnCallback(function (Address $address): void {
-                $this->assertSame(1, $address->getUserId());
-                $this->assertSame('Test Street', $address->getAddressLine1());
-                $this->assertSame('Test Street 2', $address->getAddressLine2());
-                $this->assertSame('Test City', $address->getCity());
-                $this->assertSame('Test State', $address->getState());
-                $this->assertSame('11-222', $address->getPostalCode());
-                $this->assertSame('Test Country', $address->getCountry());
-                $this->assertTrue($address->isDefault());
-            });
+            ->willReturnCallback(
+                function (Address $address): void {
+                    $this->assertSame(1, $address->getUserId());
+                    $this->assertSame('Test Street', $address->getAddressLine1());
+                    $this->assertSame('Test Street 2', $address->getAddressLine2());
+                    $this->assertSame('Test City', $address->getCity());
+                    $this->assertSame('Test State', $address->getState());
+                    $this->assertSame('11-222', $address->getPostalCode());
+                    $this->assertSame('Test Country', $address->getCountry());
+                    $this->assertTrue($address->isDefault());
+                },
+            );
 
         $addressBookService = new AddressBookService($addressRepositoryMock);
 

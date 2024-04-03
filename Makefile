@@ -39,7 +39,7 @@ ecs:
 	vendor/bin/ecs check src --config config/analysis/ecs.php
 
 phpcs:
-	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s src tests
+	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s
 
 psalm:
 	vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache
@@ -53,9 +53,14 @@ bench: ## Runs benchmarks with phpbench
 	composer bench
 
 deptrac:
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
-	-./vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
-	vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml
+ifeq (,$(wildcard bin/deptrac))
+	echo "NOT Found"
+    curl -o bin/deptrac https://github.com/qossmic/deptrac/blob/2.0.x/deptrac.phar
+endif
+	-bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
+	-bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
+	bin/deptrac --config-file=config/analysis/deptrac.yaml
+
 .PHONY: phpstan
 phpstan: lint
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress

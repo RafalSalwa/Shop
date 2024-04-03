@@ -5,20 +5,21 @@ declare(strict_types=1);
 namespace App\Tests\Unit\Entity;
 
 use App\Entity\Category;
-use App\Tests\Helpers\ProtectedPropertyHelper;
+use App\Tests\Helpers\ProtectedPropertyTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: Category::class)]
 final class CategoryTest extends TestCase
 {
-    use ProtectedPropertyHelper;
+    use ProtectedPropertyTrait;
 
     private Category $category;
 
     protected function setUp(): void
     {
         parent::setUp();
+
         $this->category = new Category('Test Category');
     }
 

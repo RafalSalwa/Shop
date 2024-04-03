@@ -11,7 +11,7 @@ use App\Entity\SubscriptionPlan;
 use App\Enum\SubscriptionTier;
 use App\Exception\AuthException;
 use App\Model\User;
-use App\Tests\Helpers\ProtectedPropertyHelper;
+use App\Tests\Helpers\ProtectedPropertyTrait;
 use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
@@ -31,8 +31,7 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: SubscriptionTier::class)]
 final class UserTest extends TestCase
 {
-    use ProtectedPropertyHelper;
-
+    use ProtectedPropertyTrait;
     use TokenTestHelperTrait;
 
     private User $goodUser;

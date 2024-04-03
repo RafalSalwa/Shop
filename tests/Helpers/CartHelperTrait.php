@@ -8,7 +8,7 @@ use App\Entity\Cart;
 
 trait CartHelperTrait
 {
-    use ProtectedPropertyHelper;
+    use ProtectedPropertyTrait;
 
     public function getHelperCart(int $id): Cart
     {

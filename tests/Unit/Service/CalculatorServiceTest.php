@@ -19,39 +19,42 @@ final class CalculatorServiceTest extends TestCase
     public function testCalculateSummaryNoCoupon(): void
     {
         $calculatorService = new CalculatorService();
-        $netAmount = 1000; // 10.00
+        // 10.00
+        $netAmount = 10_00;
         $coupon = null;
 
         $summary = $calculatorService->calculateSummary($netAmount, $coupon);
 
         $this->assertSame('0.00', $summary->getDiscount());
-        $this->assertSame(230, $summary->getTax());
-        $this->assertSame(2000, $summary->getShipping());
+        $this->assertSame(2_30, $summary->getTax());
+        $this->assertSame(20_00, $summary->getShipping());
     }
 
     public function testCalculateSummaryCartDiscount(): void
     {
         $calculatorService = new CalculatorService();
-        $netAmount = 1000; // 10.00
+        // 10.00
+        $netAmount = 10_00;
         $couponCode = new CouponCode('cart-discount', 10);
 
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 
         $this->assertSame('1.00', $summary->getDiscount());
-        $this->assertSame(207, $summary->getTax());
-        $this->assertSame(2000, $summary->getShipping());
+        $this->assertSame(2_07, $summary->getTax());
+        $this->assertSame(20_00, $summary->getShipping());
     }
 
     public function testCalculateSummaryShippingDiscount(): void
     {
         $calculatorService = new CalculatorService();
-        $netAmount = 10000; // 100.00
-        $couponCode = new CouponCode('shipping-discount', 100);
+        // 100.00
+        $netAmount = 100_00;
+        $couponCode = new CouponCode('shipping-discount', 1_00);
 
         $summary = $calculatorService->calculateSummary($netAmount, $couponCode);
 
         $this->assertSame('0.00', $summary->getDiscount());
-        $this->assertSame(2300, $summary->getTax());
+        $this->assertSame(23_00, $summary->getTax());
         $this->assertSame(0, $summary->getShipping());
     }
 }
