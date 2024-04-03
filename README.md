@@ -6,7 +6,7 @@
 [![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
 
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
-[![Build Status](https://jenkins.salwa.com.pl/buildStatus/icon?job=Shop)](https://jenkins.salwa.com.pl/job/Shop/)
+[![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
 
 simple REST Server with REST and gRPC clients to communicate
 with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)

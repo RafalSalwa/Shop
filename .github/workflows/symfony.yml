@@ -15,35 +15,41 @@ permissions:
   contents: read
 
 jobs:
-  symfony-tests:
+  symfony:
     runs-on: ubuntu-20.04
     steps:
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-          ini-values: error_reporting=-1, display_errors=On, zend.assertions=1
-      - uses: actions/checkout@v3
+      - name: "Checkout"
+        uses: actions/checkout@v4
 
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, grpc
+          coverage: pcov
+          tools: cs2pr, composer
+
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Docker Compose Action
-        uses: isbang/compose-action@v1.5.1
+        uses: hoverkraft-tech/compose-action@v2.0.0
+        with:
+          up-flags: '-d'
 
       - name: Cache Composer packages
         id: composer-cache
         uses: actions/cache@v3
         with:
           path: vendor
-          key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+          key: docker-compose-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-php-
-
-      - name: Install Dependencies
-        run: composer install --no-interaction --no-progress --prefer-dist
+            docker-compose-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: vendor/bin/phpunit --configuration ${GITHUB_WORKSPACE}/phpunit.xml --testsuite unit
+        run: make test_unit
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4-beta
@@ -51,26 +57,6 @@ jobs:
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
         with:
           token: "${{ secrets.CODECOV_TOKEN }}"
-          files: temp/coverage.xml
+          files: var/reports/phpunit.clover.xml
           flags: unittests
           fail_ci_if_error: true
-      - name: Rector Cache
-        uses: actions/cache@v3
-        with:
-          path: ./var/cache/rector
-          key: ${{ runner.os }}-rector-${{ hashFiles('**/composer.lock') }}
-          restore-keys: ${{ runner.os }}-rector-
-
-      - name: Rector Dry Run
-        run: php vendor/bin/rector process --dry-run --config=rector2.php
-
-  phpinsights:
-    runs-on: ubuntu-20.04
-    name: PHP Insights checks
-    steps:
-      - uses: actions/checkout@v3
-      - uses: shivammathur/setup-php@v2
-        with:
-          php-version: 8.2
-      - run: composer install --prefer-dist --no-progress
-      - run: vendor/bin/phpinsights -n --ansi --format=github-action
