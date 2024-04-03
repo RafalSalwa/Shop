@@ -6,6 +6,7 @@
 name: Symfony
 
 on:
+  push:
   pull_request:
     branches:
       - main
