@@ -8,6 +8,7 @@
 
 
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
+
 [![PHPCS-Fixer](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml)
 
 [![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
