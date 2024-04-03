@@ -4,9 +4,15 @@
 [![PHPStan lvl 8](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml)
 [![PHPMD - Mess Detector](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml)
 [![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
+[![codecov](https://codecov.io/gh/RafalSalwa/interview-client-php/graph/badge.svg?token=DOR8PFOKFQ)](https://codecov.io/gh/RafalSalwa/interview-client-php)
+
 
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
-[![Build Status](https://jenkins.salwa.com.pl/buildStatus/icon?job=Shop)](https://jenkins.salwa.com.pl/job/Shop/)
+[![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
+
+Codacy:
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 simple REST Server with REST and gRPC clients to communicate
 with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)

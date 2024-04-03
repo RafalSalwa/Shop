@@ -1,0 +1,48 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: PHPUnit & CodeCov
+
+on:
+  push:
+  pull_request:
+    branches:
+      - main
+      - develop
+
+permissions:
+  contents: read
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, iconv, grpc
+          coverage: pcov
+          tools: cs2pr, composer
+
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+
+      - name: Execute tests (Unit and Feature tests) via PHPUnit
+        run: make test_unit
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v4.0.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          slug: RafalSalwa/interview-client-php
+          files: var/reports/phpunit.cobertura.xml
+          flags: unittests
+          fail_ci_if_error: true
