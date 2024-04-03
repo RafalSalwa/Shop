@@ -1,0 +1,17 @@
+---
+engines:
+  hadolint:
+  markdownlint:
+  phpcs:
+    php_version: 8.2
+  phpmd:
+
+languages:
+  css:
+    extensions:
+      - ".scss"
+
+exclude_paths:
+  - "migrations/**"
+  - "src/Protobuf/**/*"
+  - "**/tests/**"
