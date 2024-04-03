@@ -1,6 +1,7 @@
 name: "PHPInsights - Complexity check"
 
 on:
+  push:
   pull_request:
     branches:
       - main

@@ -1,5 +1,6 @@
 name: "Architecture & Dependencies"
 on:
+  push:
   pull_request:
     branches:
       - main
