@@ -44,6 +44,8 @@ jobs:
     steps:
       - name: "Checkout"
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
@@ -58,7 +60,7 @@ jobs:
           composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
           custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
-      - name: Sonar Scan
+      - name: PHPUnit Psalm PHPStan Scans
         id: sonar_scan
         run: |
           make test_unit
