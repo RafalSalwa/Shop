@@ -38,10 +38,33 @@ permissions:
   pull-requests: read # allows SonarQube to decorate PRs with analysis results
 
 jobs:
-  Analysis:
+  sonar_analysis:
     runs-on: ubuntu-latest
 
     steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: amqp, ast, bcmath, ctype, grpc, iconv, igbinary, mbstring, xml, yaml, zend-opcache
+          coverage: pcov
+          tools: cs2pr, composer
+
+      - uses: "ramsey/composer-install@v3"
+        with:
+          composer-options: "--no-interaction --no-progress --quiet --prefer-dist"
+          custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+
+      - name: Sonar Scan
+        id: sonar_scan
+        run: |
+          vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml || true
+          vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json > ./var/reports/phpstan.sonarqube.report.json || true
+        continue-on-error: true
+
       - name: Analyze with SonarQube
         uses: SonarSource/sonarqube-scan-action@master
         env:
