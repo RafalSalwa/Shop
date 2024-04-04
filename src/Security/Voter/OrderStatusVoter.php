@@ -21,7 +21,11 @@ final class OrderStatusVoter extends Voter
     /** @param Order $subject */
     protected function supports(string $attribute, mixed $subject): bool
     {
-        return 'view' === $attribute && Order::PENDING === $subject->getStatus();
+        if ('view' === $attribute && Order::PENDING === $subject->getStatus()) {
+            return (bool)self::ACCESS_GRANTED;
+        }
+
+        return (bool)self::ACCESS_ABSTAIN;
     }
 
     /** @param Order $subject */
