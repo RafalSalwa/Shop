@@ -102,7 +102,7 @@ class Subscription
         $this->createdAt = $createdAt;
     }
 
-    public function getStartsAt(): ?DateTimeImmutable
+    public function getStartsAt(): DateTimeImmutable
     {
         return $this->startsAt;
     }

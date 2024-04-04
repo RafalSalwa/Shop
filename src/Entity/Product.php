@@ -6,6 +6,7 @@ namespace App\Entity;
 
 use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\StockManageableInterface;
+use App\Enum\SubscriptionTier;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -58,7 +59,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
         $this->price = $price;
         $this->unitsInStock = $unitsInStock;
         $this->unitsOnOrder = $unitsOnOrder;
-        $this->subscriptionPlan = new SubscriptionPlan();
+        $this->subscriptionPlan = new SubscriptionPlan('freemium', 'freemium', SubscriptionTier::Freemium, true, true);
     }
 
     public function getRequiredSubscription(): SubscriptionPlan

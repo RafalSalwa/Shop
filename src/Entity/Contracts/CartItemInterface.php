@@ -58,4 +58,6 @@ interface CartItemInterface
      * Instead of add/substract qty, we will update property with new value.
      */
     public function updateQuantity(int $quantity): void;
+
+    public function getItemType(): string;
 }

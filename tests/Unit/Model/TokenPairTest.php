@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use function json_encode;
 
 #[CoversClass(className: TokenPair::class)]
+#[CoversClass(className: Token::class)]
 #[UsesClass(className: Token::class)]
 final class TokenPairTest extends TestCase
 {

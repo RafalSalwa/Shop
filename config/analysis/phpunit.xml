@@ -24,7 +24,6 @@
     <php>
         <ini name="display_errors" value="1"/>
         <ini name="error_reporting" value="-1"/>
-        <server name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
         <server name="KERNEL_CLASS" value="App\Kernel"/>
         <server name="APP_ENV" value="test" force="true"/>
         <server name="SHELL_VERBOSITY" value="-1"/>
@@ -82,6 +81,8 @@
         </include>
         <exclude>
             <directory>../../src/Protobuf</directory>
+            <directory>../../src/DataFixtures</directory>
+            <directory>../../src/Requests</directory>
         </exclude>
     </source>
 

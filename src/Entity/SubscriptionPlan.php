@@ -58,9 +58,20 @@ class SubscriptionPlan
     )]
     private DateTimeImmutable $createdAt;
 
-    public function __construct()
-    {
-        $this->tier = SubscriptionTier::Freemium->value();
+    public function __construct(
+        string $name,
+        string $description,
+        SubscriptionTier $tier,
+        bool $isActive,
+        bool $isVisible,
+    ) {
+        $this->name = $name;
+        $this->tier = $tier->value();
+        $this->description = $description;
+
+        $this->isActive = $isActive;
+        $this->isVisible = $isVisible;
+
         $this->createdAt = new DateTimeImmutable();
     }
 
@@ -97,5 +108,10 @@ class SubscriptionPlan
     public function getId(): int
     {
         return $this->id;
+    }
+
+    public function getCreatedAt(): DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 }
