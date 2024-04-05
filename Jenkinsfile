@@ -65,5 +65,45 @@ pipeline {
                 }
             }
         }
+        stage('Fixers')
+        {
+            parallel{
+                stage('PHP-CS-Fixer') {
+                    steps {
+                        sh 'vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php check --diff --verbose'
+                    }
+                }
+                stage('Rector') {
+                    steps {
+                        sh 'vendor/bin/rector process --dry-run'
+                    }
+                }
+                stage('TwigCS') {
+                    steps {
+                        sh 'vendor/bin/twigcs templates'
+                    }
+                }
+                stage('Mess Detection Report') {
+                    steps{
+                        sh 'make phpmd env=jenkins'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: false,
+                            reportDir: 'var/reports',
+                            reportFiles: 'phpmd.html',
+                            reportName: 'Mess Detection (HTML)',
+                            reportTitles: 'PHPMD'
+                        ])
+                    }
+                }
+
+                stage('Deptrac') {
+                    steps {
+                        sh 'make deptrac'
+                    }
+                }
+            }
+        }
     }
 }

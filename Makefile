@@ -161,6 +161,7 @@ static_analysis: lint test_unit
 jenkins_static_analysis:
 	$(MAKE) test_unit
 	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=./var/reports/deptrack.junit.xml
+	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=graphviz-image --output=var/reports/deptrack.png
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle --report-file=./var/reports/phpcs.checkstyle.xml src tests || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=checkstyle > ./var/reports/phpstan.checkstyle.xml || true
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=./var/reports/psalm.checkstyle.xml || true
