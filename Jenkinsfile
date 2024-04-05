@@ -42,7 +42,15 @@ pipeline {
                 stage('Mess Detection Report') {
                     steps{
                         sh 'make phpmd env=jenkins'
-                        pmd canRunOnFailed: true, pattern: 'build/logs/pmd.xml'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: false,
+                            keepAll: false,
+                            reportDir: 'var/reports',
+                            reportFiles: 'phpmd.html',
+                            reportName: 'Coverage Report (HTML)',
+                            reportTitles: 'PHPUnit'
+                        ])
                     }
                 }
 
