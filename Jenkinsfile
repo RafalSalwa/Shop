@@ -22,7 +22,6 @@ pipeline {
                     reportName: 'Coverage Report (HTML)',
                     reportTitles: 'PHPUnit'
                 ])
-                discoverGitReferenceBuild()
                 recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'var/reports/phpunit/phpunit.cobertura.xml']])
             }
         }
