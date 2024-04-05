@@ -8,32 +8,22 @@ pipeline {
             steps {
                 checkout scm;
                 sh 'composer install';
-
             }
         }
         stage('Unit Tests') {
             steps {
                 sh 'make test_unit'
-                xunit([
-                    thresholds: [
-                        failed ( failureThreshold: "0" ),
-                        skipped ( unstableThreshold: "0" )
-                    ],
-                    tools: [
-                        PHPUnit(pattern: 'reports/config/phpunit.xml', stopProcessingIfError: true, failIfNotNew: true)
-                    ]
-                ])
                 publishHTML([
                     allowMissing: false,
                     alwaysLinkToLastBuild: false,
                     keepAll: false,
-                    reportDir: 'reports/phpunit',
+                    reportDir: 'var/reports/phpunit',
                     reportFiles: 'index.html',
                     reportName: 'Coverage Report (HTML)',
-                    reportTitles: ''
+                    reportTitles: 'PHPUnit'
                 ])
                 discoverGitReferenceBuild()
-                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'reports/phpunit/cobertura.xml']])
+                recordCoverage(tools: [[parser: 'COBERTURA', pattern: 'var/reports/phpunit/phpunit.cobertura.xml']])
             }
         }
         stage('Static Analysis')
@@ -41,18 +31,18 @@ pipeline {
             parallel{
                 stage('CodeSniffer') {
                     steps {
-                        sh 'bin/phpcs --standard=phpcs.xml --report=checkstyle --report-file=reports/phpcs/phpcs.checkstyle.xml -spv src tests'
+                        sh 'make phpcs env=jenkins'
                     }
                 }
                 stage('PHPStan') {
                     steps {
-                        sh 'bin/phpstan analyse --error-format=checkstyle --no-progress -n . > reports/phpstan/phpstan.checkstyle.xml'
+                        sh 'make phpstan env=jenkins'
                     }
                 }
 
                 stage('Mess Detection Report') {
                     steps{
-                        sh 'bin/phpmd src checkstyle phpmd.xml --reportfile reports/phpmd/pmd.xml --exclude vendor/ --exclude autoload.php'
+                        sh 'make phpmd env=jenkins'
                         pmd canRunOnFailed: true, pattern: 'build/logs/pmd.xml'
                     }
                 }
@@ -60,12 +50,6 @@ pipeline {
                 stage('Software metrics') {
                     steps{
                         sh 'bin/pdepend --jdepend-xml=build/logs/jdepend.xml --jdepend-chart=build/pdepend/dependencies.svg --overview-pyramid=build/pdepend/overview-pyramid.svg --ignore=vendor app'
-                    }
-                }
-
-                stage('Generate documentation') {
-                    steps{
-                        sh 'bin/phpdox -f phpdox.xml'
                     }
                 }
             }

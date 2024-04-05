@@ -1,9 +1,29 @@
+
 SHELL=/bin/bash
 PHP_CMD = php
 export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/phpcs.xml
+export PHPSTAN_CMD= $(PHP_CMD) "./vendor/bin/phpstan" analyse --configuration=config/analysis/phpstan.neon --no-progress--standard=./config/analysis/phpcs.xml
+export PHPMD_CMD= $(PHP_CMD) "./vendor/bin/phpmd" src/
+export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
+
+## ----------------------------------------------------------------------
+## This is a help comment. The purpose of this Makefile is to demonstrate
+## a simple help mechanism that uses comments defined alongside the rules
+## they describe without the need of additional help files or echoing of
+## descriptions. Help comments are displayed in the order defined within
+## the Makefile.
+## --------------------------------------------------------------------
 
 help: ## show help message
+	@echo '----------------------------------------------------------------------'
+	@echo 'Commands list and available envs'
+	@echo 'Every analysis tool can be run with or without env param'
+	@echo 'example make phpcs or make phpcs env=gh'
+	@echo 'currently available params are env=gh env=jenkins'
+	@echo 'command without param is considered as local and default output will be console'
+	@echo '----------------------------------------------------------------------'
+
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[$$()% a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
 all:
@@ -41,7 +61,20 @@ cloc:
 ecs:
 	vendor/bin/ecs check src --config config/analysis/ecs.php
 
-phpcs:
+phpmd: ## PHP Code Sniffer Analysis
+ifndef env
+	${PHPMD_CMD}
+endif
+
+ifeq ("$(env)", "gh")
+	${PHPMD_CMD} github config/analysis/phpmd.xml
+endif
+ifeq ("$(env)", "jenkins")
+	${PHPMD_CMD} html config/analysis/phpmd.xml > ./var/reports/phpmd.html
+	${PHPMD_CMD} xml config/analysis/phpmd.xml > ./var/reports/phpmd.xml
+endif
+
+phpcs: ## PHP Mess Detector Analysis
 ifndef env
 	${PHPCS_CMD}
 endif
@@ -54,7 +87,17 @@ ifeq ("$(env)", "jenkins")
 endif
 
 psalm:
-	vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache
+ifndef env
+	${PHP_PSALM_CMD} --shepherd
+endif
+
+ifeq ("$(env)", "gh")
+	${PHP_PSALM_CMD} --report=psalm_results.sarif
+	${PHP_PSALM_CMD} --output-format=github
+endif
+ifeq ("$(env)", "jenkins")
+	${PHP_PSALM_CMD} --report=./var/reports/psalm.checkstyle.xml
+endif
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
@@ -73,8 +116,17 @@ endif
 	-bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=var/reports/deptrack.junit.xml
 	bin/deptrac --config-file=config/analysis/deptrac.yaml
 
-.PHONY: phpstan
-phpstan: lint
+phpstan: lint ## PHPStan Analysis
+ifndef env
+	${PHPSTAN_CMD}
+endif
+
+ifeq ("$(env)", "gh")
+	${PHPSTAN_CMD} --error-format=github
+endif
+ifeq ("$(env)", "jenkins")
+	${PHPSTAN_CMD} --error-format=checkstyle > ./var/reports/phpstan.checkstyle.xml
+endif
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --no-progress
 
 .PHONY: phpinsights
@@ -110,7 +162,7 @@ jenkins_static_analysis:
 	-vendor/bin/deptrac --config-file=config/analysis/deptrac.yaml --formatter=junit --output=./var/reports/deptrack.junit.xml
 	-vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle --report-file=./var/reports/phpcs.checkstyle.xml src tests || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=checkstyle > ./var/reports/phpstan.checkstyle.xml || true
-	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=./var/reports/psalm.sonarqube.json || true
+	-vendor/bin/psalm --config=config/analysis/psalm.xml --report=./var/reports/psalm.checkstyle.xml || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > ./var/reports/php-cs-fixer.checkstyle.xml || true
 	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > ./var/reports/phpmd.html || true
 	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > ./var/reports/phpmd.xml || true
