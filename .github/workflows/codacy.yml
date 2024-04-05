@@ -59,6 +59,8 @@ jobs:
           max-allowed-issues: 2147483647
 
       - name: Run Codacy Coverage Reporter
+        with:
+          project-token: ${{ secrets.CODACY_PROJECT_TOKEN }}
         run: |
           make test_unit
           export CODACY_PROJECT_TOKEN=${{ secrets.CODACY_PROJECT_TOKEN }}
