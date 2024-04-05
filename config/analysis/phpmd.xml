@@ -33,11 +33,9 @@
     <rule ref="rulesets/naming.xml/ConstantNamingConventions"/>
     <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
 
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
     <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
     <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
     <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
     <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
 
     <rule ref="rulesets/cleancode.xml">
@@ -97,6 +95,7 @@
     </rule>
     <rule ref="rulesets/unusedcode.xml">
         <exclude name="UnusedFormalParameter"/>
+        <exclude name="UnusedPrivateField"/>
     </rule>
     <rule ref="rulesets/cleancode.xml/BooleanArgumentFlag"/>
 
