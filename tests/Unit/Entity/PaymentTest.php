@@ -20,7 +20,6 @@ final class PaymentTest extends TestCase
 {
     use ProtectedPropertyTrait;
 
-
     private Order $order;
 
     protected function setUp(): void
