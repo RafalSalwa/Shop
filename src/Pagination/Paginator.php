@@ -89,6 +89,7 @@ final class Paginator
         return $this->currentPage > 1;
     }
 
+    /** @psalm-return int<1, max> */
     public function getPreviousPage(): int
     {
         return max(1, $this->currentPage - 1);

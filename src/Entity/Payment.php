@@ -6,7 +6,7 @@ namespace App\Entity;
 
 use App\Enum\PaymentProvider;
 use App\Repository\PaymentRepository;
-use DateTime;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping\Column;
@@ -49,15 +49,15 @@ class Payment
     #[Column(name: 'status', type: Types::STRING, length: 25)]
     private string $status = self::PENDING;
 
-    #[Column(name: 'payment_date', type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?DateTime $paymentDate = null;
+    #[Column(name: 'payment_date', type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $paymentDate = null;
 
     #[Column(
         name: 'created_at',
-        type: Types::DATETIME_MUTABLE,
+        type: Types::DATETIME_IMMUTABLE,
         options: ['default' => 'CURRENT_TIMESTAMP'],
     )]
-    private DateTime $createdAt;
+    private DateTimeImmutable $createdAt;
 
     #[Column(name: 'user_id', type: Types::INTEGER)]
     private int $userId;
@@ -73,7 +73,7 @@ class Payment
         $this->operationType = $operationType->value;
         $this->operationNumber = $operationNumber;
 
-        $this->createdAt = new DateTime('now');
+        $this->createdAt = new DateTimeImmutable('now');
     }
 
     public function setAmount(int $amount): void
@@ -116,19 +116,14 @@ class Payment
         return $this->paymentDate;
     }
 
-    public function setPaymentDate(DateTime $paymentDate): void
+    public function setPaymentDate(DateTimeImmutable $paymentDate): void
     {
         $this->paymentDate = $paymentDate;
     }
 
-    public function getCreatedAt(): DateTime
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
-    }
-
-    public function setCreatedAt(DateTime $createdAt): void
-    {
-        $this->createdAt = $createdAt;
     }
 
     public function getUserId(): int

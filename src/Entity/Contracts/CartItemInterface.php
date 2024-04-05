@@ -38,10 +38,6 @@ interface CartItemInterface
      */
     public function getQuantity(): int;
 
-    /**
-     * @return string
-     *                Determines which Entity was used For this item (i.e. Product,subscription)
-     */
     public function getType(): string;
 
     /**
@@ -58,4 +54,6 @@ interface CartItemInterface
      * Instead of add/substract qty, we will update property with new value.
      */
     public function updateQuantity(int $quantity): void;
+
+    public function getItemType(): string;
 }

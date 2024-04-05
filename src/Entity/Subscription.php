@@ -77,7 +77,7 @@ class Subscription
         return $this->subscriptionTier;
     }
 
-    public function getPlan(): ?SubscriptionPlan
+    public function getPlan(): SubscriptionPlan
     {
         return $this->subscriptionPlan;
     }
@@ -102,7 +102,7 @@ class Subscription
         $this->createdAt = $createdAt;
     }
 
-    public function getStartsAt(): ?DateTimeImmutable
+    public function getStartsAt(): DateTimeImmutable
     {
         return $this->startsAt;
     }

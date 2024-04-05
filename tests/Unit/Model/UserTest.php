@@ -12,6 +12,7 @@ use App\Enum\SubscriptionTier;
 use App\Exception\AuthException;
 use App\Model\User;
 use App\Tests\Helpers\ProtectedPropertyTrait;
+use App\Tests\Helpers\SubscriptionPlanTrait;
 use App\Tests\Helpers\TokenTestHelperTrait;
 use App\ValueObject\EmailAddress;
 use App\ValueObject\Token;
@@ -21,6 +22,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: User::class)]
+#[CoversClass(className: AuthException::class)]
 #[UsesClass(className: ShopUserInterface::class)]
 #[UsesClass(className: Token::class)]
 #[UsesClass(className: EmailAddress::class)]
@@ -32,6 +34,7 @@ use PHPUnit\Framework\TestCase;
 final class UserTest extends TestCase
 {
     use ProtectedPropertyTrait;
+    use SubscriptionPlanTrait;
     use TokenTestHelperTrait;
 
     private User $goodUser;
@@ -71,11 +74,15 @@ final class UserTest extends TestCase
         $this->assertCount(0, $goodUser->getConsents());
         $this->assertSame(['ROLE_USER'], $goodUser->getRoles());
 
-        $subscription = new Subscription($goodUser->getId(), new SubscriptionPlan());
+        $subscription = new Subscription($goodUser->getId(), $this->getHelperSubscriptionPlan());
         $goodUser->setSubscription($subscription);
         $this->assertInstanceOf(Subscription::class, $goodUser->getSubscription());
         $this->assertSame($goodUser->getSubscription(), $subscription);
         $this->assertTrue($goodUser->isEqualTo($anotherUser));
+
+        $token = new Token($this->generateTokenString());
+        $badUser->setToken($token);
+
         $this->assertFalse($goodUser->isEqualTo($badUser));
         $goodUser->eraseCredentials();
     }

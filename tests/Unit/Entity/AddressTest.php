@@ -12,6 +12,7 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 #[CoversClass(className: Address::class)]
+#[CoversClass(className: InvalidArgumentException::class)]
 final class AddressTest extends TestCase
 {
     private Address $address;

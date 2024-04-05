@@ -21,8 +21,9 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: Cart::class)]
-#[UsesClass(className: CartStatus::class)]
-#[UsesClass(className: CouponCode::class)]
+#[CoversClass(className: ItemNotFoundException::class)]
+#[CoversClass(className: CartStatus::class)]
+#[CoversClass(className: CouponCode::class)]
 #[UsesClass(className: AbstractCartItem::class)]
 #[UsesClass(className: ProductCartItem::class)]
 #[UsesClass(className: Product::class)]
@@ -183,6 +184,7 @@ final class CartTest extends TestCase
         $this->assertInstanceOf(CartItemInterface::class, $cart->getItem($cartItem));
     }
 
+    /** @psalm-suppress DocblockTypeContradiction */
     public function testAddItem(): void
     {
         $cart = $this->cart;
@@ -193,6 +195,8 @@ final class CartTest extends TestCase
         $product2 = $this->getHelperProductCartItem(id: 2);
         $cart->addItem($product2);
         $this->assertSame(2, $cart->getTotalItemsCount());
+        $cart->addItem($product2);
+        $this->assertSame(3, $cart->getTotalItemsCount());
     }
 
     public function testGetItemsPrice(): void

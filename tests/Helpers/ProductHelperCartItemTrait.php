@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Helpers;
 
 use App\Entity\Cart;
-use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 
@@ -34,7 +33,7 @@ trait ProductHelperCartItemTrait
         return $product;
     }
 
-    public function getHelperProductCartItem(int $id = 1): CartItemInterface
+    public function getHelperProductCartItem(int $id = 1): ProductCartItem
     {
         $product = $this->getHelperProduct($id);
         $cart = new Cart(userId: $id);

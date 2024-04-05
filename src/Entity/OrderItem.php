@@ -64,19 +64,9 @@ class OrderItem
         $this->createdAt = new DateTimeImmutable();
     }
 
-    public function setOrder(Order $order): void
-    {
-        $this->order = $order;
-    }
-
     public function getItemType(): string
     {
         return $this->itemType;
-    }
-
-    public function getId(): int
-    {
-        return $this->id;
     }
 
     public function getName(): string

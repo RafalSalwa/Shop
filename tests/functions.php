@@ -5,7 +5,6 @@ declare(strict_types=1);
 use App\Kernel;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Dotenv\Dotenv;
-use Symfony\Component\HttpKernel\KernelInterface;
 
 // phpcs:disable SlevomatCodingStandard.Variables.DisallowSuperGlobalVariable.DisallowedSuperGlobalVariable
 if (false === function_exists('getAppEntityManager')) {
@@ -32,7 +31,7 @@ if (false === function_exists('getAppEntityManager')) {
 }
 
 if (false === function_exists('getAppKernel')) {
-    function getAppKernel(): KernelInterface
+    function getAppKernel(): Kernel
     {
         (new Dotenv())->bootEnv(__DIR__ . '/../.env');
 
