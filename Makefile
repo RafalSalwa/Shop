@@ -1,4 +1,3 @@
-
 SHELL=/bin/bash
 PHP_CMD = php
 export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
