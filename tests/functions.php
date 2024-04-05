@@ -32,7 +32,7 @@ if (false === function_exists('getAppEntityManager')) {
 }
 
 if (false === function_exists('getAppKernel')) {
-    function getAppKernel(): KernelInterface
+    function getAppKernel(): Kernel
     {
         (new Dotenv())->bootEnv(__DIR__ . '/../.env');
 

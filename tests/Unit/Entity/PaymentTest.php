@@ -15,13 +15,11 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: Payment::class)]
-#[UsesClass(className: Address::class)]
 #[UsesClass(className: Order::class)]
 final class PaymentTest extends TestCase
 {
     use ProtectedPropertyTrait;
 
-    private Address $address;
 
     private Order $order;
 
@@ -42,7 +40,6 @@ final class PaymentTest extends TestCase
             bilingAddress: $address,
         );
         $this->setProtectedProperty($this->order, 'id', 1);
-        $this->address = new Address(1);
     }
 
     public function testConstructor(): void

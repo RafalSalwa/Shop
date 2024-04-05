@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 
+use Symfony\Component\Security\Core\User\UserInterface;
 use function array_diff;
 use function array_merge;
 use function assert;
@@ -66,7 +67,7 @@ final readonly class OAuth2Service
         );
     }
 
-    private function getUser(): OAuth2UserInterface
+    private function getUser(): UserInterface&OAuth2UserInterface
     {
         $user = $this->security->getUser();
         assert($user instanceof OAuth2UserInterface);

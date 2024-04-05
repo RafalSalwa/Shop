@@ -77,7 +77,7 @@ class Subscription
         return $this->subscriptionTier;
     }
 
-    public function getPlan(): ?SubscriptionPlan
+    public function getPlan(): SubscriptionPlan
     {
         return $this->subscriptionPlan;
     }

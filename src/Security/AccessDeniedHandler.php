@@ -20,7 +20,7 @@ final readonly class AccessDeniedHandler implements AccessDeniedHandlerInterface
     public function __construct(private UrlGeneratorInterface $urlGenerator, private LoggerInterface $logger)
     {}
 
-    public function handle(Request $request, AccessDeniedException $accessDeniedException): Response
+    public function handle(Request $request, AccessDeniedException $accessDeniedException): RedirectResponse
     {
         $this->logger->warning('Access denied', ['exception' => $accessDeniedException]);
 

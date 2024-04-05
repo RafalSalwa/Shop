@@ -6,6 +6,7 @@ namespace App\Security;
 
 use App\Client\AuthApiClient;
 use App\Entity\Contracts\ShopUserInterface;
+use App\Exception\Contracts\AuthenticationExceptionInterface;
 use App\Security\Contracts\ShopUserAuthenticatorInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -34,7 +35,8 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
             && $request->request->has('verificationCode');
     }
 
-    public function authenticate(Request $request): Passport
+    /** @throws AuthenticationExceptionInterface */
+    public function authenticate(Request $request): SelfValidatingPassport
     {
         $verificationCode = $request->request->getAlnum('verificationCode');
         $user = $this->authApiClient->getByVerificationCode($verificationCode);
@@ -51,14 +53,14 @@ final class AuthApiTokenAuthenticator extends AbstractAuthenticator implements S
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): RedirectResponse
     {
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
     }
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
         if (true === $request->hasSession()) {
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);

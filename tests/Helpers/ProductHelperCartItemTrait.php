@@ -34,7 +34,7 @@ trait ProductHelperCartItemTrait
         return $product;
     }
 
-    public function getHelperProductCartItem(int $id = 1): CartItemInterface
+    public function getHelperProductCartItem(int $id = 1): ProductCartItem
     {
         $product = $this->getHelperProduct($id);
         $cart = new Cart(userId: $id);

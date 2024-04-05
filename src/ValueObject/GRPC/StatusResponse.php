@@ -11,11 +11,11 @@ use const Grpc\STATUS_OK;
 /**
  * Converts GRPC response array into more readable form.
  */
-final class StatusResponse
+final readonly class StatusResponse
 {
-    private readonly int $code;
+    private int $code;
 
-    private readonly string $details;
+    private string $details;
 
     public function __construct(stdClass $class)
     {

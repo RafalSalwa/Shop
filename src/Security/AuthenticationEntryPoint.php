@@ -24,7 +24,7 @@ final readonly class AuthenticationEntryPoint implements AuthenticationEntryPoin
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function start(Request $request, ?AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): RedirectResponse
     {
         $session = $request->getSession();
         assert($session instanceof FlashBagAwareSessionInterface);

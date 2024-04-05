@@ -30,7 +30,7 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
         private readonly LoggerInterface $logger,
     ) {}
 
-    public function authenticate(Request $request): Passport
+    public function authenticate(Request $request): SelfValidatingPassport
     {
         if (false === $request->request->has('email') || false === $request->request->has('password')) {
             throw new InvalidArgumentException('Missing authentication parameters in request.');
@@ -60,7 +60,7 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
 
     // phpcs:disable Generic.CodeAnalysis.UnusedFunctionParameter
     // phpcs:disable SlevomatCodingStandard.Functions.UnusedParameter.UnusedParameter
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): Response
+    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): RedirectResponse
     {
         $this->logger->debug(
             'AuthenticationSuccess',
@@ -71,7 +71,7 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
         return new RedirectResponse($this->urlGenerator->generate('app_index'));
     }
 
-    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response
+    public function onAuthenticationFailure(Request $request, AuthenticationException $exception): RedirectResponse
     {
         if (true === $request->hasSession()) {
             $request->getSession()->set(SecurityRequestAttributes::AUTHENTICATION_ERROR, $exception);

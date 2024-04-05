@@ -16,24 +16,14 @@ use App\Tests\Helpers\ProductHelperCartItemTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\Uid\Uuid;
 
 #[CoversClass(className: OrderItem::class)]
-#[UsesClass(className: Product::class)]
-#[UsesClass(className: Payment::class)]
-#[UsesClass(className: Address::class)]
 #[UsesClass(className: Order::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
 final class OrderItemTest extends TestCase
 {
     use ProductHelperCartItemTrait;
-
-    private Product $product;
-
-    private Payment $payment;
-
-    private Address $address;
 
     private Order $order;
 
@@ -54,15 +44,6 @@ final class OrderItemTest extends TestCase
             bilingAddress: $address,
         );
         $this->setProtectedProperty($this->order, 'id', 1);
-        $this->product = $this->getHelperProduct(1);
-        $this->payment = new Payment(
-            1,
-            100_00,
-            PaymentProvider::from('stripe'),
-            Uuid::v7()->generate(),
-        );
-        $this->setProtectedProperty($this->payment, 'id', 1);
-        $this->address = new Address(1);
     }
 
     public function testConstructor(): void
@@ -72,9 +53,8 @@ final class OrderItemTest extends TestCase
         $price = 100;
         $name = 'Test Product';
         $itemType = 'normal';
-        $order = $this->order;
 
-        $orderItem = new OrderItem($prodId, $quantity, $price, $name, $itemType, $order);
+        $orderItem = new OrderItem($prodId, $quantity, $price, $name, $itemType, $this->order);
 
         $this->assertSame($quantity, $orderItem->getQuantity());
         $this->assertSame($price, $orderItem->getPrice());

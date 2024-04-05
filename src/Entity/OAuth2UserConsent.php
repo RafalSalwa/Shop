@@ -100,7 +100,7 @@ class OAuth2UserConsent
         $this->ipAddress = $ipAddress;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client
     {
         return $this->client;
     }

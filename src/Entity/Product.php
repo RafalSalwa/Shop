@@ -42,7 +42,7 @@ class Product implements CartInsertableInterface, StockManageableInterface
     #[Column(name: 'unit_price', type: Types::SMALLINT, nullable: false)]
     private int $price;
 
-    #[Column(name: 'units_in_stock', type: Types::SMALLINT, nullable: false)]
+    #[Column(name: 'units_in_stock', type: Types::INTEGER, nullable: false)]
     private int $unitsInStock;
 
     #[Column(name: 'units_on_order', type: Types::SMALLINT, nullable: false)]
