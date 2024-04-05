@@ -5393,16 +5393,16 @@
         },
         {
             "name": "rybakit/twig-deferred-extension",
-            "version": "v3.0.4",
+            "version": "v3.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rybakit/twig-deferred-extension.git",
-                "reference": "13a70ae9a4f8f0f92fbe8e08641f05327276586d"
+                "reference": "3e5d00ccd27863f25e87f2af05a1430f3039e480"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rybakit/twig-deferred-extension/zipball/13a70ae9a4f8f0f92fbe8e08641f05327276586d",
-                "reference": "13a70ae9a4f8f0f92fbe8e08641f05327276586d",
+                "url": "https://api.github.com/repos/rybakit/twig-deferred-extension/zipball/3e5d00ccd27863f25e87f2af05a1430f3039e480",
+                "reference": "3e5d00ccd27863f25e87f2af05a1430f3039e480",
                 "shasum": ""
             },
             "require": {
@@ -5439,7 +5439,7 @@
             ],
             "support": {
                 "issues": "https://github.com/rybakit/twig-deferred-extension/issues",
-                "source": "https://github.com/rybakit/twig-deferred-extension/tree/v3.0.4"
+                "source": "https://github.com/rybakit/twig-deferred-extension/tree/v3.0.5"
             },
             "funding": [
                 {
@@ -5447,7 +5447,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-01-28T22:50:25+00:00"
+            "time": "2024-04-04T09:38:53+00:00"
         },
         {
             "name": "seld/cli-prompt",
