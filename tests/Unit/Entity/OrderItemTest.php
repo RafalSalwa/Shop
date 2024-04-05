@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: OrderItem::class)]
+#[CoversClass(className: Address::class)]
 #[UsesClass(className: Order::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]

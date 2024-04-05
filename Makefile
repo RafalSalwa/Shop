@@ -6,6 +6,7 @@ export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/p
 export PHPSTAN_CMD= $(PHP_CMD) "./vendor/bin/phpstan" analyse --configuration=config/analysis/phpstan.neon --no-progress--standard=./config/analysis/phpcs.xml
 export PHPMD_CMD= $(PHP_CMD) "./vendor/bin/phpmd" src/
 export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
+export PHPUNIT_CMD= $(PHP_CMD) "./vendor/bin/phpunit" --configuration ./config/analysis/phpunit.xml
 
 ## ----------------------------------------------------------------------
 ## This is a help comment. The purpose of this Makefile is to demonstrate
@@ -197,8 +198,21 @@ phpmetrics:
 	xdg-open ${ROOT_DIR}/reports/results/phpmetrics/html/index.html >/dev/null
 
 .PHONY: test_unit
-test_unit: ### run test
-	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=unit --no-output
+test_unit: ### run Unit test suite
+ifndef env
+	${PHPUNIT_CMD} --testsuite=unit
+endif
+
+ifeq ("$(env)", "cli")
+	${PHPCS_CMD} --testsuite=unit --no-output
+endif
+
+ifeq ("$(env)", "gh")
+	${PHPCS_CMD} --testsuite=unit --no-output
+endif
+ifeq ("$(env)", "jenkins")
+	${PHPCS_CMD} --testsuite=unit --no-output
+endif
 
 .PHONY: test_integration
 test_integration: ### run test
