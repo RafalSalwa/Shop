@@ -50,7 +50,6 @@ final class OrderItemTest extends TestCase
         $price = 100;
         $name = 'Test Product';
         $itemType = 'normal';
-
         $orderItem = new OrderItem($prodId, $quantity, $price, $name, $itemType, $this->order);
 
         $this->assertSame($quantity, $orderItem->getQuantity());
