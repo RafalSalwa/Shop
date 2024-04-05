@@ -70,19 +70,5 @@ pipeline {
                 }
             }
         }
-        post {
-            always {
-                recordIssues([
-                    sourceCodeEncoding: 'UTF-8',
-                    enabledForFailure: true,
-                    aggregatingResults: true,
-                    blameDisabled: true,
-                    tools: [
-                        phpCodeSniffer(id: 'phpcs', name: 'CodeSniffer', pattern: 'reports/phpcs/phpcs.checkstyle.xml', reportEncoding: 'UTF-8'),
-                        phpStan(id: 'phpstan', name: 'PHPStan', pattern: 'reports/phpstan/phpstan.checkstyle.xml', reportEncoding: 'UTF-8'),
-                    ]
-                ])
-            }
-        }
     }
 }
