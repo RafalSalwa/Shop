@@ -184,6 +184,7 @@ final class CartTest extends TestCase
         $this->assertInstanceOf(CartItemInterface::class, $cart->getItem($cartItem));
     }
 
+    /** @psalm-suppress DocblockTypeContradiction */
     public function testAddItem(): void
     {
         $cart = $this->cart;

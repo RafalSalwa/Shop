@@ -62,6 +62,7 @@ final class ProductTest extends TestCase
         $this->assertSame(1, $this->product->getId());
     }
 
+    /** @psalm-suppress DocblockTypeContradiction */
     public function testStockManagement(): void
     {
         $product = new Product('Test Product', '1 item', 10_00, 10, 5);

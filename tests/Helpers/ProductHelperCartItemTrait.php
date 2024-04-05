@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Tests\Helpers;
 
 use App\Entity\Cart;
-use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Product;
 use App\Entity\ProductCartItem;
 
