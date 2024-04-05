@@ -6,7 +6,6 @@ namespace App\Security\Voter;
 
 use App\Entity\Contracts\ShopUserInterface;
 use App\Entity\Order;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
@@ -34,9 +33,9 @@ final class OrderStatusVoter extends Voter
         assert($user instanceof ShopUserInterface);
 
         if ($user->getId() !== $subject->getUserId()) {
-            throw new UnauthorizedHttpException('You cannot view this order.');
+            return (bool)self::ACCESS_DENIED;
         }
 
-        return true;
+        return (bool)self::ACCESS_GRANTED;
     }
 }

@@ -47,4 +47,24 @@ trait TokenTestHelperTrait
 
         return $token->toString();
     }
+
+    private function generateTokenStringWithoutClaims(): string
+    {
+        $tokenBuilder = (new Builder(new JoseEncoder(), ChainedFormatter::default()));
+        $sha256    = new Sha256();
+        $signingKey = InMemory::base64Encoded('hiG8DlOKvtih6AxlZn5XKImZ06yu8I3mkOzaJrEuW8yAv8Jnkw330uMt8AEqQ5LB');
+        $dateTimeImmutable   = new DateTimeImmutable();
+        $token = $tokenBuilder
+            ->issuedBy('http://example.com')
+            ->permittedFor('http://example.org')
+            ->relatedTo('component1')
+            ->identifiedBy('4f1g23a12aa')
+            ->issuedAt($dateTimeImmutable)
+            ->canOnlyBeUsedAfter($dateTimeImmutable->modify('+1 minute'))
+            ->expiresAt($dateTimeImmutable->modify('+1 hour'))
+            ->withHeader('foo', 'bar')
+            ->getToken($sha256, $signingKey);
+
+        return $token->toString();
+    }
 }

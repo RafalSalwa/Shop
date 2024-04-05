@@ -1,4 +1,7 @@
+SHELL=/bin/bash
+PHP_CMD = php
 export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
+export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/phpcs.xml
 
 help: ## show help message
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[$$()% a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
@@ -39,14 +42,23 @@ ecs:
 	vendor/bin/ecs check src --config config/analysis/ecs.php
 
 phpcs:
-	vendor/bin/phpcs --standard=config/analysis/phpcs.xml -s
+ifndef env
+	${PHPCS_CMD}
+endif
+
+ifeq ("$(env)", "gh")
+	${PHPCS_CMD} --report=checkstyle | cs2pr
+endif
+ifeq ("$(env)", "jenkins")
+	${PHPCS_CMD} --report=checkstyle --report-file=var/reports/phpcs.checkstyle.xml
+endif
 
 psalm:
 	vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
-	vendor/bin/php-cs-fixer --config=.php-cs-fixer.dist.php --format=checkstyle fix --dry-run > php-cs-fixer.checkstyle.xml
+	vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run > php-cs-fixer.checkstyle.xml
 
 .PHONY: bench
 bench: ## Runs benchmarks with phpbench
@@ -116,6 +128,10 @@ github_actions_static_analysis:
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php --format=checkstyle fix --dry-run | cs2pr || true
 	-vendor/bin/phpmd src/ github config/analysis/phpmd.xml || true
 	-vendor/bin/phpinsights analyse src --config-path=config/analysis/phpinsights.php --no-interaction --composer=composer.json --format=github-action
+
+.PHONY: lint test_unit
+phpcs_gh:
+	vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
 
 .PHONY: lint test_unit
 sonar_static_analysis:

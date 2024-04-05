@@ -10,6 +10,36 @@
     </description>
 
     <exclude-pattern>*/Protobuf/*</exclude-pattern>
+    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
+    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
+    <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
+    <rule ref="rulesets/codesize.xml/TooManyFields"/>
+    <rule ref="rulesets/codesize.xml/TooManyMethods"/>
+
+    <rule ref="rulesets/controversial.xml/Superglobals"/>
+    <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseMethodName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseParameterName"/>
+    <rule ref="rulesets/controversial.xml/CamelCaseVariableName"/>
+
+    <rule ref="rulesets/design.xml/ExitExpression"/>
+    <rule ref="rulesets/design.xml/EvalExpression"/>
+    <rule ref="rulesets/design.xml/GotoStatement"/>
+    <rule ref="rulesets/design.xml/DepthOfInheritance"/>
+
+    <rule ref="rulesets/naming.xml/ShortMethodName"/>
+    <rule ref="rulesets/naming.xml/ConstructorWithNameAsEnclosingClass"/>
+    <rule ref="rulesets/naming.xml/ConstantNamingConventions"/>
+    <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
+
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
+    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
+
     <rule ref="rulesets/cleancode.xml">
         <exclude name="BooleanArgumentFlag"/>
         <exclude name="StaticAccess"/>
@@ -35,6 +65,7 @@
         <exclude name="LongVariable"/>
         <exclude name="ShortMethodName"/>
     </rule>
+
     <rule ref="rulesets/naming.xml/ShortVariable"
           since="0.2"
           message="Avoid variables with short names like {0}. Configured minimum length is {1}."
@@ -84,34 +115,6 @@
             <property name="maximum" value="100"/>
         </properties>
     </rule>
-    <rule ref="rulesets/codesize.xml/ExcessiveClassLength"/>
-    <rule ref="rulesets/codesize.xml/ExcessiveMethodLength"/>
-    <rule ref="rulesets/codesize.xml/ExcessiveParameterList"/>
-    <rule ref="rulesets/codesize.xml/ExcessivePublicCount"/>
-    <rule ref="rulesets/codesize.xml/TooManyFields"/>
-    <rule ref="rulesets/codesize.xml/TooManyMethods"/>
 
-    <rule ref="rulesets/controversial.xml/Superglobals"/>
-    <rule ref="rulesets/controversial.xml/CamelCasePropertyName"/>
-    <rule ref="rulesets/controversial.xml/CamelCaseMethodName"/>
-    <rule ref="rulesets/controversial.xml/CamelCaseParameterName"/>
-    <rule ref="rulesets/controversial.xml/CamelCaseVariableName"/>
-
-    <rule ref="rulesets/design.xml/ExitExpression"/>
-    <rule ref="rulesets/design.xml/EvalExpression"/>
-    <rule ref="rulesets/design.xml/GotoStatement"/>
-    <rule ref="rulesets/design.xml/DepthOfInheritance"/>
-
-    <rule ref="rulesets/naming.xml/ShortMethodName"/>
-    <rule ref="rulesets/naming.xml/ConstructorWithNameAsEnclosingClass"/>
-    <rule ref="rulesets/naming.xml/ConstantNamingConventions"/>
-    <rule ref="rulesets/naming.xml/BooleanGetMethodName"/>
-
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedLocalVariable"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateField"/>
-    <rule ref="rulesets/unusedcode.xml/UnusedPrivateMethod"/>
 
 </ruleset>

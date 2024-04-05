@@ -6,6 +6,7 @@
 name: Psalm lvl 2
 
 on:
+  push:
   pull_request:
     branches:
       - main

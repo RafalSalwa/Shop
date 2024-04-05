@@ -1,5 +1,6 @@
 name: PHPStan lvl 8
 on:
+  push:
   pull_request:
     branches:
       - main

@@ -6,6 +6,8 @@ namespace App\ValueObject;
 
 use InvalidArgumentException;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\EmailValidator;
+use Symfony\Component\Validator\ConstraintValidatorFactory;
 use Symfony\Component\Validator\Validation;
 
 use function count;
@@ -16,7 +18,15 @@ final readonly class EmailAddress
 
     public function __construct(private string $email)
     {
-        $validator = Validation::createValidator();
+        $validatorBuilder = Validation::createValidatorBuilder();
+        $validator = $validatorBuilder->setConstraintValidatorFactory(
+            new ConstraintValidatorFactory(
+                [
+                    EmailValidator::class => new EmailValidator(Email::VALIDATION_MODE_HTML5),
+                ],
+            ),
+        )->getValidator();
+
         $emailConstraint = new Email(mode: Email::VALIDATION_MODE_STRICT);
         $emailConstraint->message = self::INVALID_EMAIL;
 

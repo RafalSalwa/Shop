@@ -38,7 +38,7 @@ class OAuth2ClientProfile
         return $this->id;
     }
 
-    public function getClient(): ?Client
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -48,7 +48,7 @@ class OAuth2ClientProfile
         $this->client = $client;
     }
 
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }

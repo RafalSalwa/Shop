@@ -45,6 +45,7 @@ final readonly class Summary
         return (int)bcadd((string)$subTotal, (string)$this->tax);
     }
 
+    /** @return numeric-string */
     public function getDiscount(): string
     {
         return bcdiv((string)$this->discount, '100', 2);
