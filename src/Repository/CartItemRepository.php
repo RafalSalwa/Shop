@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repository;
 
 use App\Entity\AbstractCartItem;
+use App\Entity\Contracts\CartItemInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,5 +22,11 @@ final class CartItemRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $managerRegistry)
     {
         parent::__construct($managerRegistry, AbstractCartItem::class);
+    }
+
+    public function remove(CartItemInterface $item): void
+    {
+        $this->getEntityManager()->remove($item);
+        $this->getEntityManager()->flush();
     }
 }

@@ -11,11 +11,11 @@ final readonly class PaymentTypeRequest
     public function __construct(
         #[Assert\Type(type: 'string')]
         #[Assert\NotBlank()]
-        private string $paymentType,
+        private string $payment,
     ) {}
 
     public function getPaymentType(): string
     {
-        return $this->paymentType;
+        return $this->payment;
     }
 }

@@ -32,8 +32,8 @@
                             RPC call stack
                             <table class="table table-bordered table-responsive">
                                 <thead>
-                                <th>status code</th>
-                                <th>Details (or Error)</th>
+                                    <th>status code</th>
+                                    <th>Details (or Error)</th>
                                 </thead>
                                 <tbody>
                                 {% for element in grpc_responses %}
@@ -51,30 +51,27 @@
                                 {% if user is not empty %}
                                     <tr>
                                         <td>id</td>
-                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.getId() }}</td>
                                     </tr>
                                     <tr>
                                         <td>email</td>
-                                        <td>{{ user.email }}</td>
+                                        <td>{{ user.getEmail() }}</td>
                                     </tr>
                                     <tr>
                                         <td>verified</td>
-                                        <td>{{ user.verified }}</td>
+                                        <td>{{ user.getVerified() }}</td>
                                     </tr>
                                     <tr>
                                         <td>active</td>
-                                        <td>{{ user.active }}</td>
+                                        <td>{{ user.getActive() }}</td>
                                     </tr>
                                     <tr>
                                         <td>Created</td>
-                                        <td>{{ user.createdAt }}</td>
+                                        <td>{{ user.getCreatedAt().getSeconds() }}</td>
                                     </tr>
                                 {% endif %}
                                 </tbody>
                             </table>
-                            {% if api_user_response is not empty and api_user_response.verified is same as true %}
-                                Nice, now we can<a href="{{ path('grpc_user_details') }}"> get Account Details</a>
-                            {% endif %}
                         {% endif %}
 
                     </div>

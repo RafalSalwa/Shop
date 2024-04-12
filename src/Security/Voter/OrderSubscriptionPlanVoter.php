@@ -18,7 +18,7 @@ use function assert;
  */
 final class OrderSubscriptionPlanVoter extends Voter
 {
-    public const ORDER_SUBSCRIPTION_PLAN = 'ORDER';
+    public const ORDER_SUBSCRIPTION_PLAN = 'ORDER_SUBSCRIPTION_PLAN';
 
     protected function supports(string $attribute, mixed $subject): bool
     {

@@ -9,6 +9,7 @@ use App\Enum\CartStatus;
 use App\Exception\CartOperationException;
 use App\Exception\ItemNotFoundException;
 use App\Exception\ProductStockDepletedException;
+use App\Repository\CartItemRepository;
 use App\Repository\CartRepository;
 use App\Service\ProductStockService;
 use App\Storage\Cart\Contracts\CartStorageInterface;
@@ -17,6 +18,7 @@ final readonly class DatabaseStorage implements CartStorageInterface
 {
     public function __construct(
         private CartRepository $cartRepository,
+        private CartItemRepository $cartItemRepository,
         private ProductStockService $stockService,
     ) {
     }
@@ -70,6 +72,7 @@ final readonly class DatabaseStorage implements CartStorageInterface
     {
         foreach ($cart->getItems() as $item) {
             $cart->removeItem($item);
+            $this->cartItemRepository->remove($item);
             $this->stockService->restoreStock($item);
         }
 

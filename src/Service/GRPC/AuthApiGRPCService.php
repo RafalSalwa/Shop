@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Service\GRPC;
 
-use App\Client\Contracts\AuthClientInterface;
+use App\Client\GRPC\AuthApiGRPCClient;
 use App\Client\GRPC\UserApiGRPCClient;
 use App\Exception\AuthException;
 use App\Exception\Contracts\AuthenticationExceptionInterface;
@@ -21,7 +21,7 @@ final readonly class AuthApiGRPCService
 
     public function __construct(
         private RequestStack $requestStack,
-        private AuthClientInterface $authApiGRPCClient,
+        private AuthApiGRPCClient $authApiGRPCClient,
         private UserApiGRPCClient $userApiGRPCClient,
         private LoggerInterface $logger,
     ) {}
