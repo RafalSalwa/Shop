@@ -147,7 +147,7 @@
     "symfony/debug-bundle": "~6.4.3",
     "symfony/maker-bundle": "^1.57",
     "symfony/panther": "^2.1.1",
-    "symfony/phpunit-bridge": "^6.4.6",
+    "symfony/phpunit-bridge": "^7.0.6",
     "symfony/stopwatch": "~6.4.3",
     "symfony/web-profiler-bundle": "~6.4.4",
     "symplify/coding-standard": "^12.1.4",
