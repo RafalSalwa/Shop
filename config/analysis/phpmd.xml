@@ -90,6 +90,7 @@
         <priority>3</priority>
         <properties>
             <property name="maximum" description="The variable length reporting threshold" value="30"/>
+            <property name="subtract-suffixes" value="Exception,Interface"/>
         </properties>
     </rule>
     <rule ref="rulesets/naming.xml/ShortMethodName">

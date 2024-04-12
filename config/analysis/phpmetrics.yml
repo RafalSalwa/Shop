@@ -38,8 +38,6 @@ plugins:
 searches:
   Repository which uses Service: # You can name your search as you want
     type: class
-    instanceOf:
-      - App\MyRepository
     nameMatches: ".*Repository.*"
     usesClasses:
       - ".*Service"

@@ -28,6 +28,7 @@ return RectorConfig::configure()
     ->withSkip(
         [
             __DIR__ . '/src/Protobuf',
+            __DIR__ . '/migrations',
             ClassPropertyAssignToConstructorPromotionRector::class,
             SimplifyBoolIdenticalTrueRector::class,
             RenamePropertyToMatchTypeRector::class,
@@ -69,4 +70,4 @@ return RectorConfig::configure()
             AddVoidReturnTypeWhereNoReturnRector::class,
         ],
     )
-    ->withCache(cacheClass: FileCacheStorage::class, cacheDirectory: 'var/cache/dev/rector');
+    ->withCache(cacheDirectory: 'var/cache/dev/rector', cacheClass: FileCacheStorage::class);
