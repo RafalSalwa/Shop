@@ -26,6 +26,7 @@
     <!-- Customized Bootstrap Stylesheet -->
     <link href="https://cdn.salwa.com.pl/cart/css/style.css" rel="stylesheet">
     <link href="https://cdn.salwa.com.pl/cart/css/custom.css" rel="stylesheet">
+    {% block stylesheets %}{% endblock %}
 </head>
 
 <body>
@@ -100,15 +101,12 @@
     <div class="row border-top border-light mx-xl-5 py-4">
         <div class="col-md-6 px-xl-0">
             <p class="mb-md-0 text-center text-md-left text-dark">
-                &copy; <a class="text-dark font-weight-semi-bold" href="#">Your Site Name</a>. All Rights Reserved.
+                &copy; <a class="text-dark font-weight-semi-bold" href="#">RShop</a>. All Rights Reserved.
                 Designed
                 by
-                <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex</a><br>
+                <a class="text-dark font-weight-semi-bold" href="https://htmlcodex.com">HTML Codex.</a>
                 Distributed By <a href="https://themewagon.com" target="_blank">ThemeWagon</a>
             </p>
-        </div>
-        <div class="col-md-6 px-xl-0 text-center text-md-right">
-            <img class="img-fluid" src="{{ asset('img/payments.png', 'cdn') }}" alt="">
         </div>
     </div>
 </div>

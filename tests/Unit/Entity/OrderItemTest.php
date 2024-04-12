@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: OrderItem::class)]
 #[UsesClass(className: Order::class)]
+#[UsesClass(className: Address::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
 final class OrderItemTest extends TestCase

@@ -15,6 +15,7 @@ use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 #[CoversClass(className: Payment::class)]
+#[UsesClass(className: Address::class)]
 #[UsesClass(className: Order::class)]
 final class PaymentTest extends TestCase
 {

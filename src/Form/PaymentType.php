@@ -16,8 +16,6 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Traversable;
 
-use function assert;
-use function is_int;
 use function iterator_to_array;
 
 /**
@@ -101,9 +99,8 @@ final class PaymentType extends AbstractType implements DataMapperInterface
 
         /** @var array<FormInterface> $arrForms */
         $arrForms = iterator_to_array($forms, preserve_keys: true);
-        $amount = $arrForms['amount']->getData();
-        assert(is_int($amount));
+        $amount = (float)$arrForms['amount']->getData();
 
-        $viewData->setAmount($amount * 100);
+        $viewData->setAmount((int)$amount * 100);
     }
 }

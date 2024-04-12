@@ -38,7 +38,7 @@ abstract class AbstractCartItem implements CartItemInterface
     #[Id]
     #[GeneratedValue]
     #[Column(name: 'cart_item_id', type: Types::INTEGER, unique: true, nullable: false)]
-    protected int $id = 0;
+    protected int $id;
 
     #[ManyToOne(targetEntity: Cart::class, inversedBy: 'items')]
     #[JoinColumn(name: 'cart_id', referencedColumnName: 'cart_id', nullable: false)]
