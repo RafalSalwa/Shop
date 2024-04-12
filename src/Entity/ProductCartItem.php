@@ -11,6 +11,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 
+/** @psalm-suppress PropertyNotSetInConstructor */
 #[Entity(repositoryClass: ProductCartItemRepository::class)]
 class ProductCartItem extends AbstractCartItem implements CartItemInterface
 {
