@@ -58,7 +58,7 @@
     "symfony/framework-bundle": "~6.4.6",
     "symfony/html-sanitizer": "~6.4.4",
     "symfony/http-client": "~6.4.6",
-    "symfony/lock": "~6.4.6",
+    "symfony/lock": "~7.0.6",
     "symfony/mailer": "~6.4.6",
     "symfony/messenger": "~6.4.6",
     "symfony/monolog-bundle": "^3.10",
