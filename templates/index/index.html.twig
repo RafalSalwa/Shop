@@ -64,7 +64,7 @@
                             <li>PHP 8.2</li>
                             <li>Symfony 6.3</li>
                             <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li>Custom Docker image with gRPC</li>
                         </ul>
                     </div>
                 </div>
@@ -73,10 +73,11 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong>Static analysis tools</strong></li>
+                            <li>PHPStan lvl 7, Psalm lvl 2, PHPMD</li>
+                            <li>PHPCS, PHP-CS-Fixer, Rector</li>
+                            <li>PHPArkitect & deptrac</li>
+                            <li>GrumPHP on top for pre commit checks</li>
                         </ul>
                     </div>
                 </div>
@@ -85,10 +86,10 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong> External Quality Tools</strong></li>
+                            <li>Snyk and SemGrep analysis</li>
+                            <li>SonarQube</li>
+                            <li>Codacy & codecov</li>
                         </ul>
                     </div>
                 </div>
@@ -97,10 +98,10 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong> CI/CD Tooling</strong></li>
+                            <li>Jenkins & JenkinsFile</li>
+                            <li>GitHub, Gitlab, Gitea</li>
+                            <li>Makefile to run scripts and tools</li>
                         </ul>
                     </div>
                 </div>
@@ -109,10 +110,11 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong>Doctrine & PostrgreSQL</strong></li>
+                            <li>Table Inheritance & Validation</li>
+                            <li>migrations & db dumps in image</li>
+                            <li>Redis and Rabbitmq support</li>
+                            <li>Events with Event Listeners & Subscribers</li>
                         </ul>
                     </div>
                 </div>
@@ -121,10 +123,10 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong>Rest and gRPC support</strong></li>
+                            <li>Rest api with JWT</li>
+                            <li>Authorization based on OAuth2</li>
+                            <li>gRPC connection to auth-api for authentication</li>
                         </ul>
                     </div>
                 </div>
@@ -133,10 +135,11 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
+                            <li><strong>Security</strong></li>
+                            <li>Custom UserProvider & UserAuthenticator</li>
                             <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li>EntryPoint Authenticator with acces handler</li>
+                            <li>Voters & Workflows</li>
                         </ul>
                     </div>
                 </div>
@@ -145,10 +148,10 @@
                 <div class="card product-item border-0 mb-4">
                     <div class="card-header product-img position-relative overflow-hidden bg-transparent border">
                         <ul>
-                            <li>PHP 8.2</li>
-                            <li>Symfony 6.3</li>
-                            <li>nginx 1.25</li>
-                            <li>Docker compose</li>
+                            <li><strong>UI/UX</strong></li>
+                            <li>Symfony UX</li>
+                            <li>Yarn, webpack encore</li>
+                            <li>Bootstrap5 </li>
                         </ul>
                     </div>
                 </div>
@@ -222,9 +225,13 @@
     .homepage-features .product-item .product-img {
         min-height: 300px;
         text-align: center !important;
-        padding: 3rem !important;
+        padding: 3rem 0 !important;
     }
-    .homepage-features .product-item .product-img ul li{
+    .homepage-features .product-item .product-img ul {
+        padding:0;
+    }
+
+    .homepage-features .product-item .product-img ul li {
         list-style: none;
     }
 </style>
