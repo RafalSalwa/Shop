@@ -9,11 +9,11 @@ controllers:
   type: attribute
 
 app.swagger_ui:
-  path: /php/app/doc
+  path: /doc
   methods: GET
   defaults: { _controller: nelmio_api_doc.controller.swagger_ui }
 
 app.swagger:
-  path: /php/app/doc.json
+  path: /doc.json
   methods: GET
   defaults: { _controller: nelmio_api_doc.controller.swagger }

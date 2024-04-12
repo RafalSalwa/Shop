@@ -43,4 +43,4 @@ nelmio_api_doc:
       - Bearer
   areas:
     path_patterns:
-      - ^/php/app/api(?!/doc$)
+      - ^/api(?!/doc$)

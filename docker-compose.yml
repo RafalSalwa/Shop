@@ -26,7 +26,7 @@ services:
       - ./docker/nginx/keys/nginx-selfsigned.key:/etc/ssl/private/nginx-selfsigned.key
       - ./docker/nginx/keys/dhparam.pem:/etc/ssl/certs/dhparam.pem
     ports:
-      - 8001:80
+      - 8001:8001
     networks:
       interview-net:
         aliases:
@@ -63,7 +63,7 @@ services:
     image: redis:7-alpine
     ports:
       - '26379:6379'
-    command: /bin/sh -c "redis-server --save 60 1 --loglevel debug --appendonly yes --requirepass GCAHwF0kz59p9FpP"
+    command: /bin/sh -c "redis-server --save 3600 1 --appendonly yes --requirepass GCAHwF0kz59p9FpP"
     networks:
       interview-net:
         aliases:
