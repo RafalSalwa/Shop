@@ -17,13 +17,12 @@ Codacy:
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 
-SonarQube: [![Lines of Code](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=ncloc&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
-
-[![Duplicated Lines (%)](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=duplicated_lines_density&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
-[![Maintainability Rating](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=sqale_rating&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
-[![Quality Gate Status](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=alert_status&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
-[![Reliability Rating](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=reliability_rating&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
-[![Security Rating](http://jenkins.salwa.com.pl:9000/api/project_badges/measure?project=Shopping-App&metric=security_rating&token=sqb_c1e655532b49e9a7ea5bae138d85db73e5a986b0)](http://jenkins.salwa.com.pl:9000/dashboard?id=Shopping-App)
+SonarQube: [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
 
 
 
