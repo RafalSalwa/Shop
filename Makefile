@@ -4,7 +4,7 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/phpcs.xml
 export PHPSTAN_CMD= $(PHP_CMD) "./vendor/bin/phpstan" analyse --configuration=config/analysis/phpstan.neon --no-progress
 export PHPMD_CMD= $(PHP_CMD) "./vendor/bin/phpmd" src/
-export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
+export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --shepherd --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
 export PHPUNIT_CMD= $(PHP_CMD) "./vendor/bin/phpunit" --configuration ./config/analysis/phpunit.xml
 
 ## ----------------------------------------------------------------------
@@ -26,17 +26,12 @@ help: ## show help message
 
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m\033[0m\n"} /^[$$()% a-zA-Z_-]+:.*?##/ { printf "  \033[36m%-20s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
 
-all:
-
 up:
 	docker compose up -d && docker compose logs -f nginx php
-up_local:
+local:
 	symfony server:stop
-	-killall webpack
 	docker compose up -d
 	symfony server:start -d --no-tls
-	symfony run -d --watch=config,src,templates,vendor symfony
-	symfony run -d yarn encore dev-server --port 9001
 	symfony server:log
 
 prod:
@@ -88,12 +83,14 @@ endif
 
 psalm:
 ifndef env
-	${PHP_PSALM_CMD} --shepherd
+	${PHP_PSALM_CMD}
+	${PHP_PSALM_CMD} --taint-analysis
 endif
 
 ifeq ("$(env)", "gh")
 	${PHP_PSALM_CMD} --report=psalm_results.sarif
 	${PHP_PSALM_CMD} --output-format=github
+	${PHP_PSALM_CMD} --taint-analysis
 endif
 ifeq ("$(env)", "jenkins")
 	${PHP_PSALM_CMD} --report=./var/reports/psalm.checkstyle.xml
