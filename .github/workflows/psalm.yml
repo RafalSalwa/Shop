@@ -44,7 +44,7 @@ jobs:
 
       - name: Psalm Security Scan
         id: psalm_scan
-        run: vendor/bin/psalm --config=config/analysis/psalm.xml --report=psalm_results.sarif
+        run: vendor/bin/psalm --config=config/analysis/psalm.xml --shepherd --report=psalm_results.sarif
         continue-on-error: true
 
       - name: "Check file existence"
