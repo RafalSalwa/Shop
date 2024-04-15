@@ -1,4 +1,4 @@
-# interview-client-php
+# Shop app with cart
 
 [![Psalm lvl 2](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml)
 [![PHPStan lvl 8](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml)
@@ -11,6 +11,7 @@
 [![Rector](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml)
 [![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php?ref=badge_shield&issueType=license)
+[![Type Coverage](https://shepherd.dev/github/rafalsalwa/shop/coverage.svg)](https://shepherd.dev/github/rafalsalwa/shop)
 
 Codacy:
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
@@ -24,25 +25,41 @@ SonarQube: [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?pr
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
 
+---
 
+Simple and feature rich Shopping cart based on PHP 8.2, Symfony 6, PostgresSQL, OAuth2, gRPC and custom [grpc&REST Auth api](https://github.com/RafalSalwa/auth-api)
 
-simple REST Server with REST and gRPC clients to communicate
-with go  [grpc&REST interview server](https://github.com/RafalSalwa/interview-app-srv)
-# Build
-At first create docker network if You did not do so for server
+Featured with Shopping cart, profile management, Order processing flow with abandoned carts and pendings. Features based on subscription tiers.
 
-next steps are to build docker
+## ⚙️ Installation
 ```bash
-make compose-up
+make up
 ```
-add hosts entry for nginx vhost
+or via symfony internal server installed on host:
 ```bash
-echo "0.0.0.0  interview.local" >> /etc/hosts
+make local
 ```
-postman collection is in docs folder
+
+then You can visit [http://127.0.0.1:8001/](http://127.0.0.1:8001/)
+
+Also, there is a openApi documentation at [http://127.0.0.1:8001/doc](http://127.0.0.1:8001/doc) or postman collection is in [docs](docs/RSShop.postman_collection.json) folder
+
+## 🎯 Features
+- Products listings based on subscription tier
+- Flow control with Symfony Workflows and Security Voters
+- cart management via view or REST Api
+- REST communication with Auth-api via JWT Tokens for authentication flow in User Providers and Authenticators
+- OAuth2 server integration for authorization flow
+- Doctrine entities with Inheritance pattern and abstraction for cart and order items
+- GitHub actions, Jenkins, Gitlab integrations
+- gRPC clients for external (golang) [Auth-api](https://github.com/RafalSalwa/auth-api)
+- Clean layered architecture checked by [PHPArkitect and deptrac](.github/workflows/architecture_dependencies.yml)
+- Static analysis with [PHPStan lvl 7](.github/workflows/phpstan.yml), [Psalm lvl 2](.github/workflows/psalm.yml), [PHPMD](.github/workflows/phpmd.yml), [PHPCS](.github/workflows/phpcs.yml), [PHP-CS-Fixer](.github/workflows/php-cs-fixer.yml), [Rector](.github/workflows/rector.yaml)
+- External tools for quality analysis PHPMetrics, PHPInsights, Snyk, SemGrep, SonarQube, Codacy & codecov
 
 
 ## Screenshots:
+![deptrac](docs/deptrack.png)
 ![REST](docs/rest.png)
 ![grpc](docs/grpc.png)
 
