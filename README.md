@@ -10,7 +10,6 @@ static analysis:
 Code analysis:
 
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
-
 [![PHPCS-Fixer](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml)
 [![Rector](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml)
 
