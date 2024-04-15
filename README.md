@@ -18,7 +18,6 @@ Architecture:
 [![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
 
 External services
-
 [![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php?ref=badge_shield&issueType=license)
 [![codecov](https://codecov.io/gh/RafalSalwa/interview-client-php/graph/badge.svg?token=DOR8PFOKFQ)](https://codecov.io/gh/RafalSalwa/interview-client-php)
@@ -26,7 +25,6 @@ External services
 Codacy:
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![Codacy Badge](https://app.codacy.com/project/badge/Coverage/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
-
 
 SonarQube: [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
