@@ -1,4 +1,4 @@
-# Shop app with cart
+# Shopping cart
 
 static analysis:
 
@@ -50,7 +50,10 @@ make local
 
 then You can visit [http://127.0.0.1:8001/](http://127.0.0.1:8001/)
 
-Also, there is a openApi documentation at [http://127.0.0.1:8001/doc](http://127.0.0.1:8001/doc) or postman collection is in [docs](docs/RSShop.postman_collection.json) folder
+Also, there is a openApi documentation at [http://127.0.0.1:8001/doc](http://127.0.0.1:8001/doc) or postman collection in [docs](docs/RSShop.postman_collection.json) folder
+
+#### Or
+visit [Demo app](https://cart.salwa.com.pl)
 
 ## 🎯 Features
 - Products listings based on subscription tier
@@ -65,9 +68,15 @@ Also, there is a openApi documentation at [http://127.0.0.1:8001/doc](http://127
 - Static analysis with [PHPStan lvl 7](.github/workflows/phpstan.yml), [Psalm lvl 2](.github/workflows/psalm.yml), [PHPMD](.github/workflows/phpmd.yml), [PHPCS](.github/workflows/phpcs.yml), [PHP-CS-Fixer](.github/workflows/php-cs-fixer.yml), [Rector](.github/workflows/rector.yaml)
 - External tools for quality analysis PHPMetrics, PHPInsights, Snyk, SemGrep, SonarQube, Codacy & codecov
 
+## 👀 Other Apps
+
+---
+
+- [Auth-api](https://github.com/RafalSalwa/auth-api): Golang api with REST, gRPC, MySQL, Mongo, Redis, OTEL, [auth-api.salwa.com.pl](https://auth-api.salwa.com.pl/docs/swagger.json)
+- [Portfolio](https://github.com/RafalSalwa/Portfolio): Symfony UX & ReactJS with webpack and TS. Site contains details and stacks about all apps [apps.salwa.com.pl](https://apps.salwa.com.pl)
+
 
 ## Screenshots:
 ![deptrac](docs/deptrack.png)
 ![REST](docs/rest.png)
 ![grpc](docs/grpc.png)
-
