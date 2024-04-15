@@ -1,17 +1,27 @@
 # Shop app with cart
 
+static analysis:
+
 [![Psalm lvl 2](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/psalm.yml)
+[![Type Coverage](https://shepherd.dev/github/rafalsalwa/shop/coverage.svg)](https://shepherd.dev/github/rafalsalwa/shop)
 [![PHPStan lvl 8](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpstan.yml)
 [![PHPMD - Mess Detector](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpmd.yml)
-[![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
-[![codecov](https://codecov.io/gh/RafalSalwa/interview-client-php/graph/badge.svg?token=DOR8PFOKFQ)](https://codecov.io/gh/RafalSalwa/interview-client-php)
+
+Code analysis:
+
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
 [![PHPCS-Fixer](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml)
-
 [![Rector](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml)
+
+Architecture:
+
+[![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
+
+External services
+
 [![Build Status](https://jenkins.salwa.com.pl/job/Shop/badge/icon?subject=Jenkins)](https://jenkins.salwa.com.pl/job/Shop/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php.svg?type=shield&issueType=license)](https://app.fossa.com/projects/git%2Bgithub.com%2FRafalSalwa%2Finterview-client-php?ref=badge_shield&issueType=license)
-[![Type Coverage](https://shepherd.dev/github/rafalsalwa/shop/coverage.svg)](https://shepherd.dev/github/rafalsalwa/shop)
+[![codecov](https://codecov.io/gh/RafalSalwa/interview-client-php/graph/badge.svg?token=DOR8PFOKFQ)](https://codecov.io/gh/RafalSalwa/interview-client-php)
 
 Codacy:
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
