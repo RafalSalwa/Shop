@@ -31,7 +31,7 @@ final class Paginator
 
     private int $numResults = 0;
 
-    private int $pageSize = 15;
+    private int $pageSize = 16;
 
     /** @var Traversable<mixed, mixed>|null */
     private ?Traversable $traversable = null;
