@@ -36,8 +36,8 @@ final class AuthApiFormAuthenticator extends AbstractLoginFormAuthenticator
 
         try {
             $tokenPair = $this->authApiClient->signIn(
-                $request->request->getAlnum('email'),
-                $request->request->getAlnum('password'),
+                $request->request->getString('email'),
+                $request->request->getString('password'),
             );
             $user = $this->usersApiClient->loadUserByIdentifier($tokenPair->getToken()->value());
 
