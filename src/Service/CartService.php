@@ -19,6 +19,9 @@ use Symfony\Bundle\SecurityBundle\Security;
 use function assert;
 use function sprintf;
 
+/**
+ * @see \App\Tests\Service\CartServiceTest
+ */
 final readonly class CartService
 {
     public function __construct(

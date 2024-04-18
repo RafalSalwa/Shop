@@ -10,6 +10,7 @@ use const Grpc\STATUS_OK;
 
 /**
  * Converts GRPC response array into more readable form.
+ * @see \App\Tests\ValueObject\GRPC\StatusResponseTest
  */
 final readonly class StatusResponse
 {
