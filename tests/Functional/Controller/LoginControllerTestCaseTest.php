@@ -15,11 +15,8 @@ final class LoginControllerTestCaseTest extends WebTestCase
 {
     public function testResponses(): void
     {
-        // This calls KernelTestCase::bootKernel(), and creates a
-        // "client" that is acting as the browser
         $client = self::createClient();
 
-        // Request a specific page
         $crawler = $client->request('GET', '/login');
         $client->followRedirect();
         $this->assertResponseIsSuccessful();

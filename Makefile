@@ -2,7 +2,7 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/phpcs.xml
 export PHPSTAN_CMD= $(PHP_CMD) "./vendor/bin/phpstan" analyse --configuration=config/analysis/phpstan.neon --no-progress
 export PHPMD_CMD= $(PHP_CMD) "./vendor/bin/phpmd" src/
-export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --shepherd --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
+export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --shepherd --no-cache --no-file-cache --no-reflection-cache
 export PHPUNIT_CMD= $(PHP_CMD) "./vendor/bin/phpunit" --configuration ./config/analysis/phpunit.xml
 
 ## ----------------------------------------------------------------------

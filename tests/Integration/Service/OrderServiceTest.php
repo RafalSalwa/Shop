@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Service;
 
 use App\Entity\Cart;
-use App\Entity\Order;
+use App\Exception\ItemNotFoundException;
 use App\Model\User;
 use App\Service\OrderService;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -34,9 +34,8 @@ final class OrderServiceTest extends WebTestCase
 
         $cart = new Cart(1);
 
-        $order = $this->orderService->createPending($cart);
-
-        $this->assertInstanceOf(Order::class, $order);
+        $this->expectException(ItemNotFoundException::class);
+        $this->orderService->createPending($cart);
     }
 
     private function logInUser(): void

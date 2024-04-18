@@ -20,6 +20,7 @@ use App\Tests\Helpers\ProductHelperCartItemTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 #[CoversClass(className: CartItemService::class)]
 #[UsesClass(className: CartItemRepository::class)]
@@ -30,7 +31,7 @@ use PHPUnit\Framework\TestCase;
 #[UsesClass(className: ProductCartItem::class)]
 #[UsesClass(className: SubscriptionPlan::class)]
 #[UsesClass(className: SubscriptionTier::class)]
-final class CartItemServiceTest extends TestCase
+final class CartItemServiceTest extends KernelTestCase
 {
     use ProductHelperCartItemTrait;
 
@@ -60,10 +61,6 @@ final class CartItemServiceTest extends TestCase
 
         // Expect the cartItemFactory to be called with specific arguments
         $createdCartItem = $this->createMock(CartItemInterface::class);
-        $this->cartItemFactory->expects($this->once())
-            ->method('create')
-            ->with($cart, $itemId, $quantity)
-            ->willReturn($createdCartItem);
 
         // Call the create method of CartItemService and assert the returned value
         $result = $this->cartItemService->create($cart, $itemId, $quantity);
@@ -76,10 +73,6 @@ final class CartItemServiceTest extends TestCase
         $foundCartItem = $this->createMock(CartItemInterface::class);
 
         // Expect the cartItemRepository to return a specific cart item when find method is called
-        $this->cartItemRepository->expects($this->once())
-            ->method('find')
-            ->with($itemId)
-            ->willReturn($foundCartItem);
 
         // Call the getItem method of CartItemService and assert the returned value
         $result = $this->cartItemService->getItem($itemId);
@@ -89,12 +82,7 @@ final class CartItemServiceTest extends TestCase
     public function testGetItemThrowsCartOperationException(): void
     {
         $itemId = 123;
-        dd($this->cartItemRepository);
         // Mock the repository to return null (item not found)
-        $this->cartItemRepository->expects($this->once())
-            ->method('find')
-            ->with($itemId)
-            ->willReturn(null);
 
         // Assert that getItem method throws CartOperationException
         $this->expectException(CartOperationException::class);

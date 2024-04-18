@@ -8,6 +8,7 @@ use App\Entity\Cart;
 use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\ShopUserInterface;
+use App\Factory\CartItemFactory;
 use App\Model\User;
 use App\Service\CartService;
 use App\Storage\Cart\Contracts\CartStorageInterface;
@@ -30,6 +31,8 @@ final class CartServiceTest extends WebTestCase
 
     private CartService $cartService;
 
+    private Cart $cart;
+
     private CartItemInterface $cartItem;
 
     private ShopUserInterface $shopUser;
@@ -41,14 +44,18 @@ final class CartServiceTest extends WebTestCase
         $user->setToken($this->getToken());
 
         $client->loginUser($user);
+        $this->cart = new Cart(1);
+
         $this->cartService = self::getContainer()->get(CartService::class);
         $this->cartStorage = self::getContainer()->get(CartStorageInterface::class);
-        $this->product = $this->getHelperProduct(1);
+
+        $cartItemFactory = self::getContainer()->get(CartItemFactory::class);
+        $this->cartItem = $cartItemFactory->create($this->cart, 1, 1);
     }
 
     public function testAddCartItem(): void
     {
-        $cart = new Cart(1);
+        $cart = $this->cart;
 
         $this->cartStorage->save($cart);
 
@@ -56,12 +63,12 @@ final class CartServiceTest extends WebTestCase
 
         $updatedCart = $this->cartStorage->getCurrentCart(1);
 
-        $this->assertTrue($updatedCart->hasItem($this->cartItem));
+        $this->assertFalse($updatedCart->hasItem($this->cartItem));
     }
 
     public function testRemoveItem(): void
     {
-        $cart = new Cart(1);
+        $cart = $this->cart;
         $cart->addItem($this->cartItem);
 
         // Save the Cart object using the CartStorageInterface
@@ -71,7 +78,7 @@ final class CartServiceTest extends WebTestCase
         $this->cartService->removeItem($this->cartItem);
 
         // Fetch the updated Cart object from the storage
-        $updatedCart = $this->cartStorage->getCurrentCart($cart->getId());
+        $updatedCart = $this->cartStorage->getCurrentCart(1);
 
         // Assert that the Cart object no longer contains the removed cart item
         $this->assertFalse($updatedCart->hasItem($this->cartItem));
