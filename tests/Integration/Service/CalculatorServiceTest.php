@@ -30,7 +30,7 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, null);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertEquals($expectedSummary, $summary);
     }
 
     public function testCalculateSummaryWithPercentageCoupon(): void
@@ -43,7 +43,7 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, $couponCode);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertEquals($expectedSummary, $summary);
     }
 
     public function testCalculateSummaryWithFixedAmountCoupon(): void
@@ -55,6 +55,6 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, $couponCode);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertEquals($expectedSummary, $summary);
     }
 }

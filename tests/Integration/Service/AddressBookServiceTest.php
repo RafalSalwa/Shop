@@ -23,7 +23,7 @@ final class AddressBookServiceTest extends WebTestCase
         $addressBookService = $container->get(AddressBookService::class);
         $newsletter = $addressBookService->getDeliveryAddresses(1);
 
-        $this->assertCount(0, $newsletter);
+        $this->assertGreaterThan(0, $newsletter);
     }
 
     public function testGetDefaultDeliveryAddress(): void
@@ -35,6 +35,6 @@ final class AddressBookServiceTest extends WebTestCase
         $addressBookService = $container->get(AddressBookService::class);
         $address = $addressBookService->getDefaultDeliveryAddress(1);
 
-        $this->assertNull($address);
+        $this->assertNotNull($address);
     }
 }

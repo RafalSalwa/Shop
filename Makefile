@@ -143,8 +143,8 @@ static_analysis: lint test_unit
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php check --diff --verbose || true
-	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
-	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
+	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > var/reports/phpmd.html || true
+	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > var/reports/phpmd.xml || true
 	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 	-vendor/bin/twigcs templates
 	-vendor/bin/rector process --dry-run

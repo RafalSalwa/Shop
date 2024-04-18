@@ -33,6 +33,7 @@ use PHPUnit\Framework\TestCase;
 final class CartItemServiceTest extends TestCase
 {
     use ProductHelperCartItemTrait;
+
     private CartItemFactory $cartItemFactory;
 
     private CartItemRepository $cartItemRepository;

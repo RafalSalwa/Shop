@@ -40,12 +40,11 @@ final class CartServiceTest extends WebTestCase
         $client->loginUser($user);
         $this->cartService = self::getContainer()->get(CartService::class);
         $this->cartStorage = self::getContainer()->get(CartStorageInterface::class);
-        $this->cartItem = $this->getHelperProductCartItem(1);
+        $this->product = $this->getHelperProduct(1);
     }
 
     public function testAddCartItem(): void
     {
-
         $cart = new Cart(1);
 
         $this->cartStorage->save($cart);

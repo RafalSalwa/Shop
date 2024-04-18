@@ -92,7 +92,6 @@ final class AddressTest extends TestCase
         // Test setting nullable properties
         $this->address->setAddressLine2('Apt 101');
         $this->assertSame('Apt 101', $this->address->getAddressLine2());
-
     }
 
     public function testIdGetterAndSetter(): void

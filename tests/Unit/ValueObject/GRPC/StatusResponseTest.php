@@ -8,6 +8,7 @@ use App\ValueObject\GRPC\StatusResponse;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 use stdClass;
+
 use const Grpc\STATUS_OK;
 
 #[CoversClass(className: StatusResponse::class)]
