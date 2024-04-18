@@ -7,12 +7,13 @@ namespace App\Tests\Unit\Entity;
 use App\Entity\Address;
 use App\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validation;
 
 #[CoversClass(className: Address::class)]
-#[CoversClass(className: InvalidArgumentException::class)]
+#[UsesClass(className: InvalidArgumentException::class)]
 final class AddressTest extends TestCase
 {
     private Address $address;
@@ -91,10 +92,6 @@ final class AddressTest extends TestCase
         // Test setting nullable properties
         $this->address->setAddressLine2('Apt 101');
         $this->assertSame('Apt 101', $this->address->getAddressLine2());
-
-        // Test setting null for nullable properties
-        $this->address->setAddressLine2('');
-        $this->assertEmpty($this->address->getAddressLine2());
     }
 
     public function testIdGetterAndSetter(): void

@@ -2,7 +2,7 @@ export ROOT_DIR=$(shell dirname $(realpath $(firstword $(MAKEFILE_LIST))))
 export PHPCS_CMD= $(PHP_CMD) "./vendor/bin/phpcs" --standard=./config/analysis/phpcs.xml
 export PHPSTAN_CMD= $(PHP_CMD) "./vendor/bin/phpstan" analyse --configuration=config/analysis/phpstan.neon --no-progress
 export PHPMD_CMD= $(PHP_CMD) "./vendor/bin/phpmd" src/
-export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --shepherd --clear-cache --clear-global-cache --no-cache --no-file-cache --no-reflection-cache
+export PHP_PSALM_CMD= $(PHP_CMD) "./vendor/bin/psalm" --config=config/analysis/psalm.xml --shepherd --no-cache --no-file-cache --no-reflection-cache
 export PHPUNIT_CMD= $(PHP_CMD) "./vendor/bin/phpunit" --configuration ./config/analysis/phpunit.xml
 
 ## ----------------------------------------------------------------------
@@ -143,8 +143,8 @@ static_analysis: lint test_unit
 	-vendor/bin/psalm --config=config/analysis/psalm.xml --no-cache --no-file-cache --no-reflection-cache || true
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon || true
 	-vendor/bin/php-cs-fixer --config=config/analysis/php-cs-fixer.php check --diff --verbose || true
-	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > reports/results/phpmd.html || true
-	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > reports/results/phpmd.xml || true
+	-vendor/bin/phpmd src/ html config/analysis/phpmd.xml > var/reports/phpmd.html || true
+	-vendor/bin/phpmd src/ xml config/analysis/phpmd.xml > var/reports/phpmd.xml || true
 	-vendor/bin/phpmetrics --config=config/analysis/phpmetrics.yml src/
 	-vendor/bin/twigcs templates
 	-vendor/bin/rector process --dry-run
@@ -222,6 +222,10 @@ test_functional: ### run test
 .PHONY: test_e2e
 test_e2e: ### run test
 	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=e2e
+
+.PHONY: tests
+tests: ### run test
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml
 
 .PHONY: phpdoc
 phpdoc:

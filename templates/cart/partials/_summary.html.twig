@@ -10,7 +10,7 @@
         {% if summary.discount is not empty and cart.coupon is not empty and cart.coupon.isCartDiscount %}
             <div class="d-flex justify-content-between">
                 <h6 class="font-weight-medium">Coupon {{ "-" ~ cart.coupon.value ~ "%" }}</h6>
-                <h6 class="font-weight-medium">{{ "-" ~ (summary.discount / 100)|format_currency('USD') }}</h6>
+                <h6 class="font-weight-medium">{{ "-" ~ summary.discount|format_currency('USD') }}</h6>
             </div>
         {% endif %}
         <div class="d-flex justify-content-between">

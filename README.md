@@ -12,9 +12,6 @@ Code analysis:
 [![PHPCS - Code Sniffer](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/phpcs.yml)
 [![PHPCS-Fixer](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/php-cs-fixer.yml)
 [![Rector](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml/badge.svg)](https://github.com/RafalSalwa/Shop/actions/workflows/rector.yaml)
-
-Architecture:
-
 [![Architecture & Dependencies](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml/badge.svg)](https://github.com/RafalSalwa/interview-client-php/actions/workflows/architecture_dependencies.yml)
 
 External services
@@ -78,5 +75,5 @@ visit [Demo app](https://cart.salwa.com.pl)
 
 ## Screenshots:
 ![deptrac](docs/deptrack.png)
-![REST](docs/rest.png)
-![grpc](docs/grpc.png)
+![REST](docs/cart.webp)
+![grpc](docs/grpc.webp)

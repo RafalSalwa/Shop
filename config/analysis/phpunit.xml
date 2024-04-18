@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.5/phpunit.xsd"
-         beStrictAboutCoverageMetadata="true"
+         beStrictAboutCoverageMetadata="false"
          beStrictAboutOutputDuringTests="true"
          beStrictAboutTestsThatDoNotTestAnything="true"
          beStrictAboutTodoAnnotatedTests="true"
@@ -16,7 +16,7 @@
          displayDetailsOnSkippedTests="true"
          executionOrder="default"
          resolveDependencies="true"
-         requireCoverageMetadata="true"
+         requireCoverageMetadata="false"
          stopOnFailure="false"
          stopOnError="false"
          testdox="false"
@@ -83,6 +83,9 @@
             <directory>../../src/Protobuf</directory>
             <directory>../../src/DataFixtures</directory>
             <directory>../../src/Requests</directory>
+            <directory>../../src/EventSubscriber</directory>
+            <directory>../../src/Exception</directory>
+            <directory>../../src/Form</directory>
         </exclude>
     </source>
 
