@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Pagination;
 
+use App\Entity\Product;
 use App\Pagination\Paginator;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Attributes\CoversClass;
@@ -25,7 +26,7 @@ final class PaginationTest extends KernelTestCase
         // Create a query builder to fetch data (replace with your own query logic)
         $queryBuilder = $this->entityManager->createQueryBuilder()
             ->select('p')
-            ->from('App\Entity\Product', 'p')
+            ->from(Product::class, 'p')
             ->orderBy('p.id', 'ASC')
             ->setMaxResults(64);
 
@@ -37,7 +38,8 @@ final class PaginationTest extends KernelTestCase
 
         // Test pagination properties
         $this->assertSame(1, $paginator->getCurrentPage());
-        $this->assertSame(16, $paginator->getPageSize()); // Default page size in Paginator class
+        // Default page size in Paginator class
+        $this->assertSame(16, $paginator->getPageSize());
         $this->assertFalse($paginator->hasPreviousPage());
         $this->assertTrue($paginator->hasNextPage());
         $this->assertSame(1, $paginator->getPreviousPage());
@@ -45,6 +47,6 @@ final class PaginationTest extends KernelTestCase
         $this->assertTrue($paginator->hasToPaginate());
         $this->assertNotNull($paginator->getResults());
         $this->assertGreaterThan(1, $paginator->getNumResults());
-        $this->assertNotNull($paginator->getNextPage());
+        $this->assertGreaterThan(1, $paginator->getNextPage());
     }
 }

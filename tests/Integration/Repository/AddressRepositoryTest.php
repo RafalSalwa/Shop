@@ -45,17 +45,6 @@ final class AddressRepositoryTest extends WebTestCase
 
     public function testGetDefaultForUser(): void
     {
-        // Create and persist multiple addresses for a user
-        $userAddresses = [];
-        for ($i = 1; $i <= 3; $i++) {
-            $address = new Address(1);
-            $address->setUserId(1);
-            $address->setCity('City ' . $i);
-            // Make the second address default
-            $this->addressRepository->save($address);
-            $userAddresses[] = $address;
-        }
-
         // Retrieve the default address for the user
         $defaultAddress = $this->addressRepository->getDefaultForUser(1);
 

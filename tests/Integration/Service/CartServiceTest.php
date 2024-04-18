@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests\Integration\Service;
 
 use App\Entity\Cart;
+use App\Entity\Contracts\CartInsertableInterface;
 use App\Entity\Contracts\CartItemInterface;
 use App\Entity\Contracts\ShopUserInterface;
 use App\Model\User;
@@ -22,6 +23,8 @@ final class CartServiceTest extends WebTestCase
 {
     use ProductHelperCartItemTrait;
     use TokenTestHelperTrait;
+
+    private CartInsertableInterface $product;
 
     private CartStorageInterface $cartStorage;
 
@@ -51,7 +54,7 @@ final class CartServiceTest extends WebTestCase
 
         $this->cartService->add($this->cartItem);
 
-        $updatedCart = $this->cartStorage->getCurrentCart($cart->getId());
+        $updatedCart = $this->cartStorage->getCurrentCart(1);
 
         $this->assertTrue($updatedCart->hasItem($this->cartItem));
     }

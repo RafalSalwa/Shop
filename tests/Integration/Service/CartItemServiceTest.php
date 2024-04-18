@@ -89,7 +89,7 @@ final class CartItemServiceTest extends TestCase
     public function testGetItemThrowsCartOperationException(): void
     {
         $itemId = 123;
-
+        dd($this->cartItemRepository);
         // Mock the repository to return null (item not found)
         $this->cartItemRepository->expects($this->once())
             ->method('find')
