@@ -64,7 +64,7 @@ jobs:
           max-allowed-issues: 2147483647
 
       - name: Run Unit Tests
-        run: make test_unit
+        run: make tests
 
       - name: Run codacy-coverage-reporter
         uses: codacy/codacy-coverage-reporter-action@v1
