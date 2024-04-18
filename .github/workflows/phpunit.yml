@@ -36,9 +36,7 @@ jobs:
           custom-cache-key: composer-${{ runner.os }}-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
 
       - name: Execute tests (Unit and Feature tests) via PHPUnit
-        run: |
-          echo ${{ secrets.TEST_ENV }} > .env.test
-          make tests
+        run: make tests
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4.0.1
