@@ -70,6 +70,7 @@ parameters:
                 - Symfony\Component\Security\Http\Authenticator\AbstractLoginFormAuthenticator
                 - Symfony\Component\Security\Core\Authorization\Voter\Voter
                 - Symfony\Component\Security\Http\Authenticator\AbstractAuthenticator
+                - Symfony\Bundle\FrameworkBundle\Test\WebTestCase
                 - Exception
                 - AbstractCartItem
                 - RuntimeException
