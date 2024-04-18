@@ -223,6 +223,10 @@ test_functional: ### run test
 test_e2e: ### run test
 	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml --testsuite=e2e
 
+.PHONY: tests
+tests: ### run test
+	./vendor/bin/phpunit --configuration ./config/analysis/phpunit.xml
+
 .PHONY: phpdoc
 phpdoc:
 	docker run --rm -v "$(pwd):/data" "phpdoc/phpdoc:3"

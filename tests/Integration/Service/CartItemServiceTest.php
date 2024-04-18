@@ -19,7 +19,6 @@ use App\Service\CartItemService;
 use App\Tests\Helpers\ProductHelperCartItemTrait;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\UsesClass;
-use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
 #[CoversClass(className: CartItemService::class)]
