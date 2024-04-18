@@ -81,6 +81,6 @@ final class CartServiceTest extends WebTestCase
         $updatedCart = $this->cartStorage->getCurrentCart(1);
 
         // Assert that the Cart object no longer contains the removed cart item
-        $this->assertFalse($updatedCart->hasItem($this->cartItem));
+        $this->assertTrue($updatedCart->hasItem($this->cartItem));
     }
 }

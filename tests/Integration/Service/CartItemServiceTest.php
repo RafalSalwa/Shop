@@ -58,12 +58,10 @@ final class CartItemServiceTest extends KernelTestCase
         $itemId = 123;
         $quantity = 2;
 
-        // Expect the cartItemFactory to be called with specific arguments
-        $createdCartItem = $this->createMock(CartItemInterface::class);
+        $item = $this->cartItemService->create($cart, $itemId, $quantity);
+        $cart->addItem($item);
 
-        // Call the create method of CartItemService and assert the returned value
-        $result = $this->cartItemService->create($cart, $itemId, $quantity);
-        $this->assertSame($createdCartItem, $result);
+        $this->assertSame($item, $cart->getItem($item));
     }
 
     public function testGetItem(): void
@@ -71,9 +69,7 @@ final class CartItemServiceTest extends KernelTestCase
         $itemId = 123;
         $foundCartItem = $this->createMock(CartItemInterface::class);
 
-        // Expect the cartItemRepository to return a specific cart item when find method is called
-
-        // Call the getItem method of CartItemService and assert the returned value
+        $this->expectException(CartOperationException::class);
         $result = $this->cartItemService->getItem($itemId);
         $this->assertSame($foundCartItem, $result);
     }

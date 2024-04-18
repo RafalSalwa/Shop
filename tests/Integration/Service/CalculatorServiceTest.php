@@ -30,7 +30,11 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, null);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertSame($expectedSummary->getDiscount(), $summary->getDiscount());
+        $this->assertSame($expectedSummary->getNet(), $summary->getNet());
+        $this->assertSame($expectedSummary->getShipping(), $summary->getShipping());
+        $this->assertSame($expectedSummary->getSubTotal(), $summary->getSubTotal());
+        $this->assertSame($expectedSummary->getTotal(), $summary->getTotal());
     }
 
     public function testCalculateSummaryWithPercentageCoupon(): void
@@ -43,7 +47,11 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, $couponCode);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertSame($expectedSummary->getDiscount(), $summary->getDiscount());
+        $this->assertSame($expectedSummary->getNet(), $summary->getNet());
+        $this->assertSame($expectedSummary->getShipping(), $summary->getShipping());
+        $this->assertSame($expectedSummary->getSubTotal(), $summary->getSubTotal());
+        $this->assertSame($expectedSummary->getTotal(), $summary->getTotal());
     }
 
     public function testCalculateSummaryWithFixedAmountCoupon(): void
@@ -55,6 +63,10 @@ final class CalculatorServiceTest extends TestCase
 
         $summary = $this->calculatorService->calculateSummary($netAmount, $couponCode);
 
-        $this->assertSame($expectedSummary, $summary);
+        $this->assertSame($expectedSummary->getDiscount(), $summary->getDiscount());
+        $this->assertSame($expectedSummary->getNet(), $summary->getNet());
+        $this->assertSame($expectedSummary->getShipping(), $summary->getShipping());
+        $this->assertSame($expectedSummary->getSubTotal(), $summary->getSubTotal());
+        $this->assertSame($expectedSummary->getTotal(), $summary->getTotal());
     }
 }

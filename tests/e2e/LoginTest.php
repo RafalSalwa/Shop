@@ -19,8 +19,8 @@ final class LoginTest extends WebTestCase
 
         // Validate a successful response and some content
         $this->assertResponseIsSuccessful();
-        $this->assertSelectorTextContains('h1', 'Hello World');
+        $this->assertSelectorTextContains('h1', 'Shop');
 
-        $this->assertGreaterThan(0, $crawler->filter('html:contains("R")')->count());
+        $this->assertGreaterThan(0, $crawler->filter('html:contains("Shop")')->count());
     }
 }
