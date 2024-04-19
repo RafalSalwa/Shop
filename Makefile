@@ -179,8 +179,8 @@ github_actions_static_analysis:
 phpcs_gh:
 	vendor/bin/phpcs --standard=config/analysis/phpcs.xml --report=checkstyle | cs2pr
 
-.PHONY: lint test_unit
-sonar_static_analysis:
+.PHONY: sonar_static_analysis
+sonar_static_analysis: lint tests
 	-vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml
 	-vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json > ./var/reports/phpstan.sonarqube.report.json || true
 	sonar-scanner -Dsonar.host.url=${SONAR_HOST} -Dsonar.token=${SONAR_TOKEN}

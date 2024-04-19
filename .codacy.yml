@@ -1,7 +1,5 @@
 ---
 engines:
-  hadolint:
-  markdownlint:
   phpcs:
     php_version: 8.2
   phpmd:
