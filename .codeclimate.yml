@@ -23,13 +23,6 @@ plugins:
     enabled: true
   markdownlint:
     enabled: true
-  phpcodesniffer:
-    enabled: true
-    channel: beta
-    config:
-      ignore_warnings: true
-      file_extensions: "php"
-      standard: "phpcs.xml"
   sonar-php:
     enabled: true
     config:

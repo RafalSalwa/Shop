@@ -62,10 +62,7 @@ jobs:
 
       - name: PHPUnit Psalm PHPStan Scans
         id: sonar_scan
-        run: |
-          make test_unit
-          vendor/bin/psalm --report=./var/reports/psalm.sonarqube.json --config=config/analysis/psalm.xml || true
-          vendor/bin/phpstan analyse --configuration=config/analysis/phpstan.neon --error-format=json > ./var/reports/phpstan.sonarqube.report.json || true
+        run: make sonar_static_analysis
         continue-on-error: true
 
       - name: Analyze with SonarQube
