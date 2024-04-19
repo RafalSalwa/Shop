@@ -21,7 +21,6 @@ External services
 
 Codacy:
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
-[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/7621ab51388d4f4aa5b0528030eb5f57)](https://app.codacy.com/gh/RafalSalwa/interview-client-php/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 SonarQube: [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
 [![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=RafalSalwa_Shop&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=RafalSalwa_Shop)
