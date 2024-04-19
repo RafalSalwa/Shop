@@ -10,8 +10,12 @@ languages:
       - ".scss"
 
 exclude_paths:
+  - "config/**"
+  - "docker/**"
   - "migrations/**"
   - "src/Protobuf/**/*"
-  - "tests/**"
   - "templates/**"
+  - "vendor/**"
+  - "public/**"
+  - "assets/**"
   - "**/*.twig"
